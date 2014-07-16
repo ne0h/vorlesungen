@@ -1,0 +1,729 @@
+\chapter{IT-Sicherheit für vernetzte Systeme}
+Zusammenfassung der Vorlesung  "`IT-Sicherheit für vernetzte Systeme"' von Professor Hartenstein aus dem Wintersemester 2013\footnote{\url{http://dsn.tm.kit.edu/pastcourses_3385.php}}.
+
+\section{Einführung}
+
+\subsection{Management}
+
+\subsubsection{Handlungsorientiertes Managementkonzept}
+Prozesse der Entscheidungsfindung und Entscheidungsdurchsetzung.
+\begin{itemize}
+	\item Gesamtheit der Handlungen
+	\item Bestmögliches Erreichen der Ziele einer Institution
+	\item Auf die beteiligten Interessensgruppen gerichtet
+\end{itemize}
+\textbf{Strukturierung in Aufgabenbereiche:}
+\begin{itemize}
+	\item Grundsatz- und Zielbildung
+	\item Planung
+	\item Organisation
+	\item Kontrolle
+\end{itemize}
+
+\subsubsection{Personenorientiertes Managementkonzept}
+Fokus liegt auf den Aufgaben sowie den Befugnissen und Aufsicht/Kontrolle der handelnden Personen.\\
+Die Personengruppen sind durch Gesetze, Satzungen oder Aufträgen mit Rechten, Pflichten und Verantwortung ausgestattet.
+
+\subsubsection{Handhabungssorientiertes Managementkonzept}
+\begin{itemize}
+	\item Management-Techniken und Methoden
+	\item Qualitativer und quantitativer Art
+	\item Prognose-, Planungs- und Entscheidungstechniken
+	\item Einbeziehung/basis von Managementinformationssystemen
+\end{itemize}
+
+
+\subsection{IT-Sicherheitsmanagement}
+\begin{itemize}
+	\item Allumfassender Ansatz
+	\item Ziel: Agemessenes Sicherheitsniveau
+	\item Verlangt: Abschätzung des Risikos
+	\item Immerwährender Prozess: Planung/Organisation - Umsetzung/Durchsetzung - Aufrechterhaltung und Erfolgskontrolle
+\end{itemize}
+
+\subsubsection{Informationssicherheit}
+\begin{itemize}
+	\item Hauptaspekte: Vertraulichkeit, Verfügbarkeit und Integrität zum Erhalt eines kontinuierlichen Geschäftsbetriebs
+	\footnote{\url{http://standards.iso.org/ittf/PubliclyAvailableStandards/c041933_ISO_IEC_27000_2009.zip}}
+	\item Umsetzung eines geeigneten Maßnahmenkatalogs
+	\item Festgelegter Risikomanegementprozess
+	\item Umsetzung mit Hilfe eines ISMS
+	\item Die Maßnahmen müssen festgelegt, umgesetzt, überwacht, überprüft und verbessert werden
+	\item Ziel: Erreichen des spezifischen Unternehmenssicherheitsniveaus
+\end{itemize}
+
+
+\subsection{IT-Sicherheitsmanagement: Prinzipien}
+
+\subsubsection{Prinzipien: Die 6 Ps}
+Siehe handlungsorientiertes Management.
+\begin{itemize}
+	\item Richtlinien (Policy)
+	\item Planung (Planning)
+	\item Programme (Programs)
+	\item Schutzmaßnahmen (Protection)
+	\item Menschen (People)
+	\item Projektmanegement
+\end{itemize}
+
+\subsection{Strukturierung der Vorlesung}
+\begin{itemize}
+	\item Konzepte
+	\item Standards
+	\item Vorgehensweisen
+	\item Fallstudien und -beispiele
+\end{itemize}
+
+
+
+\section{Bedrohungsszenarien und IT-Schutzziele}
+
+\subsection{Potentielle Bedrohungen und Angreifer}
+
+\subsubsection{Klassifizierung und Angreifer}
+\begin{itemize}
+	\item Zielsetzung (Wann ist der Angriff ein Erfolg?)
+	\item Fokussierung (Muss ein bestimmtes Ziel angegriffen werden?)
+	\item Ressourcen (Welche Ressourcen stehen dem Angreifer zur Verfügung?)
+	\item Motivationsstärke (Wie wichtig ist dem Angreifer das Erreichen der Zielsetzung?)
+\end{itemize}
+
+\subsubsection{Typische Zielsetzungen eines Angreifers}
+\begin{itemize}
+	\item Zugriff auf Ressourcen
+	\item Zugriff auf Informationen
+	\item Manipulation eines Dienstes
+	\item Sabotage
+\end{itemize}
+
+\subsubsection{Ressourcen des Angreifers}
+\begin{itemize}
+	\item Personelle Ressourcen
+	\item Finanzielle Ressourcen
+	\item Technische Ressourcen
+	\item Insiderwissen
+	\item Einfluss auf das Ziel
+\end{itemize}
+
+\subsubsection{Motivationsstärke des Angreifers}
+\begin{itemize}
+	\item Persönliche, nicht-finanzielle Interessen: Ansehen, politische Überzeugung, Interesse. Sicherheitsmmaßnahmen so weit erhöhen, dass der Angriff aufwendig wird.
+	\item Finanzieller Gewinn: Rentabilität. Sicherheit so weit erhöhen, dass der Angriff unrentabel wird.
+	\item Politisches oder strategisches Ziel: Sicherheit muss erhäht werden, dass Angriff unmöglich ist (praktisch kaum zu bewältigen).
+\end{itemize}
+
+Angriffe können gezielt oder ungezielt sein. Für einen gezielten Angriff ist ein höheres Sicherheitsniveau erforderlich. (Anderenfalls muss man nur besser sein als die anderen.)
+
+\subsubsection{Beispiele von Angreifern}
+\begin{itemize}
+	\item Staatliche Institutionen: Informationen oder Sabotage
+	\item Gezielte Hacker-Angriffe: Manipulation von Diensten. Bsp: Drogenschmuggel, Ausspähen von Häfen.
+	\item Ungezielte Hacker-Angriffe: Meist Zugriff auf Informationen oder Ressourcen
+	\item Gelegenheitsangriffe
+\end{itemize}
+
+
+\subsection{Schutzziele der IT-Sicherheit}
+
+\subsubsection{IT-Sicherheit / Informationssicherheit}
+Schützen von Informationen bzw. Daten einschließlich zugehöriger Komponenten wie etwa der Systeme und Hardware, die diese Information nutzt, speichert oder überträgt.
+
+Differenzierung zur allgemeinen Sicherheit erfolgt über die sogenannten Schutzziele.
+
+\subsubsection{Schutzziele}
+
+Die klassischen Triaden: Confidentiality, Integrity, Availability (CIA).
+
+\begin{itemize}
+	\item Authentizität: Echtheit und Glaubwürdigkeit eines Objekts (Übergeordnetes Schutzziel)
+	\item Vertraulichkeit: Keine unautorisierte Informationsgewinnung.
+	\item Integrität: Keine Möglichkeit, Daten unautorisiert zu manipulieren.
+	\item Verfügbarkeit (Abgrenzung gegenüber Robustheit).
+	\item Datenschutz
+	\item Anonymität und Pseudonymität
+	\item Verbindlichkeit
+\end{itemize}
+
+
+
+\section{Der IT-Sicherheitsprozess}
+
+\subsection{Was ist ein IT-Sicherheitsprozess?}
+
+Ergänzung der Schutzziele durch Richtlinien und Gesetze, Sicherheitsbewusstsein, Schulungen, Planung und Organisation.
+
+\begin{itemize}
+	\item Was ist ein angemessenes Sicherheitsniveau?
+	\item Welche Ressourcen müssen geschützt werden?
+	\item Wie werden die Ressourcen geschützt?
+\end{itemize}
+
+\subsubsection{Umsetzung von IT-Sicherheit}
+\begin{itemize}
+	\item Zugangs- und Zugriffskontrolle
+	\item Kryptokonzept und Montoring
+	\item Redundanz, Backup und Archivierung
+	\item Patches und Upgrades
+	\item Firewalls, Intrusion Detection und Intrusion Prevention
+\end{itemize}
+
+\subsubsection{Klassisches Prozessmodell: Wasserfall-Modell}
+\begin{enumerate}
+	\item Voruntersuchung
+	\item Analyse
+	\item Grobentwurf
+	\item Feinentwurf
+	\item Realisierung
+	\item Betrieb und Wartung
+\end{enumerate}
+Jeweils nur ein Sprung zum Vorgänger bzw. Nachfolger möglich.
+
+\subsubsection{Inkrementelles Modell}
+\begin{itemize}
+	\item Voruntersuchung/Analyse
+	\item Definition
+	\item Entwurf
+	\item Realisierung
+	\item Betrieb
+\end{itemize}
+Inkrementelles Modell, daher nach \textit{Betrieb} ein Sprung zu \textit{Definition}.
+
+\subsubsection{Spirallmodell}
+Die Spirale besteht aus den folgenden Teilschritten, die jeweils immer wieder abgearbeitet werden und weiter nach Außen gehen.
+\begin{itemize}
+	\item Analyse, Identifikation der Ziele
+	\item Evaluierung der Alternativen, Risikoanalyse
+	\item Entwicklung und Verifikation (Wasserfallmodell, inkr. Modell, etc.)
+	\item Planung der nächsten Schritte, Überprüfung
+\end{itemize}
+
+\subsection{Internationale Umsetzung: ISO 2700x}
+
+\begin{itemize}
+	\item Ziel: Normierung des IT-Sicherheitsprozesses, Katalog von "`Best Practise"' - Vorschlägen, Detaillierte Behandlung ausgewählter Problemfelder (z.B. Risikoanalyse), Grundlage für Zertifizierung
+	\item Aber: Kein Anspruch auf Vollständigkeit!
+\end{itemize}
+
+\subsubsection{ISO 27000: Informationssicherheits-Managementsystem (ISMS)}
+\begin{itemize}
+	\item Ganzheitlicher Prozess
+	\item Risikoanalyse
+	\item Risikoakzeptanz (Risiko vs. Kosten)
+	\item Risikomanagement (aktive Prävention und Neubewertung)
+\end{itemize}
+
+\subsubsection{ISO 27001: Prozessmodell}
+\begin{itemize}
+	\item Planen: Definition des Anwendungsbereichs und der Sicherheitsleitlinie, Organisation der Risikoanalyse, Auswahl von Maßnahmen, Koordination mit Management
+	\item Durchführen (Do): Risikobehandlung und Umsetzung der Maßnahmen, Schulungen und Bewusstseinsbindung
+	\item Prüfen (Check); Überwachung der Maßnahmen, Prüfen der Wirksamkeit, Überprüfung der Risikoeinschätzung, Interne Befragungen (Audits)
+	\item Handeln (Act): Umsetzung identifizierter Verbesserungen, Verbeugung neuer Risiken, Sicherstellen, dass die Verbesserungen ihre Ziele erreichen
+\end{itemize}
+
+\subsubsection{Verantwortung des Managements}
+\begin{itemize}
+	\item Zielbildung: Festlegung der Sicherheitsleitlinie und des Sicherheitsniveaus
+	\item Organisation: Bestimmung von Verantwortlichkeiten, Bereitstellung der Ressourcen
+	\item Schlung und Bewusstsein
+	\item Kontrolle: Regelmäßige Überprüfung, Analyse und Bewertung
+\end{itemize}
+
+\subsubsection{ISO 27002: Sicherheitsleitlinie}
+Verbindliche Grundsätze für die IT-Sicherheit.
+\begin{itemize}
+	\item Bedeutung: Bedeutung der Sicherheit definieren, Absicht des Managements zu erklären
+	\item Zielsetzung
+	\item Strategie: Rahmen für Risikoeinschätzung und Risikimanegement, Berücksichtigung gesetzlicher und vertraglicher Anforderungen
+	\item Organisation: Verantwortlichkeiten festlegen, Verweise auf weiterführende Dokumente
+\end{itemize}
+
+\subsubsection{Aufbau und Struktur am Beispiel des KIT}
+\begin{itemize}
+	\item Präambel
+	\item Geltungsbereich
+	\item Zielsetzung
+	\item Organisation
+	\item IT-Sicherheitsprozess am KIT
+	\item Sachverwandte Themen
+\end{itemize}
+Knapp formuliert (5 Seiten).
+
+\subsubsection{Maßnahmen zur behandlung identifizierter Risiken}
+\begin{itemize}
+	\item Bahandlung mittels Maßnahme (Risikoreduktion)
+	\item Tolierierung des Risikos (Restrisiko)
+	\item Vermeidung/Eleminierung spezieller Risiken
+	\item Übertragung des Risikos auf Dritte (z.B. Versicherung)
+\end{itemize}
+
+
+\subsection{Deutsche Umsetzung: BSI-Grundschutz}
+\begin{itemize}
+	\item Empfehlungen von Standardsicherheitsmaßnahmen für typische IT-Systeme
+	\item Organisatorische, personelle, infrastrukturelle und technische Standard-Sicherheitsmaßnahmen
+	\item Baukastenprinzip
+	\item Werkzeugunterstützung
+	\item Bedarfsgerechte Weiterentwicklung (...aber leider etwas zu langsam)
+\end{itemize}
+
+\subsubsection{IT-SIcherheitsprozess nach BSI GSK}
+\begin{itemize}
+	\item Strategische Ebene: Initiierung, Erstellung der Sicherheitsleitlinie, Einrichtung des IT-Sicherheitsmanagements
+	\item Taktische Ebene: Erstellung eines IT-Sicherheitskonzepts
+	\item Operative Ebene: Umsetzung und Aufrechterhaltung im laufenden Betrieb
+\end{itemize}
+
+\subsubsection{Entwicklung eines IT Sicherheitskonzeots nach GSK}
+\begin{enumerate}
+	\item IT-Strukturanalyse: Ermittlung des zu schützenden IT-Verbungs
+	\item Schutzbedarfsfeststellung
+	\item IT-Grundschutzanalyse: Modellierung über Baukastensystem und Basis-Sicherheitscheck
+	\item Ergänzende Sicherheitsanalyse (bei hohem Schutzbedarf): Risikoanalyse, Penetrationstest, Differenz-Sicherheitsanalyse (etablierte Musterlösungen hochschutzbedürftiger Systeme)
+	\item Realisierungsplanung
+\end{enumerate}
+
+\subsubsection{Schutzbedarfsfeststellung}
+\begin{itemize}
+	\item Klassisches Vorgehen: Ermittlung der bedrohten Objekte und Bedrohungen, dann Risikoanalyse
+	\item GSK vereinfacht: Pauschale Schutzbedarfsfeststellung über die Schadensauswirkungen
+	\item Schutzbedarfsfeststellung für \textit{jedes} Schutzziel separat.
+	\item Mögliche Prinzipien: Maximumsrinzip (Schutzbedarf orientiert sich am höchsten Schadenspotential), Kumulationseffekt (Schutzbedarf des Systems ist höher als Schutzbedarf aller Anwendungungen kumuliert), Verteilungseffekt (Invers zu Kumulationseffekt)
+\end{itemize}
+
+\subsubsection{Gefährdungskatalog}
+\begin{itemize}
+	\item Elementare Gefährdungen
+	\item Höhere Gewalt
+	\item Organisatorische Mängel
+	\item Menschliche Fehlhandlung
+	\item Technisches Versagen
+	\item Versätzliche Handlungen
+\end{itemize}
+
+\subsubsection{Vergleich zu ISO 2700x}
+\begin{itemize}
+	\item BSI GSK konkretisiert das recht allgemeine ISO 2700x-Paket
+	\item Vorteile: Detaillierter, Berücksichtungeg deutscher Besonderheiten (Rechtslage, etc.)
+	\item Nachteile: Grundschutz recht starr, BSI Maßnahmen oft zu konkret und nicht aktuell
+	\item Fazit: Nut für mittelgroße IT-Verbunde geeignet, sonst "`Overkill"'
+\end{itemize}
+
+
+
+\section{Rechtliche Anforderungen}
+
+\subsection{Motivation}
+
+\subsubsection{Fragen aus dem Betrieb}
+\begin{itemize}
+	\item Welche Gesetze sind einschlägig?
+	\item Welche (Log-)Daten darf ich speichern und wie lange?
+	\item Welche Schutzmaßnahmen sind vorgeschrieben?
+\end{itemize}
+
+\subsubsection{Mögliche Gesetze}
+\begin{itemize}
+	\item Bundesdatenschutzgesetz
+	\item Telemediengesetz und Telekommunikationsgesetz
+	\item Kreditwesengesetz, HGB und KonTraG
+	\item Signaturgesetz
+\end{itemize}
+
+\subsubsection{Herausforderungen bei der IT-Compliance}
+\begin{itemize}
+	\item Vollständigkeit nur schwer erreichbar
+	\item Abwägung unterschiedlicher Anforderungen nötig
+	\item Gewichtung und Angemessenheit muss gewahrt werden
+\end{itemize}
+
+\subsection{Abgrenzung von Regelungsbereichen}
+Die Abgrenzung von Regelungsbereichen, d.h. die Wechselwirkung von verschiedenen Gesetzen ist zu beachten.\\
+Beispiel: Welche Regelungsbereiche sind für den Bereich elektronischer Kommunikationsnetzen und -diensten einschlägig?\\
+Abgrenzung/Zuordnung in der Praxis oft umstritten.\\
+
+\subsubsection{Exemplarische Abgrenzung: Ebenen der Kommunikation}
+
+\begin{tabularx}{\columnwidth}{|X|X|l}
+	\hline
+	\textbf{Inhaltsebene}: z.B. Abwicklung von Bankgeschäften, Versandhandel & \textbf{Offline-Recht}: Bundesdatenschutzgesetz, Bereichsspezifische Gesetze \\
+	\hline
+	\textbf{Interaktionsebene}: Teledienste und Mediendienste & \textbf{Online-Recht}: Telemediengesetz \\
+	\hline
+	\textbf{Transportebene}: Telekommunikationsdienste & \textbf{Telekommunikationsrecht}: Telekommunikationsgesetz \\
+	\hline
+\end{tabularx}
+
+\subsubsection{Telekommunikationsgesetz}
+\begin{itemize}
+	\item Fernmeldegeheimnis
+	\item Datenschutz
+	\item TK-Überwachung und Voratsdatenspeicherung
+	\item Nicht verantwortlich für den Inhalt
+	\item Sicherheitskonzept notwendig, wenn TK-Anlagen betrieben werden
+\end{itemize}
+
+\subsubsection{Telemediengesetz}
+\begin{itemize}
+	\item Datenschutz
+	\item Impressumspflicht
+	\item Regelmäßig verantwortlich für den Inhalt
+\end{itemize}
+
+
+\subsection{Datenschutz}
+Schutz von personenbezogener Daten\footnote{Bundesdatenschutzgesetz}. Datensicherheit ist meistens vorausgesetzt, bzw. notwendig.
+
+\subsubsection{Unterscheidung zwischen 3 Phasen}
+\begin{itemize}
+	\item Erhebung
+	\item Verarbeitung, Speicherung, Übermittlung
+	\item Nutzung
+\end{itemize}
+
+\subsubsection{Grundsätze des BDSG}
+\begin{itemize}
+	\item Präventives Verbot mit Erlaubnisvorbehalt
+	\item Zweckbindungsgebot
+	\item Transparenzgebot: Auskunftspflicht und Berichtungsrecht
+	\item Gebot Verhältnismäßigkeit, Datenvermeidung und Datensparsamkeit
+	\item Technische und organisatorische Schutzmaßnahmen
+\end{itemize}
+
+
+\subsection{Aufsichtsrechtliche Regelungen für IT-Finanzdienstleister}
+
+\subsubsection{MaRisk}
+\begin{itemize}
+	\item Abgeleitet aus dem KWG
+	\item Mindestanforderungen an das Risikomanagement
+	\item Herausgegeben von der BaFin
+	\item Präventiv ausgerichtet mit risikoorientiertem Aufsichtsprozess
+	\item Verwendung con internat. und nat. Normen (ISO 2700x, BSI GSK)
+	\item Vergleichbare Maßnahmen und vereinfachte Prüfung
+	\item Auswirkungen auf die Software-Entwicklung: Programmierrichtlinie, Testverfahren, Funktionstrennung von Entwicklung und Abnahme/Test, Dokumentation und Versionierung
+	\item Umfangreiches Notfallmanagement
+\end{itemize}
+
+
+\subsection{Aktuelles: Geplantes IT-Sicherheitskonzept}
+
+\subsubsection{Kernpunkten des Referentenentwurfs}
+\begin{itemize}
+	\item Pflicht zur Erfüllung von Mindeststandards
+	\item Pflicht zur Meldung erheblicher Sicherheitsvorfälle
+	\item Jährliche Berichtspflicht des BSI
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item Zahlreiche Gesetze mit (in-)direktem Bezug zur IT-Sicherheit
+	\item Datenschutz
+	\item Regulierung im Finanzsektor durch KWG und MaRisk
+	\item Weitere Regulierungen auf nat. und europäischer Ebene zu erwarten (z.B. IT-Sicherheitsgesetz)
+\end{itemize}
+
+\section{Risikoanalyse und -management}
+
+\subsection{Motivation}
+\begin{itemize}
+	\item Risiken sind per se nichts Schlechts
+	\item Risiken müssen allerdings konsequent gemanagt werden
+	\item "`Geht ein Unternehmen kein Risiko ein, wird es sofort von offensiveren Wettbewerbern überholt"'\footnote{Bärentango: Mit Risikomanagement Projekte zum Erfolg führen von Tom DeMarco}
+\end{itemize}
+
+
+\subsection{Risikomanagement}
+\[Risiko = Eintrittswahrscheinlichkeit\cdot Schadenspotential\]
+
+\subsubsection{Methoden der Risikoanalyse}
+\begin{itemize}
+	\item Qualitative Einstufung
+	\item Quantitative Einstufung
+\end{itemize}
+
+Risikomanagement bildet eine fundierte Basis für Entscheidungen und dient somit als Steuerinstrument, um Ressourcen effektiv zu nutzen.\\
+Die Vorgehensweise orientiert sich an Plan-Do-Check-Act.
+
+\subsection{Spezifika des IT-Risikomanegement}
+\begin{itemize}
+	\item Risikomanagement bildet einen wesentlichen Baustein im IT-Sicherheitsmanagement
+	\item Integration in das Unternehmens Risikomanagement
+	\item Definiert in ISO 27005
+\end{itemize}
+
+\subsubsection{Der IT-Sicherheitsrisikoprozess}
+\begin{enumerate}
+	\item \textbf{Festlegung der Rahmenbedingungen}
+	\begin{itemize}
+		\item Methodik festlegen (ISO 27005 gibt nur den Rahmen vor)
+		\item Evaluierungskriteren entwickeln
+		\item Potentielle Auwirkungs(-kategorien) festlegen
+		\item Fokus und Grenzen festlegen
+		\item Organisation im Unternehmen (Rollen zuweisen, etc.)
+	\end{itemize}
+	\item \textbf{Risikoidentifizierung}
+	\begin{itemize}
+		\item Identifikation von Szenarien, die zu einem Schaden führen können
+		\item Identifikstion von Assets, Bedrohungen, umgesetzter Maßnahmen, Schwachstellen und potentielle Auwirkungen
+	\end{itemize}
+	\item \textbf{Risikoanalyse}
+	\begin{itemize}
+		\item Bestimmung des Schadenspotentials (z.B. durch statitische Daten)
+		\item Bestimmung der Eintrittswahrscheinlichkeit
+		\item Qualitative oder quantitative Bewertung möglich,
+	\end{itemize}
+	\item \textbf{Risikobewertung}
+	\begin{itemize}
+		\item Priorisierung der Risiken auf Basis der Evaluationskriterien und Akzeptanzkriterien
+		\item Ist kompetenzgerecht vorzunehmen
+	\end{itemize}
+	\item \textbf{Risikobehandlung}
+	\begin{itemize}
+		\item Mögliche Methoden zur Risikobehandlung s.o.
+		\item Ggf. sind Maßnahmen vorzuehmen
+		\item Entscheidungen kompetenzgerecht
+	\end{itemize}
+\end{enumerate}
+
+Iterativer Prozess, daher im Anschluss ein Sprung zu (1).
+
+\subsubsection{Qualitative vs. quantitativer IT-Risikobewertung}
+\begin{itemize}
+	\item Quantitativ: Hinterlegung von konkreten Werten
+	\item Qualitativ: Konkrete meist schwierig zu erlangen, daher Bewertung in Stufen (von Eintrittswahrscheinlichkeit und Schadenspotential $\rightarrow$ Matrix)
+	\item ISO 27005 rät zu einer qualitativen Bewertung
+\end{itemize}
+
+
+\subsection{OCTAVE}
+
+\subsubsection{Fokussierung auf zwei Aspekte}
+\begin{enumerate}
+	\item Operationelle Risiken
+	\item Sicherheitsrisiken
+\end{enumerate}
+
+\textbf{OCTAVE ist eine Evaluierungsmethode und kein Prozess.}
+
+\subsubsection{Die OCTAVE-Methoden}
+\begin{enumerate}
+	\item OCTAVE-Methode (2001): Erste und umfangreiche Methode. Aus der Organisationssicht und der Technologiesicht wird ein Strategieplan entwickelt.
+	\item OCTACE-S: Analog zu (1), allerdings für kleine Organisationen (< 100 Mitarbeitern)
+	\item OCTAVE-Allegro (2007): Weiterentwicklung von (1), Fokussierung auf Information Assets. Wesentliche Unterschiede sind die vereinfachte Nutzung, die eingeschränkte Technologiesicht und das Information-Asset-Konzept mit einer quantitativen Risikoanalyse.
+\end{enumerate}
+
+\subsubsection{OCTAVE Allegro: Prozess}
+\begin{enumerate}
+	\item Risikomanagementkriterien
+	\item Entwicklung von Information-Asset-Profilen und Identifikation von Kontainern
+	\item Identifikation von Bedrohungen
+	\item Identifikation und Behandlung von Risiken
+\end{enumerate}
+
+
+\subsection{IT-Risikomanegement in der Praxis}
+
+\subsubsection{IT-Risikomanagement-Methode der Fiducia}
+\begin{itemize}
+	\item 4-stufige, qualitative Risikobewertung (Kein - Standard - Erweitert - Hoch)
+	\item Ableitung der Eintrittswahrscheinlichkeiten aus dieser Einstufung
+	\item Risikomatrix mit 3 Risikoklassen (Akzeptabel - Meldepflichtig - Genehmigungspflichtig)
+\end{itemize}
+
+\subsubsection{Höhere Qualität bei der Entwicklung}
+Trotz initial gesteigertem Aufwand,
+
+\begin{itemize}
+	\item effezienterer Ressourceneinsatz
+	\item erhöhte Rebostheit und weniger Support
+	\item gesteigerte Wiederverwendbarkeit
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item Risikoorientiertes Vorgehen notwendig für effektives IT-Sicherheitsmanagement
+	\item Risken bestimmen sich durch Eintrittswahrscheinlichkeit und Schadenspotential
+	\item IT-Risiken werden i.d.R. qualitativ bewertet
+	\item Die Einstufungen von Eintrittswahrscheinlichkeit und Schadenspotential in der Praxis eine Herausforderung
+	\item Eintrittswahrscheinlichkeit kann aus der Schwachstelle und Bedrohung berechnet werden
+\end{itemize}
+
+
+
+\section{Krpytografische Verfahren}
+
+\subsection{Kryptografische Verfahren}
+Der Schutz sensibler Informationen in potentiell bösartigen Systemen ist nicht ohne weiteres gewährleistet.
+
+\subsubsection{Kerkoff's Prinzip}
+Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüssels beruhen.
+
+\subsection{Symmetrische Verschlüsselungsverfahren}
+\begin{itemize}
+	\item Algorithmen werden so gestaltet, dass bekannte Kryptoanalyseangriffe keine Bedrohung sind
+	\item Sicherheit im allgemeinen nicht beweisbar
+	\item Hohe Effiziens, da meist Bit-Shifts oder XORs
+\end{itemize}
+
+\subsubsection{Asymmetrische Verschlüsselungsverfahren}
+\begin{itemize}
+	\item Jeweils verschiedene Schlüssel zum Ver- und Entschlüsseln
+	\item Basieren vorwiegend auf mathematischen Problemen
+	\item Um Größenordnungen langsamer als symmetrische Verfahren, daher meist hybride Verfahren
+\end{itemize}
+
+\subsubsection{Message Authentication Codes}
+\begin{itemize}
+	\item Verwendung zum Detektieren von Manipulationen an Daten
+	\item Basis: Vorher ausgetauschter, symmetrischer Schlüssel
+	\item Kann nicht ohne Kenntnis des Schlüssels gefälscht werden
+	\item Beispiel HMAC: Nutzen einer Hashfunktion und eines Schlüssels (Problem: Kollisionen der Hashfunktion)
+	\item Nachteile: Komplexes Schlüsselmanagement, Verbindlichkeit nicht gegeben
+\end{itemize}
+
+\subsubsection{Digitale Signatur}
+\begin{itemize}
+	\item Digitale Signatur = "`elektronische Unterschrift"'
+	\item Unterschriftverfahren zwar angreifbar, in der Praxis jedoch zumeist ausreichend (kaum zu erwartender Gewinn, Risiko einer Entdeckung hoch, harte Sanktionen und hoher zeitlicher Aufwand)
+	\item Digitale Welt: Risiko und zeitlicher Aufwand sehr gering $\rightarrow$ Digitale Signaturen müssen sehr viel sicherer sein als Unterschriften
+	\item Berechnung über asymmetrisches Schlüsselpaar
+\end{itemize}
+
+\subsubsection{Zufallszahlengenerator (PRNG)}
+\begin{itemize}
+	\item Zufallszahlen dürfen nicht prädizierbar sein
+	\item Probleme bei herkömmlichen PRNGs: Gleichförmigkeit, Unabhängigkeit, Unkorreliertheit
+	\item Sicherheit bei Kryptografischen PRNGs: Hohes Maß an Entropie nötig, so dass der Angreifer das Seed nicht prädizieren kann
+\end{itemize}
+
+\subsection{Anwendung der Verfahren}
+
+\subsubsection{Basic Authentication}
+\begin{itemize}
+	\item Client schickt Geheimnis P an den Server
+	\item Angriffsmöglichkeiten: Abhören und Replay-Attack, MitM, Angriff auf den Server, der die Geheimnisse hält
+\end{itemize}
+
+\subsubsection{Challenge-Response-Verfahren}
+\begin{itemize}
+	\item Client schickt Identifier C; Server schickt neugenerierte Zufallszahl R; Client verschlüsselt R mit Schlüssel K und schickt Ergebnis
+	\item Angriffsmöglichkeiten: Abhören und Krypotanalyse, MitM, Angriff auf den Server, der die Schlüssel hält
+\end{itemize}
+
+\subsubsection{Challenge-Reponse mit PK-Verfahren}
+\begin{itemize}
+	\item Client schickt ID; Server schickt neugenerierte Zufallszahl R, Client signiert R und schickt Ergebnis
+	\item Angriffsmöglichkeiten: Abhören und Kryptoanalyse, MitM
+\end{itemize}
+
+\subsubsection{Mutual Authentication (konzeptionell)}
+\begin{itemize}
+	\item Server schickt seinen Public Key; Client verschickt mit seinem Public Key verschlüsselten, generierten Session Key; Client schickt ID; Server schickt neugenrierte Zufallszahl R; Client signiert R und schickt Ergebnis
+	\item Problem: Echtheitsprüfung der Public Keys
+	\item Angriffsmöglichkeiten: Abhören und Kryptoanalyse, MitM mit falschen Public Keys
+\end{itemize}
+
+\subsubsection{Forward Secrecy}
+\begin{itemize}
+	\item Mutual Authentication zur Etablierung eines Session Keys; Aushandeln eines Sessions Keys per Diffie-Hellman; Austausch der Daten; Löschen der Keys
+	\item Mutual Authentication und Session Key für Authentizität und Integrität
+	\item Session Key für Vertraulichkeit
+\end{itemize}
+
+\subsubsection{Digitale Zertifikate}
+\begin{itemize}
+	\item Bindung bestimmte Eigenschaften an digitale Identitäten
+	\item Können Daten zur Identifikation enthalten
+	\item Überprüfbar bzgl. Integrität und Authentizität
+	\item Zentrale Vergabestelle notwendig
+	\item Praxisüblicher Standard: X.509
+\end{itemize}
+
+\subsubsection{Vergleich mit der Realwelt}
+
+\begin{tabularx}{\columnwidth}{|X|X|l}
+	\hline
+	\textbf{Digitale Welt} & \textbf{Realwelt} \\
+	\hline
+	Digitale Signatur & Unterschrift \\
+	Privater Schlüssel & Schriftbild \\
+	Zertifikat & Personalausweis \\
+	\hline
+\end{tabularx}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item Hautziele von Verschlüsselung: Vertraulichkeit, Integrität, Authentizität und Verbindlichkeit (siehe Schutzziele)
+	\item Grundlegende kryptografische Verfahren können zu komplexen Protokollen kombiniert werden
+\end{itemize}
+
+
+
+\section{Schlüsselmanagement und Zugangskontrolle}
+
+\subsection{Schlüsselmanagement}
+
+\subsubsection{Public Key Infrastruktur}
+\begin{itemize}
+	\item Verwaltung der öffentlichen Schlüsseln
+	\item Bestandteile: Certification Authority (Verwalten und Ausstellen der Zertifikate), Registration Authority (Vorgelagerte Instanz zur Prüfung der Antragstellenden), Validation Authority (Prüfung von Zertifikaten, OCSP-Protokoll)
+	\item Zur Signierung durch die CA: Signieren mit dem privaten Schlüssel
+	\item Senden einer Nachricht: Signieren mit privatem Schlüssel; Senden der Nachricht mit Zertifikat im Anhang; Prüfen der Signatur mit öffentlichem Schlüssel aus dem Zertifikat
+	\item Eine weltweite CA würde nicht skalieren, daher Root CAs mit Intermediate CAs als Zwischenstellen
+	\item Widerruf von Zertifikaten über Certificate Revocation Lists (CRL)
+\end{itemize}
+
+\subsubsection{Kerberos}
+\begin{itemize}
+	\item Zentralisierung durch Key Distribution Center (KDC) mit SSO. Mögliche Nachteile: Single Point of Failure, Leistungsengpass
+	\item Entwickelt im MIT (Athena-Projekt) und dort seit 1986 im Einsatz
+	\item Verwendung von Tickets (sowohl benutzer- als auch serverbezogen)
+	\item Zweistufiges Protokoll: Client kommuniziert nur selten mit dem KDC, Passwort wird nur selten genutzt
+	\item Interrealm-Authentifizierung möglich
+\end{itemize}
+
+
+\subsection{Grundlagen der Zugangs- und Zugriffskontrolle}
+
+\subsubsection{Digitale Identität am Beispiel des nPA}
+\begin{itemize}
+	\item Spezielle Funktionen: Fingerabdruck, eID (Internet Ausweis), Digitale Unterschrift
+	\item Datensicherheit: Übertragung nur bei berechtigten Diensten (Zertifikat), Übermittlung nur nach PIN-Eingabe, verschlüsselte Übertragung, Karte muss auf dem Leser liegen
+	\item Wettbewerb: Bereits eingeführte Verfahren (z.B. Near-Field-Communication), exisitierende Dienste, eventuell ungeeignet für Smartphones
+\end{itemize}
+
+\subsubsection{Möglichkeiten zur Authentifikation}
+\begin{itemize}
+	\item Wissensbasiert: PIN, Passwörter, Challenge-Response
+	\item Biometrie: Fingerabdruck, Iris, Unterschrift, Tippverhalten
+	\item Besitzbasiert: Ausweis, Magnetkarte, Zertifikat
+	\item Mehr-Faktor-Authentifikation: Kombinationen daraus
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item Zugangskontrolle ermöglicht Identifikation und Authentifikation
+	\item Zugriffskontrolle als Basis für autorisierten Zugriff auf Ressourcen
+	\item Aber: Der Faktor Mensch...
+\end{itemize}
+
+
+\section{Zugriffskontrolle}
+
+\section{IDM1 - Provisioning}
+
+\section{IDM2 - Föderatives IAM}
+
+\section{Business Continuity}
+
+\section{Secure Data Outsourcing}
+
+\section{Secure Data Sharing}
+
+\section{Anonymität}
+
+\section{Online Social Networks}
