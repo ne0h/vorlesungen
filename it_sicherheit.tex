@@ -712,11 +712,286 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \end{itemize}
 
 
+
 \section{Zugriffskontrolle}
 
-\section{IDM1 - Provisioning}
+\subsection{Allgemeines}
+\begin{itemize}
+	\item Zugriffskontrollmatrix: Zuordnung von Dateien und Benutzern mit Berechtigungen. Problem: Meist nur dünn besetzt
+	\item Capability Lists: Liste mit Berechtigungen pro Person. Besser als Zugriffskontrollmatrix, jedoch nur Subjektbezogene Sicht (Bestimmung aller Berechtigungen pro Datei aufwendig)
+	\item Access Control Lists: Wie Capability Lists, nur aus Dateisicht. Meist in Betriebssystemen verwendet
+\end{itemize}
+
+
+\subsection{Zugriffskontrollstrategien}
+\begin{itemize}
+	\item \textbf{Discretionary Access Control (DAC)}
+	\begin{itemize}
+		\item Benutzerbestimmbare Zugriffskontrolle
+		\item Berechtigungen für Ressourcen werden vom Eigentümer festgelegt
+		\item Problem: Kontrolle von Informationsflüssen
+	\end{itemize}
+	\item \textbf{Mandantory Access Control (MAC)}
+	\begin{itemize}
+		\item Systembedingte Zugriffskontrolle
+		\item Vergabe von Berechtigungen erfolgt regelbasiert durch systemweite Mechanismen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{MAC-Modelle}
+\begin{itemize}
+	\item \textbf{Bell-LaPadula}
+	\begin{itemize}
+		\item Einteilung der Entitäten und Ressourcen in Sicherheitsklassen
+		\item Informationsfluss zwischen den Sicherheitsklassen ist reglementiert
+		\item Einsatz bspw. beim Militär
+	\end{itemize}
+	\item \textbf{Chinese-Wall}
+	\begin{itemize}
+		\item Vermeidung des Transfers von Insiderwissen in Banken- und Börsentransaktionen
+		\item Einführung von Interessenskonfliktklassen
+		\item Immer nut Zugriff auf Ressourcen einer einzigen Partei
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Zugriffskontrollmodelle}
+
+\subsubsection{Role Based Access Control (RBAC)}
+\begin{itemize}
+	\item Zuordnung von Rollen auf Personen
+	\item Dreistufiges Modell: Benutzer $\rightarrow$ Rollen $\rightarrow$ Gruppen für erhöhte Flexibilität bei großen Netzwerken
+	\item Abbildung der Organisationsstruktur auf die Geschäftsprozesse möglich
+	\item Herausforderungen: Entwicklung einer guten unternehmensspezifischen Umsetzung und Automatisierung der Rollenzuweisung
+\end{itemize}
+
+\subsubsection{Attribute Based Access Control (ABAC)}
+\begin{itemize}
+	\item Attribute als Grundlage der Zugriffskontrolle
+	\item Auswertung der Attribute zur Laufzeit für Autorisationsentscheidung
+	\item Flexibel, allerdings übergreifender Autausch personenbezogener Daten (Datenschutz)
+\end{itemize}
+
+\subsubsection{Aktuelle Forschung Privacy-aware RBAC}
+\begin{itemize}
+	\item Erweitert RBAC um Datenschutzbelange
+	\item Vereinigung von \textit{Hierarchical P-RBAC} und \textit{Conditional P-RBAC} zu \textit{Universal P-RBAC}
+\end{itemize}
+
+
+\subsection{eXtensible Access Control Markup Language (XACML)}
+\begin{itemize}
+	\item Initiative zur Standardisierung von Zugriffskontroll- und Autorisierungssystemen (OASIS)
+	\item Dedizierte Sprache zur Spezifikation von Zugangskontrollregeln in XML
+	\item Soll in möglichst vielen Anwendungsumgebungen eingesetzt werden können
+\end{itemize}
+
+\subsubsection{Wichtige Komponenten}
+\begin{itemize}
+	\item Policy Enforcement Point (PEP): Führt Zugriffskontrolle durch
+	\item Policy Decision Point (PDP): Evaluiert die anwendbaren Policies und fällt Zugriffsentscheidung
+	\item Policy Administration Point (PAP): Erstellt die Policies
+	\item Policy Information Point (PIP): Quelle für Attributwerte
+\end{itemize}
+
+
+
+\section{IDM1 - Organisationsinternes Identitäts- und Zugriffsmanagement}
+Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Funktionen effizient verwaltet werden?
+
+\subsection{Identitätsspeicher}
+\begin{itemize}
+	\item Vorhalten digitaler Identitäten/Nutzerkonten
+	\item Beispiele: HR-Systeme, Datenbanken, Verzeichnisdienste
+	\item Anfragen basieren auf Eigenschaften (z.B. (L)LDAP)
+	\item Struktur Verzeichnisdienst: Hierarchisch
+\end{itemize}
+
+
+\subsection{Organisationsinterne Integration}
+
+\subsubsection{Grundlegende Fragestellungen}
+\begin{itemize}
+	\item Identifikation der Datenquellen
+	\item Datenautorität: Wem gehören die Daten?
+	\item Datenaggregation: Wie werden die einer digitalen Identität zugehörigen Daten erkannt?
+	\item Datenaktualität: Wie erfolgt der Abgleich?
+	\item Datenkonsument: Wer benötigt welche Daten?
+	\item Datenschutz
+\end{itemize}
+
+\subsubsection{Bewertung zentraler Verzeichnisdienst}
+\begin{itemize}
+	\item Vorteile: Keine {Redundanz, komplexe Synchronisation, Inkosistenz}, Konzentration der Sicherheitsmaßnahmen an einer Stelle
+	\item Nachteile: Legacy Systeme, Verlust der Autarkie, Single Point of Failure, Aggregation aller Benutzerdaten an einer Stelle (Angriffsziel)
+\end{itemize}
+
+\subsubsection{Virtual Directory}
+\begin{itemize}
+	\item Middleware zur dynamischen Aggregation verteilter Identitätsdaten
+	\item Vorteile: Keine Redundanz, Nutzung lokaler Authentifikationsmechanismen (Pass-through Authentication)
+	\item Nachteile: Verfügbarkeit zur Laufzeit nicht garantiert, keine Synchronisationsfunktionalität
+\end{itemize}
+
+\subsubsection{Meta Directory}
+\begin{itemize}
+	\item Synchronisation verteilter Identitätsdaten mit aggregiertem Verzeichnisdienst (vorgeschaltet)
+	\item Vorteile: Sehr gute Suchperformance, Nachverfolgbarkeit von Datenflüssen
+	\item Nachteile: Synchronisationsverzögerungen, zusätzliches, zentrales Berechtigungsmanagement, alle Daten zentral $\rightarrow$ Datenschutz?
+\end{itemize}
+
+\subsubsection{Provisioning System}
+\begin{itemize}
+	\item Anlegen, Pflege (Synchronisation), Entfernen verteilter Identitätsdaten
+	\item Synchronisation verschiedener Attributwerte aus angebundenen Ressourcen nach vorgegebenen Regeln
+	\item Integriertes Passwort-Management
+	\item Vorteile: Self Service, NAchverfolgbarkeit von Datenflüssen
+	\item Nachteile: Keine zentrale, aggregierte Sicht
+\end{itemize}
+
+
 
 \section{IDM2 - Föderatives IAM}
+
+\subsection{Domänen-übergreifendes Identitäts- und Zugriffsmanagement}
+
+\subsubsection{Einordnen Authentifikations- und Autorisierungsinfrastruktur (AAI)}
+\begin{itemize}
+	\item Komplexitätsreduktion (z.B. SSO)
+	\item Domänenübergreifender Autausch von Identitätsdaten
+	\item Nur ein Login für alle Dienste und Ressourcen benötigt
+\end{itemize}
+
+\subsubsection{Organisationsübergreifende AAI}
+\begin{itemize}
+	\item Voraussetzungen: Vertrauensbeziehungen zwischen den Teilnehmern, Zusammenschluss zu Föderationen
+	\item Standardisierung durch Security Assertion Markup Language (SAML)
+\end{itemize}
+
+
+\subsection{Ausgewählte Technologien}
+
+\subsubsection{Kerberos V4: Interrealm-Authentifikation}
+\begin{itemize}
+	\item Realm ist "`Herrschaftsbereich"', verlangt Namensschema zur Unterscheidung der Realms
+	\item Idee: KDC von Realmm B agiert wie eine Ressource in Realm A $\rightarrow$ gemeinsames Geheimnis mit KDC von Realm A
+\end{itemize}
+
+\subsubsection{RADIUS}
+\begin{itemize}
+	\item Problemstellung: Vielzahl von Zugangspunkten, an jedem muss authentifiziert werden
+	\item RADIUS Server des Netwaro Access Servers (NAS) dient als Proxy zum RADIUS Server der Heimatorganisation (z.B. Eduroam)
+	\item Client und Server besitzen ein vorab vereinbartes, gemeinsames Geheimnis
+	\item RADIUS verwendet keine Nachrichtenverschlüsselung
+\end{itemize}
+
+\subsubsection{SAML}
+\begin{itemize}
+	\item Austausch von Authentifizierungs- und Autorisierungsinformationen über institutionelle Grenzen hinweg
+	\item XML basiert, OASIS Standard
+	\item Bietet Profile für einige Use-cases, ist aber zusäzlich erweiterbar
+	\item \textbf{Definitionen}
+	\begin{itemize}
+		\item Principal/Subjet: Subjekt, das Zugriff auf geschützte Ressource erhalten will
+		\item Asserting Party/Identify Provider: Bietet Authentifikation von Principals
+		\item Relying Party/Service Provider: Bietet Zugriff auf geschützte Ressourcen, benötigt identitätsbezogene Informationen für Autorisierungsentscheidung
+	\end{itemize}
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Profiles: Definiert einen Use-case auf Basis von \textit{Bindings}, \textit{Protocols} und \textit{Assertions}
+		\item Binding: Bildet SAML Protokoll auf Nachrichten- und Kommunikationsprotokolle ab
+		\item Protocols: Protokolle zum Autausch von Assertions
+		\item Assertions: Authentifizierungsinformationen, Attribute und Autorisierungsmerkmale
+	\end{itemize}
+	\item Beispielprofile: Web Browser SSO Profile, ECP Profile, Single Logout Profile
+\end{itemize}
+
+\subsubsection{SAML in der Praxis: Shibboleth}
+\begin{itemize}
+	\item OpenSource (Apache License)
+	\item Attribute Based Access Control
+	\item Ermöglicht föderatives Identitätsmanagement
+	\item Einstz beispielsweise bei Elsevier, Asknet, Gigamove
+	\item \textbf{Ablauf am Beispiel Gigamove}
+	\begin{enumerate}
+		\item Aufruf der Gigamove Webseite der RWTH Aachen
+		\item Weiterleitung zum DFN, Heimateinrichtung auswählen
+		\item Weitelreitung zum Shibboleth Provider des KIT
+		\item Weiterleitung "`zurück"' zur Gigamove-Webseite der RWTH Aachen
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Zugang über einen SSH-Server}
+Es existieren drei Varianten.
+\begin{enumerate}
+	\item \textbf{Variabte 1 - Enhanced Proxy}
+	\begin{itemize}
+		\item Delegation der Autorisierungsentscheidung über PAM
+		\item Vorteil: Kein spezieller SSH-Client nötig
+		\item Nachteil: Passwird wird im Klartext an dern Service Provider übertragen
+	\end{itemize}
+	\item \textbf{Variabte 2 - Enhanced Client}
+	\begin{itemize}
+		\item PAM dient lediglich als Schnittstelle zum SAML-SP
+		\item SSH-Client fungiert als Enhanced Client
+		\item Vorteil: Service Provider erhält keine Kenntnis des Passworts
+		\item Nachteil: Modifizierter SSH-Client nötig
+	\end{itemize}
+	\item \textbf{Variabte 3 - Public Key based Authentication}
+	\begin{itemize}
+		\item Authentifizierung gegen Service Provider
+		\item Autorisierung basiert auf aktuellen Attributen des Identity Providers
+		\item PAM beauftragt SAML-SP eine AttributeQuery durchzuführen
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Metadatenverwaltung der Föderation}
+\begin{itemize}
+	\item Es muss sichergestellt werden, dass alle Föderationsmitglieder sich gegenseitig authentifizieren können $\rightarrow$ Metadaten zur Definition der Föderation notwendig
+	\item Metadaten können zentral in einem Dokument verwaltet werden, enthalten Zertifikate der SPs und IdPs und enthalten Adressen der unterstützten Kommunikationsschnittstellen der Teilnehmer
+\end{itemize}
+
+
+\subsection{Föderatives Identitätsmanagement im Web 2.0}
+
+\subsubsection{OAuth 1.0}
+\begin{itemize}
+	\item Anwendungsfall: Nutzer möchte einem Dienst Zugriff auf eine Ressource geben, die bei einem anderen Dienst liegt
+	\item \textbf{Ablauf}
+	\begin{enumerate}
+		\item TODO!
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{OAUTH 2.0}
+\begin{itemize}
+	\item Weiterentwicklung von OAuth 1.0, allerdings nicht rückwärtskompatibel
+	\item Fokus auf Komplexitätsreduktion für den Client(-entwickler)
+\end{itemize}
+
+\subsubsection{OpenID}
+\begin{itemize}
+	\item \textbf{Ablauf}
+	\begin{enumerate}
+		\item Nutzer gibt seine OpenID-URL an
+		\item SP lädt diese URL herunter, darin enthalten: Verweis auf den IdP
+		\item Optional: RP handelt mit IdP (per Diffie-Hellman) einen gemeinsamen Schlüssel aus
+		\item SP schickt einen HTTP-Redirect auf den IdP an den Nutzer
+		\item Nutzer authentifiziert sich beim IdP
+		\item IdP schickt HTTP-Redirect an den SP mit Aussage über die Authentifizierung
+		\item SP prüft die Aussage. Falls DH-Schlüssel vorhanden hiermit, anderenfalls durch Nachfrage
+	\end{enumerate}
+	\item Bwertung: Massive Verbreitung, allerdings keine Verschlüsselung gefordert, Nutzer kann eine beliebige Id angeben, die gemäß Verfahren heruntergeladen werden muss
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item Föderatives Identitätsmanagement erlaubt einen organisationsübergreifenden Austausch von Identitätsinformationen
+	\item Vorteile: Aktualität, SSO, viele Registrierungsprozesse entfallen
+	\item Allerdings organisationsübergreifendes Vertrauen notwendig
+\end{itemize}
+
 
 \section{Business Continuity}
 
