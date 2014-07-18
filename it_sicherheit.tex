@@ -993,12 +993,315 @@ Es existieren drei Varianten.
 \end{itemize}
 
 
-\section{Business Continuity}
+
+\section{Business Continuity Management}
+
+\subsection{Motivation}
+\begin{itemize}
+	\item Unternehmen sind abhängig von Einrichtungen Rechnern, Diensten, Personal, Daten, Kommunikationsverbindungen, etc.
+	\item Was passiert, wenn diese Ressourcen im Krisenfall ausfallen?
+\end{itemize}
+
+
+\subsection{Was ist Business Continuity Management}
+"`Ganzheitlicher Manegementprozess zur Fortführung der kritischen Geschäftsprozesse bei Eintritt eines Notfalls."'\footnote{BSI-Standard 100-4, S. 100}
+
+\subsubsection{Notfallmanagement nach BSI 100-4}
+\begin{enumerate}
+	\item Initiierung durch das Management mit Zieldefinition und Organisation der Verantwortlichkeiten und des Krisenstabs
+	\item Konzeptions des Notfallvorsorgekonzepts mit \textit{Business Impact Analyse} (Prioriseirung der Geschäftsprozess für den Krisenfalls), Risikoanalyse und der Erstellung eines Notfallhandbuchs
+	\item Umsetzung des Notfallvorsorgekonzepts: Kosten- und Aufwandschützung, Umsetzung der Maßnahmen, Sensibilisierung und Schulung
+	\item \textbf{Notfallbewältigung}
+	\begin{enumerate}
+		\item Meldung bei zentraler Meldestelle
+		\item Eskalation durch Krisenstabsleiter. Störung/Notfall/Krise?
+		\item Sofortmaßnahmen einleiten
+		\item Notfall bewältigen: Do-Plan-Check-Act
+	\end{enumerate}
+	\item Tests und Übungen: Tests der wesentlichen Bestandteile, Angemessen beachten
+	\item Aufrechterhaltung und Verbesserungen: Regelmäßige Bewertung des Notfallmanagements
+\end{enumerate}
+Iterativer Prozess, daher im Anschluss ein Sprung zu (2).
+
+\subsubsection{Business Impact Analyse}
+\begin{enumerate}
+	\item Auswahl einzubeziehender Organisationseinheiten und Prozesse
+	\item Schadensanalyse
+	\item Festlegung Wideranlaufparameter
+	\item Priorisierung der Geschäftsprozesse
+	\item Abschätzung des Ressourcenbedarfs
+	\item Priorisierung der Ressourcen
+\end{enumerate}
+
+\subsubsection{Notfallhandbuch}
+Das Notfallhandbuch besteht üblicherweise aus folgenden Teilen:
+\begin{itemize}
+	\item Sofortmaßnahmen
+	\item Krisenstabsleitfaden
+	\item Krisenkommunikationsplan
+	\item Geschäftsfortführungsplan
+	\item Wiederanlaufplan
+\end{itemize}
+
+
 
 \section{Secure Data Outsourcing}
 
+\subsubsection{Generelle Vorteile}
+\begin{itemize}
+	\item Kosten sparen
+	\item Höhere Verfügbarkeit/Robustheit
+	\item Vereinfachte Administration
+	\item Nachteil: Mangelnde Datenvertraulichkeit. Naheliegend: Verschlüsselung, lässt allerdings dann auch keine Datenverarbeitung vor Ort zu
+\end{itemize}
+
+
+\subsection{Existierende Ansätze}
+
+\subsubsection{Cryptografische Maßnahmen}
+\begin{itemize}
+	\item Deterministische Verschlüsselung: Ermittlung einzelner Chiffrate ohne Schlüssel schwierig, allerdings sind Chiffrate unterscheidbar
+	\item Probabilistische Verschlüsselung: Chiffrate weder lesebar noch unterscheidbar. Jedoch keine Anfragen möglich
+	\item Homomorphe Verschlüsselung: $Enc(k_1) \oplus Enc(k_2) = Enc(k_1 \otimes k_2)$. Ermöglicht Aggregation von Attributwerten, allerdings hoher Rechenaufwand und keine SELECT-Anfragen möglich
+\end{itemize}
+
+\subsubsection{Data Partitioning}
+\begin{itemize}
+	\item Aufteilung der Daten auf verschiedene Storage Provider $\rightarrow$ Unkenntlichkeit von Zusammenhängen zwischen Attributen
+	\item Nachteil: Mehrere Storage Provider notwendig; ggf. zu wenige vorhanden
+\end{itemize}
+
+\subsubsection{k-Anonymisierung}
+Jede mögliche Belegung eines Identifikators muss entweder nicht oder mindestens k-mal im Datensetz vorkommen. Operationen zur Sicherstellung: Suppresion (*), Generalization (M*) oder Einfügen falsche Einträge.
+
+
+\subsection{Aktuelle Forschung: Securus}
+Anwendungsfall: Datenbank mit Patientendaten.
+
+\subsubsection{Von Securus adressierte Schutzziele}
+\begin{itemize}
+	\item Vertraulichkeit: Sicherstellung der Vertraulichkeit von Daten, die bei externen Providern abgelegt werden
+	\item Datenschutz: Datenschutzrechtliche Vorgeben werden wahrgenommen und erfüllt
+	\item Verfügbarkeit: Auslagern von Daten ermöglicht eine Steigerung der Verfügbarkeit der Daten
+\end{itemize}
+
+\subsubsection{Workflow}
+\begin{enumerate}
+	\item Benutzerseite: Definition des \textit{Policy Profile} über \textit{Securus Latin} (domänenspezifische Sprache)
+	\item Securus: Tranformiere \textit{Policy Profile} in den \textit{Mediator}
+	\item Mediator: \textit{Mediator} übernimmt die Verwaltung der Storage Provider und leitet alle Anfragen weiter
+\end{enumerate}
+
+\subsubsection{Access Policies} 
+Access Policies spezifizieren eine Menge von Anfragen, die effezient auf den Daten ausführbar sein sollen.
+
+\subsubsection{Confidential Constraits (CCs)}
+Eine Untermenge an Attributen, deren Kombination als vertraulich gilt.
+
+\subsubsection{Inference Constraits (ICs)}
+Es wird angenommen, dass Angreifer kein Wissen us deterministischen Chiffraten des entsprechenden Attributs gewinnen können.
+
+\subsubsection{Securus-PT: Transformation des Policy Profiles}
+\begin{enumerate}
+	\item Verschlüssele jeden Wert der \textit{data table}. Einträge können per ID abgerufen werden, es können jedoch keine Anfragen ausgeführt werden
+	\item Erstelle \textit{index table} für jede Access Policy. Ermöglicht effiziente Ausführung von entsprechenden Anfragen
+	\item \textbf{Substitutionsklassen}
+	\begin{itemize}
+		\item Idee: Klassifikation der Sicherheitsmechanismen anhand der Art, wie Attributwerte beim Storage Provider vorliegen
+		\item Confidential Constraits und Access Policies schränken die Möglichkeiten ein, Substitutionsklassen zu wählen $\rightarrow$ Lösung als Integer Linear Programming von einem ILP-Server
+		\item Beispiel: Mitarbeiterdatenbank, verteilt auf zwei Storage Provider. Name, DoB und Salary
+		\begin{enumerate}
+			\item Verschlüssele jeden Wert der \textit{data table}
+			\item Erstelle \textit{index table} für jede Access Policy: Effiziente Abfragen möglich. Alle \textit{index tables} werden bei allen Storage Providern angelegt, bleiben allerdings ggf. leer
+			\item Fülle \textit{index tables}, so dass alle ICs und CCs erfüllt sind mit (un-)verschlüsselten Werten.
+		\end{enumerate}
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Zusammenfassung Securus}
+\begin{itemize}
+	\item \textbf{Konzept}
+	\begin{itemize}
+		\item Herausforderung für sicheres Data Outsourcing: Matching von Datenvertraulichkeits- und Datenanfragbarkeitsanforderungen
+		\item Securus automatisiert diesen Prozess
+	\end{itemize}
+	\item \textbf{Benutzung}
+	\begin{enumerate}
+		\item Definition von Access Policies und Confidential Constraits mit Securus-Latin
+		\item Nutzung von generierten Mediatoren zur Ablage und Abfrage von Daten
+	\end{enumerate}
+	\item \textbf{Funktionsweise}
+	\begin{itemize}
+		\item Securus transformiert Policies in ein ILP-Problem
+		\item Die eingesetzten Sicherheitsmechanismen werden dann entsprechend gewählt
+	\end{itemize}
+\end{itemize}
+
+
+
 \section{Secure Data Sharing}
 
-\section{Anonymität}
+\subsection{Problemstellung}
+\begin{itemize}
+	\item Vorteile: Verfügbarkeit, Bandbreite, vereinfachte Administration
+	\item Im Gegensatz zu \textit{Data Outsourcing} ist Teilen der Daten explizite Anforderung
+	\item Nachteil: Vertraulichkeit und Integrität der Daten gefährdet
+\end{itemize}
 
-\section{Online Social Networks}
+\subsubsection{Verschlüsselung der Daten}
+\begin{itemize}
+	\item Naiver Ansatz: Daten symmetrisch verschlüsseln und Datenschlüssel direkt an andere weitergeben. Nachteile: Entzug von Zugriffsrechten aufwendig, sicherer Kanal zur Schlüsselweitergabe nötig
+	\item Besser: Autausch neuer Schlüssel durch Nutzung bereits ausgetauschter Schlüssel. Initialer Autausch von (a-)symmetrischen Schlüsseln notwendig
+\end{itemize}
+
+
+\subsection{Shared Cryptographic File Systems}
+\begin{itemize}
+	\item Vertraulicher Datenaustausch zwischen Benutzern über externe Speicheranbieter mit Ende-zu-Ende-Sicherheit
+	\item Zusätzlich zur Sicherhung der Integrität: Signaturen und/oder MACs
+	\item Initialer Autausch nicht Teil des SCFS
+\end{itemize}
+
+\subsubsection{SiRiUS}
+\begin{itemize}
+	\item Stellt Vertraulichkeit und Integrität sicher: Nutzerdaten werden vor Ablage auf dem Dateiserver verschlüsselt und signiert
+	\item Ein Besitzer für jeden Verzeichnisbaum
+	\item Overlay zu bestehenden Dateisystemen
+	\item Sicherung der Metadaten: Besitzer der Datei signiert jede Änderung mit seinem privaten Schlüssel. Problem: Freshness nicht gewährleistet (rollback-Angriff)
+	\item Beim Entzug von Leserechten: Sofortige Neuverschlüsselung
+\end{itemize}
+
+\subsubsection{Cepheus}
+\begin{itemize}
+	\item Stellt ebendalls Vertraulichkeit und Integrität der Nutzerdaten sicher
+	\item Führt zusätzliche Schlüssel für Benutzergruppen ein
+	\item Keine Unterscheidung zwischen Lese- und Schreibrechte
+	\item Sicherung der Integrität und Freshness der Metadaten über \textit{Merkle Hash Tree}
+	\item Beim Entzug von Leseberechtigung: Lazy Revocation (Problem: Entzug erst nach Neuschreiben der Daten wirksam)
+\end{itemize}
+
+\subsubsection{Cryptree}
+\begin{itemize}
+	\item Ordnet jeder Datei/Verzeichnis einen Satz Schlüsseln zu
+	\item Eigener \textit{Write Cryptree} für das Erteilen von Schreibrechten, Dateien werden zusätzlich signiert
+	\item Setzt ebenfalls Lazy Revocation ein
+\end{itemize}
+
+\subsubsection{Shared Cryptographic File Systems: Risiko}
+Tradeoff zwischen Verminderung des Risikos gegenüber Kosten/Ressourcenbedarf.
+
+
+\subsection{Abstrakte Repräsentation: Schlüsselgraph}
+\begin{itemize}
+	\item Benutzer und die deren bekannten Schlüssel bilden einen Schlüsselgraphen
+	\item Erweiterung: Verschlüsselte Ressourcen
+	\item Systeme für Secure Datasharing erzeugen implizit einen Schlüsselgraphen
+	\item Ziel: Veringere Anzahl der Kanten
+	\item Simpler Ansatz, abgeleitet aus Zugriffskontrollmatrix: Ein Schlüssel pro Benutzer und pro Ressource
+	\item Mögliche Optimierung: Capability List, benötigt je nach Szenario weniger Kanten $\rightarrow$ welcher Ansatz ressourcenschonender ist, hängt vom Szenario ab
+\end{itemize}
+
+
+\subsection{Aktuelle Forschung: Abschätzen des Ressourcenbedarfs über Änderungen des Schlüsselgraphen}
+\begin{itemize}
+	\item Ziel: Abhängigkeit des Ressourcenbedarfs von konkretem Szenario und konkretem System für Secure Data Sharing finden
+	\item Vorgehen: Modellierung des Systems als Regelsatz, der Änderungen am Schlüsselgraphen vornimmt, dann Ableitung des Ressourcenbedarfs aus den Änderungen am Schlüsselgraphen $\rightarrow$ Eingabe für Simulation: Workloads als Abfolge von Ereignissen (Erfassung realistischer Workloads schwierig)
+\end{itemize}
+
+
+
+\section{Anonymität}
+\begin{itemize}
+	\item ... Anonymität "`ersetzen"'
+	\item ... Datenschutz ermöglichen
+	\item ... Voraussetzung für ein technisches System sein
+	\item Schützt vor Repressalien, bietet aber auch Missbrauchspotential
+\end{itemize}
+
+\subsubsection{Definition nach BSI:}
+"`Die Identität einer oder mehrerer an einem anonymen Vorgang beteilitger Instanzen ist nicht bestimmbar, weil sie entweder
+\begin{itemize}
+	\item den anderen beteiligten Instanzen nicht bekannt ist (Nichtbewusstsein),
+	\item gegenüber den anderen beteiligten Instanzen nicht in Erscheinung tritt (Nichtgenanntsein) \\ oder
+	\item innerhalb des anonymen Vorgangs ohne erkannbaren Namen agiert (Namenlosigkeit)."'\footnote{\url{https://www.bsi.bund.de/DE/Publikationen/Studien/anonym/wasistanonymitaet.html}}
+\end{itemize}
+
+Problem: Identität mit hinreichend großem Aufwand eben doch bestimmbar, besonders im IT-Umfeld.
+
+\subsubsection{Anwendungsfelder}
+\begin{itemize}
+	\item Anonymisierung von Daten
+	\item Anonyme Kommunikation (Schwerpunkt in dieser Vorlesung)
+\end{itemize}
+
+\subsubsection{Pseudonymisierung}
+\begin{itemize}
+	\item Erlaubt eine digitale Identität zu verwenden ohne seine reale Identität preiszugeben. Enscheidung, welche Informationen er über sich herausgiebt, liegt beim Subjekt selbst
+\end{itemize}
+
+\subsubsection{Anynome Kommunikationsstufen}
+Eigenschaften anonymer Kommunikation: Sender- und Empfängeranonymität.
+\begin{enumerate}
+	\item Absolute anonymity: Beobachter kann nicht feststellen, ob eine Nachricht verschickt wurde.
+	\item Beyond suspicion: Beobachter kann nicht feststellen, von wem die Nachricht verschickt wurde
+	\item Probale innocence: Für den Beobachter ist es wahrscheinlicher, dass die Nachricht nicht vom Sender kommt, als dass die von ihm kommt
+	\item Possible innocence: Für Beobachter exisitiert Wahrscheinlichkeit, dass die Nachricht nicht vom Sender kommt
+	\item Exposed: Beobahter kann Sender identifizieren,aber gegenüber Dritten nicht beweisen, dass der Sender sie wirklich gesendt hat
+	\item Povable exposed: Verbindlichkeit ist gegeben
+\end{enumerate}
+
+\subsubsection{Anonymität im Internet}
+\begin{itemize}
+	\item Szenario: Anonymes Senden von Nachrichten über (vertrauenswürdigen) Proxy
+	\item Erweiterung: Einführen mehrerer Proxies in Reihe (Mix-Kaskaden). Problem: Mögliche Kollaboration zwischen Mixes $\rightarrow$ Mixes dynamisch wählen
+	\item \textbf{Onion Routing}
+	\begin{itemize}
+		\item Dynamische Wahl der Mixes, Benutzer können eigenen Endknoten als Mix anbieten und mischen eigenen Traffic eigenen Traffic und den anderer Knoten.
+		\item Mögliches Problem, Sybil-Attacke: Beobachten von Kommunikationsmuster im Netz
+		\item Implementierungen: Tor, Freenet, I2P
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{Peer-to-Peer und Online Social Networks}
+
+\subsection{Methodig für empirische OSN-Studien}
+\begin{itemize}
+	\item Datenschutzkonforme und Privatsphäre-wahrende Analyse: Analyse vollständig zur Laufzeit des Analyse-Systems, ledigliches Speichern statistischer (anonymisierter) Daten
+	\item Breitensuche: Analysiere mind. ein Profil und davon ausgehend alle Freunde, etc.
+	\item Tiefensuche: Analysiere ein Seed-Profil, dann einen Freund, dann einen Freund des Freunde, etc.
+\end{itemize}
+
+
+\subsection{Online Social Networks}
+\begin{itemize}
+	\item Attribut-Verfügbarkeit. Mögliche Gefahr: Wenn diverse OSN-Profile eines Nutzer in Verbindung gebracht werden, kann ein umfassendes digitales Abbild der Person erstellt werden (Freundeslisten zu ca. 50\% öffentlich verfübar)
+	\item Profil-Verknüpfbarkeit (Linkability)
+	\item \textbf{Attribut-Vorhersagbarkeit (Attribute Prediction)}
+	\begin{itemize}
+		\item Freundeslisten in ca. 50\% der Profile öffentlich
+		\item >78\% teilen mindestens ein Attribut öffentlich, dass sie auch verstecken könnten
+		\item Hohe Genauigkeit bei Attribut-Vorhersagen
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item \textbf{Attributverfügbarkeit}
+	\begin{itemize}
+		\item Viele Attribute noch immer öffentlich verfügbar
+		\item Alt-Profile oft noch online
+		\item Ca. die Hälfte der Freundeslisten öffentlich
+	\end{itemize}
+	\item \textbf{Quantifizierte Risiken}
+	\begin{itemize}
+		\item Linkability: Vier überlappende Freunde oft ausreichend für Linking
+		\item \textbf{Attribute Prediction}
+		\begin{itemize}
+			\item Location-Attribute und Alter kann predeziert werden (mit Ungenauigkeit)
+			\item Andere Attribute schwerer zu prezidieren, wenn kein komplexer Algorithmus oder zusätzliche Informationen hinzugezogen werden
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
