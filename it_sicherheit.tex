@@ -198,7 +198,7 @@ Die Spirale besteht aus den folgenden Teilschritten, die jeweils immer wieder ab
 \subsection{Internationale Umsetzung: ISO 2700x}
 
 \begin{itemize}
-	\item Ziel: Normierung des IT-Sicherheitsprozesses, Katalog von "`Best Practise"' - Vorschlägen, detaillierte Behandlung ausgewählter Problemfelder (z.B. Risikoanalyse), Grundlage für Zertifizierung
+	\item Ziel: Normierung des IT-Sicherheitsprozesses, Katalog von "`Best Practise"'-Vorschlägen, detaillierte Behandlung ausgewählter Problemfelder (z.B. Risikoanalyse), Grundlage für Zertifizierung
 	\item Aber: Kein Anspruch auf Vollständigkeit!
 \end{itemize}
 
@@ -450,7 +450,7 @@ Die Vorgehensweise orientiert sich an Plan-Do-Check-Act.
 	\item Definiert in ISO 27005
 \end{itemize}
 
-\subsubsection{Der IT-Sicherheitsrisikoprozess}
+\subsubsection{ISO 27005: Der IT-Sicherheitsrisikoprozess}
 \begin{enumerate}
 	\item \textbf{Festlegung der Rahmenbedingungen}
 	\begin{itemize}
@@ -550,7 +550,7 @@ Trotz initial gesteigertem Aufwand,
 
 
 
-\section{Krpytografische Verfahren}
+\section{Kryptografische Verfahren}
 
 \subsection{Kryptografische Verfahren}
 Der Schutz sensibler Informationen in potentiell bösartigen Systemen ist nicht ohne weiteres gewährleistet.
@@ -584,7 +584,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \subsubsection{Digitale Signatur}
 \begin{itemize}
 	\item Digitale Signatur = "`elektronische Unterschrift"'
-	\item Reale Welt: Unterschriftverfahren zwar angreifbar, in der Praxis jedoch zumeist ausreichend (kaum zu erwartender Gewinn, Risiko einer Entdeckung hoch, harte Sanktionen und hoher zeitlicher Aufwand)
+	\item Reale Welt: Unterschriftverfahren zwar angreifbar, in der Praxis jedoch zumeist ausreichend sicher (kaum zu erwartender Gewinn, Risiko einer Entdeckung hoch, harte Sanktionen und hoher zeitlicher Aufwand)
 	\item Digitale Welt: Risiko und zeitlicher Aufwand sehr gering $\rightarrow$ Digitale Signaturen müssen sehr viel sicherer sein als Unterschriften
 	\item Berechnung über asymmetrisches Schlüsselpaar
 \end{itemize}
@@ -618,7 +618,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 
 \subsubsection{Mutual Authentication (konzeptionell)}
 \begin{itemize}
-	\item Server schickt seinen Public Key; Client verschickt mit seinem Public Key verschlüsselten, generierten Session Key; Client schickt ID; Server schickt neugenrierte Zufallszahl R; Client signiert R und schickt Ergebnis
+	\item Server schickt seinen Public Key; Client verschickt mit seinem Public Key verschlüsselten, generierten Session Key; Client schickt Id; Server schickt neugenerierte Zufallszahl R; Client signiert R und schickt Ergebnis
 	\item Problem: Echtheitsprüfung der Public Keys
 	\item Angriffsmöglichkeiten: Abhören und Kryptoanalyse, MitM mit falschen Public Keys
 \end{itemize}
@@ -677,7 +677,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \subsubsection{Kerberos}
 \begin{itemize}
 	\item Zentralisierung durch Key Distribution Center (KDC) mit SSO. Mögliche Nachteile: Single Point of Failure, Leistungsengpass
-	\item Entwickelt im MIT (Athena-Projekt) und dort seit 1986 im Einsatz
+	\item Entwickelt am MIT (Athena-Projekt) und dort seit 1986 im Einsatz
 	\item Verwendung von Tickets (sowohl benutzer- als auch serverbezogen)
 	\item Zweistufiges Protokoll: Client kommuniziert nur selten mit dem KDC, Passwort wird nur selten genutzt
 	\item Interrealm-Authentifizierung möglich
@@ -767,7 +767,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \begin{itemize}
 	\item Attribute als Grundlage der Zugriffskontrolle
 	\item Auswertung der Attribute zur Laufzeit für Autorisationsentscheidung
-	\item Flexibel, allerdings übergreifender Autausch personenbezogener Daten (Datenschutz)
+	\item Flexibel, allerdings übergreifender Austausch personenbezogener Daten (Datenschutz)
 \end{itemize}
 
 \subsubsection{Aktuelle Forschung Privacy-aware RBAC}
@@ -914,7 +914,7 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 	\begin{enumerate}
 		\item Aufruf der Gigamove Webseite der RWTH Aachen
 		\item Weiterleitung zum DFN, Heimateinrichtung auswählen
-		\item Weitelreitung zum Shibboleth Provider des KIT
+		\item Weiterleitung zum Shibboleth Provider des KIT
 		\item Weiterleitung "`zurück"' zur Gigamove-Webseite der RWTH Aachen
 	\end{enumerate}
 \end{itemize}
@@ -926,7 +926,7 @@ Es existieren drei Varianten.
 	\begin{itemize}
 		\item Delegation der Autorisierungsentscheidung über PAM
 		\item Vorteil: Kein spezieller SSH-Client nötig
-		\item Nachteil: Passwird wird im Klartext an den Service Provider übertragen
+		\item Nachteil: Password wird im Klartext an den Service Provider übertragen
 	\end{itemize}
 	\item \textbf{Variabte 2 - Enhanced Client}
 	\begin{itemize}
@@ -961,7 +961,7 @@ Es existieren drei Varianten.
 	\end{enumerate}
 \end{itemize}
 
-\subsubsection{OAUTH 2.0}
+\subsubsection{OAuth 2.0}
 \begin{itemize}
 	\item Weiterentwicklung von OAuth 1.0, allerdings nicht rückwärtskompatibel
 	\item Fokus auf Komplexitätsreduktion für den Client(-entwickler)
@@ -1002,7 +1002,7 @@ Es existieren drei Varianten.
 
 
 \subsection{Was ist Business Continuity Management}
-"`Ganzheitlicher Manegementprozess zur Fortführung der kritischen Geschäftsprozesse bei Eintritt eines Notfalls."'\footnote{BSI-Standard 100-4, S. 100}
+"`Ganzheitlicher Managementprozess zur Fortführung der kritischen Geschäftsprozesse bei Eintritt eines Notfalls."'\footnote{BSI-Standard 100-4, S. 100}
 
 \subsubsection{Notfallmanagement nach BSI 100-4}
 \begin{enumerate}
@@ -1070,7 +1070,7 @@ Das Notfallhandbuch besteht üblicherweise aus folgenden Teilen:
 \end{itemize}
 
 \subsubsection{k-Anonymisierung}
-Jede mögliche Belegung eines Identifikators muss entweder nicht oder mindestens k-mal im Datensetz vorkommen. Operationen zur Sicherstellung: Suppresion (*), Generalization (M*) oder Einfügen falsche Einträge.
+Jede mögliche Belegung eines Identifikators muss entweder nicht oder mindestens k-mal im Datensatz vorkommen. Operationen zur Sicherstellung: Suppresion (*), Generalization (M*) oder Einfügen falsche Einträge.
 
 
 \subsection{Aktuelle Forschung: Securus}
@@ -1224,7 +1224,7 @@ Tradeoff zwischen Verminderung des Risikos gegenüber Kosten/Ressourcenbedarf.
 	\item innerhalb des anonymen Vorgangs ohne erkannbaren Namen agiert (Namenlosigkeit)."'\footnote{\url{https://www.bsi.bund.de/DE/Publikationen/Studien/anonym/wasistanonymitaet.html}}
 \end{itemize}
 
-Problem: Identität mit hinreichend großem Aufwand eben doch bestimmbar, besonders im IT-Umfeld.
+Problem: Identität mit hinreichend großem Aufwand eben doch bestimmbar, besonders im IT-Umfeld."''
 
 \subsubsection{Anwendungsfelder}
 \begin{itemize}
@@ -1242,7 +1242,7 @@ Eigenschaften anonymer Kommunikation: Sender- und Empfängeranonymität.
 \begin{enumerate}
 	\item Absolute anonymity: Beobachter kann nicht feststellen, ob eine Nachricht verschickt wurde.
 	\item Beyond suspicion: Beobachter kann nicht feststellen, von wem die Nachricht verschickt wurde
-	\item Probale innocence: Für den Beobachter ist es wahrscheinlicher, dass die Nachricht nicht vom Sender kommt, als dass die von ihm kommt
+	\item Probable innocence: Für den Beobachter ist es wahrscheinlicher, dass die Nachricht nicht vom Sender kommt, als dass die von ihm kommt
 	\item Possible innocence: Für Beobachter exisitiert Wahrscheinlichkeit, dass die Nachricht nicht vom Sender kommt
 	\item Exposed: Beobachter kann Sender identifizieren, aber gegenüber Dritten nicht beweisen, dass der Sender sie wirklich gesendt hat
 	\item Provably exposed: Verbindlichkeit ist gegeben
@@ -1264,7 +1264,7 @@ Eigenschaften anonymer Kommunikation: Sender- und Empfängeranonymität.
 
 \section{Peer-to-Peer und Online Social Networks}
 
-\subsection{Methodig für empirische OSN-Studien}
+\subsection{Methodik für empirische OSN-Studien}
 \begin{itemize}
 	\item Datenschutzkonforme und Privatsphäre-wahrende Analyse: Analyse vollständig zur Laufzeit des Analyse-Systems, ledigliches Speichern statistischer (anonymisierter) Daten
 	\item Breitensuche: Analysiere mind. ein Profil und davon ausgehend alle Freunde, etc.
