@@ -328,9 +328,18 @@ Die Effektivverzinsung (Yield to Maturity, YtM) errechnet sich aus der Diskontie
 \subsubsection{Plain Vanilla Zinsswaps}
 \begin{itemize}
 	\item Vereinbarung zweier Parteien, Zinszahlungen zu tauschen
-	\item Eine Partei zahlt Zinsen bezogen auf festen Zinssatz (Swapsatz) und festgelegten Nominalbetrag
-	\item Zweite Partei zahlt Zinsen bezogen auf variablen Zinssatz und denselben Nominalbetrag
+	\item Eine Partei zahlt Zinsen bezogen auf festen Zinssatz (Swapsatz) und festgelegten Nominalbetrag (Swapkäufer, Fix Payer)
+	\item Zweite Partei zahlt Zinsen bezogen auf variablen Zinssatz und denselben Nominalbetrag (Swapverkäufer, Fix Receiver)
 \end{itemize}
+
+\begin{tabularx}{\columnwidth}{l|X|X|X|c|l}
+						& \(t=0\) 	& \(t=1\)		& \(t=1\)			& \(\dots\) 	& \(t=T\) \\
+	\hline
+	Fix Payer zahlt 	& \(0\)		& \(s(0,T)\)	& \(s(0,T)\)		& \(\dots\)		& \(s(0,T)\) \\
+	Fix Receiver zahlt 	& \(0\)		& \(L(0)\)		& \(\tilde{L}(1)\)	& \(\dots\)		& \(\tilde{L}(T-1)\)
+\end{tabularx}
+
+Alle Änderungen innerhalb einer Periode wirken sich erst auf die folgende Periode aus.
 
 \subsubsection{Zusammenfassung}
 \begin{itemize}
@@ -340,6 +349,16 @@ Die Effektivverzinsung (Yield to Maturity, YtM) errechnet sich aus der Diskontie
 		\item Eine Anlageentscheidung aufgrund der internen Rendite ist wenig sinnvoll
 		\item Vielmehr ist zu prüfen, ob die Kuponanleihe relativ zur Zinsstrukturkurve fair bewertet ist
 	\end{itemize}
+\end{itemize}
+
+
+\subsection{Duration}
+Die Duration ist eine Sensitivitätskennzahl, die die durchschnittliche Kapitalbindungsdauer einer Geldanlage in einem festverzinslichen Wertpapier bezeichnet. Genauer genommen und allgemein formuliert ist die Duration der gewichtete Mittelwert der Zeitpunkte, zu denen der Anleger Zahlungen aus einem Wertpapier erhält.\footnote{\url{http://de.wikipedia.org/wiki/Duration}}
+
+Prinzipiell basiert das Risikomaß Duration auf der Grundidee, dass das Zinsrisiko direkt mit der Restlaufzeit zusammenhängt. So ist das Risiko umso höher, je länger eine Anleihe läuft.\footnote{\url{http://finance.wiwi.tu-dresden.de/Wiki-fi/index.php/Duration}}
+\begin{itemize}
+	\item Macaulay-Duration: Zeitgewichtete diskontierte Zahlungen pro Preiseinheit
+	\item EUR-Duration: Änderung eines Wertpapierpreises bei einer Zinsänderung von einem Prozentpunkt
 \end{itemize}
 
 
@@ -453,3 +472,13 @@ Der Swapsatz entspricht dem Kupon einer zu pari notierenden Kuponanleihe.
 
 \subsubsection{Terminzinssatz}
 \[(1+f(0,S,T))^{T-S} = \frac{(1+y(0,T))^T}{(1+y(0,S))^S}\]
+
+
+\subsection{Duration}
+
+\subsubsection{Macaulay Duration}
+\[D^{Mac} = \frac{\sum_{t=1}^{T} t \cdot \frac{c \cdot 100}{(1+z)^t} + \frac{T \cdot RZK}{(1+z)^T}}{P(0)} \]
+
+\subsubsection{EUR Duration}
+\[D^{EUR} = D^{Mac} \cdot \frac{1}{1+z} \cdot P(0) \]
+
