@@ -8,4 +8,5 @@ Zusammenfassung meiner gehörten Vorlesungen. Zum Erzeugen des PDFs ist Latex no
 Aktuell enthalten
 -----------------
 
+* Investments
 * IT-Sicherheit für vernetzte Systeme
