@@ -271,7 +271,12 @@ Für alle Wertpapiere gilt eine lineare Beziehung zwischen erwarteter Rendite un
 \begin{itemize}
 	\item Empirische Überprüfbarkeit des CAPM in Frage gestellt
 	\item Alternative Bewertungstheorie des CAPM, die Marktportefeuille nicht benötigt
-	\item Prinzip: Anstatt \(\mu - \sigma - Optimierer\) zu unterstellen, renditegenerierter Prozess: \(\tilde{r}_i = \alpha_i + \beta_{i,1} \cdot \tilde{I}_1 + \alpha_2 + \beta_{i,2} \cdot \tilde{I}_2 + \dots + \alpha_i + \beta_{i,k} \cdot \tilde{I}_k + \tilde{\epsilon}_i\)
+	\item \textbf{Prinzip}
+	\begin{itemize}
+		\item Anstatt \(\mu - \sigma - Optimierer\) zu unterstellen, renditegenerierter Prozess: \(\tilde{r}_i = \alpha_i + \beta_{i,1} \cdot \tilde{I}_1 + \alpha_2 + \beta_{i,2} \cdot \tilde{I}_2 + \dots + \alpha_i + \beta_{i,k} \cdot \tilde{I}_k + \tilde{\epsilon}_i\)
+		\item Marktpreise der Faktorrisiken: \(\lambda_1, \dots, \lambda_k\)
+		\item Falls risikoloses Papier existiert: \(\lambda_0 = r\)
+	\end{itemize}
 \end{itemize}
 
 
@@ -341,7 +346,7 @@ Die Effektivverzinsung (Yield to Maturity, YtM) errechnet sich aus der Diskontie
 
 \section{Appendix A: Begrifflichkeiten}
 
-\subsection{Festverzinslicher Titel}
+\subsubsection{Festverzinslicher Titel}
 Schuldrechtlicher Anspruch auf
 \begin{itemize}
 	\item Zahlung eines zeitabhängigen Entgelts (Zinsen)
@@ -359,6 +364,12 @@ Schuldrechtlicher Anspruch auf
 \subsubsection{Termingeschäfte}
 \begin{itemize}
 	\item Terminpreis einer Nullkuponanleihe \(F(0, S, T)\): Zum Zeitpunkt \(0\) vereinbarter Preis über den unbedingten Kauf einer in \(T\) fälligen Nullkuponanleihe im Zeitpunkt \(S\)
+\end{itemize}
+
+\subsubsection{Zinsen}
+\begin{itemize}
+	\item Kassazins (spot price): Zinssatz für eine Kapitalanlage, deren Laufzeit sofort beginnt.
+	\item Terminzins (forward rate): Zinssatz, der für einen zukünftigen Zeitpunkt gilt.
 \end{itemize}
 
 
@@ -418,10 +429,27 @@ Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtw
 \subsubsection{Treynor-Maß}
 \[Treynor-Mass = \frac{Mittlere~Ueberrendite}{systematisches~Risiko} = \frac{\overline{\mu} - r}{\beta}\]
 
+
 \subsection{Anleihen}
+
+\subsubsection{Begriffe}
+\begin{itemize}
+	\item Diskontfaktor: \(b(0,T)\)
+	\item Effektivzins oder Kassazins: \(y(0,T)\)
+\end{itemize}
 
 \subsubsection{Nullkuponanleihe}
 \[Barwert = \frac{Nennwert}{(1+i)^t} \iff i = \sqrt[t]{\frac{Nennwert}{Barwert}} -1\]
 
 \subsubsection{Rendite einer Kuponanleihe}
-\[P(0) = \sum_{t=1}^{T} \frac{C}{(1+y*)^t} + \frac{RZK}{(1+y*)^T}\]
+\[P(0) = \sum_{t=1}^{T} \frac{C}{(1+y(0,t))^t} + \frac{RZK}{(1+y(0,T))^T}\]
+
+\subsubsection{Berechnung Diskontfaktor}
+\[b(0,T) = \frac{1}{(1+y(0,T))^T}\]
+
+\subsubsection{Berechnung Swapsatz}
+Der Swapsatz entspricht dem Kupon einer zu pari notierenden Kuponanleihe.
+\[1 = \sum_{t=1}^{T} \frac{s(0,T)}{(1+y(0,t))^t} + \frac{1}{(1+y(0,T))^T}\]
+
+\subsubsection{Terminzinssatz}
+\[(1+f(0,S,T))^{T-S} = \frac{(1+y(0,T))^T}{(1+y(0,S))^S}\]
