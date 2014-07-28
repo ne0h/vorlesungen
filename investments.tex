@@ -266,6 +266,8 @@ $\rightarrow$ Anstatt \(\sigma_j\) ist \(cov(\tilde{r}_j, \tilde{r}_M)\) als Ris
 \subsubsection{Zentrale Aussage des CAPM}
 Für alle Wertpapiere gilt eine lineare Beziehung zwischen erwarteter Rendite und Risiko.
 
+Der risikolose Zinssatz entspricht der erwarteten Rendite des Zero-Beta-Portefeuilles, da im CAPM nur systematisches Risiko vergütet wird.
+
 
 \subsection{Arbitrage Pricing Theory}
 \begin{itemize}
@@ -357,8 +359,8 @@ Die Duration ist eine Sensitivitätskennzahl, die die durchschnittliche Kapitalb
 
 Prinzipiell basiert das Risikomaß Duration auf der Grundidee, dass das Zinsrisiko direkt mit der Restlaufzeit zusammenhängt. So ist das Risiko umso höher, je länger eine Anleihe läuft.\footnote{\url{http://finance.wiwi.tu-dresden.de/Wiki-fi/index.php/Duration}}
 \begin{itemize}
-	\item Macaulay-Duration: Zeitgewichtete diskontierte Zahlungen pro Preiseinheit
-	\item EUR-Duration: Änderung eines Wertpapierpreises bei einer Zinsänderung von einem Prozentpunkt
+	\item Macaulay-Duration: Zeitgewichtete diskontierte Zahlungen pro Preiseinheit, relatives Maß für die Wertänderung
+	\item EUR-Duration: Änderung eines Wertpapierpreises bei einer Zinsänderung von einem Prozentpunkt, Maß für die absolute Preisänderung
 \end{itemize}
 
 
@@ -398,7 +400,7 @@ Schuldrechtlicher Anspruch auf
 \subsection{Portefeuilletheorie}
 
 \subsubsection{Rendite einer Aktie}
-\[\tilde{r} = \frac{\tilde{S} (1) + D - S(0)}{S(0)}\]
+\[\tilde{r} = \frac{\tilde{S} (1) + D - S(0)}{S(0)},~\mu_i = \frac{E[S_i(1)]}{S_i(0)} - 1,~\sigma_i = \frac{Std[S_i(1)]}{S_i(0)}\]
 
 \subsubsection{Portefeuillerendite}
 Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtwert des Portefeuilles.
@@ -412,6 +414,12 @@ Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtw
 \subsubsection{Erreichbare \(\mu-\sigma-Kombinationen\)}
 \[\mu_w = r + \frac{\mu_2 - r}{\sigma_2} \cdot \sigma_w \]
 
+\subsubsection{Berechnung der Geradengleichung der effizienten Linie \(\mu_w(\sigma_w)\)}
+\[\vec{\mu}_x = \vec{\mu} - \vec{r}\]
+\[V = \begin{pmatrix} \sigma_1^2 & 0 \\ 0 & \sigma_2^2 \\ \end{pmatrix}\]
+\[\vec{w}_M = V^{-1} \cdot \vec{\mu}_x\]
+\[\mu_M = w_M^T \cdot \vec{\mu}_x - r\]
+\[\sigma_M = \sqrt{\vec{w}_M^T \cdot V \cdot \vec{w}_M}\]
 
 \subsubsection{Aufteilung in \(N\) riskante Wertpapiere, \(N = 2\), Bestimmung des GVMP}
 \[\tilde{r}_w = w_1 \cdot \tilde{r}_1 + w_2 + \tilde{r}_2\]
@@ -420,6 +428,7 @@ Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtw
 \[w_1 = \frac{\sigma_2^2-\sigma_1 \cdot \sigma_2 \cdot \rho_{12}}{\sigma_1^2-2 \cdot \sigma_1 \cdot \sigma_2 \cdot \rho_{12} + \sigma_2^2}\]
 \[w_2 = \frac{\sigma_1^2 - \sigma_1 \cdot \sigma_2 \cdot \rho_{12}}{\sigma_1^2 - 2 \cdot \sigma_1 \cdot \sigma_2 \cdot \rho_{12} + \sigma_2^2}\]
 \[\sigma_w^2 = \frac{\sigma_1^2 \cdot \sigma_2^2 \cdot (1 - \rho_{12}^2)}{\sigma_1^2 - 2 \cdot \sigma_1 \cdot \sigma2 \cdot \rho_{12} + \sigma_2^2}\]
+\[\sigma_w = \sqrt{Var[r_w]} = \frac{1}{S(0)} \cdot \sqrt{Var[S(1)]} \]
 
 \subsubsection{Single Index Modell}
 \[\mu_i = \alpha_i + \beta_i \cdot \mu_I\]
@@ -429,6 +438,12 @@ Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtw
 
 \subsection{Capital Asset Pricing Modell}
 \[\mu_w = r + \frac{\mu_M - r}{\sigma_M} \cdot \sigma_w = r + (\mu_M - r) \cdot \beta_j\]
+\[\beta_w = \frac{\sigma_w}{\sigma_M} = \frac{cov(r_w, r_M)}{\sigma_M^2} = \frac{\sigma_w \cdot \sigma_M \cdot \rho_{wM}}{\sigma_M^2} \]
+
+Aus negativer Korrelation folgt, dass \(\beta_w\) negativ ist, woraus wiederum folgt, dass \(\mu_w < r\).
+
+\subsubsection{Systematisches Risiko}
+CAPM ohne systematisches Risiko: \(\beta_{Pf} \stackrel{!}{=} 0\)
 
 
 \subsection{Arbitrage Pricing Model}
@@ -455,6 +470,7 @@ Gewichtete Summe der Einzelrenditen. Gewichtung am Wertanteil \(w_i\) am Gesamtw
 \begin{itemize}
 	\item Diskontfaktor: \(b(0,T)\)
 	\item Effektivzins oder Kassazins: \(y(0,T)\)
+	\item Arbitagefrei: Die Diskontstrukturkurve \(b(0,T)\) ist monoton fallend
 \end{itemize}
 
 \subsubsection{Nullkuponanleihe}
@@ -475,6 +491,7 @@ Der Swapsatz entspricht dem Kupon einer zu pari notierenden Kuponanleihe.
 
 
 \subsection{Duration}
+\[P(0) = \sum_{t=1}^{T} \frac{c \cdot 100}{(1+y(0,t))^t} + \frac{RZK}{(1+y(0,T))^T}\]
 
 \subsubsection{Macaulay Duration}
 \[D^{Mac} = \frac{\sum_{t=1}^{T} t \cdot \frac{c \cdot 100}{(1+z)^t} + \frac{T \cdot RZK}{(1+z)^T}}{P(0)} \]
