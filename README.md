@@ -8,5 +8,6 @@ Zusammenfassung meiner gehörten Vorlesungen. Zum Erzeugen des PDFs ist Latex no
 Aktuell enthalten
 -----------------
 
+* Financial Management
 * Investments
-* IT-Sicherheit für vernetzte Systeme
+* IT-Sicherheitsmanagement für vernetzte Systeme
