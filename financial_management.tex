@@ -87,18 +87,18 @@ Financial Management ist die zielgerichtete Beschaffung, Verwendung und Steuerun
 
 \subsubsection{Betriebliche Kennzahlen}
 \begin{itemize}
-	\item \textbf{Cash Ratio}
+	\item \textbf{Cash Ratio (Liquidität 1. Grades)}
 	\begin{itemize}
 		\item Gibt an, in wieweit ein Unternehmen seine derzeitigen Zahlungsverpflichtungen durch seine Liquide Mitteln erfüllen kann
 		\item Idee: Je höher das Cash Ratio, desto liquider das Unternehmen
 	\end{itemize}
-	\item \textbf{Acid Test Ratio}
+	\item \textbf{Acid Test Ratio (Liquidität 2. Grades)}
 	\begin{itemize}
 		\item Erweiterung der Cash Ratio um kurzfristige Forderungen
 		\item Wenn \(ATR < 1\): ein Teil der kurzfristigen Verbindlichkeiten ist nicht durch kurzfristig zur Verfügung stehendes Vermögen gedeckt
 		\item Achtung: Forderungsausfall möglich
 	\end{itemize}
-	\item \textbf{Current Ratio}
+	\item \textbf{Current Ratio (Liquidität 3. Grades)}
 	\begin{itemize}
 		\item Erweiterung des Acid Test Ratios um Vorräte
 		\item Als Untergrenze gilt ein Wert > 1, ansonsten muss eventuell zur Deckung der kurzfristigen Verbindlichkeiten Anlagevermögen veräußert werden
@@ -632,18 +632,38 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 
 \subsection{Working Capital Management}
 
+\subsubsection{Working Capital}
+\[WC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
+
 \subsubsection{Net Working Capital}
 \[NWC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
 \[- (kurzfr.~Verbindlichkeiten - kurzfr.~Finanzverbindlichkeiten\]
+
+\subsubsection{Geldumschlagsdauer (Cash Conversion Cycle)}
 \[Geldumschlagsdauer = \varnothing Lagerdauer + \varnothing Inkassoperiode - Lieferantenzahlungsziel\]
-\[\varnothing Lagerdauer = \frac{\varnothing Lagerbestand \cdot 360}{Jahresverbrauch}\]
+\[\varnothing Lagerdauer = \frac{\varnothing Lagerbestand \cdot 360}{Jahresverbrauch} = \frac{\varnothing Lagerbestand \cdot 360}{Umsatzkosten}\]
+\[\varnothing Inkassoperiode = \frac{\varnothing Forderungen~aus~LuL \cdot 360}{Umsatz~auf~Ziel}\]
+\[\varnothing Lieferantenzahlungsziel = \frac{\varnothing Verbindlichkeiten~aus~LuL \cdot 360}{Umsatzkosten}\]
 \[Forderungsbestand = \varnothing Forderungslaufzeit \cdot \varnothing Tagesumsatz\]
 
+\subsubsection{Optimale Höhe der Bargeldorder (Baumol Modell)}
+\[C* = \sqrt{\frac{2 \cdot Transaktionsgebuehr \cdot \sum Liquiditaetsbedarf}{r}}\]
+\[Oppertunitaetskosten(C*) = r \cdot \frac{C*}{2}\]
+\[Transaktionskosten(C*) = Transaktionsgebuehr \cdot \frac{\sum Liquiditaetsbedarf}{C*}\]
 
 \subsection{Fremdkapital}
 
+\subsubsection{Darlehen mit Disagio}
+\[Betrag = \frac{Nennwert}{1 - Disagio}\]
+
 \subsubsection{Fremdkapitalkosten}
 \[E_0 = \sum_{t=1}^{n} \frac{A_t}{(1+i)^t}\]
+
+\subsubsection{Kennzahlen zur Unternehmensbonität}
+\[Verschuldungsgrad = \frac{Fremdkapital}{Eigenkapital}\]
+\[Return~on~Equity = \frac{Jahresueberschuss}{Eigenkapital}\]
+\[Nettoumsatzrendite = \frac{Jahresueberschuss}{Umsatz}\]
+\[Return~on~Assets = \frac{EBIT}{Bilanzsumme}\]
 
 \subsubsection{Z-Score}
 \[zscore = 3,25 + 6,56X_1 + 3,26X_2 + 6,72X_3 + 1,05X_4\]
@@ -656,6 +676,27 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 
 \subsubsection{Debt Tex Shield}
 \[dts = Ertragssteuersatz \cdot Zinszahlung\]
+
+
+\subsection{Eigenkapital - Börsengang}
+
+\subsubsection{Zugeflossenes Kapital}
+\[n_{Aktien} \cdot Emissionspreis \cdot (1- Gross~Preceeds)\]
+
+\subsubsection{Marktwert des Unternehmens}
+\[Marktwert_{Eigenkapital} + Marktwert_{Fremdkapital}\]
+
+\subsubsection{Underpricing (Auf Aktienkurs bezogen)}
+\[Schlusskurs~nach~erstem~Handelstag - Emissionskurs\]
+
+\subsubsection{Rendite nach erstem Handelstag}
+\[\frac{Underpricing}{Emissionskurs}\]
+
+\subsubsection{Money left on the Table}
+\[Underpricing \cdot n_{Aktien}\]
+
+\subsubsection{Kosten des IPO}
+\[Kosten_{direkt} + money~left~on~the~table\]
 
 
 \subsection{Kapitalstruktur und Kapitalkosten}
