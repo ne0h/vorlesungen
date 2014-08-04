@@ -623,7 +623,7 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \subsubsection{Cash Ratio}
 \[Cash~Ratio = \frac{liquide~Mittel}{kurzfristige~Verbindlichkeiten}\]
 
-\subsubsection{Acid Test Ratio}
+\subsubsection{Acid Test Ratio (Quick Ratio)}
 \[ATR = \frac{LiMi + kurzfristige~Forderungen}{kurzfristige Verbindlichkeiten}\]
 
 \subsubsection{Current Ratio}
@@ -632,15 +632,23 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 
 \subsection{Working Capital Management}
 
+\subsubsection{Bestimmung der Cash Flows}
+\begin{enumerate}
+	\item CF aus operativer Tätigkeit: \(Jahresueberschuss\) \\ \(+ zahlungsunwirksame~Aufwendungen + Veraendungerungen~im~NWC\)
+	\item CF aus Investitionstätigkeit: Alle Veränderungen im Anlagevermögen
+	\item CF aus Finanzierungstätigkeit: Ein- und Auszahlungen von und zu Kreditgebern und Eigenkapitalgebern
+\end{enumerate}
+
 \subsubsection{Working Capital}
 \[WC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
 
 \subsubsection{Net Working Capital}
 \[NWC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
-\[- (kurzfr.~Verbindlichkeiten - kurzfr.~Finanzverbindlichkeiten\]
+\[- (kurzfr.~Verbindlichkeiten - kurzfr.~Finanzverbindlichkeiten)\]
 
 \subsubsection{Geldumschlagsdauer (Cash Conversion Cycle)}
-\[Geldumschlagsdauer = \varnothing Lagerdauer + \varnothing Inkassoperiode - Lieferantenzahlungsziel\]
+\[Geldumschlagsdauer = \varnothing Lagerdauer + \varnothing Inkassoperiode - \varnothing Lieferantenzahlungsziel\]
+\[OC = \varnothing Lagerdauer + \varnothing Inkassoperiode\]
 \[\varnothing Lagerdauer = \frac{\varnothing Lagerbestand \cdot 360}{Jahresverbrauch} = \frac{\varnothing Lagerbestand \cdot 360}{Umsatzkosten}\]
 \[\varnothing Inkassoperiode = \frac{\varnothing Forderungen~aus~LuL \cdot 360}{Umsatz~auf~Ziel}\]
 \[\varnothing Lieferantenzahlungsziel = \frac{\varnothing Verbindlichkeiten~aus~LuL \cdot 360}{Umsatzkosten}\]
@@ -648,8 +656,14 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 
 \subsubsection{Optimale Höhe der Bargeldorder (Baumol Modell)}
 \[C* = \sqrt{\frac{2 \cdot Transaktionsgebuehr \cdot \sum Liquiditaetsbedarf}{r}}\]
-\[Oppertunitaetskosten(C*) = r \cdot \frac{C*}{2}\]
+\[Opportunitaetskosten(C*) = r \cdot \frac{C*}{2}\]
 \[Transaktionskosten(C*) = Transaktionsgebuehr \cdot \frac{\sum Liquiditaetsbedarf}{C*}\]
+
+\subsubsection{Miller-Orr Modell}
+\[Z* = L* + \sqrt[3]{\frac{3}{4} \cdot \frac{Kosten_{fixe} \cdot \sigma_{Tag}^2}{i_{Tag}}}\]
+\[H* = 3 \cdot Z* - 2 \cdot L*\]
+\[\varnothing Kassenbestand = \frac{4 \cdot Z* - 2 \cdot L*}{3}\]
+
 
 \subsection{Fremdkapital}
 
@@ -677,6 +691,14 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \subsubsection{Debt Tex Shield}
 \[dts = Ertragssteuersatz \cdot Zinszahlung\]
 
+\subsubsection{Prüfschema Financial vs. Operating Lease}
+Kriterien nacheinander abarbeiten, beim ersten "`ja"' handelt es sich um Operating Lease.
+\begin{enumerate}
+	\item \(|Leasingvertrag| < 75\% oekonomische Nutzungsdauer\)
+	\item Kaufoption? Eigenumsübergang? Spezialleasing?
+	\item Barwertkriterium: \(BW(Leasing) = Leasingrate_1 + Leasingrate_1 \cdot (\frac{1}{r} - \frac{1}{r \cdot (1+r)^n}), \frac{BW(Leasing)}{Marktwert} > 90\%\) 
+\end{enumerate}
+
 
 \subsection{Eigenkapital - Börsengang}
 
@@ -686,8 +708,11 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \subsubsection{Marktwert des Unternehmens}
 \[Marktwert_{Eigenkapital} + Marktwert_{Fremdkapital}\]
 
-\subsubsection{Underpricing (Auf Aktienkurs bezogen)}
-\[Schlusskurs~nach~erstem~Handelstag - Emissionskurs\]
+\subsubsection{Underpricing}
+\begin{itemize}
+	\item \textit{ex-ante}: Differenz zwischen erwartetem Börsenkurs und Emissionskurs
+	\item \textit{ex-post}: Tatsächlich realisierte Differenz zwischen erstem Börsenkurs und Emissionskurs
+\end{itemize}
 
 \subsubsection{Rendite nach erstem Handelstag}
 \[\frac{Underpricing}{Emissionskurs}\]
@@ -698,18 +723,70 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \subsubsection{Kosten des IPO}
 \[Kosten_{direkt} + money~left~on~the~table\]
 
+\subsubsection{Erwartungswert uninformierte Anleger}
+\[\mathbb{E}(G_n) = p \cdot \frac{n_{Aktien}}{n_{Zeichner}} \cdot (V_H - K) + (1-p) \cdot \frac{n_{Aktien}}{p_{uninf} \cdot n_{Zeichner}} \cdot (V_L-K)\]
+
+\subsubsection{Aktienkurs nach Kapitalerhöhung}
+\[P = \frac{n_{Aktien~alt} \cdot P_{Atkien~alt} + n_{Aktien~neu} \cdot P_{Aktien~neu}}{n_{Aktien~alt} \cdot n_{Aktien~neu}}\]
+
+\subsubsection{Gewinn je Aktie (EPS)}
+\[\frac{Jahresueberschuss}{n_{Aktien}}\]
+
+\subsubsection{Kurs-Gewinn-Verhältnis}
+\[\frac{Aktienkurs}{Gewinn~je~Aktie}\]
+
+\subsubsection{Kurs aus Marktkapitalisierung}
+\[\frac{Marktkapitalisierung}{n_{Aktien}}\]
+
+\subsubsection{Agio}
+\[Agio = Kurs - Aktienkurs\]
+
+\subsubsection{Wert Bezugsrecht}
+\[B = \frac{K_{alt} \cdot K_{neu}}{\frac{n_{alt}}{n_{neu}}+1}\]
+
 
 \subsection{Kapitalstruktur und Kapitalkosten}
 
 \subsubsection{Kapitalstrukturrisiko und Leverage-Effekt}
-\[r_{EK} = r_{GK} - \frac{FK}{EK} \cdot (r_{GK} - i_{FK})\]
+\[r_{EK} = r_{GK} + \frac{FK}{EK} \cdot (r_{GK} - r_{FK})\]
 
 \subsubsection{WACC}
-\[wacc = \frac{EK}{GK} \cdot r_{EK} + \frac{FK}{GK} \cdot r_{FK} \cdot (1-Einkommenssteuersatz)\]
+\[r_{wacc} = \frac{EK}{GK} \cdot r_{EK} + \frac{FK}{GK} \cdot r_{FK} \cdot (1-Einkommenssteuersatz)\]
 
 \subsubsection{Eigenkapitalkosten}
 \[r_i = r + (r_M - r) \cdot \beta_i\]
 \[\beta_i = \frac{cov(r_i, r_M)}{\sigma_M}\]
+\[\sigma_{EK} = (1 + \frac{FK}{EK}) \cdot \sigma_{GK}\]
+
+\subsubsection{Bestimmung Fremdkapitalniveau}
+\begin{enumerate}
+	\item Zinszahlungen
+	\item Debt Tax Shield
+	\item Barwert Debt Tax Shield
+	\item Insolvenzkosten
+	\item Barwert der erwarteten Insolvenzkosten
+	\item Vorteil aus BW(Debt Tax Shield) und Barwert der erwarteten Insolvenzkosten
+\end{enumerate}
+
+
+\subsection{Ausschüttungspolitik}
+
+\subsubsection{Zukünftiger Unternehmenswert (Ewige Rente)}
+\[heutiger~free~Cash~Flow + Barwert(kuenfitge~free~Cash~Flows)\]
+\[CashFlow_{heute} + \frac{CashFlow_{Zukunft}}{r_{EK}}\]
+
+\subsubsection{Cum Dividend}
+\[Div_{cum} = Div_{heute} + BW(Div_{Zukunft})\]
+
+\subsubsection{Ex Dividend}
+\[Div_{ex} = BW(Div_{Zukunft})\]
+
+\subsubsection{Dividend Discount Model}
+\(g\) bezeichnet die durschnittliche Wachstumsrate.
+\[Kurs_{0} = \frac{Div_1 \cdot (1+g)}{r_{EK}-g}\]
+
+\subsubsection{Rendite Gesamtkapital}
+\[r_{GK} = \frac{Gewinn}{Gesamtkapital}\]
 
 
 \subsection{Diversifikation}
