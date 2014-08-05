@@ -640,10 +640,10 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \end{enumerate}
 
 \subsubsection{Working Capital}
-\[WC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
+\[WC = (Umlaufvermoegen - LiMi - kurzfr.~finanz.~Vermoegenswerte)\]
 
 \subsubsection{Net Working Capital}
-\[NWC = (Umlaufvermoegen - LiMi + kurzfr.~finanz.~Vermoegenswerte)\]
+\[NWC = (Umlaufvermoegen - LiMi - kurzfr.~finanz.~Vermoegenswerte)\]
 \[- (kurzfr.~Verbindlichkeiten - kurzfr.~Finanzverbindlichkeiten)\]
 
 \subsubsection{Geldumschlagsdauer (Cash Conversion Cycle)}
@@ -660,7 +660,7 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \[Transaktionskosten(C*) = Transaktionsgebuehr \cdot \frac{\sum Liquiditaetsbedarf}{C*}\]
 
 \subsubsection{Miller-Orr Modell}
-\[Z* = L* + \sqrt[3]{\frac{3}{4} \cdot \frac{Kosten_{fixe} \cdot \sigma_{Tag}^2}{i_{Tag}}}\]
+\[Z* = L* + \sqrt[3]{\frac{3}{4} \cdot \frac{Kosten_{fix} \cdot \sigma_{Tag}^2}{i_{Tag}}}, i_{Tag} = (1+i)^\frac{1}{360}-1\]
 \[H* = 3 \cdot Z* - 2 \cdot L*\]
 \[\varnothing Kassenbestand = \frac{4 \cdot Z* - 2 \cdot L*}{3}\]
 
@@ -694,9 +694,9 @@ Der Berry-Index gibt den Grad der Diversifikation eines Konzerns an. Berechnet w
 \subsubsection{Prüfschema Financial vs. Operating Lease}
 Kriterien nacheinander abarbeiten, beim ersten "`ja"' handelt es sich um Financial Lease.
 \begin{enumerate}
-	\item \(|Leasingvertrag| < 75\% oekonomische Nutzungsdauer\)
+	\item \(Dauer(Leasingvertrag) < 75\%~oekonomische Nutzungsdauer\)
 	\item Kaufoption? Eigenumsübergang? Spezialleasing?
-	\item Barwertkriterium: \(BW(Leasing) = Leasingrate_1 + Leasingrate_1 \cdot (\frac{1}{r} - \frac{1}{r \cdot (1+r)^n}), \frac{BW(Leasing)}{Marktwert} > 90\%\) 
+	\item Barwertkriterium: \(BW(Leasing) = LR_1 + LR_1 \cdot (\frac{1}{r} - \frac{1}{r \cdot (1+r)^n}), \frac{BW(Leasing)}{Marktwert} > 90\%\) 
 \end{enumerate}
 
 
@@ -706,7 +706,8 @@ Kriterien nacheinander abarbeiten, beim ersten "`ja"' handelt es sich um Financi
 \[n_{Aktien} \cdot Emissionspreis \cdot (1- Gross~Preceeds)\]
 
 \subsubsection{Marktwert des Unternehmens}
-\[Marktwert_{Eigenkapital} + Marktwert_{Fremdkapital}\]
+\[Marktwert_{EK} + Marktwert_{FK}\]
+\[Marktwert_{EK} = n_{Aktien} \cdot Kurs\]
 
 \subsubsection{Underpricing}
 \begin{itemize}
@@ -721,13 +722,14 @@ Kriterien nacheinander abarbeiten, beim ersten "`ja"' handelt es sich um Financi
 \[Underpricing \cdot n_{Aktien}\]
 
 \subsubsection{Kosten des IPO}
+Gross Preceeds gehören zu den direkten Kosten.
 \[Kosten_{direkt} + money~left~on~the~table\]
 
 \subsubsection{Erwartungswert uninformierte Anleger}
 \[\mathbb{E}(G_n) = p \cdot \frac{n_{Aktien}}{n_{Zeichner}} \cdot (V_H - K) + (1-p) \cdot \frac{n_{Aktien}}{p_{uninf} \cdot n_{Zeichner}} \cdot (V_L-K)\]
 
 \subsubsection{Aktienkurs nach Kapitalerhöhung}
-\[K = \frac{n_{Aktien~alt} \cdot K_{alt} + n_{neu} \cdot K_{neu}}{n_{alt} \cdot n_{neu}}\]
+\[K = \frac{n_{Aktien~alt} \cdot K_{alt} + n_{neu} \cdot K_{neu}}{n_{alt} + n_{neu}}\]
 
 \subsubsection{Gewinn je Aktie (EPS)}
 \[\frac{Jahresueberschuss}{n_{Aktien}}\]
@@ -773,7 +775,7 @@ Kriterien nacheinander abarbeiten, beim ersten "`ja"' handelt es sich um Financi
 
 \subsubsection{Zukünftiger Unternehmenswert (Ewige Rente)}
 \[heutiger~free~Cash~Flow + Barwert(kuenfitge~free~Cash~Flows)\]
-\[CashFlow_{heute} + \frac{CashFlow_{Zukunft}}{r_{EK}}\]
+\[= CashFlow_{heute} + \frac{CashFlow_{Zukunft}}{r_{EK}}\]
 
 \subsubsection{Cum Dividend}
 \[Div_{cum} = Div_{heute} + BW(Div_{Zukunft})\]
