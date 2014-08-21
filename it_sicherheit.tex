@@ -4,6 +4,7 @@ Zusammenfassung der Vorlesung  "`IT-Sicherheit für vernetzte Systeme"' von Prof
 \section{Einführung}
 
 \subsection{Management}
+"`Bezeichnung einerseits für die Führung von Institutionen jedweder Art andererseits für die Gesamtheit der Personen, die diese Funktion erfüllen."'\footnote{Brockhaus-Enzyklopädie in 24 Bänden, 19. Aufl., Band 14, 1991}
 
 \subsubsection{Handlungsorientiertes Managementkonzept}
 Prozesse der Entscheidungsfindung und Entscheidungsdurchsetzung.
@@ -246,7 +247,7 @@ Verbindliche Grundsätze für die IT-Sicherheit.
 \end{itemize}
 Knapp formuliert (5 Seiten).
 
-\subsubsection{Maßnahmen zur behandlung identifizierter Risiken}
+\subsubsection{Maßnahmen zur Behandlung identifizierter Risiken}
 \begin{itemize}
 	\item Behandlung mittels Maßnahme (Risikoreduktion)
 	\item Tolerierung des Risikos (Restrisiko)
@@ -260,6 +261,7 @@ Knapp formuliert (5 Seiten).
 	\item Empfehlungen von Standardsicherheitsmaßnahmen für typische IT-Systeme
 	\item Organisatorische, personelle, infrastrukturelle und technische Standardsicherheitsmaßnahmen
 	\item Baukastenprinzip
+	\item Gefährdungs- und Maßnahmenkataloge
 	\item Werkzeugunterstützung
 	\item Bedarfsgerechte Weiterentwicklung (...aber leider etwas zu langsam)
 \end{itemize}
@@ -331,6 +333,7 @@ Knapp formuliert (5 Seiten).
 \begin{itemize}
 	\item Vollständigkeit nur schwer erreichbar
 	\item Abwägung unterschiedlicher Anforderungen nötig
+	\item Die Abgrenzung von Regelungsbereichen (Wechselwirkung von verschiedenen Gesetzen) ist zu beachten
 	\item Gewichtung und Angemessenheit muss gewahrt werden
 \end{itemize}
 
@@ -553,7 +556,7 @@ Trotz initial gesteigertem Aufwand,
 \section{Kryptografische Verfahren}
 
 \subsection{Kryptografische Verfahren}
-Der Schutz sensibler Informationen in potentiell bösartigen Systemen ist nicht ohne weiteres gewährleistet.
+Der Schutz sensibler Informationen in potentiell bösartigen Systemen ist nicht ohne weiteres gewährleistet (Schutzziele: Integrität und Authentizität).
 
 \subsubsection{Kerkoff's Prinzip}
 Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüssels beruhen.
@@ -577,8 +580,9 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 	\item Verwendung zum Detektieren von Manipulationen an Daten
 	\item Basis: Vorher ausgetauschter, symmetrischer Schlüssel
 	\item Kann nicht ohne Kenntnis des Schlüssels gefälscht werden
-	\item Beispiel HMAC: Nutzen einer Hashfunktion und eines Schlüssels (Problem: Kollisionen der Hashfunktion)
+	\item Beispiel HMAC: Nutzen einer Hashfunktion und eines Schlüssels (Problem: Kollisionen der Hashfunktion durch zusätzlich angehängte Daten)
 	\item Nachteile: Komplexes Schlüsselmanagement, Verbindlichkeit nicht gegeben
+	\item Eingabe: Nachricht und bekannter, symmetrischer Schlüssel
 \end{itemize}
 
 \subsubsection{Digitale Signatur}
@@ -586,7 +590,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 	\item Digitale Signatur = "`elektronische Unterschrift"'
 	\item Reale Welt: Unterschriftverfahren zwar angreifbar, in der Praxis jedoch zumeist ausreichend sicher (kaum zu erwartender Gewinn, Risiko einer Entdeckung hoch, harte Sanktionen und hoher zeitlicher Aufwand)
 	\item Digitale Welt: Risiko und zeitlicher Aufwand sehr gering $\rightarrow$ Digitale Signaturen müssen sehr viel sicherer sein als Unterschriften
-	\item Berechnung über asymmetrisches Schlüsselpaar
+	\item Berechnung über asymmetrisches Schlüsselpaar: Asymmetrisches Verschlüsseln eines Hashes der Nachricht mit privatem Schlüssel
 \end{itemize}
 
 \subsubsection{Zufallszahlengenerator (PRNG)}
