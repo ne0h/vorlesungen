@@ -629,9 +629,9 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 
 \subsubsection{Forward Secrecy}
 \begin{itemize}
-	\item Mutual Authentication zur Etablierung eines Session Keys; Aushandeln eines Sessions Keys per Diffie-Hellman; Austausch der Daten; Löschen der Keys
+	\item Mutual Authentication zur Etablierung eines Session Keys; Aushandeln eines zweiten Sessions Keys per Diffie-Hellman; Austausch der Daten; Löschen der 2. Session Keys
 	\item Mutual Authentication und Session Key für Authentizität und Integrität
-	\item Session Key für Vertraulichkeit
+	\item Session Key (2) für Vertraulichkeit
 \end{itemize}
 
 \subsubsection{Digitale Zertifikate}
@@ -660,6 +660,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \begin{itemize}
 	\item Hauptziele von Verschlüsselung: Vertraulichkeit, Integrität, Authentizität und Verbindlichkeit (siehe Schutzziele)
 	\item Grundlegende kryptografische Verfahren können zu komplexen Protokollen kombiniert werden
+	\item Sicherung der Integrität durch MACs und der Authtentizität durch digitale Signaturen
 \end{itemize}
 
 
@@ -684,7 +685,21 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 	\item Entwickelt am MIT (Athena-Projekt) und dort seit 1986 im Einsatz
 	\item Verwendung von Tickets (sowohl benutzer- als auch serverbezogen)
 	\item Zweistufiges Protokoll: Client kommuniziert nur selten mit dem KDC, Passwort wird nur selten genutzt
-	\item Interrealm-Authentifizierung möglich
+	\item Interrealm-Authentifizierung möglich: KDC von Realm B agiert wie eine Ressource in Realm A
+	\item \textbf{Komponenten}
+	\begin{itemize}
+		\item Benutzer
+		\item Lokale Kerberos Client Anwendung
+		\item Server
+		\item Authentication Server (AS): Primäre Authentisierung des Benutzers
+		\item Ticket Granting Server (TGS): Stellt Tickets für bestimmte Dienste aus
+		\item KDC: Umfasst AS und TGS
+	\end{itemize}
+	\item \textbf{Replikation von KDCs}
+	\begin{itemize}
+		\item Verwendung von \textit{einem} gemeinsamen Masterkey und identischen Datenbanken
+		\item Ein KDC hält Master Copy der Datenbank, die anderen synchronisieren sich
+	\end{itemize}
 \end{itemize}
 
 
@@ -777,7 +792,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 \subsubsection{Aktuelle Forschung Privacy-aware RBAC}
 \begin{itemize}
 	\item Erweitert RBAC um Datenschutzbelange
-	\item Vereinigung von \textit{Hierarchical P-RBAC} und \textit{Conditional P-RBAC} zu \textit{Universal P-RBAC}
+	\item Vereinigung von \textit{Hierarchical P-RBAC} (weniger Berechtigungszuweisungen notwendig) und \textit{Conditional P-RBAC} (Komplexe Berechtigungen durch logische Operationen) zu \textit{Universal P-RBAC}
 \end{itemize}
 
 
@@ -795,6 +810,10 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 	\item Policy Administration Point (PAP): Erstellt die Policies
 	\item Policy Information Point (PIP): Quelle für Attributwerte
 \end{itemize}
+
+\includegraphics[scale=0.68]{it_sicherheitsmanagement/xacml.pdf}
+
+Quelle: \url{http://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en_files/image002.gif}
 
 
 
