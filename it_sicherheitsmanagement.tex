@@ -406,7 +406,7 @@ Schutz von personenbezogener Daten\footnote{Bundesdatenschutzgesetz}. Datensiche
 \end{itemize}
 
 
-\subsection{Aktuelles: Geplantes IT-Sicherheitskonzept}
+\subsection{Aktuelles: Geplantes IT-Sicherheitsgesetz}
 
 \subsubsection{Kernpunkten des Referentenentwurfs}
 \begin{itemize}
@@ -610,6 +610,7 @@ Die Sicherheit eines Verfahrens soll alleine auf der Geheimhaltung eines Schlüs
 
 \subsubsection{Challenge-Response-Verfahren}
 \begin{itemize}
+	\item Basis: Zuvor ausgetauschtes Geheimnis $K_C$
 	\item Client schickt Identifier C; Server schickt neugenerierte Zufallszahl R; Client verschlüsselt R mit Schlüssel K und schickt Ergebnis
 	\item Angriffsmöglichkeiten: Abhören und Krypotanalyse, MitM, Angriff auf den Server, der die Schlüssel hält
 \end{itemize}
@@ -825,6 +826,10 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 	\item Vorhalten digitaler Identitäten/Nutzerkonten
 	\item Beispiele: HR-Systeme, Datenbanken, Verzeichnisdienste
 	\item Anfragen basieren auf Eigenschaften (z.B. (L)DAP)
+	\begin{itemize}
+		\item \textit{Schema} bestimmt Struktur, Attribute und Matching Rules (Konsistenz wichtig!)
+		\item Klassenhierarchie zur Beschreibung einer Person
+	\end{itemize}
 	\item Struktur Verzeichnisdienst: Hierarchisch
 \end{itemize}
 
@@ -839,6 +844,7 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 	\item Datenaktualität: Wie erfolgt der Abgleich?
 	\item Datenkonsument: Wer benötigt welche Daten?
 	\item Datenschutz
+	\item Zentral vs. Dezentral und Homogenität vs. Heterogenität
 \end{itemize}
 
 \subsubsection{Bewertung zentraler Verzeichnisdienst}
@@ -878,6 +884,7 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 
 \subsubsection{Einordnung Authentifikations- und Autorisierungsinfrastruktur (AAI)}
 \begin{itemize}
+	\item Auslagerung von Authentifikation und Autorisation in Infrastrukturdienste
 	\item Komplexitätsreduktion (z.B. SSO)
 	\item Domänenübergreifender Autausch von Identitätsdaten
 	\item Nur ein Login für alle Dienste und Ressourcen benötigt
@@ -896,12 +903,15 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 \begin{itemize}
 	\item Realm ist "`Herrschaftsbereich"', verlangt Namensschema zur Unterscheidung der Realms
 	\item Idee: KDC von Realm B agiert wie eine Ressource in Realm A $\rightarrow$ gemeinsames Geheimnis mit KDC von Realm A
+	\item Problemstellung: Vielzahl von Zugangspunkten, an allen muss authentifiziert werden
 \end{itemize}
 
 \subsubsection{RADIUS}
 \begin{itemize}
 	\item Problemstellung: Vielzahl von Zugangspunkten, an jedem muss authentifiziert werden
-	\item RADIUS Server des Netwaro Access Servers (NAS) dient als Proxy zum RADIUS Server der Heimatorganisation (z.B. Eduroam)
+	\item Hierarchische Struktur von RADIUS Servern der verschiedenen Organisationen
+	\item RADIUS Server des Network Access Servers (NAS) dient als Proxy zum RADIUS Server der Heimatorganisation (z.B. Eduroam)
+	\item Authentifizierung durch die Heimatorganisation, Autorisierung durch die Zielorganisation
 	\item Client und Server besitzen ein vorab vereinbartes, gemeinsames Geheimnis
 	\item RADIUS verwendet keine Nachrichtenverschlüsselung
 \end{itemize}
@@ -924,7 +934,7 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 		\item Protocols: Protokolle zum Autausch von Assertions
 		\item Assertions: Authentifizierungsinformationen, Attribute und Autorisierungsmerkmale
 	\end{itemize}
-	\item Beispielprofile: Web Browser SSO Profile, ECP Profile, Single Logout Profile
+	\item Beispielprofile: Web Browser SSO Profile, ECP Profile (SSO für nicht-browser Anwendungen), Single Logout Profile
 \end{itemize}
 
 \subsubsection{SAML in der Praxis: Shibboleth}
@@ -977,10 +987,15 @@ Es existieren drei Varianten.
 
 \subsubsection{OAuth 1.0}
 \begin{itemize}
-	\item Anwendungsfall: Nutzer möchte einem Dienst Zugriff auf eine Ressource geben, die bei einem anderen Dienst liegt
+	\item Anwendungsfall: Benuter (User) kann einer Anwendung (Consumer) Zugriff auf Daten erlauben, die von einer anderen Anwendung verwaltet werden (Service Provider)
 	\item \textbf{Ablauf}
 	\begin{enumerate}
-		\item TODO!
+		\item User stellt Anfrage an den Consumer
+		\item Consumer beantragt ein Abfrage-Token beim Service-Provider
+		\item User wird zum Service Provider weitergeleitet
+		\item User gibt seine Daten und bestätigt die Anfrage des Consumers
+		\item Consumer erhält Zugangs-Token
+		\item Consumer kann auf die geschützten Ressourcen zugreifen
 	\end{enumerate}
 \end{itemize}
 
@@ -1002,7 +1017,7 @@ Es existieren drei Varianten.
 		\item IdP schickt HTTP-Redirect an den SP mit Aussage über die Authentifizierung
 		\item SP prüft die Aussage. Falls DH-Schlüssel vorhanden hiermit, anderenfalls durch Nachfrage
 	\end{enumerate}
-	\item Bwertung: Massive Verbreitung, allerdings keine Verschlüsselung gefordert, Nutzer kann eine beliebige Id angeben, die gemäß Verfahren heruntergeladen werden muss
+	\item Bewertung: Massive Verbreitung, allerdings keine Verschlüsselung gefordert, Nutzer kann eine beliebige Id angeben, die gemäß Verfahren heruntergeladen werden muss
 \end{itemize}
 
 
@@ -1065,6 +1080,16 @@ Das Notfallhandbuch besteht üblicherweise aus folgenden Teilen:
 \end{itemize}
 
 
+\subsection{Vorfallbehandlung}
+
+\subsubsection{Computer Emergency Response Team (CERT)}
+\begin{itemize}
+	\item Lösung konkreter Sicherheitsvorfälle
+	\item Warnungen vor Sicherheitslücken mit Lösungsansätzen
+	\item Verschiedene CERTs, die verschiedenen Einrichtungen zugeordnet sind (z.B. Bund oder KIT)
+\end{itemize}
+
+
 
 \section{Secure Data Outsourcing}
 
@@ -1073,7 +1098,7 @@ Das Notfallhandbuch besteht üblicherweise aus folgenden Teilen:
 	\item Kosten sparen
 	\item Höhere Verfügbarkeit/Robustheit
 	\item Vereinfachte Administration
-	\item Nachteil: Mangelnde Datenvertraulichkeit. Naheliegend: Verschlüsselung, lässt allerdings dann auch keine Datenverarbeitung vor Ort zu
+	\item Nachteil: Mangelnde Datenvertraulichkeit. Naheliegend: Verschlüsselung, lässt allerdings dann auch keine Datenverarbeitung vor Ort zu (Anbieter ist "`Honest, but curious"')
 \end{itemize}
 
 
@@ -1172,7 +1197,7 @@ Es wird angenommen, dass Angreifer kein Wissen aus deterministischen Chiffraten 
 \subsubsection{Verschlüsselung der Daten}
 \begin{itemize}
 	\item Naiver Ansatz: Daten symmetrisch verschlüsseln und Datenschlüssel direkt an andere weitergeben. Nachteile: Entzug von Zugriffsrechten aufwendig, sicherer Kanal zur Schlüsselweitergabe nötig
-	\item Besser: Autausch neuer Schlüssel durch Nutzung bereits ausgetauschter Schlüssel. Initialer Autausch von (a-)symmetrischen Schlüsseln notwendig
+	\item Besser: Austausch neuer Schlüssel durch Nutzung bereits ausgetauschter Schlüssel. Initialer Austausch von (a-)symmetrischen Schlüsseln notwendig
 \end{itemize}
 
 
@@ -1186,9 +1211,12 @@ Es wird angenommen, dass Angreifer kein Wissen aus deterministischen Chiffraten 
 \subsubsection{SiRiUS}
 \begin{itemize}
 	\item Stellt Vertraulichkeit und Integrität sicher: Nutzerdaten werden vor Ablage auf dem Dateiserver verschlüsselt und signiert
+	\item Jeder Benutzer besitzt ein Schlüsselpaar
 	\item Ein Besitzer für jeden Verzeichnisbaum
 	\item Overlays zu bestehenden Dateisystemen
-	\item Sicherung der Metadaten: Besitzer der Datei signiert jede Änderung mit seinem privaten Schlüssel. Problem: Freshness nicht gewährleistet (rollback-Angriff)
+	\item Pro Datei ein symmetrischer Verschlüsselungskey und ein Keypair zur Signierung
+	\item Lesezugriff durch Weitergabe des sym. Schlüssels und Schreibzugriff durch Weitergabe des privaten Schlüssels
+	\item Sicherung der Metadaten: Besitzer der Datei signiert jede Änderung mit seinem privaten Schlüssel. Problem: Freshness nicht gewährleistet (Rollback-Angriff: Ehemals Schreibberechtigte können ältere md-Files hochladen, um Schreibberechtigung wieder zu erlangen. Gegenmaßnahmen: Gültigkeit der Signatur periosdisch auffrischen, resscourcenintensiv, Stichwort Hash-Tree)
 	\item Beim Entzug von Leserechten: Sofortige Neuverschlüsselung
 \end{itemize}
 
@@ -1240,14 +1268,15 @@ Tradeoff zwischen Verminderung des Risikos gegenüber Kosten/Ressourcenbedarf.
 \end{itemize}
 
 \subsubsection{Definition nach BSI:}
-"`Die Identität einer oder mehrerer an einem anonymen Vorgang beteilitger Instanzen ist nicht bestimmbar, weil sie entweder
+Die Identität einer oder mehrerer an einem anonymen Vorgang beteiligter Instanzen ist nicht bestimmbar, weil sie entweder
 \begin{itemize}
 	\item den anderen beteiligten Instanzen nicht bekannt ist (Nichtbewusstsein),
 	\item gegenüber den anderen beteiligten Instanzen nicht in Erscheinung tritt (Nichtgenanntsein) \\ oder
-	\item innerhalb des anonymen Vorgangs ohne erkannbaren Namen agiert (Namenlosigkeit)."'\footnote{\url{https://www.bsi.bund.de/DE/Publikationen/Studien/anonym/wasistanonymitaet.html}}
+	\item innerhalb des anonymen Vorgangs ohne erkannbaren Namen agiert (Namenlosigkeit).
 \end{itemize}
+\footnote{\url{https://www.bsi.bund.de/DE/Publikationen/Studien/anonym/wasistanonymitaet.html}}
 
-Problem: Identität mit hinreichend großem Aufwand eben doch bestimmbar, besonders im IT-Umfeld."''
+Problem: Identität mit hinreichend großem Aufwand eben doch bestimmbar, besonders im IT-Umfeld.
 
 \subsubsection{Anwendungsfelder}
 \begin{itemize}
