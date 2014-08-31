@@ -937,6 +937,15 @@ Zentrale Fragestellung: Wie können sehr viele Benutzer mit unterscheidlichen Fu
 	\item Beispielprofile: Web Browser SSO Profile, ECP Profile (SSO für nicht-browser Anwendungen), Single Logout Profile
 \end{itemize}
 
+\subsubsection{WebSSO - Ablauf}
+\begin{enumerate}
+	\item Weiterleitung zum Discovery Service und Auswahl des Identity Providers (optional)
+	\item Weiterleitung zum IdP
+	\item Authentifikation durch den IdP: Übergabe einer Assertion mit Authentication Statement und Attribute Statement
+	\item Weiterleitung zum Service Provider und Übergabe der Assertion
+\end{enumerate}
+Bindings: HTTP-Redirect, HTTP Post
+
 \subsubsection{SAML in der Praxis: Shibboleth}
 \begin{itemize}
 	\item OpenSource (Apache License)
