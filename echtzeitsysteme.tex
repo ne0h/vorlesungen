@@ -1,0 +1,198 @@
+\chapter{Echtzeitsysteme}
+
+Zusammenfassung der Vorlesung "`Echtzeitsysteme"' von Professor Längle, Professor Hein und Professor Wörn aus dem Sommersemester 2014.\footnote{\url{http://rob.ipr.kit.edu/lehrangebote_728.php}}
+
+\section{Grundlagen für Echtzeitsysteme in der Automatisierung}
+
+Bei Echtzeitsystemen kommt es neben der logischen Korrektheit auch auf die zeitliche Korrektheit der Ergebnisse an.
+
+\subsubsection{Rechtzeitigkeit}
+Die Ausgabedaten müssen rechtzeitig berechnet werden und zur Verfügung stehen.
+
+\subsubsection{Varianten zur Angabe einer Zeitbedingung}
+\begin{itemize}
+	\item Angabe eines genauen Zeitpunkts
+	\item Angabe eines spätesten Zeitpunkts
+	\item Angabe eines frühesten Zeitpunkts
+	\item Angabe eines Zeitintervalles
+\end{itemize}
+
+\subsection{Wirkungskette einer Steuerung}
+Die Steuerung ist ein Vorgang in einem abgegrenzten System, bei dem eine oder mehrere Größen als Eingangsgrößen andere Größen als Ausgangsgrößen aufgrund der dem System eigenen Gesetzmäßigkeiten beeinflussen.\footnote{DIN 19226}
+\begin{enumerate}
+	\item Steuerglied
+	\item Stellglied
+	\item Prozess/Strecke
+\end{enumerate}
+
+\subsubsection{Übergangsfunktionen}
+\begin{itemize}
+	\item Sollwert (Führungsgröße): \(w(t)\)
+	\item Steuersignal: \(u(t)\)
+	\item Stellgröße: \(y(t)\)
+	\item Steuergröße: \(x(t)\)
+\end{itemize}
+
+\subsection{Wirkungskette einer Regelung}
+Die Regelung ist ein technischer Vorgang in einem abgegrenzten System, bei dem eine technische oder physikalische Größe (Regelgröße oder Istwert), fortlaufend erfasst und durch Vergleich ihres Signales mit dem Signal einer anderen von außen vorgegebenen Größe (Sollwert), im Sinne einer Angleichung an die Führungsgröße beeinflusst wird.\footnote{DIN 19226}
+
+\begin{itemize}
+	\item Regler
+	\item Stellglied
+	\item Prozess/Strecke
+	\item Messglied für Istwert
+\end{itemize}
+
+\subsubsection{Vorgehen Entwurf eines Reglers}
+\begin{enumerate}
+	\item Anforderungen definieren, speziell Stabilität, Schnelligkeit, Genauigkeit
+	\item Ermitteln des Modells der Strecke
+	\item Wahl Reglertyp
+	\item Optimieren des Streckenmodells durch Simulation
+	\item Realisieren des Reglers, experimentelle Überprüfung und Optimierung
+\end{enumerate}
+
+
+
+\section{Rechnerarchitekturen}
+
+\subsection{Mikrorechner}
+\begin{itemize}
+	\item Bestandteile: \textit{Mikroprozessor} (Prozessokern, Steuerwerk, Rechenwerk), Hauptspeicher, IO
+	\item Verbindungseinrichtung, Bus-System
+	\item Wird durch Peripheriegeräte zum \textit{Mikrorechnersystem}
+\end{itemize}
+
+
+\subsection{Unterbrechungen}
+\begin{itemize}
+	\item Software Interrupt: Excpetion, Unterbrechungswunsch eines laufenden Programms
+	\item Hardware Interrupt: Unterbrechungswunsch durch externe Hardwarekomponenten
+	\item Behandlung per \textit{Interrupt Service Routine}, Zwischenspeichern des Prozessorstatus auf den Stackspeicher mit anschließendem Wiederherstellen
+	\item Auslösen im Mikroprozessor: Externe Untebrechung, Quitting, Vektor -> Datenbus
+	\item Prioritätsebene, gespeichert im Interrupt-Maskenregister (Teil des Steuerregisters)
+	\item Viele Prioritätsebenen: Dezentral (Daisy-Chain) oder mittels zentralem Controller
+\end{itemize}
+
+
+\subsection{Microcontrollers}
+\begin{itemize}
+	\item Prozessor
+	\item RAM
+	\item ROM, EORPM, EEPROM
+	\item Takt
+	\item Ein-/Ausgabesteuerung
+	\item Unterbrechungssteuerung
+	\item Zähler/Zeitgeber
+	\item Erweiterungbusschnittstelle
+\end{itemize}
+Ziel: Möglichst wenig externe Bausteine für eine Steuerungsaufgabe.
+
+\subsubsection{Speicher für Mikrokontroller}
+\begin{itemize}
+	\item Flüchtiger Speicher (RAM)
+	\begin{itemize}
+		\item Statischer Speicher
+		\item Dynamischer Speicher
+	\end{itemize}
+	\item Nichtflüchtiger Speicher (ROM)
+	\begin{itemize}
+		\item Einmal beschreibbar: ROM, PROM
+		\item Wiederbeschreibbar: EPROM, EEPROM, FlashRAM
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Aufbau Zähler-/Zeitgebereinheit}
+\begin{itemize}
+	\item Aufgaben: Zählen von Ereignissen, Erzeugen von Impulsfolgen, Messen von Zeiten
+	\item Über den internen Datenbus angebunden
+	\item Externen Takt notwendig
+\end{itemize}
+
+\subsubsection{Watchdog}
+\begin{itemize}
+	\item Spezieller Zähler, der bei Ablauf einen Reset auslöst
+	\item Muss regelmäßig von der Software angesprochen werden ("`Totmannschalter"')
+	\item Anbindung über den internen Datenbus
+\end{itemize}
+
+\subsubsection{Serielle und parallele Ein-/Ausgabekanäle}
+\begin{itemize}
+	\item Auswahl der Komponente über den internen Adressbus
+	\item Anbindung zur Datenübertragung über den internen Datenbus
+\end{itemize}
+
+\subsubsection{Aufbau einer Echtzeit-Ausgabeeinheit}
+\begin{itemize}
+	\item Ports, deren Verhalten nicht von der Software, sondern von einem Zeitgeber gesteuert werden
+	\item Ausgabe idealerweise jitterfrei
+\end{itemize}
+
+\subsubsection{Direct Memory Access}
+\begin{itemize}
+	\item Daten direkt, ohne Beteiligung des Prozessorkerns zwischen Peripherie und Speicher transportieren
+	\item Prozessor definiert lediglich Randbedingungen: Speicheradresse, Peripherieadresse, Anzahl Zeichen
+	\item Ende der Übertragung durch Unterbrechungssignal
+\end{itemize}
+
+
+\subsection{Busse}
+
+\subsubsection{Datenbuss}
+\begin{itemize}
+	\item Prozessorabhängig: Mikroprozessor als Master Device
+	\item Prozessorunabhängig: Komponenten am PCI-Bus über Pentium-PCI-Bus Bridge ausgelagert
+	\item Gepufferter, entkoppelter Bus: Erweiterung des prozessorunabhängigen Bus, da bei einem zentralen Bus langsame Geräten den Bus blockieren $\rightarrow$ Verletzung der Echtzeitbedingungen
+\end{itemize}
+
+\subsubsection{Busbetrieb}
+\begin{itemize}
+	\item (Nicht-)multiplex-Betrieb
+	\item Weiter Kriterien: Synchronisationsart, Übertragungsart, Busbreite, Taktfrequenz, Max. Übertragungsrate/Datentransportbreite
+\end{itemize}
+
+\subsubsection{Buszuteilung}
+\begin{itemize}
+	\item Master: Aktiver Zugriff auf den Bus
+	\item Slave: Passiver Zugriff auf den Bus
+	\item \textbf{Mehrere Busmaster}
+	\begin{itemize}
+		\item Mehrere Busmaster: Verfahren zur Zuteilung notwenig. Kann im einfachsten Fall durch den Mikroprozessor geschehen
+		\item Externer Bus-Arbiter: Schiedsrichter über die Bus-Zuteilung, Master muss aktiven Zustand anfordern. Aufbau wahlweise zentral oder dezentral per Daisy Chain
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Echtzeitaspekte von Systembussen}
+\begin{itemize}
+	\item Zeitliche Vorhersagbarkeit von zentraler Bedeutung
+	\item Einfaches System, synchroner Bus, keine Wartezyklen: Deterministisches Zeitverhalten
+	\item Einfaches System, synchroner Bus, Wartezyklen: Wenn Wartezyklen bekannt, dann deterministisch, ansonsten Obergrenze einführen
+	\item Mehrere Busmaster: Echtzeitverhalten vom Verhalten im Konfliktfall abhängig
+\end{itemize}
+
+\subsubsection{PCI-Bus Transferarten}
+\begin{itemize}
+	\item Standardtransfer: <Adresse>(<Wartezyklus>)<Datum>
+	\item Bursttransfer: <Adresse>(<Wartezyklus>)<Datum><Datum><Datum>
+\end{itemize}
+
+
+\subsection{VME-Bus}
+
+\subsubsection{Transfer}
+\begin{itemize}
+	\item Einzeltransfer: Einzelne Adresse über den Adressbus, einzelnes Datum über den Datenbus
+	\item 32-Bit-Bursttransfer: Einzelne Adresse über den Adressbus, mehrere Daten über den Datenbus
+	\item 64-Bit-Bursttransfer: Gemeinsame Nutzung von Daten- und Adressbus, jeweils im Burstmodus
+\end{itemize}
+
+
+
+\section{Appendix A: Formelsammlung}
+
+\subsection{Busse}
+
+\subsubsection{Übertragungsrate}
+\[\frac{AnzahlBytes}{Taktzykluszeit \cdot Anzahl~Taktzyklen}\]
+
+
