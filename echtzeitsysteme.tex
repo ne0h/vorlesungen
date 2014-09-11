@@ -179,16 +179,95 @@ Ziel: Möglichst wenig externe Bausteine für eine Steuerungsaufgabe.
 
 \subsection{VME-Bus}
 
+Echtzeitfähiges Bussystem, war lange Zeit das dominierende System für Automatisierungsrechner, wird allerdings zunehmend durch den PCI-Bus verdrängt (höhere Übertragungsraten).
+
+\subsubsection{Wichtige Eigenschaften}
+\begin{itemize}
+	\item Prozessorunabhängigkeit
+	\item Signal-orientiert und asynchron
+	\item Kein Multiplex, burst-fähig, fehlererkennend
+\end{itemize}
+
 \subsubsection{Transfer}
 \begin{itemize}
 	\item Einzeltransfer: Einzelne Adresse über den Adressbus, einzelnes Datum über den Datenbus
 	\item 32-Bit-Bursttransfer: Einzelne Adresse über den Adressbus, mehrere Daten über den Datenbus
 	\item 64-Bit-Bursttransfer: Gemeinsame Nutzung von Daten- und Adressbus, jeweils im Burstmodus
+	\item Bestandteile: Bus-Manager, Bus-Master, Bus-Slave
+\end{itemize}
+
+
+\subsection{Schnittstellenbausteine}
+Verbindung von Mikrorechner und Umwelt.
+\begin{itemize}
+	\item Pufferung von IO
+	\item Umsetzung der Daten (z.B. parallel $\leftrightarrow$ seriell oder digital $\leftrightarrow$ analog)
+	\item Erzeugen von Steuer- und Handshake-Signalen
+	\item Annahme und Erzeugen von Unterbrechungsanforderungen
+	\item Werden wie Speicher durch IO angesprochen
 \end{itemize}
 
 
 
-\section{Appendix A: Formelsammlung}
+\section{Hardwareschnittstelle zwischen Echtzeitsystem und Prozess}
+
+\subsection{Netzberechnung}
+\begin{itemize}
+	\item Knotenregel: Die Summe aller Ströme in einem Knoten ist $0$, es entstehen oder verschwenden keine Ströme.
+	\item Maschenregel: Die Summe aller Spannungen in einer Masche ist $0$.
+\end{itemize}
+
+
+\subsection{Transistoren}
+Grundbaustein aller elektrischen Schaltungen.
+
+\subsubsection{Transistor als Verstärker}
+Es ergibt sich eine Leistungsverstärkung, da sowohl Spannung, als auch Strom verstärkt werden.
+
+
+\subsubsection{Transistor als Schalter}
+Der Transistor wird lediglich in den Zuständen \textit{Sättigung} und \textit{Gesperrt} ($U_{BE} < 0,6 V$) betrieben.
+
+
+\subsection{Operationsverstärker}
+Verstärker erlauben es allein durch ihre Beschaltung, verschiedene mathematische Funktionen zu modellieren.
+
+\subsubsection{Der ideale Operationsverstärker: Annahmen}
+\begin{itemize}
+	\item Verstärkung ist unendlich
+	\item Der Eingangswiderstand ist unendlich
+	\item Der Ausgangswiderstand ist null
+\end{itemize}
+
+\subsubsection{Eigenschaften}
+\begin{itemize}
+	\item Verstärkt die Differenz $U_D$ der beiden anliegenden Spannungen
+	\item Die Versorgungsspannungen legen den maximalen und den minimalen Ausgangsbereich fest
+	\item Verstärkung ist linear
+\end{itemize}
+
+
+
+\section{Appendix A: Operationsverstärker}
+
+\subsubsection{Grundsätzliche Beschaltung}
+\begin{itemize}
+	\item Eingangssignal wird auf den positiven Eingang gelegt
+	\item Ausgangssignal wird auf den negativen Eingang rückgekoppelt
+\end{itemize}
+
+\subsubsection{Ausgangsspannung}
+\[U_A = Y_D \cdot (U_P - U_N) = Y_D \cdot U_D\]
+
+
+\subsection{Nicht-invertierter Spannungsverstärker}
+Die Verstärkung der Schaltung muss immer größer oder gleich eins sein.
+
+\[Y = \frac{U_A}{U_E} = \frac{R_1 + R_N}{R_1}\]
+
+
+
+\section{Appendix B: Formelsammlung}
 
 \subsection{Busse}
 
@@ -196,3 +275,11 @@ Ziel: Möglichst wenig externe Bausteine für eine Steuerungsaufgabe.
 \[\frac{AnzahlBytes}{Taktzykluszeit \cdot Anzahl~Taktzyklen}\]
 
 
+\subsection{Transistor}
+$\beta$ bezeichnet den \textit{Stromverstärkungsfaktor} des Transistors.
+
+\subsubsection{Spannungsverstärkung}
+\[V_U = \frac{-R_C}{R_B} \cdot \beta\]
+
+\subsubsection{Leistungsverstäkung}
+\[V_L = V_U \cdot \beta\]
