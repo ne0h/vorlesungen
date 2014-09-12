@@ -437,6 +437,119 @@ Ablaufplanung der Aktionen zur Laufzeit durch ein Organisationsprogramm (Echtzei
 
 \section{Echtzeitbetriebssysteme}
 
+\subsubsection{Aufgaben eines Echtzeitbetriebssystems}
+\begin{itemize}
+	\item Taskverwaltung
+	\item Betriebsmittelverwaltung
+	\item Interprozesskommunikation
+	\item Synchronisation der Tasks
+	\item Schutz der Betriebsmittel vor unberechtigtem Zugriff von Tasks
+	\item Wahrung der Rechtzeitigkeit und Gleichzeitigkeit
+	\item Wahrung der Verfügbarkeit
+\end{itemize}
+
+
+\subsection{Makrobetriebssystem}
+
+\subsubsection{Schichtenmodell eines Makrobetriebssystems}
+\begin{itemize}
+	\item Anwendung
+	\item API/Shell
+	\item Taskverwaltung
+	\item Betriebsmittelverwaltung
+	\item Speicherverwaltung/IO-Verwaltung
+	\item IO-Steuerung
+	\item Gerätetreiber
+	\item Prozessor
+\end{itemize}
+
+
+\subsection{Mikrobetriebssystem}
+
+\subsubsection{Schichtenmodell eines Mikrobetriebssystems}
+\begin{itemize}
+	\item \textbf{Erweiterungsmodule}
+	\begin{itemize}
+		\item Anwendung
+		\item API/Shell
+		\item Taskverwaltung
+		\item Betriebsmittelverwaltung
+		\item Speicherverwaltung/IO-Verwaltung
+		\item IO-Steuerung
+		\item Gerätetreiber
+	\end{itemize}
+	\item \textbf{Mikrokern}
+	\begin{itemize}
+		\item Kommunikation der Module
+		\item Erweiterungsmodule im Userspace
+		\item Interprozesskommunikation
+		\item Synchronisation
+		\item Taskverwaltung
+	\end{itemize}
+	\item Prozessor
+\end{itemize}
+
+\subsubsection{Vorteile}
+\begin{itemize}
+	\item Sehr gut an die Aufgabe anpassbar
+	\item Hohe Skalierbarkeit durch Erweiterungsmodule
+	\item Einfache Portierbarkeit
+	\item Preemptiver Kern
+	\item Kurze kritische Bereiche
+\end{itemize}
+
+
+\subsection{Echtzeitscheduling}
+Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sofern möglich - alle Zeitbedingungen eingehalten werden.
+
+
+\subsection{Scheduling-Verfahren}
+
+\subsubsection{FirstIn-FirstOut}
+\begin{itemize}
+	\item Wer zuerst kommt erhält den Prozessor
+	\item Dynamisch, nicht-preemptive, ohne Prioritäten
+	\item Wenig geeignet für Echtzeit, da keinerlei Zeitbedingungen
+\end{itemize}
+
+\subsubsection{Fixed-Priority-Scheduling}
+\begin{itemize}
+	\item Jeder Task erhält fixe Piorität
+	\item Dynamisches Scheduling, statische Prioritäten
+	\item Wahlweise (nicht-)preemptiv
+\end{itemize}
+
+\subsubsection{Earliest-Deadline-Fist-Scheduling}
+\begin{itemize}
+	\item Diejenige Task, die am nächsten an der eigenen Zeitschrank ist, erhält den Prozessor
+	\item Scheduling und Prioritäten ergeben sich dynamisch
+	\item Wahlweise (nicht-)preemptiv
+\end{itemize}
+
+\subsubsection{Least-Laxity-First-Scheduling}
+\begin{itemize}
+	\item Diejenige Task, die den geringsten Spielraum hat, erhält den Prozessor
+	\item Dynamisches Scheduling mit dynamischen Prioritäten
+	\item Wahlweise (nicht-)preemptiv
+	\item Vergleich zu EDF: Deutlich mehr Taskwechsel, allerdings besser bei Überlast
+\end{itemize}
+
+\subsubsection{Time-Slice-Scheduling}
+\begin{itemize}
+	\item Zuordnen von individuellen, festen Zeitscheiben
+	\item Preemptives, dynamische Scheduling ohne Prioritäten
+\end{itemize}
+
+\subsubsection{Guaranteed Percentage Scheduling}
+\begin{itemize}
+	\item Zuordnen von festen Prozentsätzen der verfügbaren Prozessorleitung innerhalb einer Periode
+	\item Preemptives, dynamische Scheduling ohne Prioritäten
+	\item Auf Einprozessorsystem ein optimales Verfahren
+\end{itemize}
+
+
+\subsection{Synchronisation}
+
 
 
 \section{Appendix A: Operationsverstärker}
@@ -495,3 +608,12 @@ $\beta$ bezeichnet den \textit{Stromverstärkungsfaktor} des Transistors.
 
 \subsubsection{Leistungsverstäkung}
 \[V_L = V_U \cdot \beta\]
+
+
+\subsection{Echtzeitbetriebssysteme}
+
+\subsubsection{Prozessorauslastung}
+\[H = \frac{Benoetigte~Prozessorzeit}{Verfuegbare~Prozessorzeit}\]
+
+\subsubsection{Prozessorauslastung Taskset auf Einprozessorsystem}
+\[H = \sum_{i=1}^{n}\frac{Ausfuehrungszeit_i}{Periodendauer~Task_i}\]
