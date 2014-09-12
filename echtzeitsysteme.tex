@@ -2,12 +2,28 @@
 
 Zusammenfassung der Vorlesung "`Echtzeitsysteme"' von Professor Längle, Professor Hein und Professor Wörn aus dem Sommersemester 2014.\footnote{\url{http://rob.ipr.kit.edu/lehrangebote_728.php}}
 
+
+
 \section{Grundlagen für Echtzeitsysteme in der Automatisierung}
 
 Bei Echtzeitsystemen kommt es neben der logischen Korrektheit auch auf die zeitliche Korrektheit der Ergebnisse an.
 
+\subsection{Anforderungen an Echtzeitsysteme}
+\begin{itemize}
+	\item Rechtzeitigkeit
+	\item Gleichzeitigkeit
+	\item Verfügbarkeit
+\end{itemize}
+
 \subsubsection{Rechtzeitigkeit}
 Die Ausgabedaten müssen rechtzeitig berechnet werden und zur Verfügung stehen.
+
+\subsubsection{Gleichzeitigkeit}
+Die Gleichzeitigkeit bedeutet, dass die Rechtzeitigkeit für mehrere Aktionen gleichzeitig gewährleistet sein muss.
+
+\subsubsection{Verfügbarkeit}
+Die Verfügbarkeit: Echtzeitsysteme müssen über einen längeren Zeitraum hinweg verfügbar sein, einige sogar rund um die Uhr für 24 Stunden. Verfügbarkeit erfordert keine Unterbrechungen des Betriebs für Reorganisationsphasen.
+
 
 \subsubsection{Varianten zur Angabe einer Zeitbedingung}
 \begin{itemize}
@@ -16,6 +32,14 @@ Die Ausgabedaten müssen rechtzeitig berechnet werden und zur Verfügung stehen.
 	\item Angabe eines frühesten Zeitpunkts
 	\item Angabe eines Zeitintervalles
 \end{itemize}
+
+\subsection{Wertfunktionen zur Bewertung von Zeitbedingungen}
+\begin{itemize}
+	\item Weiche Echtzeitbedingungen: Kann in gewissen Grenzen überschritten werden ohne zu fatalen Systemzuständen zu führen
+	\item Feste Echtzeitbedingungen: Bewirken bei Überschreitung einen Abbruch der Aktion
+	\item Harte Echtzeitbedigungen: Müssen eingehalten werden, anderenfalls droht Schaden
+\end{itemize}
+
 
 \subsection{Wirkungskette einer Steuerung}
 Die Steuerung ist ein Vorgang in einem abgegrenzten System, bei dem eine oder mehrere Größen als Eingangsgrößen andere Größen als Ausgangsgrößen aufgrund der dem System eigenen Gesetzmäßigkeiten beeinflussen.\footnote{DIN 19226}
@@ -229,8 +253,193 @@ Es ergibt sich eine Leistungsverstärkung, da sowohl Spannung, als auch Strom ve
 Der Transistor wird lediglich in den Zuständen \textit{Sättigung} und \textit{Gesperrt} ($U_{BE} < 0,6 V$) betrieben.
 
 
-\subsection{Operationsverstärker}
-Verstärker erlauben es allein durch ihre Beschaltung, verschiedene mathematische Funktionen zu modellieren.
+\subsection{AD-Wandler}
+
+\subsubsection{Wägeverfahren}
+\begin{itemize}
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Abtast-Halte-Glied: Hält die Eigangsspannung wärend des Abtastvorgangs konstant
+		\item Komparator: Vergleicht die Engangsspannung
+		\item Datenspeicher
+		\item Steuerlogik
+		\item Taktgenerator
+	\end{itemize}
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item Setze alle Bits im Datenspeicher gleich $0$
+		\item Beginnend beim höchstwertigen Bits werden schrittweise alle Bits des Digitalwerts ermittelt, in dem über einen DA-Wandler Referenzspannungen generiert werden
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Kompensationsverfahren}
+\begin{itemize}
+	\item Nutzt ebenfalls generierte Spannungen als Referenz
+	\item Zähler, der vorwärts und rückwärts zählen kann, hält den zu wandelten Wert
+	\item Koparatorergebnis steuert die Zählrichtung
+	\item Ergebnis in maximal $N$ Schritten vorhanden
+\end{itemize}
+
+\subsubsection{Parallelverfahren}
+\begin{itemize}
+	\item Vergleich der Eingangsspannung mit $2^n-1$ Referenzspannungen über einen Spannungsteiler und speichert die Resultate in Flip-Flops
+	\item Schnellstes Verfahren, kann Signale im GHz-Bereich verarbeiten
+	\item Nachteil: Hoher Aufwand und hohe Zahl an Bauelementen
+\end{itemize}
+
+\subsubsection{Vergleich verschiedener Verfahren}
+Auswahl des Verfahrens nach Zielfrequenz und Zielauflösung.
+\begin{itemize}
+	\item Kompensationsverfahren, Zählverfahren
+	\item Wägeverfahren
+	\item Parallelverfahren
+\end{itemize}
+
+
+\subsection{Asynchrone Datenübertragung}
+
+\subsubsection{Rs-232}
+
+\begin{itemize}
+	\item Space ($+$, Übertragung der $0$) und Mark ($-$, Übertragung der $1$)
+	\item \textbf{Verfahren}
+	\begin{enumerate}
+		\item Ruhepegel
+		\item Statusbit ($0$)
+		\item Übertragung des Datums, LSB $\rightarrow$ MSB
+		\item Stopbit ($1$, 2x)
+		\item Ruhepegel
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{RS-422}
+Analog wie RS-232, alelrdings größere Entfernung (1200 m) und höhere Datenraten (100 kBit/s).
+
+
+
+\section{Echtzeitkommunikation}
+
+\subsection{Zugriffsverfahren auf Echtzeitkommunikationssysteme}
+\begin{itemize}
+	\item Polling
+	\item CSMA/CD und CSMA/CA
+	\item Token-Passing
+	\item TDMA (Time Division Multiple Access)
+\end{itemize}
+
+
+\subsection{Netzwerkprotokolle}
+
+\subsubsection{Ethernet-Frame}
+\begin{itemize}
+	\item \textbf{Header}
+	\begin{itemize}
+		\item Präambel: Wechselnde 4 Bit Folge zur Synchonisation
+		\item Start Frame Delimeter: Beginn des Adressfeld
+		\item Zieladresse
+		\item Quelladresse
+	\end{itemize}
+	\item Datenfeld: 46 - 1500 Byte
+	\item CRC-Checksummer (Trailer)
+\end{itemize}
+
+\subsubsection{Internet Controll Message Protocol (ICMP)}
+\begin{itemize}
+	\item Flusskontroller
+	\item Erkennen von unerreichbaren Zielrechnern
+	\item Routenoptimierung
+	\item Überprüfen von erreichbaren Hosts
+\end{itemize}
+
+
+\subsection{Profibus}
+PROFIBUS (Process Field Bus) ist ein Standard für die Feldbus-Kommunikation in der Automatisierungstechnik.\footnote{\url{http://de.wikipedia.org/wiki/Profibus}}
+
+\subsubsection{Hybrides Zugriffsverfahren}
+\begin{itemize}
+	\item Token-Passing unter den aktiven Stationen (Multi-Master)
+	\item Polling zwischen einem Master und den dazugehörigen Slaves
+\end{itemize}
+
+
+\subsection{Interbus}
+Interbus ist ein Feldbussystem für einen breiten Einsatz in einem Unternehmen. Interbus deckt verschiedene Applikationsbereiche ab, von Sensor/Aktor-Ebene in der Prozess-Automatisierung, bis zu Überwachungs-PC.\footnote{\url{http://de.wikipedia.org/wiki/Interbus}}
+
+\subsubsection{Eigenschaften}
+\begin{itemize}
+	\item Topologie: Aktiver Ring
+	\item Buslänge: Fernbus max. 12,8 km und Pripheriebus max. 10 m
+	\item Übertragungsrate: 500 kBit/s
+	\item Buszugriffsverfahren: Festes Zeitraster
+	\item Busverwaltung: Monomaster
+\end{itemize}
+
+\subsubsection{Komponententypen}
+\begin{itemize}
+	\item Master
+	\item Busklemme zur Verzweigung
+	\item IO-Modul (Peripheriebusgerät)
+	\item IO-Modul (Fernbusgerät)
+\end{itemize}
+
+
+
+\section{Echtzeitprogrammierung}
+Das Ergebnis von Echtzeit-Datenverarbeitung ist nur dann korrekt, wenn es logisch und zeitlich korrekt ist.
+
+
+\subsection{Synchrone Programmierung}
+\begin{itemize}
+	\item Zeitliches Verhalten periodischer Aktionen ist vorgeplant
+	\item Die periodischen Aktionen werden in einem Zeitraster synchronisiert
+	\item Die Reihenfolge des Ablaufs ist fest vorgegeben
+	\item \textbf{Vorteile}
+	\begin{itemize}
+		\item Festes, vorhersagbares Zeitverhalten
+		\item Einfaches Analyse und Testen
+		\item Gut für zyklische Abläufe anwendbar
+		\item Kann bei guter Planung Rechtzeitigkeit und Gleichzeitigkeit garantieren
+	\end{itemize}
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Geringe Flexibilität gegenüber Änderungen
+		\item Reaktionen auf aperiodische Ereignisse sind nicht vorgesehen (synchron nur durch periodische Überwachung möglich)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Asynchrone Programmierung}
+Ablaufplanung der Aktionen zur Laufzeit durch ein Organisationsprogramm (Echtzeitbetriebssystem).
+
+\begin{itemize}
+	\item Flexibler Programmablauf und flexible Programmstruktur
+	\item Reaktion auf periodische und aperiodische Ereignisse
+	\item Rechtzeitigkeit nicht immer im Voraus garantierbar
+	\item Systemtests und Systemanalyse schwierig
+\end{itemize}
+
+\subsubsection{Aufgaben des Organisationsprogramms (Echtzeitscheduling)}
+\begin{itemize}
+	\item Ereignisse überwachen
+	\item Informationen über Zeitbedingungen entgegennehmen
+	\item Ablaufreihenfolge von Teilprogrammen der eingetretenen Ereignisse ermitteln
+	\item Teilprogramme gemäß der ermittelten Ablaufreihenfolge aktivieren
+\end{itemize}
+
+\subsubsection{Fixed Priority Preemptive Scheduling}
+\begin{itemize}
+	\item Feste Prioritäten, Reihenfolge der Ausführung richtet sich danach
+	\item Ereignisse mit hoher Priorität unterbrechen Ereignisse mit niedriger Priorität
+	\item Bearbeitung des niedrig priorisieten Ereignisses wird erst wieder aufgenommen, wenn alle höher priorisierten abgearbeitet sind
+\end{itemize}
+
+
+
+\section{Echtzeitbetriebssysteme}
+
+
+
+\section{Appendix A: Operationsverstärker}
 
 \subsubsection{Der ideale Operationsverstärker: Annahmen}
 \begin{itemize}
@@ -246,10 +455,6 @@ Verstärker erlauben es allein durch ihre Beschaltung, verschiedene mathematisch
 	\item Verstärkung ist linear
 \end{itemize}
 
-
-
-\section{Appendix A: Operationsverstärker}
-
 \subsubsection{Grundsätzliche Beschaltung}
 \begin{itemize}
 	\item Eingangssignal wird auf den positiven Eingang gelegt
@@ -258,6 +463,13 @@ Verstärker erlauben es allein durch ihre Beschaltung, verschiedene mathematisch
 
 \subsubsection{Ausgangsspannung}
 \[U_A = Y_D \cdot (U_P - U_N) = Y_D \cdot U_D\]
+
+
+\subsection{Operationsverstärker als Vergleicher}
+\begin{itemize}
+	\item $U_{E1} > U_{E2} \rightarrow U_A = U_{CC}$
+	\item $U_{E1} < U_{E2} \rightarrow U_A = U_{EE}$
+\end{itemize}
 
 
 \subsection{Nicht-invertierter Spannungsverstärker}
