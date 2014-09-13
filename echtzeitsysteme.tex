@@ -313,7 +313,7 @@ Auswahl des Verfahrens nach Zielfrequenz und Zielauflösung.
 \end{itemize}
 
 \subsubsection{RS-422}
-Analog wie RS-232, alelrdings größere Entfernung (1200 m) und höhere Datenraten (100 kBit/s).
+Analog wie RS-232, allerdings größere Entfernung (1200 m) und höhere Datenraten (100 kBit/s) möglich.
 
 
 
@@ -634,6 +634,114 @@ Schwierigkeit: Bieten einer transparenten Schnittstelle bei sehr unterschiedlich
 	\item Linuxkern ist Echtzeitanwendung neben Echtzeittasks
 	\item Echtzeit-FIFO
 	\item RT-Prozesse werden über Kernel-Module definiert und geladen
+\end{itemize}
+
+
+
+\section{Echtzeitmiddleware}
+\begin{itemize}
+	\item Mittler zwischen verteilten Objekten zwischen Kommunikation und Anwendung
+	\item Vebirgt die Verteilung
+	\item Übernimmt Aufgaben der Identifikation, Lokalisierung, Interaktion, Fehlerbehebung
+\end{itemize}
+
+\subsection{Vorteile}
+\begin{itemize}
+	\item Anwendung muss sich nicht um Verteilung kümmern
+	\item Verteile und lokale Anwendung können auf die gleiche Weise entwickelt werden
+	\item Bei einer Rekonfiguration muss die Anwendung nicht geändert werden
+	\item Alle Aufgaben werden von einer einheitlichen Software übernommen
+\end{itemize}
+
+\subsubsection{Abgeleitete Vorteile}
+\begin{itemize}
+	\item Portierbarkeit wächst
+	\item Heterogene Umgebung bleibt verborgen
+	\item Testbarkeit und Wartbarkeit wird verbessert
+\end{itemize}
+Somit werden Entwicklungszeiten und -kosten reduziert.
+
+\subsection{Nachteile}
+\begin{itemize}
+	\item Zusätzlicher Speicher-Overhead
+	\item Zusätzlicher Verarbeitungs-Overhead
+	\item Standard-Middleware-Architekturen für Echtzeitanwendungen nicht geeignet (Prioritätsinversion)
+\end{itemize}
+
+
+\subsection{COBRA}
+
+\subsubsection{Architektur}
+\begin{itemize}
+	\item Application Objects (Anwendung), Object Services (Basisdienste), Common Facilities (Dienste für bestimmte Anwendungsbereiche)
+	\item Object Request Broker
+	\item Verteiltes, heterogenes Rechnersystem
+\end{itemize}
+
+\subsubsection{Features}
+\begin{itemize}
+	\item Objektmodell: Anwendungen in verschiedenen Sprachen möglich, Interface-Definition per IDL
+	\item Aufruf eines entfernten Objektes: IDL-Stub $\rightarrow$ ORB-Kern $\rightarrow$ IDL-Skeleton
+\end{itemize}
+
+
+\subsection{RT-CORBA}
+\begin{itemize}
+	\item Zeitschranken für Methodenaufrufe
+	\item Prioritätsgesteuerte Warteschlangen
+	\item EInheitliches Prioritätsschema
+	\item Echtzeitfähiger Ereignisdienst
+	\item Echtzeitfähige Ausnahmebehandlung
+	\item Dienstorientierte Struktur für eingebettet Systeme
+\end{itemize}
+
+\subsubsection{Anforderungen}
+\begin{itemize}
+	\item Synchronisierte Uhren
+	\item Echtzeitfähige Kommunikation: Priorisierung der Nachrichten
+	\item Echtzeitscheduling
+	\item Blockaden-Vermeidung
+\end{itemize}
+
+
+
+\section{Speicherprogrammierbare Steuerung}
+Eine SPS hat im einfachsten Fall Eingänge, Ausgänge, ein Betriebssystem (Firmware) und eine Schnittstelle, über die das Anwenderprogramm geladen werden kann. Das Anwenderprogramm legt fest, wie die Ausgänge in Abhängigkeit von den Eingängen geschaltet werden sollen.\footnote{\url{http://de.wikipedia.org/wiki/Speicherprogrammierbare_Steuerung}}
+
+
+\subsection{Softwarestruktur einer Soft-SPS}
+\begin{itemize}
+	\item Anwendungen: Tasks, Visualisierung, Motion Control, usw.
+	\item API
+	\item RT-Kern
+	\item Hardware: Timer, Interrupt Controller, usw.
+\end{itemize}
+
+
+\subsection{SPS-Programmiersprachen}
+\begin{itemize}
+	\item \textbf{Grafisch}
+	\begin{itemize}
+		\item Kontaktplan
+		\item Funktionsplan
+	\end{itemize}
+	\item \textbf{Textuell}
+	\begin{itemize}
+		\item Anweisungsliste
+		\item Strukturierter Text
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Phasen der Softwareentwicklung einer SPS}
+\begin{itemize}
+	\item Lastenheft
+	\item Pflichtenheft
+	\item Programmkonzept (Entwurf)
+	\item Programmierung
+	\item Integration
+	\item Test
+	\item Wartung und Pflege
 \end{itemize}
 
 
