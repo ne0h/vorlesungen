@@ -550,6 +550,92 @@ Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sof
 
 \subsection{Synchronisation}
 
+\subsubsection{Gemeinsame Betriebsmittel}
+\begin{itemize}
+	\item Daten
+	\item Geräte
+	\item Programme
+\end{itemize}
+
+\subsubsection{Synchronisationsvarianten}
+\begin{enumerate}
+	\item Sperrsynchronisation mit Mutex (wechselseitiger Ausschluss), bei belegtem Mutex wird die zugreifende Task verzögert, bis der Mutex frei ist
+	\item Reihenfolgensynchronisation mit Semaphoren, Operationen: Passiere, Verlasse
+\end{enumerate}
+
+\subsubsection{Deadlocks}
+Mehrere Tasks warten auf die Freigabe von Betriebsmitteln, die sich gegenseitig blockieren.
+
+\subsubsection{Gegenmaßnahmen}
+\begin{itemize}
+	\item Abhängigkeitsanalyse
+	\item Vergabe der Betriebsmittel in gleicher Reihenfolge
+	\item Timeout
+\end{itemize}
+
+\subsubsection{Livelocks}
+Eine Task wird durch andere Tasks ständig an der Ausführung gehindert.
+
+
+\subsection{Kommunikation zwischen Tasks}
+\begin{itemize}
+	\item Gemeinsamer Speicher
+	\item Austausch von Nachrichten
+\end{itemize}
+
+
+\subsection{IO-Verwaltung}
+
+\subsubsection{Aufgaben}
+\begin{itemize}
+	\item Zuteilung und Freigeben von Geräten
+	\item Benutzen von Geräten
+\end{itemize}
+Schwierigkeit: Bieten einer transparenten Schnittstelle bei sehr unterschiedlichen Geräten, die sich in Geschwindigkeit und Datenformat stark unterscheiden.
+
+\subsubsection{Aufgaben im Detail}
+\begin{itemize}
+	\item Symbolische Namensgebung
+	\item Synchronisation und Schutz der Geräte
+	\item Kommunikation mit den Gerätetreibern über Schnittstellenbausteine
+	\item Pufferung und einheitliches Datenformt
+\end{itemize}
+
+\subsubsection{Synchronisationsmechanismen}
+\begin{itemize}
+	\item Polling: Einfach und hohe Übertragungsleistung, allerdings ist der Prozessor ständig aktiv, keine Nebenaktivitäten
+	\item Busy Waiting (Periodisches Einschieben von Nebenaktivitäten): Nebenaktivität möglich, allerdings verlangsamte Reaktionszeit und Nebenaktivitäten müssen in kleine Teilschritte unterteilt werden
+	\item Interrupt: Beliebige Nebenaktivitäten, schnelle Übertragung, allerdings verringerte Übertragungsraten
+	\item Polling mit Handshake: Zusätzlicher Handshake notwendig, falls das Gerät schneller liefert als die Task sie entgegennehen kann
+	\item Interrupt mit Handshake: s.o.
+\end{itemize}
+
+
+\subsection{Auswahlkriterien für Echtzeitbetriebssysteme}
+\begin{enumerate}
+	\item Entwicklungs- und Zielumgebung: Programmiersprache, Zielsystem, Cross-Entwicklung
+	\item Modularität und Kerngröße: Konfigurierbarkeit der Anwendung, minimaler Mikrokern für eingebettete Systeme
+	\item Anpassbarkeit an verschiedene Zielumgebungen für Automatisierung
+	\item Allgemeine Eigenschaften: Shell, Bibliotheken, Werkzeuge
+	\item Leistungsdaten
+\end{enumerate}
+
+\subsubsection{QNX-Architektur}
+\begin{itemize}
+	\item Anwendertasks
+	\item Systemtasks
+	\item Mikrokern
+	\item Hardware
+\end{itemize}
+
+\subsubsection{Architektur von RTLinux}
+\begin{itemize}
+	\item Hardware-Echtzeitkern
+	\item Linuxkern ist Echtzeitanwendung neben Echtzeittasks
+	\item Echtzeit-FIFO
+	\item RT-Prozesse werden über Kernel-Module definiert und geladen
+\end{itemize}
+
 
 
 \section{Appendix A: Operationsverstärker}
