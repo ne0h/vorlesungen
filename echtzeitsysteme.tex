@@ -757,6 +757,56 @@ Eine SPS hat im einfachsten Fall Eingänge, Ausgänge, ein Betriebssystem (Firmw
 
 
 
+\section{Robotersteuerung}
+
+\subsection{Wesentliche Komponenten}
+\begin{itemize}
+	\item Mechanik
+	\item Steuerschrank
+	\item Programmiergerät
+\end{itemize}
+
+
+\subsection{Informationsfluss und Funktionen}
+\begin{itemize}
+	\item IO, Speicherebene: Bedienung, Programmierung, Speicherung von Befehlen
+	\item Verarbeitungsebene: Sensordatenverarbeitung, Verarbeitung von Logik
+	\item Prozess-IO-Ebene: Antrieb, Wegmeßsystem, Sensore, Robotermechanik, Peripherie
+\end{itemize}
+
+
+\subsection{Robotersoftwarearchitektur}
+\begin{itemize}
+	\item \textbf{Mit Echtzeit-Betriebssystem}
+	\begin{itemize}
+		\item Anwendung: Steuerung, Sessordatenverarbeitung, Feldbusse, Shell
+		\item API
+		\item RT-Kernel
+		\item Hardware
+	\end{itemize}
+	\item \textbf{Mit Hardware-Umschaltung zwischen zwei Betriebssysteme}
+	\begin{itemize}
+		\item Jeweils ein Standard-Betriebssystem und ein Echtzeit-Betriebssystem
+		\item Hardware-Task-Umschalter dazwischen
+	\end{itemize}
+	\item \textbf{Mit zusätzlichem Standardbetriebssystem für niederpriore Tasks}
+	\begin{itemize}
+		\item Standardbetriebssystem als Task innerhalb des Echtzeitsystems
+		\item Shared Memory
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Aufgabenstellung von Robotern in der Industrie}
+\begin{itemize}
+	\item Bearbeitungsaufgaben
+	\item Handhabungsaufgaben
+	\item Montageaufgaben
+	\item Inspektionsaufgaben
+\end{itemize}
+
+
+
 \section{Appendix A: Operationsverstärker}
 
 \subsubsection{Der ideale Operationsverstärker: Annahmen}
