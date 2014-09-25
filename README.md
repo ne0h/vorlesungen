@@ -1,7 +1,8 @@
 Vorlesungen
 ===========
 
-Zusammenfassung meiner gehörten Vorlesungen. Zum Erzeugen des PDFs ist Latex notwendig:
+Zusammenfassung einiger Vorlesungen, die ich gehört habe. Zum Erzeugen des PDFs ist Latex 
+notwendig:
 
 `$ pdflatex main.tex`
 

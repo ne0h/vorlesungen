@@ -24,6 +24,13 @@ Die Gleichzeitigkeit bedeutet, dass die Rechtzeitigkeit für mehrere Aktionen gl
 \subsubsection{Verfügbarkeit}
 Die Verfügbarkeit: Echtzeitsysteme müssen über einen längeren Zeitraum hinweg verfügbar sein, einige sogar rund um die Uhr für 24 Stunden. Verfügbarkeit erfordert keine Unterbrechungen des Betriebs für Reorganisationsphasen.
 
+\subsection{Gütekriterien für Echtzeitsysteme}
+\begin{itemize}
+	\item Stabilität
+	\item Genauigkeit
+	\item Schnelligkeit
+\end{itemize}
+
 
 \subsubsection{Varianten zur Angabe einer Zeitbedingung}
 \begin{itemize}
@@ -131,8 +138,9 @@ Das Bode-Diagramm wird, wie auch die anderen Diagramme, aus mathematischen Syste
 
 \subsection{Signalprozessor}
 \begin{itemize}
-	\item Echtzeitfähigkeit
-	\item Kontinuierliche Verarbeitung digitaler Signale
+	\item Hardvard-Architektur
+	\item Hochleistungsarithmetik
+	\item Hohe, benutzerbestimmbare Parallelität
 \end{itemize}
 
 
@@ -198,6 +206,15 @@ Ziel: Möglichst wenig externe Bausteine für eine Steuerungsaufgabe.
 
 
 \subsection{Busse}
+
+
+\subsection{Augaben Feldbusse}
+\begin{itemize}
+	\item Echtzeitfähigkeit
+	\item Robustheit
+	\item Interoperabilität
+\end{itemize}
+
 
 \subsubsection{Datenbuss}
 \begin{itemize}
@@ -448,7 +465,7 @@ Interbus ist ein Feldbussystem für einen breiten Einsatz in einem Unternehmen. 
 	\item Steuergeräte in einem Auto: CAN-Bus (hohe Übertragungssicherheit)
 	\item Gebäudeautomation: Profibus (große Buslänge, multimasterfähig)
 	\item Automation in der Produktion: Interbus (feste MMAT, geringe Latenz)
-	\item Regelung Industrieroboter: Sercos (kurze Zykluszeitn, nur wenige Daten, Synchronisierung)
+	\item Regelung Industrieroboter: Sercos (kurze Zykluszeiten, nur wenige Daten, Synchronisierung)
 \end{itemize}
 
 
@@ -549,7 +566,6 @@ Ablaufplanung der Aktionen zur Laufzeit durch ein Organisationsprogramm (Echtzei
 	\end{itemize}
 	\item \textbf{Mikrokern}
 	\begin{itemize}
-		\item Kommunikation der Module
 		\item Erweiterungsmodule im Userspace
 		\item Interprozesskommunikation
 		\item Synchronisation
@@ -596,7 +612,7 @@ Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sof
 	\item Preemptiv
 \end{itemize}
 
-\subsubsection{Earliest-Deadline-Fist-Scheduling}
+\subsubsection{Earliest-Deadline-First-Scheduling}
 \begin{itemize}
 	\item Diejenige Task, die am nächsten an der eigenen Zeitschrank ist, erhält den Prozessor
 	\item Scheduling und Prioritäten ergeben sich dynamisch
@@ -609,7 +625,7 @@ Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sof
 	\item Dynamisches Scheduling mit dynamischen Prioritäten
 	\item Wahlweise (nicht-)preemptiv
 	\item Vergleich zu EDF: Deutlich mehr Taskwechsel, allerdings besser bei Überlast
-	\item Spielraum: \(I_i = deadline_i -(t+Restausfuerhungszeit_i)\)
+	\item Spielraum: \(I_i = deadline_i -(t+Restausfuehrungszeit_i)\)
 \end{itemize}
 
 \subsubsection{Time-Slice-Scheduling}
