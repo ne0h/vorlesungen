@@ -77,6 +77,25 @@ Die Regelung ist ein technischer Vorgang in einem abgegrenzten System, bei dem e
 \end{enumerate}
 
 
+\subsection{PID-Regler}
+\(w \rightarrow Regler~R(s) \rightarrow Strecke~H(s) \rightarrow x\)
+
+\begin{enumerate}
+	\item P-Regler: \(R(s) = K_P\)
+	\item PI-Regler: \(R(s) = K_P(1+\frac{1}{T_Ns})\)
+	\item PD-Regler: \(R(s) = K_P(1+T_Vs)\)
+	\item PID-Regler: \(R(s) = K_P(1+\frac{1}{T_Ns}+T_Vs)\)
+\end{enumerate}
+
+
+\subsection{Das Abtasttjeorem nach Shannon}
+Das Abtasttheorem besagt, dass ein auf \(f_{max}\) bandbegrenztes Signal mit einer Frequenz von mindestens \(2\cdot f_{max}\) abgetastet werden muss, damit man es aus dem zeitdiskreten Signal wieder exakt rekonstruieren kann. Die exakte Rekonstruktion ist dabei nur theoretisch möglich, da hierzu eine unendliche Anzahl an Abtastpunkten nötig wäre. In der Praxis beschränkt man sich deswegen darauf, das ursprüngliche Signal möglichst gut zu interpolieren.\footnote{\url{http://de.wikipedia.org/wiki/Nyquist-Shannon-Abtasttheorem}}
+
+\subsection{Bode-Diagramm}
+Das Bode-Diagramm dient der Darstellung des Übertragungsverhaltens eines dynamischen Systems, auch Frequenzantwort oder Frequenzgang genannt.
+Das Bode-Diagramm wird, wie auch die anderen Diagramme, aus mathematischen Systembeschreibungen durch Differentialgleichungen hergeleitet und berechnet.\footnote{\url{https://de.wikipedia.org/wiki/Bode-Diagramm}}
+
+
 
 \section{Rechnerarchitekturen}
 
@@ -90,12 +109,30 @@ Die Regelung ist ein technischer Vorgang in einem abgegrenzten System, bei dem e
 
 \subsection{Unterbrechungen}
 \begin{itemize}
-	\item Software Interrupt: Excpetion, Unterbrechungswunsch eines laufenden Programms
-	\item Hardware Interrupt: Unterbrechungswunsch durch externe Hardwarekomponenten
+	\item \textbf{Unterbrechungsarten}
+	\begin{itemize}
+		\item Exception: Fehlersituation im Prozessorkern
+		\item Software Interrupt: Unterbrechungswunsch eines laufenden Programms
+		\item Hardware Interrupt: Unterbrechungswunsch durch externe Hardwarekomponenten
+	\end{itemize}
 	\item Behandlung per \textit{Interrupt Service Routine}, Zwischenspeichern des Prozessorstatus auf den Stackspeicher mit anschließendem Wiederherstellen
 	\item Auslösen im Mikroprozessor: Externe Untebrechung, Quitting, Vektor -> Datenbus
 	\item Prioritätsebene, gespeichert im Interrupt-Maskenregister (Teil des Steuerregisters)
 	\item Viele Prioritätsebenen: Dezentral (Daisy-Chain) oder mittels zentralem Controller
+\end{itemize}
+
+\subsubsection{Reaktionsmöglichkeiten auf Unterbrechungen}
+\begin{itemize}
+	\item Taskabbruch
+	\item Taskwechsel: Verdrängung durch höhere Priorität
+	\item Kein Taskwechsel: Zurückstellung bei Unterbrechung mit einer niedrigeren Priorität
+\end{itemize}
+
+
+\subsection{Signalprozessor}
+\begin{itemize}
+	\item Echtzeitfähigkeit
+	\item Kontinuierliche Verarbeitung digitaler Signale
 \end{itemize}
 
 
@@ -307,7 +344,7 @@ Auswahl des Verfahrens nach Zielfrequenz und Zielauflösung.
 		\item Ruhepegel
 		\item Statusbit ($0$)
 		\item Übertragung des Datums, LSB $\rightarrow$ MSB
-		\item Stopbit ($1$, 2x)
+		\item Stopbit ($1$, abhängig vom gewählten Verfahren)
 		\item Ruhepegel
 	\end{enumerate}
 \end{itemize}
@@ -323,7 +360,7 @@ Analog wie RS-232, allerdings größere Entfernung (1200 m) und höhere Datenrat
 \begin{itemize}
 	\item Polling
 	\item CSMA/CD und CSMA/CA
-	\item Token-Passing
+	\item Token-Passing (Obergrenze für Medienzugreifzeit möglich)
 	\item TDMA (Time Division Multiple Access)
 \end{itemize}
 
@@ -351,6 +388,30 @@ Analog wie RS-232, allerdings größere Entfernung (1200 m) und höhere Datenrat
 	\item Überprüfen von erreichbaren Hosts
 \end{itemize}
 
+\subsubsection{CSMA/CD}
+\begin{itemize}
+	\item \(T_{Paket} \ge 2 \cdot T_{Prop}\)
+\end{itemize}
+
+\subsubsection{Overhead der Protokoll/Schicht}
+\begin{itemize}
+	\item Ethernet 26 Byte
+	\item IPv4: 24 Byte
+	\item TCP: 24 Byte
+\end{itemize}
+
+
+\subsection{Kodierungen}
+
+\subsubsection{Manchester Kodierung}
+\begin{itemize}
+	\item XOR von Takt und Signal
+	\item Benötigt kein externes Taktsignal zwischen Sender und Empfänger \(\rightarrow\) wird aus dem Signalverlauf abgeleitet
+	\item Benötigt doppelte Bandbreite im Vgl. zu NRZ. Pro Nutzdatenbit werden zwei Signalzustände benötigt
+\end{itemize}
+
+
+\subsection{Busse}
 
 \subsection{Profibus}
 PROFIBUS (Process Field Bus) ist ein Standard für die Feldbus-Kommunikation in der Automatisierungstechnik.\footnote{\url{http://de.wikipedia.org/wiki/Profibus}}
@@ -380,6 +441,14 @@ Interbus ist ein Feldbussystem für einen breiten Einsatz in einem Unternehmen. 
 	\item Busklemme zur Verzweigung
 	\item IO-Modul (Peripheriebusgerät)
 	\item IO-Modul (Fernbusgerät)
+\end{itemize}
+
+\subsubsection{Bus-Beispiele}
+\begin{itemize}
+	\item Steuergeräte in einem Auto: CAN-Bus (hohe Übertragungssicherheit)
+	\item Gebäudeautomation: Profibus (große Buslänge, multimasterfähig)
+	\item Automation in der Produktion: Interbus (feste MMAT, geringe Latenz)
+	\item Regelung Industrieroboter: Sercos (kurze Zykluszeitn, nur wenige Daten, Synchronisierung)
 \end{itemize}
 
 
@@ -517,6 +586,14 @@ Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sof
 	\item Jeder Task erhält fixe Piorität
 	\item Dynamisches Scheduling, statische Prioritäten
 	\item Wahlweise (nicht-)preemptiv
+	\item Vergabe von Prozessorzuteilung: \(\frac{Ausfuehrungszeit}{Maximalzeit}\)
+	\item Prozessorauslastung:\(\sum Prozessorzuteilung_i\)
+\end{itemize}
+
+\subsubsection{Rate-Monotonic-Scheduling}
+\begin{itemize}
+	\item Periodisch auszuführende Tasks erhalten Prioritäten: \(PR_i =\frac{1}{Maximalzeit}\) 
+	\item Preemptiv
 \end{itemize}
 
 \subsubsection{Earliest-Deadline-Fist-Scheduling}
@@ -532,6 +609,7 @@ Aufteilung des Prozessors zwischen allen ablaufwilligen Tasks derart, dass - sof
 	\item Dynamisches Scheduling mit dynamischen Prioritäten
 	\item Wahlweise (nicht-)preemptiv
 	\item Vergleich zu EDF: Deutlich mehr Taskwechsel, allerdings besser bei Überlast
+	\item Spielraum: \(I_i = deadline_i -(t+Restausfuerhungszeit_i)\)
 \end{itemize}
 
 \subsubsection{Time-Slice-Scheduling}
@@ -608,6 +686,16 @@ Schwierigkeit: Bieten einer transparenten Schnittstelle bei sehr unterschiedlich
 	\item Interrupt: Beliebige Nebenaktivitäten, schnelle Übertragung, allerdings verringerte Übertragungsraten
 	\item Polling mit Handshake: Zusätzlicher Handshake notwendig, falls das Gerät schneller liefert als die Task sie entgegennehen kann
 	\item Interrupt mit Handshake: s.o.
+\end{itemize}
+
+
+\subsection{Virtuelle Speicherverwaltung}
+Ein größerer Adressraum wird auf einen kleineren physikalischen Adressraum abgebildet. Dies heißt, es müssen Verdrängungen stattfinden, um den Speicherbedarf aller Tasks zu befriedigen.
+
+\begin{itemize}
+	\item Lineare oder streuende Adressbildung
+	\item Vorteile: Größerer Adressraum, leichteres Abfangen von Zugriffsverletzungen
+	\item Nachteile: Aufwendige Realisierung, Verdrängung notwendig, Auflösung von Adressen
 \end{itemize}
 
 
@@ -722,13 +810,13 @@ Eine SPS hat im einfachsten Fall Eingänge, Ausgänge, ein Betriebssystem (Firmw
 \begin{itemize}
 	\item \textbf{Grafisch}
 	\begin{itemize}
-		\item Kontaktplan
-		\item Funktionsplan
+		\item Kontaktplan (KOP)
+		\item Funktionsplan (FUP)
 	\end{itemize}
 	\item \textbf{Textuell}
 	\begin{itemize}
-		\item Anweisungsliste
-		\item Strukturierter Text
+		\item Anweisungsliste (AWL)
+		\item Strukturierter Text (ST)
 	\end{itemize}
 \end{itemize}
 
@@ -754,6 +842,13 @@ Eine SPS hat im einfachsten Fall Eingänge, Ausgänge, ein Betriebssystem (Firmw
 	\item Werkzeugmaschine
 	\item Werkstück
 \end{enumerate}
+
+\subsection{Kaskadensteuerung}
+\begin{itemize}
+	\item Regler bekommt Soll-Wert, vergleicht mit Ist-Wert und erzeugt Soll-Wert für den nächsten Regler
+	\item Synchrone Programmierung: Rein zeitgesteuert, keine asynchronen Ereignisse. Festes Zeitverhalten, einfache Tests und Analysen, leichtes Garantieren von Rechtzeitigkeit und Gleichzeitigkeit
+	\item Ablaufdiagramm: Logische Abfolge mit zeitlicher Reihenfolge kombiniert mit Säulen darstellen
+\end{itemize}
 
 
 
@@ -807,7 +902,19 @@ Eine SPS hat im einfachsten Fall Eingänge, Ausgänge, ein Betriebssystem (Firmw
 
 
 
-\section{Appendix A: Operationsverstärker}
+\section{Appendix A: Differenzialgleichungen}
+
+\subsection{Homogene lineare Differenzialgleichung}
+\[x_h(t) = C_ke^{\lambda_kt}\]
+\begin{enumerate}
+	\item Setze \(x(t) = e^{\lambda t}\) und setze integriert pro Term ein
+	\item Ausklammern und kürzen von \(e^{\lambda t}\)
+	\item Nullstellen berechnen
+\end{enumerate}
+
+
+
+\section{Appendix B: Operationsverstärker}
 
 \subsubsection{Der ideale Operationsverstärker: Annahmen}
 \begin{itemize}
@@ -847,7 +954,7 @@ Die Verstärkung der Schaltung muss immer größer oder gleich eins sein.
 
 
 
-\section{Appendix B: Formelsammlung}
+\section{Appendix C: Formelsammlung}
 
 \subsection{Busse}
 
@@ -865,6 +972,22 @@ $\beta$ bezeichnet den \textit{Stromverstärkungsfaktor} des Transistors.
 \[V_L = V_U \cdot \beta\]
 
 
+\subsection{Netze}
+
+\subsubsection{Maximale Buslänge}
+\[l \le \frac{1}{2} \cdot L_{Paket} \cdot \frac{v}{BW}\]
+
+\subsubsection{Übertragungsdauer eines Pakete}
+\[T_{Paket} = \frac{L_{Paket}}{BW}\]
+
+
+\subsubsection{Busspezifische Signallaufzeit}
+\[T_{Prop} = \frac{l}{v}\]
+
+\subsubsection{Übertragungseffiziens}
+\[\eta = \frac{1}{1+5\cdot\frac{T_{Prop}}{T_{Paket}}}\]
+
+
 \subsection{Echtzeitbetriebssysteme}
 
 \subsubsection{Prozessorauslastung}
@@ -872,3 +995,68 @@ $\beta$ bezeichnet den \textit{Stromverstärkungsfaktor} des Transistors.
 
 \subsubsection{Prozessorauslastung Taskset auf Einprozessorsystem}
 \[H = \sum_{i=1}^{n}\frac{Ausfuehrungszeit_i}{Periodendauer~Task_i}\]
+
+\subsubsection{Maximale Medienzugriffszeit}
+\[MMAT = T_{Paket} + N \cdot T_{Token} + T_{Prop} + (N-1) \cdot T_{THT}\]
+
+
+\section{Appendix D: Klausuraufgaben}
+
+\subsection{Zeitkontinuierliche Regelung}
+
+\subsubsection{Rückkopplungen}
+\begin{itemize}
+	\item Gegenkopplung \((-)\): \(\frac{G_1(s)}{1 + G_1(s) \cdot G_2(s)}\), bei positiven Konstanten
+	\item Mitkopplung \((+)\): \(\frac{G_1(s)}{1-G_1(s) \cdot G_2(s)}\), bei negativen Konstanten
+\end{itemize}
+
+\subsubsection{Differenzialgleichung \(\rightarrow\) Blockschaldbild}
+\begin{enumerate}
+	\item Aufbau: \(u \rightarrow \ddot{x} \rightarrow \dot{x} \rightarrow x\), zwischen den Differenzialen jeweils \(\frac{1}{s}\), nach \(u\) die Konstante, Konstanten der Differenziale als Rückkopplung, Rückkopplung von \(x\) nach \(u\)
+	\item Streichen unnötiger Differenziale
+	\item Zusammenfassen von Konstanten in Reihe per Multiplikation
+	\item Zusammenfassen der letzten Rückkopplung
+\end{enumerate}
+
+\subsubsection{Stabilität eines Systems mit Hurwitz-Kriterium}
+\begin{itemize}
+	\item Alle Koeffizienten \(a_i > 0\)
+	\item Alle Hauptminoren der Hurwitz-Matrix positiv
+	\item \(H = \begin{pmatrix}
+					a_{n-1} & a_{n-3} & a_{n-5} & a_{n-7} & ... & 0 \\
+					1 & a_{n-2} & a_{n-4} & a_{n-6} & ... & 0 \\
+					0 & a_{n-1} & a_{n-3} & a_{n-5} & ... & 0 \\
+					0 & 1 & a_{n-1} & a_{n-2} & ... & 0 \\
+					. & . & . & . & ... & . \\
+					0 & 0 & 0 & 0 & 0 & a_n
+				\end{pmatrix}\)
+\end{itemize}
+
+\subsubsection{Laplace-Transformierte berechnen}
+Linear: Nach s ableiten.
+
+\subsubsection{Übertragungsfunktion berechnen}
+\begin{itemize}
+	\item Laplace-Transformierte berechnen
+	\item Einsetzen in \(G(s) = \frac{X(s)}{U(s)}\). Kehrwert beachten!
+\end{itemize}
+
+
+\subsection{Zeitdiskrete Regelung}
+
+\subsubsection{Differenzialgleichung \(\rightarrow\) Differenzengleichung}
+Berechnung der diskreten Schritte mit \(T_A\). Vorsicht: \(tx(t) \rightarrow kT_Ax_k\)
+
+\subsubsection{Z-Transformation}
+
+
+\subsection{Netze}
+
+\subsubsection{N Geräte, die senden möchten}
+Benötigte Bandbreite und vorhandene Bandbreite berechnen und vergleichen.
+
+
+\subsection{Scheduling}
+
+\subsubsection{Gibt es einen gültigen Schedul}
+Auslastung anschauen!
