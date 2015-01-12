@@ -167,6 +167,41 @@ Lediglich für unabhängige Projekte geeignet.
 
 
 \section{Portfoliotheorie}
+\begin{itemize}
+	\item Fundament der modernen Kapitalmarkttheorie: Abwägung zwischen Ertrag und Risiko
+	\item Idee: Risikominimierung durch Diversifikation
+\end{itemize}
+
+
+\subsection{Portefeuilles}
+Investoren betrachten keine isolierten Wertpapiere sondern Portefeuilles.
+
+\subsubsection{Erreichbare Kombinationen effektiver Portefeuilles}
+\begin{itemize}
+	\item Berechnung des Globalen Varianzminimalen Portefeilles (GMVP)
+	\item Die Porteifeilles oberhalb des GVMP sind effizient
+	\item Konkrete Wahl abhängig von der Risikoeinstellung
+\end{itemize}
+
+\subsubsection{Erreichbare Kombinationen mit Tangentialportefeuille}
+\begin{itemize}
+	\item Zusätzliches, risikoles Papier; darstellbar als Gerade
+	\item Berechnung des Schnittpunkts der Kurven
+	\item Durch Verschuldung mit dem risikolosen Papier sind höhere Investitonen möglich
+\end{itemize}
+
+
+\subsection{CAPM}
+\begin{itemize}
+	\item Jeder Investor hält Kombination aus Tangentialportefeuille und risikolosem Instrument (Aufteilung investorspezifisch)
+	\item Anpassung der Kurse, so dass Markträumung stattfindet
+\end{itemize}
+
+\subsubsection{Zerlegung des Gesamtrisikos}
+\begin{enumerate}
+	\item Risikobeitrag zum Gesamtrisiko: Höhere Rendite \(cov(r_j,r_M)\)
+	\item Unternehmensbezogenes Risiko: Keine höhere Rendite \(\sigma^2_{\epsilon_j}\)
+\end{enumerate}
 
 
 
@@ -203,23 +238,18 @@ Lediglich für unabhängige Projekte geeignet.
 \subsection{Anleihen}
 
 \subsubsection{Barwert einer ewigen Rente}
-
 \[BW = \frac{C}{r}\]
 
 \subsubsection{Barwert einer endlichen Rente}
-
 \[BW = \frac{C}{(1+r)^1}+..+\frac{C}{(1+r)^n} = \frac{C}{r}\cdot[1-\frac{1}{(1+r)^n}]\]
 
 \subsubsection{Ewige Rente mit konstantem Wachstum g}
-
 \[BW = \frac{C}{r-g}\]
 
 \subsubsection{Endliche Rente mit konstantem Wachstum}
-
 \[BW = \frac{C}{r-g} \cdot [1-[\frac{1+g}{1+r}]^n]\]
 
 \subsubsection{Bewertung risikoloser Anleihen: Zerobonds}
-
 \[y = (\frac{Nennwert}{r})^{\frac{1}{n}})-1\]
 
 
@@ -234,3 +264,31 @@ Lediglich für unabhängige Projekte geeignet.
 \subsubsection{Divided Discount Model mit unterschiedlichen Wachstumsraten}
 Erweiterung um ewige Rente.
 \[P_0 = \sum_{t=1}^{N} \frac{Div_t}{(1+r_E)^t} + \frac{1}{(1+r_E)^N}\cdot\frac{Div_{N+1}}{r_E-g}\]
+
+
+\subsection{Portfoliotheorie}
+
+\subsubsection{Aktienrendite}
+Bei verschiedenen Papieren mit linearer Gewichtung.
+
+\[r = \frac{Div + K_1 - K_0}{K_0}\]
+
+\subsubsection{Standardabweichungen der Rendite}
+Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
+
+\[Std = \sqrt{Var} = \sqrt{\frac{(R_1-R)^2+..+(R_N-R)^2}{N-1}}\]
+
+\subsubsection{Erwartungswert der Portefeuillerendite}
+\[\mu_w = w_1\mu_1 + w_2\mu_2\]
+
+\subsubsection{Risiko der Portefeuillerendite}
+\[\sigma^2_w = w^2_1\sigma^2_1+w^2_2\sigma^2_2+2w_1w_2cov(r_1,r_2)\]
+
+\[cov(r_1,r_2) = \sigma_1\sigma_2\rho_{12}\]
+
+\subsubsection{CAPM: Kapitalmarktlinie}
+\[\mu_W = r + \frac{\mu_M-r}{\sigma_M}\cdot\sigma_W\]
+
+\subsubsection{CAPM: Einzelne Wertpapiere im Gleichgewicht}
+\[\mu_j = r + \frac{\mu_M-r}{cov(r_M,r_M)}\cdot cov(r_j,r_M) = r + (\mu_M-r)\cdot \beta_j\]
+\[\beta_j = \frac{cov(r_j,r_M)}{cov(r_M,r_M)}\]
