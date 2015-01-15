@@ -385,14 +385,101 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 
 
 \section{Kostenartenrechnung}
+\begin{itemize}
+	\item Wiederbeschaffungswert: Kosten, ein Produkt zu verkaufen (Umsatzkosten oder Herstellkosten)
+\end{itemize}
 
 
 
 \section{Kostenstellenrechnun}
+\begin{itemize}
+	\item Abrechnungseinheiten, in die das Unternehmen aufgegliedert ist
+	\item \textbf{Differenzierung}
+	\begin{itemize}
+		\item Vorkostenstelle: Arbeiten nicht direkt am Endprodukt (sekundäre Kostenstelle)
+		\item Endkostenstelle: Kann direkt dem Kostenträger zugeordnet werden (primäre Kostenstelle)
+	\end{itemize}
+	\item \textbf{Aufgaben}
+	\begin{itemize}
+		\item Bindeglied zwischen Kostenarten- und Kostenträgerrechnungm, um Gemeinkosten bei Mehrproduktunternehmen auf die Kostenträger verrechnen zu können
+		\item Bereitstellung von Informationen über den Leistungsbeziehungs und Ressourcenverbrauch
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Betriebsabrechnungsbogen}
+\begin{itemize}
+	\item Tabellarische Aufstellung der Kostenstellen
+	\item \textbf{Vorgehen}
+	\begin{itemize}
+		\item Aufgliederung der primären Gemeinkosten auf Kostenstellen (Primrkostenverrechnung)
+		\item Verrechnung der innerbetrieblichen Leistungen von Vorkostenstellen auf Endkostenstellen (Sekundärkostenverrechnung)
+	\end{itemize}
+	\item Sekundärkostenverrechnung: Verwendung von kostenstellenspezifischen Kalkulationssätzen (Kostenschlüssel): Bsp. Mengenschlüssel oder Wertschlüssel
+\end{itemize}
 
 
 
 \section{Kostenträgerrechnung}
+\begin{itemize}
+	\item Kostenträger sind einzelne Produkte oder Leistungen (Kostenträgerstückrechnung), aber auch Perioden (Kostenträgerzeitrechnung)
+	\item \textbf{Aufgaben der Kostenträgerstückrechnung}
+	\begin{itemize}
+		\item Ermittlung der Herstellkosten oder Selbstkosten
+		\item Vorbereitung kurzfristiger Ergebnisrechnung
+		\item Berwertung der Bestände an unfertigen und fertigen Erzeugnissen
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Verfahren der Kostenträgerstückrechnung}
+
+\subsubsection{Divisionskalkulation}
+\begin{itemize}
+	\item Durchschnittsbetrachtung als Grundlage: \(Selbstkosten~pro~Stueck=\frac{Gesamtkosten}{Produktionsmenge}\)
+	\item Kostenverteilung nach Verursachungsprinzip
+	\item Gesamtkosten bilden die Summe der einzelnen Stufen
+\end{itemize}
+
+\subsubsection{Zuschlagskalkulation}
+\begin{itemize}
+	\item Geeignet Unternehmen mit mehreren Produkten und komplexen Prozessen (z.B. Serienfertigung oder Einzelfertigung)
+	\item Idee. Gemeinkosten werden durch Zuschlagssätze entsprechend auf Einzelkosten umgelegt
+	\item Differenzierung nach Eintel-, Gemein- und Sondereinzelkosten unter Verwendung des BAB
+	\item \textbf{Schema}
+	\begin{enumerate}
+		\item \(Materialkosten = Fertigungsmaterial + Material-Gemeinkosten-Zuschlag\)
+		\item \(Fertigungskosten = Fertigungslöhne + Fertigungs-Gemeinkosten-Zuschlag\)
+		\item \(Herstellkosten = Sondereinzelkosten~der~Fertigung\)
+		\item \(Selbstkosten = Forschung~und~Entwicklung+Verwaltung + Vertrieb + Sonderkosten~des~Vertriebs\)
+	\end{enumerate}
+	\item Selbstkosten sind die Summe daraus
+\end{itemize}
+
+\subsubsection{Äquivalenzkalkulation}
+\begin{itemize}
+	\item Idee: Ähnliche Produkte werden in ein einheitliches "`Einheitsprodukt"' umgerechnet. Bsp: verschiedene Biersorten
+	\item \textbf{Prozess}
+	\begin{enumerate}
+		\item Bestimmung der Äquivalenzziffern: Festlegung eines Produkts als Referenz (\(1,0)\), Schätzung der komplexität der anderen
+		\item Umrechnung der Outputmengen auf Einheitsmengen \(Einheitsmenge = Anzahl \cdot Aehnlichkeit\)
+		\item Ermittlung der Stückselbstkosten: \(\frac{Selbstkosten~Unternehmen}{Einheitsgesamtmenge}\)
+		\item Ermittlunf der Stückkosten der äquivalenten Produkte
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Maschinenstundensatzkalkulation}
+\begin{itemize}
+	\item Idee: Differenzierung zwischen maschinenzurechenbaren Gemeinkosten und den nicht-maschinenzurechenbaren Rest-Gemeinkosten
+	\item Maschinenzurechenbare Gemeinkosten:\newline \(Maschinenstundensatz = \frac{Maschinenzurechenbare~Gemeinkosten}{Tatsaechliche~Maschinenlaufzeit}\)
+	\item Rest-Gemeinkosten: Verrechnung entsprechend Zuschlagskalkulation
+	\item \textbf{Generelles Kalkulationsschema}: Summierung von
+	\begin{itemize}
+		\item Fertigungskosten
+		\item Maschinenabhängige Fertigungsgemeinkosten
+		\item Restfertigungsgemeinkosten
+	\end{itemize}
+\end{itemize}
 
 
 
@@ -465,3 +552,12 @@ Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
 
 \subsubsection{Geometrisch-degressive Abschreibung}
 \[p = 1 - \sqrt[N]{\frac{Anfangswert}{Restwert}}\]
+
+
+\subsection{Verfahren der Kostenträgerstückrechnung}
+
+\subsubsection{Divisionskalkulation}
+\[Herstellkosten_{Stufe_i} = \frac{Gesamtkosten_{Stufe_i}}{Outputmenge_{Stufe_i}}\]
+\[Einsatzfaktor_{Stufe_i}=\frac{Inputmenge}{Outputmenge}\]
+\[Korrekturterm_{Stufe_i} = (Einsatzfaktor_{Stufe_i}-1)\cdot Herstellkosten_{Stufe_i-1}\]
+\[k_{Stufe_i} = Herstellkosten_{Stufe_i}+Korrekturterm_{Stufe_i}\]
