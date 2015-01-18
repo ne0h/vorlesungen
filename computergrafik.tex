@@ -1,0 +1,63 @@
+\chapter{Computergrafik}
+
+Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\footnote{\url{http://cg.ivd.kit.edu/lehre/ws2014/cg/index.php}}
+
+\section{Farben, Bilder und Perzeption}
+
+\subsection{Bilder, Darstellung und Framebuffer}
+
+\subsubsection{Gammakorrektur}
+\begin{itemize}
+	\item Bilder sind oft zu hell oder zu dunkel
+	\item Korrekturfunktion für das menschlichem Empfinden vpn physikalischen Helligkeitsunterschieden
+	\item Ein idealer Monitor bildet einen Pixel-Wert \(n\) auf die Intensität \(I(n)\) ab
+	\item Vergleichsweise wenige Stufen sind ausreichend
+\end{itemize}
+
+
+\subsection{Licht, Sehen und Wahrnehmung}
+
+\subsubsection{Perzeption vs. Messung}
+\begin{itemize}
+	\item Das menschliche Auge kann die spektrale Zusammensetzung von Licht nicht erfassen
+	\item Das Auge (und das Gehirn) macht eingeschränkte Messungen und passt sich den äußeren Umständen an
+\end{itemize}
+
+\subsubsection{Das Auge}
+\begin{itemize}
+	\item Zapfen: Für photopisches Sehen (Tagsehen) und trichromatisches Farbsehen. Blau (7\%), Grün (37\%), Rot (56\%)
+	\item Stäbchen: Für skotopisches, monochromatisches Sehen (Nachtsehen); lichtempfindlicher, überall auf der Retina
+\end{itemize}
+
+\subsubsection{Farbmischungen}
+\begin{itemize}
+	\item \textbfAdditiv}
+	\begin{itemize}
+		\item RGB: \(C=rR+gG+bB\)
+		\item Farbkombination durch Addition der Spektren
+		\item Biologisch und technisch motiviert
+		\item Anwendung: Monitore, Beamer
+	\end{itemize}
+	\item \textbf{Subtraktiv}
+	\begin{itemize}
+		\item CMY(K): Jede Primärfarbe absorbiert einen Teil des Spektrums; Key ist beim Druck meist Schwarz
+		\item Dualer Farbraum zu RGB
+		\item Farbkombination durch Multiplikation der Spektren
+		\item Anwendung: Film, Farbstifte, Farbdrucker
+	\end{itemize}
+	\item \textbf{HSV}
+	\begin{itemize}
+		\item Farbton (Hue), Sättigung (Saturation) und Helligkeit (Value)
+		\item Darstellung als Zylinder oder hexagonaler Kegel
+		\item Anwendung: Benutzerschnittstellen, da intuitiv
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Farbraum}
+Die Menge der Farben, die mit einem bestimmten Modell beschrieben werden können.
+
+\subsubsection{Graßmannsche Gesetze}
+Jeder Farbeindruc kann mit drei Grundgrößen beschrieben werden.
+
+
+\subsection{Rasterbilder}

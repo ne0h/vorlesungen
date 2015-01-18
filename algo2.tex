@@ -1,0 +1,29 @@
+\chapter{Algorithmen II}
+
+Zusammenfassung der Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\footnote{\url{http://geom.ivd.kit.edu/ws14_algo2.php}}
+
+
+\section{Flussmaximierung}
+
+\subsection{Flussnetzwerke}
+
+\subsubsection{Bestandteile}
+\begin{itemize}
+	\item Graph mit Quelle q und Senke s: \(G(V,E)\) mit \(E \subset V^2\)
+	\item Kapazitätsfunktion \(k : V^2 \rightarrow \mathbb{R}_{+0}\), wobei \(\forall e \in V^2 \setminus E: k(e) = 0\)
+\end{itemize}
+
+\subsection{Flüsse}
+Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigenschaften:
+\begin{enumerate}
+	\item \(f \leq k\)
+	\item \(\forall x,y \in V : f(x,y) = -f(y,x)\)
+	\item \(\forall x \in V \setminus \{ q,s \}: 0 = \sum f(x,V) := \sum_{y\in V} f(x,y)\)
+\end{enumerate}
+
+\subsubsection{Bemerkungen}
+\begin{itemize}
+	\item Der negative Fluss soll lediglich die Darstellung vereinfachen und ist ansonsten uninteressant.
+	\item In alle Knoten au0er in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus.
+	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengafasst werden. (mit unendlichen Zu- und Abflüssen)
+\end{itemize}
