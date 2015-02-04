@@ -6,6 +6,7 @@ Zusammenfassung der Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\fo
 \section{Flussmaximierung}
 
 \subsection{Flussnetzwerke}
+\textbf{Ziel:} Berechnung des maximalen Flusses.
 
 \subsubsection{Bestandteile}
 \begin{itemize}
@@ -13,7 +14,7 @@ Zusammenfassung der Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\fo
 	\item Kapazitätsfunktion \(k : V^2 \rightarrow \mathbb{R}_{+0}\), wobei \(\forall e \in V^2 \setminus E: k(e) = 0\)
 \end{itemize}
 
-\subsection{Flüsse}
+\subsubsection{Flüsse}
 Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigenschaften:
 \begin{enumerate}
 	\item \(f \leq k\)
@@ -23,14 +24,71 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 
 \subsubsection{Bemerkungen}
 \begin{itemize}
-	\item Der negative Fluss soll lediglich die Darstellung vereinfachen und ist ansonsten uninteressant.
-	\item In alle Knoten au0er in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus.
-	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengafasst werden. (mit unendlichen Zu- und Abflüssen)
+	\item Der negative Fluss soll lediglich die Darstellung vereinfachen und ist ansonsten uninteressant
+	\item In alle Knoten außer in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus
+	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengafasst werden (mit unendlichen Zu- und Abflüssen)
 \end{itemize}
 
 
+\subsection{Algorithmus von Ford und Fulkerson}
+\begin{itemize}
+	\item \textbf{Algorithmus}
+	\begin{enumerate}
+		\item Setze die Flüsse an alle Kanten gleich Null
+		\item Solange es einen Pfad von \(q\) nach \(s\) gibt, erhöhe einen beliebigen Pfad
+	\end{enumerate}
+	\item Terminiert Ford-Fulkerson, ist \(f\) maximal
+	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f | f~Fluss~in~F\})\)
+\end{itemize}
 
-\section{Appendix A: Algorithmen}
 
-\subsection{Ford-Fulkerson}
-Berechnung des maximalen Flusses.
+\subsection{Algorithmus von Edmonds und Karp}
+\begin{itemize}
+	\item Idee: Anwendung von Ford-Fulkerson immer längs eines kürzesten Pfades (Breitensuche)
+	\item Aufwand: \(\mathcal{O} (|E|^2 \cdot |V|)\)
+\end{itemize}
+
+
+\subsection{Präfluss-Pusch-Methode}
+Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluß speichern zu können.
+
+\subsubsection{Operationen}
+
+\paragraph{\(PUSCH(x,y)\)}
+\begin{itemize}
+	\item \textbf{Bedingungen}
+	\begin{itemize}
+		\item Überschuss bei \(x\) vorhanden: \(u(x) > 0, x \in V \setminus \{q,s\}\)
+		\item \(x\) liegt höher als \(y\): \(h(x) - h(y) = 1\)
+	\end{itemize}
+	\item \textbf{Algorithmus}
+	\begin{enumerate}
+		\item Ermittle den Abfluss aus Überschuss und Restkapazität: \(min\{u(x), k_f(x,y)\}\)
+		\item Erhöhe den Fluss auf der Kante \(x,y)\)
+		\item Aktualisiere die Überschusswerte an \(x\) und \(y\)
+	\end{enumerate}
+\end{itemize}
+
+\paragraph{\(LIFTE(x)\)}
+\begin{itemize}
+	\item \textbf{Bedingungen}
+	\begin{itemize}
+		\item Der Knoten ist weder \(q\) und \(s\)
+		\item Überschuss bei \(x\) vorhanden
+		\item \(x\) kann nur geliftet werden, wenn kein Pfad \(y \rightarrow x\) eine höhere Restkapazität aufweist: \(h(x) < h(y)\)
+	\end{itemize}
+	\item \textbf{Algorithmus}
+	\begin{enumerate}
+		\item Erhöhe \(x\): \(h(x) = 1 + min\{h(y)\}\)
+	\end{enumerate}
+\end{itemize}
+
+\paragraph{PREFLUSS-PUSCH}
+\begin{enumerate}
+	\item \textbf{Initialisiere}
+	\begin{enumerate}
+		\item Alle Knoten außer \(q\) bekommen die Höhe \(0\) (\(h(q) = |V|)\)
+		\item Alle Pfade von \(q\) bekommen die Kapazität nach \(k(x,y)\) zugewiesen, alle anderen Pfade \(0\)
+	\end{enumerate}
+	\item Solange es eine beliebige, erlaubte Operation gibt, führe diese aus
+\end{enumerate}
