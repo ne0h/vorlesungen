@@ -50,12 +50,12 @@ Verbriefte, typischerweise handelbare Ansprüche gegenüber einem Schulder (Emit
 	\begin{itemize}
 		\item Kuponanleihe: Periodische, fixe Zinszahlungen (Kupons) sowie endfällige Tilgungszahlung
 		\item Floater: Periodisch variable Zinszahlung, die sich an kurzfristigen Zinsen (z.B. EURIBOR) orientiert mit endfälliger Tilgungszahlung
-		\item Nullkuponanleihe: Keine priodischen Zinszahlungen, Tilgungsbeitrag wird am Ende ausgezahlt
+		\item Nullkuponanleihe (Zerobond): Keine priodischen Zinszahlungen, Tilgungsbeitrag wird am Ende ausgezahlt
 		\item Verschiedene Hybride Formen
 	\end{itemize}
 	\item \textbf{Weitere Gestaltungsmöglichkeiten}
 	\begin{itemize}
-		\item Sicherheoten durch weitere Vermögensgegestände (z.B. durch Aktienbestände)
+		\item Sicherheiten durch weitere Vermögensgegestände (z.B. durch Aktienbestände)
 		\item Vertragliche Zusatzvereinbarungen (Covenants)
 		\item Kündigungsrechte
 	\end{itemize}
@@ -115,9 +115,18 @@ Lediglich für unabhängige Projekte geeignet.
 \begin{itemize}
 	\item Der interne Zinssatz ist derjenige Zinssatz, bei dem der Kapitalwert einer Investition 0 beträgt.
 	\item Entscheidungsregel: Investiere, wenn der interne Zinssatz größer als der geforderte Zinssatz ist.
-	\item Berechnung: Setze Kapitalwert gleich Null
+	\item Berechnung: Setze Kapitalwert gleich Null; berechne internen Zinssatz und vergleiche
 	\item Vorteile: Simple Kennzahl als Diskussionsgrundlage; Berücksichtigung von mehrperiodigen Zahlungen
-	\item Nachteil: Schwierige Berechnung bei sehr langen Projekten
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Schwierige Berechnung bei sehr langen Projekten
+		\item Bei Vorzeichenwechsel der Zahlungen ergeben sich durch die Potenzen der Zinsen mehrere, mathematisch sinnvolle, Lösungen
+	\end{itemize}
+	\item \textbf{Sich ausschließende Projekte}
+	\begin{itemize}
+		\item Bei Projekten mit unterschliedlichen Größenordnungen nicht sinnvoll anwendbar
+		\item Lösung: Betrachtung der Zahlungsströme beider Projekte
+	\end{itemize}
 \end{itemize}
 
 
@@ -503,11 +512,14 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \subsubsection{Endliche Rente mit konstantem Wachstum}
 \[BW = \frac{C}{r-g} \cdot [1-[\frac{1+g}{1+r}]^n]\]
 
-\subsubsection{Bewertung risikoloser Anleihen: Zerobonds}
-\[y = (\frac{Nennwert}{r})^{\frac{1}{n}})-1\]
+\subsubsection{Yield to Maturity von Zerobonds}
+\[y = (\frac{Nennwert}{P_Z})^{\frac{1}{T}})-1\]
 
+\subsubsection{Unterjährige Verzinsung}
+\[EW=C_0\cdot[1+\frac{r}{m}]^{mT}\]
 
-\subsection{Anleihen}
+\subsubsection{Stetige Verzinsung}
+\[EW=C_0\cdot e^{rT}\]
 
 \subsubsection{Investor mit Einjahreshorizont}
 \[r = \frac{Div_1+P_1}{P_2}-1\]
@@ -517,10 +529,19 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 
 \subsubsection{Divided Discount Model mit unterschiedlichen Wachstumsraten}
 Erweiterung um ewige Rente.
-\[P_0 = \sum_{t=1}^{N} \frac{Div_t}{(1+r_E)^t} + \frac{1}{(1+r_E)^N}\cdot\frac{Div_{N+1}}{r_E-g}\]
+\[P_0 = \sum_{t=1}^{T} \frac{Div_t}{(1+r_E)^t} + \frac{1}{(1+r_E)^T}\cdot\frac{Div_{T+1}}{r_E-g}\]
+
+\subsubsection{Methoden der Investitionsentscheidung: Interne Zinssatzmethode}
+\[0 = Anfangsauszahlung - \sum_{t=1}^{T}\frac{C_t}{(1+z_intern)^t}\]
 
 
 \subsection{Portfoliotheorie}
+
+\subsubsection{Dividendenrendite}
+\[Dividendenrendite = \frac{Div}{Kurs}\]
+
+\subsubsection{Rendite aus Kursveränderung}
+\[Rendite~aus~Kursveraenderung = \frac{P_1-P_0}{P_0}\]
 
 \subsubsection{Aktienrendite}
 Bei verschiedenen Papieren mit linearer Gewichtung.
@@ -538,12 +559,12 @@ Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
 \subsubsection{Risiko der Portefeuillerendite}
 \[\sigma^2_w = w^2_1\sigma^2_1+w^2_2\sigma^2_2+2w_1w_2cov(r_1,r_2)\]
 
-\[cov(r_1,r_2) = \sigma_1\sigma_2\rho_{12}\]
+\[cov(r_1,r_2) = \sigma_1\sigma_2\rho_{12} = E((r_1-\mu_1)(r_2-\mu_2))\]
 
 \subsubsection{CAPM: Kapitalmarktlinie}
 \[\mu_W = r + \frac{\mu_M-r}{\sigma_M}\cdot\sigma_W\]
 
-\subsubsection{CAPM: Einzelne Wertpapiere im Gleichgewicht}
+\subsubsection{CAPM: Wertpapiermarktlinie}
 \[\mu_j = r + \frac{\mu_M-r}{cov(r_M,r_M)}\cdot cov(r_j,r_M) = r + (\mu_M-r)\cdot \beta_j\]
 \[\beta_j = \frac{cov(r_j,r_M)}{cov(r_M,r_M)}\]
 

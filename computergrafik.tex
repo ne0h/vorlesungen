@@ -51,6 +51,12 @@ Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\fo
 		\item Darstellung als Zylinder oder hexagonaler Kegel
 		\item Anwendung: Benutzerschnittstellen, da intuitiv
 	\end{itemize}
+	\item \textbf{XYZ}
+	\begin{itemize}
+		\item Beschreibung aller wahrnehmbaren Farben
+		\item Farbraum mit rein positiven Color Matching Funktionen
+		\item Lineare Abbildung \[XYZ \Leftrightarrow RGB\]
+	\end{itemize}
 \end{itemize}
 
 \subsubsection{Farbraum}
@@ -60,4 +66,81 @@ Die Menge der Farben, die mit einem bestimmten Modell beschrieben werden können
 Jeder Farbeindruc kann mit drei Grundgrößen beschrieben werden.
 
 
-\subsection{Rasterbilder}
+\subsection{CIE Color Matching Functions}
+\begin{itemize}
+	\item Wahrnehmungsexperimente: Referenzfarbe vorgegeben, soll durch drei Grundfarben reproduziert werden
+	\item Problem: Nicht alle Farben konnte reproduziert werden
+	\item Lösung: Primärfarben als negativer Vergleichwert
+\end{itemize}
+
+
+\subsection{Weber-Fechner-Gesetz}
+Die subjektiv empfundene Stärke von Sinneseindrücken ist proportional zum Logorithmus der Intensität des physikalisch Reizes (1:2 wird empfunden wie 100:200).
+
+
+\subsection{Ray Tracing}
+\begin{itemize}
+	\item Idee: Geometrische Überlegungen über Lichtstrahlen
+	\item Verfolge die Lichtstrahlen, die die Öffnung der Lochkamera passieren, finde Pixel, die das Objekt beeinflussen und bestimme Pixelfarbe
+\end{itemize}
+
+
+\subsection{Nyquist-Shannon-Abtasttheorem}
+Ein kontinuierliches, bandbegrenztes Signal mit einer maximalen Frequenz \(f_{max}\) muss mit einer Frequenz größer \(2f_{max}\) abgetastet werden, damit aus dem diskreten Signal das Ursprungssignal exakt rekonstruiert werden kann.
+
+
+
+\section{Ray Tracing}
+
+\subsection{Grundbegriffe}
+
+\subsubsection{Virtuelle Kamera}
+Definiert durch:
+\begin{itemize}
+	\item Position und Blickrichtung
+	\item Orientierung der vertikalen Achse
+	\item Bildebene vor der Kamera
+\end{itemize}
+
+\subsubsection{Rasterisierung}
+\begin{itemize}
+	\item Idee: Transformation von Geometrie (3D auf 2D-Bildebene)
+	\item Für alle Objekte: Finde Pixel, die das Objekt bedeckt und bestimme Pixelfarbe
+\end{itemize}
+
+\subsubsection{Strahlentypen}
+\begin{itemize}
+	\item Sichtstrahl: Halbgerade von der Kamera durch den Pixel
+\end{itemize}
+
+
+\subsection{Prinzip}
+\begin{itemize}
+	\item Betrachte einen Pixel nach dem anderen (ray generation)
+	\item Finde das Objekt, das die Kamera durch diesen Pixel sieht (ray intersection)
+	\item Berechne Farbe und Schattierung (shading)
+	\item Rekursive Fortsetzung der Strahlenverfolgung
+\end{itemize}
+
+
+\subsection{Materialeigenschaften}
+
+\subsubsection{Schattierung/Beleuchtungsberechnung}
+\begin{itemize}
+	\item Essentiell für dreidimensionalen Eindruck
+	\item Interaktion von Lichtquellen und Oberflächen
+	\item \textbf{Extrema}
+	\begin{itemize}
+		\item Spekulare Reflexion: Einfallswinkel gleich Ausfallswinkel
+		\item Diffuse (lambertsche) Reflexion: Gleiche Reflexion in alle Richtungen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Licht-Material-Interaktion}
+Was passiert, wenn Licht auf eine Oberfläche trifft?
+\begin{itemize}
+	\item Ein Teil wird reflektiert
+	\item Ein Teil dringt ins Material ein
+	\item Das Verhältnis ist abhängig vom Einfallswinkel (\textit{Fresnel-Effekt}) und den Brechungsindizes beider Materialien
+\end{itemize}
+
