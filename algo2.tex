@@ -83,7 +83,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\end{enumerate}
 \end{itemize}
 
-\paragraph{PREFLUSS-PUSCH}
+\paragraph{PRAEFLUSS-PUSCH}
 \begin{enumerate}
 	\item \textbf{Initialisiere}
 	\begin{enumerate}
@@ -92,3 +92,165 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\end{enumerate}
 	\item Solange es eine beliebige, erlaubte Operation gibt, führe diese aus
 \end{enumerate}
+
+\subsubsection{Laufzeit}
+\[\mathcal{O} (|V|^2 \cdot |E|)\]
+
+
+\subsection{Move-to-Front-Algorithmus}
+Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusch} beschleunigt.
+
+\begin{itemize}
+	\item Idee: Strukturierstes enladen der Knoten
+	\item Die Knoten werden über eine Liste verwaltet
+	\item Geliftete Knoten werden an die Spitze der Liste gesetzt
+\end{itemize}
+
+\subsubsection{Operationen}
+
+\paragraph{\(LEERE(x)\)}
+\begin{enumerate}
+	\item Solange \(u(x)\ > 0\)
+	\item Falls es einen puschbaren Nachbarknoten gibt: \(PUSCH(x,y)\)
+	\item Falls nicht, \(LIFTE(x)\)
+\end{enumerate}
+
+\paragraph{\(AN~DIE~SPITZE\)}
+\begin{enumerate}
+	\item Initialisiere wie in \textit{PRAEFLUSS-PUSCH}
+	\item Generierte die Knotenliste \(L\)
+	\item Iteriere über alles Knoten
+	\item Bestimme für jeden Knoten die Anzahl der Nachbarknoten
+	\item Iteriere über \(L\)
+	\begin{enumerate}
+		\item \(LEERE(x)\)
+		\item Wenn erfolgreich geleert wurde, setze den aktuellen Knoten an die Spitze von \(L\)
+	\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Laufzeit}
+\[\mathcal{O}(|V|^3)\]
+
+
+
+\section{Zuordnungsprobleme}
+\textbf{Ziel:} Verteilung verschiedener Aufgaben auf eine Gruppe von Personen mit unterschiedlichen Fähigkeiten.
+
+\subsection{Paaren in bipartiten Graphen}
+\begin{itemize}
+	\item Eine Paarung beinhaltet zwei Knoten exklusiv
+	\item Eine Paarung heißt maximal, wenn es keine bessere Paarung gibt
+	\item Maximale Paarung über Flußmaximierung: Ergänzung des bipartiten Graphs um Quelle und Senke
+\end{itemize}
+
+
+\subsection{Paaren in allgemeinen Graphen}
+Sei \(G=(V,E)\) ein Graph mit einer Paarung \(P\) und einer maximalen Paarung \(Q\).
+
+\subsubsection{Symmetrische Differenz}
+\[D:=(P\setminus Q) \cup (Q \setminus P)\]
+Die Kanten dieser Wege liegen alternierend in \(P\) und \(Q\) \(\rightarrow\) Zyklen haben eine gerade Länge.
+
+\subsubsection{Definition}
+Es gibt \(k=|Q\setminus (P \cap Q)| - |P\setminus (P \cap Q)|\) Wege, auf denen \(P\) vergrößert werden kann.
+
+\subsubsection{Folgerung}
+Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
+
+\paragraph{Algorithmus zur Vergößerung}
+Scheitert in allgemeinen Graphen, funktioniert lediglich in bipartiten Graphen.
+\begin{enumerate}
+	\item Suche \((x,y) \in E\), wobei \(x\) mit keinem \(z\in V\) gepaart
+	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort
+\end{enumerate}
+
+\subsubsection{Blüten}
+\begin{itemize}
+	\item Zu Problemen kommt es bei sogenannten Blüten
+	\item Lösung: Man schrumpft die Blüten ohne ihren Stil zu einem Knoten
+\end{itemize}
+
+\subsubsection{Aufwand der Suche nach vergrößernden Wegen}
+\[\mathcal{O}(\sqrt{|V|} \cdot |E|)\]
+
+
+\subsection{Maximal gewichtete Paarung}
+Gesucht: Maximal gewichtete Paarung eines ungerichteten Graph:
+\[\Gamma(P) := \Sigma \gamma (P)\]
+
+\subsubsection{Annahme}
+Man kann eine maximal gewichtete Paarung finden, indem eine maximal gewichtete Kante iterativ durch einen vergrößernden Weg zu einer nächstgrößeren Paarung vergrößert wird.
+
+\paragraph{Aufwand}
+\[\mathcal{O}(min\{|V|^3, |V| \cdot |E| \cdot log|V|\})\]
+
+
+
+\section{Stochastische Algorithmen}
+
+\subsection{Erwartungswert}
+Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsvariable im Mittel annimmt.\footnote{\url{http://de.wikipedia.org/wiki/Erwartungswert}}
+
+\subsubsection{Sigma-Additivität}
+\[E\lbrack \Sigma X_i\rbrack = \Sigma E \lbrack X_i\rbrack\]
+
+
+\subsection{Quicksort}
+\begin{itemize}
+	\item Sortieren durch stochastisches Teilen
+	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
+\end{itemize}
+
+
+\subsection{Minimaler Schnitt}
+
+\subsubsection{Definitionen}
+\begin{itemize}
+	\item Ereignisse: Die Teilmengen einer Stichprobenmenge
+	\item Bedingte Wahrscheinlichkeit: \(Pr \lbrack E_1 | E_2 \rbrack := \frac{Pr\lbrack E_1 \cap E_2 \rbrack}{Pr\lbrack E_2 \rbrack} \)
+	\item Multigraph: Kanten können mehrfach vorkommen
+\end{itemize}
+
+\subsubsection{Algorithmus zur Berechnung des Schnitts}
+\begin{enumerate}
+	\item Solange \(|V| \geq 3\)
+	\begin{enumerate}
+		\item Wähle zufällig eine Kante \((x,y)\)
+		\item Entferne alle \((x,y)\) aus \(E\)
+		\item Verschmelze \(x\) mit \(y\)
+	\end{enumerate}
+\end{enumerate}
+
+
+
+\section{Technik der Spieltheorie}
+Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
+
+\subsection{Nullsummenspiele}
+\begin{itemize}
+	\item Bedingung: \(Gewinn(A) + Gewinn(B) = 0\)
+	\item Definiert durch eine \(n \times m\) Matrix \(M\)
+\end{itemize}
+
+\subsubsection{Strategien}
+\begin{itemize}
+	\item Die Zeilen von \(M\) heißen Strategien von \(A\), die Spalten von \(M\) heißen Strategien von \(B\)
+	\item Zeile \(i\) ist eine optimale Strategie für \(A\) und maximiert den Mindestgewinn: \(min_j M_{ij}\)
+	\item Spalte \(j\) ist eine optimale Strategie für \(B\) und minimiert den Maximalverlust: \(max_j M_{ij}\)
+	\item Wählen beide optimale Strategien: \(max_i min_j M_{ij} \leq Gewinn(A) \leq min_j max_i M_{ij}\)
+\end{itemize}
+
+
+\subsection{MiniMax-Theorem}
+
+\subsubsection{Definitionen}
+\begin{enumerate}
+	\item \(p := \lbrack p_1,...,p_m \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(A\)
+	\item \(q := \lbrack q_1,...,q_n \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(B\)
+	\item Erwartungswert des Gewinns von \(A\): \(E\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
+	\item Optimale Strategie von \(A\): \(min_q (p^T \cdot M \cdot q)\)
+	\item Optimale Stratie für beide: \\ \(max_p min_q (p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q max_p (p^T \cdot M \cdot q)\)
+\end{enumerate}
+
+
+
