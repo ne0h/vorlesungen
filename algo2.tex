@@ -192,7 +192,7 @@ Man kann eine maximal gewichtete Paarung finden, indem eine maximal gewichtete K
 Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsvariable im Mittel annimmt.\footnote{\url{http://de.wikipedia.org/wiki/Erwartungswert}}
 
 \subsubsection{Sigma-Additivität}
-\[E\lbrack \Sigma X_i\rbrack = \Sigma E \lbrack X_i\rbrack\]
+\[\mathbb{E}\lbrack \Sigma X_i\rbrack = \Sigma E \lbrack X_i\rbrack\]
 
 
 \subsection{Quicksort}
@@ -247,7 +247,7 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 \begin{enumerate}
 	\item \(p := \lbrack p_1,...,p_m \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(A\)
 	\item \(q := \lbrack q_1,...,q_n \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(B\)
-	\item Erwartungswert des Gewinns von \(A\): \(E\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
+	\item Erwartungswert des Gewinns von \(A\): \(\mathbb{E}\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
 	\item Optimale Strategie von \(A\): \(min_q~(p^T \cdot M \cdot q)\)
 	\item Optimale Stratie für beide: \\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
 \end{enumerate}
@@ -266,7 +266,7 @@ Verwendung des MiniMax-Theorems zur Laufzeitabschätzung von stochastischen Algo
 	\item Deterministische Laufzeit von \(A\): \(min_j~max_i~M_{ij}\)
 	\item Best-case-Laufzeit von \(A\): \(min_j~M_{ij}\)
 	\item Stochastische Komplexität (Laufzeit) von \(A\) bzgl. \(P\): \(max_i~min_j~M_{ij} =: K_s\)
-	\item Erwartungswert der Laufzeit: \(E\lbrack Laufzeit \rbrack: \sum_{ij} p_i \cdot M_{ij} \cdot q =: p^T \cdot M \cdot q\)
+	\item Erwartungswert der Laufzeit: \(\mathbb{E}\lbrack Laufzeit \rbrack: \sum_{ij} p_i \cdot M_{ij} \cdot q =: p^T \cdot M \cdot q\)
 	\item Verteilungskomplexität: \(K_v := max_p~min_q~(p^T \cdot M \cdot q)\)
 \end{itemize}
 
@@ -283,13 +283,12 @@ Ein binärer Spielbaum ist ein balancierter Binärbaum gerader Höhe \(2k\) mit 
 \[Wert(x) = Wert(y) \downarrow Wert(z)\]
 
 \subsubsection{Bestimme den Wurzelwert aus den Blattwerten}
-
-\paragraph{\(WERT(x)\)}
-\begin{enumerate}
-	\item Ermittle die Kindknoten \(x\) in stochastischer Reihenfolge
-	\item Ermittle \(WERT(y)\)
-	\item Falls \((w=1)\) gib \(0\) aus, ansonsten gib \((0 \downarrow WERT(z))\) aus
-\end{enumerate}
+WERT(x)
+\begin{lstlisting}[frame=single,numbers=left]
+Ermittle die Kindknoten x in stochastischer Reihenfolge
+Ermittle WERT(y)
+Falls (w=1) gib 0 aus, ansonsten gib (0 NOR WERT(z)) aus
+\end{lstlisting}
 
 
 
@@ -303,6 +302,186 @@ Teile die affine Ebene \(A\) anhand einer Halbgeraden \(S_1\) in die Ebenen \(A_
 \subsubsection{Raumzerlegungsbaum}
 Die Entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus).
 Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
- 
+
+
+\subsection{Binäre Zerlegung des Raums}
+Folgender Algorithmus erzeugt binäre RZBs für den Raum:
+
+\subsubsection{Eingabe}
+Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Polygone \(P_1,...,P_n \subset \mathbb{R}^3\).
+\\\\
+BRZ
+\begin{lstlisting}[frame=single,numbers=left]
+k = 1
+forall P_i {
+	Bestimme Schnittmenge mit P
+	Falls es Schittpunkte gibt: k++
+}
+l = 1
+Falls es ein j gibt: Q_j zerlegt P:
+	l += j
+Wurzel = Q_l
+Falls k >= 3
+	Q = Schnittmenge von P und dem li. HR von Q_l
+	li. Wurzelteilbaum = BRZ(Q,Q_1,...,Q_{k-1})
+	Q = Schnittmenge von P und dem re. HR von Q_l
+	ere. Wurzelteilbaum = BRZ(Q,Q_1,...,Q_{k-1})
+Return Wurzel und Teilbaeume
+\end{lstlisting}
+
+\subsubsection{Laufzeit}
+\(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
+\[\mathbb{E}\lbrack Z \rbrack \in \mathcal{O}(n^2)\]
+
+
+\subsection{Konvexe Hüllen}
+Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen Elemente als Punkte und ihre Differenzen als Vektoren. Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausgangsmenge enthält\footnote{\url{http://de.wikipedia.org/wiki/Konvexe_H\%C3\%BClle}} (alle weiteren Elemente liegen in dem Raum, den die konvexe Hülle aufspannd).
+
+
+\subsection{Dualität}
+
+\subsubsection{Hyperebene}
+Die Lösungsmenge einer linearen Gleichung
+\[u^T \cdot x = 1, u \in \mathbb{R}^n\]
+heißt Hyperebene von \(A\), d.h.
+\[u* := \{x \in A~|u^T \cdot x = 1\}\]
+
+\subsubsection{Halbebene}
+Als \(u \in A\) wird der zu \(u*\), \(x*\) zum Punkt \(x\) duale Halbebene bezeichnet.
+
+\subsubsection{Dualraum}
+\[A* = \{x*~|~x \in A\}\]
+
+\subsubsection{Halbraum}
+Die Lösung der Ungleichung
+\[u^T \cdot x \leq 1, u \ne 0,\]
+bildet den Halbraum \(u^{\leq}\).
+
+
+\subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
+Die Formeln gelten nicht nur für Polyeder, sondern für beliebige geschlossene Netze mit topologischen Geschlecht \(2\)., d.h. Netze, die bis auf Verbindungsformen eine Kugeloberfläche darstellen.
+
+\subsubsection{Eulers Formel}
+Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
+\[v-e+f=2\]
+
+\subsubsection{Triangulation von Polyedern}
+Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden. Werden \(k\) Kanten hinzugefügt gilt:
+\[3(f+k) = 2(e+k\]
+Daraus folgt der mittlere Knotengrad
+\[\frac{2e}{v} \leq 6\]
+und dazu die mittlere Kantenzahl pro Seite
+\[\frac{2e}{f} \leq 6\]
+
+
+
+\section{Bewegungsplanung bei unvollständiger Information}
+\begin{itemize}
+	\item Suche nach einer Lösung, über die auch zur Laufzeit nur Teilwissen bekannt ist
+	\item Qualität der Ausgabe ist interessanter als die Laufzeit
+	\item Es kann sein, dass keine oder keine eindeutige Lösung existiert
+\end{itemize}
+
+
+\subsection{Ausweg aus einem Labyrinth}
+Wir betrachten ein Labyrinth \(L\) und einen Roboter \(R\) mit Tastsensor und Drehwinkelmessgerät.
+\\\\
+PLEDGE-Strategie
+\begin{lstlisting}[frame=single,numbers=left]
+while R in L {
+	Gehe vorwaerts bis Wand kontaktiert wird
+	while R in L OR Drehwinkel = 0 {
+		Gehe links der Wand
+	}
+}
+\end{lstlisting}
+
+
+\subsection{Zum Ziel in unbekannter Umgebung}
+Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunkt \(s\) und ein Ziel \(z\).
+\\\\
+WANZE
+\begin{lstlisting}[frame=single,numbers=left]
+while r != z {
+	Laufe in Richtung z bis r == z
+			OR r nicht aus einem Polygon herauskommt
+	Falls r != z {
+		Suche den kuerzesten Punkt q an P_i zu z
+		Laufe zu q
+	}
+}
+\end{lstlisting}
+Wanze terminiert.
+
+\subsubsection{Universelles Steuerwort}
+Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
+\\\\
+Satz: Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompas genügt also zur Zielfindung.
+
+
+\subsection{Behälterproblem}
+Ziel: Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (Problem ist NP-hart).
+\\\\
+FIRST-FIT
+\begin{lstlisting}[frame=single,numbers=left]
+Forall i = 1,...,m {
+	Fuege a_1 dem ersten Behaelter hinzu | a_i + A_j <= h
+}
+\end{lstlisting}
+Die Laufzeit is in \(\mathcal{O}(n)\).
+
+\subsubsection{Kompetivität}
+Größe der Lösung eines Problems \(P\)
+\begin{itemize}
+	\item Optimaler Algorithmus: \(k_{opt}: \epsilon \rightarrow \mathbb{N}\)
+	\item Korrektor Algorithmus \(A\): \(k_A: \epsilon \rightarrow \mathbb{N}\)
+\end{itemize}
+Es gilt:
+\[k_A \leq a+c\cdot k_{opt}~(a,c \in \mathbb{R})\]
+\(c\) bezeichnet den Kopetivitätsfaktor der Lösung.
+
+
+\subsection{Türsuche}
+Ziel: Finde die Tür an einer langen, unüberschaubaren Wand.
+\\\\
+Türsuche
+\begin{lstlisting}[frame=single,numbers=left]
+i = 1
+while Tuer nicht gefunden {
+	gehe i Meter in eine Richtung
+	aendere Laufrichtung und gehe zurueck
+	i++
+}
+\end{lstlisting}
+
+
+\subsection{Sternsuche}
+Verallgemeinerung der Türsuche. Ziel: Finden des Ziels \(z\) vom Startpunkt \(s\) aus mit Hilfe von \(m\) wachsenden Halbgeraden.
+\\\\
+Sternsuche
+\begin{lstlisting}[frame=single,numbers=left]
+# berechne Halbgeraden
+Forall i in N_0 {
+	f_i = (m/(m-1))^i
+}
+i = 0
+while z nicht gefunden {
+	gehe f_i Einheiten auf H_i entlang und zurueck
+	i++
+}
+\end{lstlisting}
+
+
+\subsection{Suche in Polygonen}
+
+\subsubsection{Definitionen}
+\begin{itemize}
+	\item Ein Polygon \(P\) heißt geschlossen, wenn gilt \(p_m = p_1\).
+	\item Ein Polygone \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt.
+\end{itemize}
+
+Es gibt keine kompetative Strategie.
+
+
 
 
