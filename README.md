@@ -9,6 +9,8 @@ notwendig:
 Aktuell enthalten
 -----------------
 
+* Algorithmen 2
+* BWL C/FR
 * Echtzeitsysteme
 * Financial Management
 * Investments
