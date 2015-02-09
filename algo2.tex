@@ -438,7 +438,7 @@ Größe der Lösung eines Problems \(P\)
 \end{itemize}
 Es gilt:
 \[k_A \leq a+c\cdot k_{opt}~(a,c \in \mathbb{R})\]
-\(c\) bezeichnet den Kopetivitätsfaktor der Lösung.
+\(c\) bezeichnet den Kompetivitätsfaktor der Lösung.
 
 
 \subsection{Türsuche}
@@ -453,6 +453,7 @@ while Tuer nicht gefunden {
 	i++
 }
 \end{lstlisting}
+Die Türsuche ist 9-kompetiv.
 
 
 \subsection{Sternsuche}
@@ -465,7 +466,7 @@ Forall i in N_0 {
 	f_i = (m/(m-1))^i
 }
 i = 0
-while z nicht gefunden {
+While z nicht gefunden {
 	gehe f_i Einheiten auf H_i entlang und zurueck
 	i++
 }
@@ -479,9 +480,93 @@ while z nicht gefunden {
 	\item Ein Polygon \(P\) heißt geschlossen, wenn gilt \(p_m = p_1\).
 	\item Ein Polygone \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt.
 \end{itemize}
+Es gibt keine kompetitive Strategie.
 
-Es gibt keine kompetative Strategie.
+\subsubsection{Baum der kürzesten Wege}
+\begin{itemize}
+	\item Die kürzesten Wege \(s\) zu den Ecken von \(P\) bilden den Baum der kürzesten Wege (BkW) von \(P\) und \(s\)
+	\item Absuchen der Wege zu den Blättern per Sternsuche
+	\item Speichern der bereits erreichten Punkte als Zwischenstopps für spätere Punkte
+\end{itemize}
 
+
+
+\section{Lineare Programmierung}
+Ziel: Maximierung linearer Funktionen mit linearen Nebenbedingungen, beispielsweise zur Bestimmung des maximalen FLusses in einem Netzwerk oder um das MiniMax-Theorem zu beweisen.
+
+\subsection{Lineares Programm}
+Die lineare Ungleichung
+\[y := \upsilon^T \cdot x + u \geq 0\]
+beschreibt den Halbraum mit Normalenvektor \(\upsilon\).
+
+\subsubsection{Konvexer Polyeder}
+\[y_i := a_i^T \cdot x + a_i \geq 0,~i = 1,...,l\]
+bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Simplex} genannt wird.
+\\\\
+Ziel: Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
+\[z := z^T \cdot x = max!\]
+\[y := A\cdot x + a \geq 0\]
+
+\subsubsection{Normalform des linearen Programms}
+\[z = c^T\cdot \bar{y} + c \stackrel{!}{=} max\]
+\[y' \geq 0\]
+\[y'' = B \cdot \bar{y} + b \geq 0\]
+
+
+\subsection{Eckentausch}
+Ziel: Um \(z\) zu maximieren, machen wir sukzessive neue \(y_i\) so dass der Ursprung von Ecke zu Ecke wandert und der Wert von \(z\) im Ursprung wächst.
+\\\\
+Getauschte Elemente werden mit einem "`jj"' gekennzeichnet.
+\\\\
+Vorgehen: Tausche immer eine Koordinate von \(y'\) mit einer von \(y''\).
+\[\begin{pmatrix}
+	a_{11}v_1 & ... &a_{1n}v_n & u_1\\
+	.   &		.	& .   & . \\
+	.   &		.	& .   & . \\
+	.   &		.	& .   & . \\
+	a_{m1}v_1 & . & a_{mn}v_n & u_m
+\end{pmatrix}\]
+Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebiges \(a_{rs}\) fungiert als Pivotelement. 
+\\\\\\
+AUSTAUSCH(A, r, s)
+\begin{lstlisting}[frame=single,numbers=left]
+Forall i != r, j != s {
+	a'_ij = a_ij + (a_is a_rj) / a_rs
+}
+# Pivotzeile
+Forall i == r, j != s {
+	a'_ij = -a_ij/a_rs
+}
+# Pivotspalte
+Forall i != r, j == s {
+	a'_ij = -a_ij / a_rs
+}
+# Pivot
+Forall i == r, j == s {
+	a'_ij = 1 / a_rs
+}
+\end{lstlisting}
+
+
+\subsection{Der Simplexalgorithmus}
+Ausgangspunkt: Ein lineares Programm in Normalform
+\[z = c^T \cdot x + c = max!\]
+
+SIMPLEX
+\begin{lstlisting}[frame=single,numbers=left]
+While ein c_s > 0 {
+	Falls alle b_is >= 0
+		keine Loseung - Ende
+	Sonst
+		bestimme r so, dass b_r/b_rs = max b_i/b_is
+	B = AUTAUSCH(B, r, s)
+}
+\end{lstlisting}
+
+\subsubsection{Anwendung des Verfahrens}
+\begin{itemize}
+	\Ermittle \(\frac{b_i}{b_{is}}\)
+\end{itemize}
 
 
 
