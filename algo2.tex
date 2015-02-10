@@ -283,12 +283,14 @@ Ein binärer Spielbaum ist ein balancierter Binärbaum gerader Höhe \(2k\) mit 
 \[Wert(x) = Wert(y) \downarrow Wert(z)\]
 
 \subsubsection{Bestimme den Wurzelwert aus den Blattwerten}
+\begin{minipage}{\textwidth}
 WERT(x)
 \begin{lstlisting}[frame=single,numbers=left]
 Ermittle die Kindknoten x in stochastischer Reihenfolge
 Ermittle WERT(y)
 Falls (w=1) gib 0 aus, ansonsten gib (0 NOR WERT(z)) aus
 \end{lstlisting}
+\end{minipage}
 
 
 
@@ -310,6 +312,7 @@ Folgender Algorithmus erzeugt binäre RZBs für den Raum:
 \subsubsection{Eingabe}
 Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Polygone \(P_1,...,P_n \subset \mathbb{R}^3\).
 \\\\
+\begin{minipage}{\textwidth}
 BRZ
 \begin{lstlisting}[frame=single,numbers=left]
 k = 1
@@ -328,6 +331,8 @@ Falls k >= 3
 	ere. Wurzelteilbaum = BRZ(Q,Q_1,...,Q_{k-1})
 Return Wurzel und Teilbaeume
 \end{lstlisting}
+\end{minipage}
+
 
 \subsubsection{Laufzeit}
 \(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
@@ -386,6 +391,7 @@ und dazu die mittlere Kantenzahl pro Seite
 \subsection{Ausweg aus einem Labyrinth}
 Wir betrachten ein Labyrinth \(L\) und einen Roboter \(R\) mit Tastsensor und Drehwinkelmessgerät.
 \\\\
+\begin{minipage}{\textwidth}
 PLEDGE-Strategie
 \begin{lstlisting}[frame=single,numbers=left]
 while R in L {
@@ -395,11 +401,13 @@ while R in L {
 	}
 }
 \end{lstlisting}
+\end{minipage}
 
 
 \subsection{Zum Ziel in unbekannter Umgebung}
 Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunkt \(s\) und ein Ziel \(z\).
 \\\\
+\begin{minipage}{\textwidth}
 WANZE
 \begin{lstlisting}[frame=single,numbers=left]
 while r != z {
@@ -411,6 +419,7 @@ while r != z {
 	}
 }
 \end{lstlisting}
+\end{minipage}
 Wanze terminiert.
 
 \subsubsection{Universelles Steuerwort}
@@ -422,12 +431,14 @@ Satz: Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum g
 \subsection{Behälterproblem}
 Ziel: Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (Problem ist NP-hart).
 \\\\
+\begin{minipage}{\textwidth}
 FIRST-FIT
 \begin{lstlisting}[frame=single,numbers=left]
 Forall i = 1,...,m {
 	Fuege a_1 dem ersten Behaelter hinzu | a_i + A_j <= h
 }
 \end{lstlisting}
+\end{minipage}
 Die Laufzeit is in \(\mathcal{O}(n)\).
 
 \subsubsection{Kompetivität}
@@ -444,6 +455,7 @@ Es gilt:
 \subsection{Türsuche}
 Ziel: Finde die Tür an einer langen, unüberschaubaren Wand.
 \\\\
+\begin{minipage}{\textwidth}
 Türsuche
 \begin{lstlisting}[frame=single,numbers=left]
 i = 1
@@ -453,12 +465,14 @@ while Tuer nicht gefunden {
 	i++
 }
 \end{lstlisting}
+\end{minipage}
 Die Türsuche ist 9-kompetiv.
 
 
 \subsection{Sternsuche}
 Verallgemeinerung der Türsuche. Ziel: Finden des Ziels \(z\) vom Startpunkt \(s\) aus mit Hilfe von \(m\) wachsenden Halbgeraden.
 \\\\
+\begin{minipage}{\textwidth}
 Sternsuche
 \begin{lstlisting}[frame=single,numbers=left]
 # berechne Halbgeraden
@@ -471,6 +485,7 @@ While z nicht gefunden {
 	i++
 }
 \end{lstlisting}
+\end{minipage}
 
 
 \subsection{Suche in Polygonen}
@@ -528,6 +543,7 @@ Vorgehen: Tausche immer eine Koordinate von \(y'\) mit einer von \(y''\).
 \end{pmatrix}\]
 Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebiges \(a_{rs}\) fungiert als Pivotelement. 
 \\\\\\
+\begin{minipage}{\textwidth}
 AUSTAUSCH(A, r, s)
 \begin{lstlisting}[frame=single,numbers=left]
 Forall i != r, j != s {
@@ -546,27 +562,35 @@ Forall i == r, j == s {
 	a'_ij = 1 / a_rs
 }
 \end{lstlisting}
+\end{minipage}
 
 
 \subsection{Der Simplexalgorithmus}
 Ausgangspunkt: Ein lineares Programm in Normalform
 \[z = c^T \cdot x + c = max!\]
 
+\begin{minipage}{\textwidth}
 SIMPLEX
 \begin{lstlisting}[frame=single,numbers=left]
-While ein c_s > 0 {
-	Falls alle b_is >= 0
-		keine Loseung - Ende
-	Sonst
-		bestimme r so, dass b_r/b_rs = max b_i/b_is
-	B = AUTAUSCH(B, r, s)
+# Bringe Problem in Normalform
+Forall Bedingungen {
+	Formuliere Bedingung als Ungleichung in Matrixzeile
+	Falls Bedingung obere Schranke hat {
+		invertiere Ungleichung
+	}
+}
+
+# Tausche
+While ### {
+	Waehle kleinsten Matrixwert als Pivotelement
+	Forall Zeile {
+		Ermittle b_i/b_is
+		x = davon groesster, noch negativen Wert
+	}
+	Tausche Spalte(Pivotelement) mit Zeile(x)
 }
 \end{lstlisting}
-
-\subsubsection{Anwendung des Verfahrens}
-\begin{itemize}
-	\Ermittle \(\frac{b_i}{b_{is}}\)
-\end{itemize}
+\end{minipage}
 
 
 
