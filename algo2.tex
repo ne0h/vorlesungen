@@ -547,7 +547,7 @@ Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebige
 AUSTAUSCH(A, r, s)
 \begin{lstlisting}[frame=single,numbers=left]
 Forall i != r, j != s {
-	a'_ij = a_ij + (a_is a_rj) / a_rs
+	a'_ij = a_ij - (a_is a_rj) / a_rs
 }
 # Pivotzeile
 Forall i == r, j != s {
@@ -583,7 +583,7 @@ Forall Bedingungen {
 # Tausche
 While ### {
 	Waehle kleinsten Matrixwert als Pivotelement
-	Forall Zeile {
+	Forall Zeilen {
 		Ermittle b_i/b_is
 		x = davon groesster, noch negativen Wert
 	}
