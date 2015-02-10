@@ -529,11 +529,9 @@ Ziel: Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
 
 
 \subsection{Eckentausch}
-Ziel: Um \(z\) zu maximieren, machen wir sukzessive neue \(y_i\) so dass der Ursprung von Ecke zu Ecke wandert und der Wert von \(z\) im Ursprung wächst.
+\textbf{Ziel}: Um \(z\) zu maximieren, machen wir sukzessive neue \(y_i\) so dass der Ursprung von Ecke zu Ecke wandert und der Wert von \(z\) im Ursprung wächst.
 \\\\
-Getauschte Elemente werden mit einem "`jj"' gekennzeichnet.
-\\\\
-Vorgehen: Tausche immer eine Koordinate von \(y'\) mit einer von \(y''\).
+\textbf{Vorgehen}: Tausche immer eine Koordinate von \(y'\) mit einer von \(y''\).
 \[\begin{pmatrix}
 	a_{11}v_1 & ... &a_{1n}v_n & u_1\\
 	.   &		.	& .   & . \\
@@ -555,7 +553,7 @@ Forall i == r, j != s {
 }
 # Pivotspalte
 Forall i != r, j == s {
-	a'_ij = -a_ij / a_rs
+	a'_ij = a_ij / a_rs
 }
 # Pivot
 Forall i == r, j == s {
