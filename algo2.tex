@@ -507,7 +507,7 @@ Es gibt keine kompetitive Strategie.
 
 
 \section{Lineare Programmierung}
-Ziel: Maximierung linearer Funktionen mit linearen Nebenbedingungen, beispielsweise zur Bestimmung des maximalen FLusses in einem Netzwerk oder um das MiniMax-Theorem zu beweisen.
+\textbf{Ziel:} Maximierung linearer Funktionen mit linearen Nebenbedingungen, beispielsweise zur Bestimmung des maximalen FLusses in einem Netzwerk oder um das MiniMax-Theorem zu beweisen.
 
 \subsection{Lineares Programm}
 Die lineare Ungleichung
@@ -515,21 +515,34 @@ Die lineare Ungleichung
 beschreibt den Halbraum mit Normalenvektor \(\upsilon\).
 
 \subsubsection{Konvexer Polyeder}
+Die Nebenbedingungen
 \[y_i := a_i^T \cdot x + a_i \geq 0,~i = 1,...,l\]
-bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Simplex} genannt wird.
+bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Simplex} genannt wird. Das gesuchte Maximum, das durch die Nebenbedingungen begrenzt wird, befindet sich innerhalb des Simplex.
 \\\\
-Ziel: Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
+\textbf{Ziel:} Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
 \[z := z^T \cdot x = max!\]
 \[y := A\cdot x + a \geq 0\]
 
 \subsubsection{Normalform des linearen Programms}
 \[z = c^T\cdot \bar{y} + c \stackrel{!}{=} max\]
 \[y' \geq 0\]
-\[y'' = B \cdot \bar{y} + b \geq 0\]
+\[y'' = B \cdot y' + b \geq 0\]
+
+\[\begin{array}{c|ccc|c|}
+	& & y' \geq 0 & & 1 \\
+	\hline
+	& & & & \\
+	y''= & & B & & b \\
+	& & & & \\
+	\hline
+	z= & & c^T & & c \\
+	\hline
+\end{array}\]
+\(c\) wird maximiert.
 
 
 \subsection{Eckentausch}
-\textbf{Ziel}: Um \(z\) zu maximieren, machen wir sukzessive neue \(y_i\) so dass der Ursprung von Ecke zu Ecke wandert und der Wert von \(z\) im Ursprung wächst.
+\textbf{Ziel:} Um \(z\) zu maximieren, machen wir sukzessive neue \(y_i\) zu neuen Koordinaten, so dass der Ursprung von Ecke zu Ecke wandert und der Wert von \(z\) im Ursprung wächst.
 \\\\
 \textbf{Vorgehen}: Tausche immer eine Koordinate von \(y'\) mit einer von \(y''\).
 \[\begin{pmatrix}
@@ -543,33 +556,48 @@ Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebige
 \\\\\\
 \begin{minipage}{\textwidth}
 AUSTAUSCH(A, r, s)
-\begin{lstlisting}[frame=single,numbers=left]
-Forall i != r, j != s {
-	a'_ij = a_ij - (a_is a_rj) / a_rs
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Forall $i \ne r$, $j \ne s$ {
+	$a_{ij}' = a_{ij} - \frac{a_{is} \cdot a_{rj}}{a_{rs}}$
 }
 # Pivotzeile
-Forall i == r, j != s {
-	a'_ij = -a_ij/a_rs
+Forall $i == r$, $j \ne s$ {
+	$a_{ij}' = -\frac{a_{ij}}{a_{rs}}$
 }
 # Pivotspalte
-Forall i != r, j == s {
-	a'_ij = a_ij / a_rs
+Forall $i \ne r$, $j == s$ {
+	$a_{ij}' = \frac{a_{ij}}{a_{rs}}$
 }
 # Pivot
-Forall i == r, j == s {
-	a'_ij = 1 / a_rs
+Forall $i == r$, $j == s$ {
+	$a_{ij}' = \frac{1}{a_{rs}}$
 }
 \end{lstlisting}
 \end{minipage}
 
 
 \subsection{Der Simplexalgorithmus}
-Ausgangspunkt: Ein lineares Programm in Normalform
-\[z = c^T \cdot x + c = max!\]
-
+\textbf{Ausgangspunkt:} Ein lineares Programm in Normalform
+\[z = c^T \cdot x + c = max!,\]
+\[x \geq 0,\]
+\[B \cdot x + b \geq 0,\]
+ausführlich:
+\[\begin{array}{c|ccc|c|}
+	& x_1 & ... & x_n & 1 \\
+	\hline
+	y_1= & b_{11} & ... & b_{1n} & b_1 \\
+	\vdots & \vdots & & \vdots & \vdots \\
+	y_m= & b_{m1} & ... & b_{mn} & b_n \\
+	\hline
+	z= & c_1 & ... & c_n & c \\
+	\hline
+\end{array}\]
+\\\\
+\textbf{Vorgehen:} Iteratives Tauschen von \(y_r\) mit \(x_s\).
+\\\\\\
 \begin{minipage}{\textwidth}
 SIMPLEX
-\begin{lstlisting}[frame=single,numbers=left]
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
 # Bringe Problem in Normalform
 Forall Bedingungen {
 	Formuliere Bedingung als Ungleichung in Matrixzeile
@@ -579,16 +607,144 @@ Forall Bedingungen {
 }
 
 # Tausche
-While ### {
+While moeglich {
 	Waehle kleinsten Matrixwert als Pivotelement
 	Forall Zeilen {
-		Ermittle b_i/b_is
+		Ermittle $\frac{b_i}{b_is}$
 		x = davon groesster, noch negativen Wert
 	}
 	Tausche Spalte(Pivotelement) mit Zeile(x)
 }
 \end{lstlisting}
 \end{minipage}
+
+
+\subsection{Berechnung der Normalform}
+\begin{itemize}
+	\item Für die Überführung eines linearen Programms in die Normalform muss eine Ecke des Simplex zum Ursprung gemacht werden
+	\item Problem: Im Allgemeinen sind die Ecken des Simplex nicht bekannt
+	\item Es sind allerdings einer oder mehrere Punkte bekannt, die zum Ursprung gemacht werden können
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item Tauschen von \(y_r\) mit \(x_s\) auf der Hauptdiagonalen. Der Ursprung wandert auf einer Koordinatenachse
+		\item Streichen der getauschten Zeile
+	\end{enumerate}
+\end{itemize}
+
+
+\subsection{Flussmaximierung}
+Die Suche nach einem maximalen Fluss in einerm Flussnetzwerk kann als lineares Programm angesehen werden.
+
+\textbf{Gegeben:} Gerichteter Graph mit Kapazitätsbeschriftung.
+\\\\
+Daraus ergibt sich das lineare Programm:
+\[z = x_1 + x_2 = max!\]
+Nebenbedingungen:
+\begin{itemize}
+	\item \textbf{Flusserhaltung}
+	\begin{itemize}
+		\item Für jeden Knoten die Summe der aus- und eingehenden Flüsse: z.B. \(x_1-x_3-x_4 \geq 0\)
+		\item Für jeden Knoten die negierten aus- und eingehenden Flüsse: z.B. \(-x_1+x_3+x_4 \geq 0\)
+	\end{itemize}
+	\item \textbf{Kapazitätsbeschränkung}
+	\begin{itemize}
+		\item Für alle Kanten die Beschränkung des Flusses: z.B. \(5-x_1 \geq 0\)
+		\item An allen Kanten muss der Fluss positiv sein: z.B. \(x_1 \geq 0\)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Duale lineare Programme}
+Das lineare Programm
+\[x \geq 0\]
+\[B\cdot x + b \geq 0\]
+\[c^T \cdot x + c = max!\]
+wird durch die Matrix \(\mathbb{B} := \begin{pmatrix} B & b \\ c^T & c\end{pmatrix}\) repräsentiert. Durch Eckentausch kann sie auf eine Normalform \(\overline{\mathbb{B}}\) gebracht werden.
+
+\subsubsection{Dualitätsgesetz}
+Das lineare Programm
+\[y \geq 0\]
+\[B^T \cdot y + c \leq 0\]
+\[b^t \cdot y + c = min!\]
+hat die Normalform \(\overline{\mathbb{B}}^T\), die Lösung \(\overline{y}=0\) und den Minimalwert \(\overline{c}\).
+\\\\
+\textbf{Definition:} Die beiden linearen Programme heißen dual zueinander.
+\\\\
+\textbf{Bemerkung:} Das zweite Programm kann umgeschrieben und mit \textit{SIMPLEX} gelöst werden. Gleichzeitig löst man damit das erste Programm. Es ist das Lösen des \textit{primalen Programms} in dualer Form.
+
+
+\subsection{Beweis des MiniMax-Theorems}
+Mit Hilfe des Dualitätssatzes für lineare Programme kann das MiniMax-Theorem
+\[max(x \in W_M)~min(y \in W_n)~x^T\cdot A\cdot y = min(y \in W_n)~max(x \in W_m)~x^T\cdot A \cdot y\]
+bewiesen werden. Auf Grund des SIMPLEX-Algorithmus ist es äquivalent zu
+\[max(x)~min(i)~x^T\cdot A \cdot e_j = min(y)~max(i)~e_i^T\cdot A \cdot y\]
+
+\subsubsection{Linke Seite}
+Auf der linken Seite wird
+\[x_0 := min(i)~x^T\cdot A \cdot e_j\]
+maximiert. Da \(x_0\) mit \(x\) wächst erhält man das lineare Programm
+\\\\
+\[\begin{array}{|cc|c|}
+x & x_1 & 1 \\
+\hline
+A^T & -b & 0 \\
+-a^T & 0 & 1 \\
+\hline
+0^T & 1 & 0 \\
+\hline
+\end{array}\]
+
+\subsubsection{Rechte Seite}
+Analog wird die rechte Seite
+\[max(i)~e_i^T\cdot A \cdot y\]
+minimiert. Man erhält das lineare Programm
+\\\\
+\[\begin{array}{|cc|c|}
+y & x_0 & 1 \\
+\hline
+A & -a & 0 \\
+-b^T & 0 & 1 \\
+\hline
+0^T & 1 & 0 \\
+\hline
+\end{array}\]
+
+\subsubsection{Folgerung}
+Da die rechte Seite dual zur linken Seite, folgt das MinMix-Theorem.
+
+
+\subsection{Ausgleichen mit der Maximumsnorm}
+Sei
+\[Ax = a\]
+ein überbestimmtes Gleichungssystem, d.h. für alle \(x\) ist das Residuum
+\[r := \begin{bmatrix} r_1 \\ \vdots \\ r_n \end{bmatrix} := Ax - a \ne 0.\]
+\textbf{Ziel:} Minimieren von
+\[r := \parallel r \parallel_{\infty} := max(i)~|r_i|\]
+mit Hilfe eines linearen Programms
+\[-A\overline{x} + ax_0 + e \geq 0\]
+\[A\overline{x} - ax_0 + e \geq 0\]
+\[x_0 = max!\]
+
+\subsubsection{Vorgehen zur Berechnung}
+\textbf{Gegeben:} Lineares, überbestimmtes Gleichungssystem
+\begin{enumerate}
+	\item Aufstellen des linearen Programms
+	\begin{enumerate}
+		\item Formulieren der Nebenbedingungen und der negierten Nebenbedingungen
+		\item Nebenbedingungen im linearen Programm gleich \(1\) setzen
+	\end{enumerate}
+	\item Berechnen des Maximums nach dem SIMPLEX-Algorithmus
+	\item Berechnung der Normalform
+	\item Berechnung von \(x_1\) aus \(r\) (\(z = x_0\))
+\end{enumerate}
+
+
+\subsection{Aufwand}
+\begin{itemize}
+	\item Worst-Case-Laufzeit: \(\Omega(m^{\frac{n}{2}})\)
+	\item Laufzeit in der Praxis: \(\mathcal{O}(m^2n)\)
+	\item Lineare Programme sind NP-hart (Überführung in Rücksackproblem möglich)
+\end{itemize}
 
 
 
