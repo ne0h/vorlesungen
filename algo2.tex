@@ -748,3 +748,285 @@ mit Hilfe eines linearen Programms
 
 
 
+\section{Zufallsgesteuerte Optimierung}
+
+\subsection{Definitionen}
+
+\subsubsection{Optimierungsaufgabe}
+Eine Optimierungsaufgabe besteht aus
+\begin{itemize}
+	\item einem Suchraum \(Q\), der Teil eines Zustandraumes \(Z\) ist,
+	\item einer Bewertungsfunktion (Kostenfunktion) \(c:Z \rightarrow \mathbb{R}\), die jedem Zustand \(q\) seine Kosten zuordnet,
+	\item Nebenbedingungen.
+\end{itemize}
+\textbf{Gesucht:} Ein \(q \in Q\) mit minimalen oder maximalen Kosten.
+
+\subsubsection{Kombinatorische Optimierungsaufgabe}
+Eine Optimierungsaufgabe heißt kombinatorisch, wenn der Suchraum \(Q\) diskret ist.
+
+\subsubsection{Globales/Lokales Optimum}
+\begin{itemize}
+	\item \(q \in Q\) heißt \textit{globales Optimum}, wenn für alle anderen Lösungen \(p \in Q\) gilt: \(c(q) \leq c(p)\)
+	\item \(q \in Q\) heißt \textit{lokales Optimum}, wenn für alle Nachbarn \(p \in Q\) von \(q\) gilt: \(c(q) \leq c(p)\)
+\end{itemize}
+
+
+\subsection{Gradientenverfahren}
+\begin{itemize}
+	\item Verfahren anschaulich: Der Algorithmus nähert sich schrittweise, nur mit Kenntnis der nächsten Nachbarn dem Maximum (Minimum). Ist kein Aufstieg (Abstieg) mehr möglich, so terminiert er
+	\item Problem: Eventuell ist nur ein lokales Maximum (Minimum) erreicht
+	\item \textbf{Nicht anwendbar:}
+	\begin{itemize}
+		\item Berechnung unangemessen aufwendig
+		\item Lokale Optima auf dem Weg zum globalen Optimum
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Suchverfahren}
+Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht werden kann.
+
+\subsubsection{Beispiel: Handlungsreisender}
+\begin{itemize}
+	\item Gesucht: Eine möglichst günstige Rundreise
+	\item Prinzip: Iterative Auswahl des "`besten"' Kindknotens
+	\item \textbf{Probleme}
+	\begin{itemize}
+		\item Bestimmung des "`besten"' Nachfolgers kann sehr auswendig sein
+		\item Eventuell sind Rückstritte nötig, da der Weg zur optimalen Lösung nicht monoton verbessernd ist
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Stochastische Verfahren}
+
+\subsubsection{Probleme bisher}
+\begin{itemize}
+	\item Bei kombinatorischem steilsten Abstieg mpssen die Kosten jeweils für alle Nachfolger berechnet werden (hoher Aufwand). Lösungsidee: Nachfolger zufällig wählen
+	\item Steilster A- oder Abstieg kann zu lokalem statt globalen Optimum führen. Lösungsidee: Unter Umständen auch "`schlechtere"' Lösungen im nächsten Iterationsschritt akzeptieren
+\end{itemize}
+
+\subsubsection{Grundalgorithmus}
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Initialisiere $q$
+#MARKER
+Erzeuge $p$ aus $q$
+Falls $(p,q)$ nicht akzeptabel {
+	Springe zu #MARKER
+}
+Aktualisierungen $q \leftarrow p,...$
+Falls Ende nicht erreicht {
+	Springe zu #MARKER
+}
+Gebe $q$ aus
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Simuliertes Tempern}
+\begin{itemize}
+	\item Technik zur Züchtung von Kristellen (beim Härten von Stahl)
+	\item Temperatur wird kontrolliert abgesenkt
+	\item Dabei sind die Energie des Systems nicht monoton
+\end{itemize}
+
+\paragraph{Maximumsalgorithmus}
+\textbf{Gegeben:} Temperaturen \(t_1,t_2,t_3,...\) und \(K\) als obere Schranke für die maximal zu berücksichtigenden Nachbarn
+\\\\
+Verschlechterungen werden akzeptiert, wenn die \textit{Aktzeptanzbedingung}
+\[exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack\]
+gilt. Bei großen Temperaturen werden verschlechterungen eher akzeptiert als bei kleinen (beispielsweise bei lokalen Maxima).
+\\\\
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+#MARKER
+k = 1
+Repeate {
+	Bestimme zufaelligen Nachfolger $p \in N(q)$
+	$k++$
+} until $k>K$ OR $c(p)>c(q)$ OR $exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack$
+
+if $k>K$ {
+	stop
+} else {
+	senke Temperatur: $i++$
+	Spring zu #MARKER
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Schwellwert-Algorithmus}
+\begin{itemize}
+	\item Verwendung der Akzeptanzbedingung \(c(p) > c(q) - \sigma\)
+	\item Der Schwellwert \(\sigma \geq 0\) wird regelmäßig abgesenkt
+	\item Anschaulich: \(\sigma\) erlaubt das kurzzeitige Abwärtsgehen nach einem lokalen Maximum. Mit fortschreitendem Aufstieg wird die Toleranz abwärts zu gehen geringer
+	\item Keine Garantie, dass das globale Optimum erreicht wird
+\end{itemize}
+
+\subsubsection{Sintflut-Maximierung}
+\begin{itemize}
+	\item Es gibt eine untere Grenze \(F\), die nicht unterschritten werden darf
+	\item \(F\) wird regelmäßig angehoben
+	\item Akzeptanzbedingung \(c(p) \geq F\) ist unabhängig von \(q\)
+	\item Keine Garantie, dass das globale Optimum erreicht wird
+\end{itemize}
+
+\subsubsection{Rekordjagd-Algorithmus}
+\begin{itemize}
+	\item Der bisher höchste wird (Rekord) wird gespeichert
+	\item Dieser darf nur um eine bestimmte Toleranz \(\delta\) unterschritten werden
+	\item Der Rekord wird regelmäßig abgesenkt
+	\item Die Akzeptanz \(c(p) \geq Rekord-\sigma\) ist unabhängig von \(q\)
+	\item Keine Garantie, dass das globale Optimum erreicht wird
+\end{itemize}
+
+\subsubsection{Vergleich der Verfahren}
+\begin{itemize}
+	\item Beispiel Gröschels-Handlungsreisender: Bohre 442 Löcher in möglichst kurzer Zeit in eine Platine. Der Sintflut-Algorithmus bietet die beste Lösung (kommt der mathematisch besten Lösung am nächsten)
+	\item \textbf{Feststellungen von Dueck, Scheuer und Wallmeister}
+	\begin{itemize}
+		\item Nur Schwellwert-Verfahren und simuliertes Tempern können aus kleinen, aber tiefen lokalen Minima entkommen
+		\item Allerdings sind bei hoch-nicht-lineare Optimeirungsaufgaben die Extremwerte im Allgemeinen weder markant noch tief
+		\item Sintflut- und Schellwert-Verfahren sind dem simulierten Tempern überlegen
+		\item Der Sintflut-Algorithmus ist fast genauso gut wie das Schwellwert-Verfahren, nicht ganz so stabil in der Qualität der Lösungen, dafür jedoch ewas schneller
+		\item Das Schwellwert-Verfahren ist die Methode der Wahl
+		\item Bei einem reichhaltigen Sortiment von Veränderungsschritten wird besser optimiert
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Evolutionäre Algorithmen}
+\textbf{Idee:} nachbilden des Evolutionsprinzips aus der Biologie.
+
+\subsubsection{Einführung}
+\begin{itemize}
+	\item Eine \textit{Population} besteht aus \textit{Individuen}
+	\item Ein \textit{Individuum} besitzt einen \textit{Genotyp} (Merkmalsvektor) \(q \in \mathbb{R}^n\) und einen \textit{Phänotyp} (Bewertung bzw. Fitness)
+	\textit{Indiviuen} können sich fortpflanzen und ihren \textit{Genotyp} verändern (Mutation). Haben sie zwei oder mehr Eltern heißen sie \textit{Kreuzungen}, haben sie nur einen Eltern sind es \textit{Klone}
+	\item Die Größe der \textit{Population} wird einigermaßen konstant gehalten, d.h. es werden immer wieder Lösungen verworfen ("`survival of the fittest"')
+\end{itemize}
+
+\subsubsection{Evolutionsstrategien}
+\begin{itemize}
+	\item Ein Individuum wird durch \(q \in \mathbb{R}^n\) und einen Streuungsvektor \(\sigma \in \mathbb{R}^n\) repräsentiert
+	\item Nachkommen mutieren nach der Regel \(q^(t+1) = q^t+d\), wobei \(d\) zufällig normal- oder geometrisch verteilt ist mit Streuungsvektor \(\sigma\)
+	\item \(\sigma\) kann bei der Evolution mitverändert werden
+\end{itemize}
+
+\subsubsection{Die Plus-Evolutionsstrategie}
+\begin{itemize}
+	\item Die Population \(Q\) ändert sich mit der Zeit \(t\), nicht aber ihre Größe \(\mu := |Q|\)
+	\item Zu jedem Zeitpunkt werden \(\lambda\) Nachkommen erzeugt
+	\item Die \(\mu\) Individuen mit der besten Fitness \(c(q)\) untern den \(\mu\) Eltern und \(\lambda\) Nachkommen bilden die nächste Polulation \(Q\). Die anderen \(\lambda\) Individuen sterben, Eltern können überleben
+	\item Die Eltern aller Individuen werden gleichverteilt aus \(Q\) gewählt 
+\end{itemize}
+
+\subsubsection{Die Komma-Evolutionsstrategie}
+\begin{itemize}
+	\item Gleich der \textit{Plus-Strategie}, allerdings überleben die Eltern nicht
+	\item Nur die Stärksten der Nachkommen überleben
+\end{itemize}
+
+\subsubsection{Mehrere Eltern}
+\begin{itemize}
+	\item Individuen können auch mehrere Eltern haben
+	\item \textbf{Methoden}
+	\begin{itemize}
+		\item Mischen: Für jedes Merkmal wird zufällig ein Elternteil bestimmt, von dem es übernommen wird
+		\item Mitteln: Für jedes Merkmal wird der Durchschnittswert der Eltern gebildet
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Genetische Algorithmen}
+
+\subsubsection{Prinzip}
+\begin{itemize}
+	\item Binäre Merkmalsvektoren, d.h. \(Q = \{0,1\}^n\)
+	\item In jeder Generation erzeugen \(\mu\) Eltern \(\mu\) Nachkommen und nur diese überleben
+	\item Starke Eltern paaren sich "`häufiger"' (höhere Wahrscheinlichkeit) als "`schwächere"'
+\end{itemize}
+
+\subsubsection{Ablauf}
+\begin{enumerate}
+	\item \textbf{Fortpflanzung}
+	\begin{itemize}
+		\item Jedes Individuum \(q\) wird mit der Wahrscheinlichkeit \(W(q) = \frac{c(q)}{\sum_{p \in Q}c(p)}\) Elter
+		\item Die \(\mu\) Individuen erzeugen \(\mu\) Klon-Nachkommen. Nur diese überleben
+	\end{itemize}
+	\item \textbf{Kreuzung}
+	\begin{itemize}
+		\item Dann werden unter den \(\mu\) Nachkommen \(p\%\) Individuen ausgesucht, die der Kreuzung interzogen werden
+		\item Die Kreuzungspartner werden zufällig festgelegt
+		\item Kreuzung per Kreuzprodukt
+	\end{itemize}
+	\item Mutation: Jedes Bit des Merkmalvektors wird mit einer sehr kleinen Mutationswahrscheinlichkeit \(p_m\) invertiert
+\end{enumerate}
+
+
+\subsection{Vergleich}
+
+\subsubsection{Evolutionsstrategien}
+\begin{itemize}
+	\item konvergieren im Allgemeinen schneller
+	\item enden öfter in lokalem Minimum
+\end{itemize}
+
+\subsubsection{Genetische Algorithmen}
+\begin{itemize}
+	\item bevorzugen Kreuzungen vor Mutationen
+	\item spähen daher Suchraum in größeren Sprüngen aus
+	\item und finden öfter ein globales Optimum
+	\item konvergieren aber schlechter
+\end{itemize}
+
+
+\subsection{Partikel-Schwarm-Optimierung}
+\textbf{Idee:} Übertragen des Verhaltens von Fisch- und Vogelschwärme auf allgemeine Optimierung.
+
+\subsubsection{Einführung}
+Ein Schwarm besteht aus Partikeln. Zum \(i-\)ten Partikel gehören seine
+\begin{itemize}
+	\item Position \(p_i(t)\) im \(\mathbb{R}^n\) abhängig von der Zeit \(t\)
+	\item Fitness \(f(p_i)\)
+	\item Geschwindigkeit \(v_t(t) = p_t(t)-p_i(t-1)\)
+\end{itemize}
+Dabei ist \(f(x)\) zu optimieren.
+
+\subsubsection{Algorithmenskizze}
+\begin{itemize}
+	\item Initialisiere die \(p_t(0)\) und \(v_i(0)\) zufällig
+	\item Aktualisiere die nächsten Positionen, Geschwindigkeiten und Lernkonstanten
+	\item Typische Werte: ca 20-40 Partikel
+\end{itemize}
+
+\subsubsection{Superschwarm-Optimierung}
+\begin{itemize}
+	\item Die Lernkonstanten können mit einem Superschwarm optimiert werden
+	\item Die Position eines Superpartikels entspricht einer Parameterwahl und der Position eines einfachen Schwarms mit diesen Parametern
+	\item Die Fitness der optimalen Fitness, die durch eine Partikelschwarm-Optimierung mit dieser parameterwahl erzielt wird
+\end{itemize}
+
+
+\subsection{Ameisen-Systeme}
+\begin{itemize}
+	\item Ameisen markieren ihre Wege mit Duftstoffen (Pheremonen)
+	\item Kurze Wege zu Futterplätzen werden in der gleichen Zeit öfter markiert als lange
+	\item Geleitet durch die Intensität der Markierung finden Ameisen die kürzesten Wege
+\end{itemize}
+Dies kann auf Probleme übertragen werden, in denen Pfade in Grapen zu bestimmen sind.
+
+\subsubsection{Beispiel Rundreise}
+Seien
+\begin{itemize}
+	\item \(\{1,...,n\}^2\) die Kantenmenge eines Graphen
+	\item \(d_{ij}\) die Länge der Kante \(ij\)
+	\item \(p_{ij}\) die Intensität der Pheromonmarkierung
+\end{itemize}
+Von \(m\) Knoten aus wird je eine Ameise auf eine Rundreise geschickt. Danach werden die \(p_{ij}\) mit der Evaporationsrate \(\rho \in \lbrack 0,1)\) neu gesetzt:
+\[p_{ij} = \rho \cdot p_{ij} + \sum_k \Delta p_{ij}^k\]
+\[\Delta p_{ij}^k = \begin{cases} \frac{1}{d_{ij}}, & falls~Ameise~k~Kante~ij~benutze \\ 0, & sonst \end{cases}\]
+Danach suchen die Ameisen wiederholt erneut eine Rundreise, bis eine Abbruchbedingung erfüllt ist.
+
+
+
