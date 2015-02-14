@@ -1084,3 +1084,153 @@ ist stückweise konstant. Die Parametrisierung des Differenzenpolygons ist stüc
 
 
 
+
+\section{Der Algorithmus von Lane und Riesenfeld}
+Lane und Riesenfeld veröffentlichten 1980 einen Unterteilungsalgorithmus um stückweise polynomielle Kurven (Splines) zu erzeugen. Dabei handelt es sich um einen stationären Unterteilungsalgorithmus, der durch eine einzige wiederholt anzuwendende lineare Operation beschreibar sind.
+
+\subsection{Der Algorithmus}
+Der Algorithmus erzeugt eine Folge von Polygone (Kontrollpolygone), die den Grenzwert der Folge, die Limeskurve, definieren und deren Form beeinflussen
+\[c_{\mathbb{Z}} := (c_i)_{i \in \mathbb{Z}}\]
+\[= (...,c_{-1},c_0,c_1,...)\]
+Endliche Polygone können als biinfinite aufgefasst werden, bei denen nur endlich viele der Kontrollpunkte \(c_i\) von \(0\) verschieden sind.
+\\\\
+\textbf{Eingabe:} \(c_{\mathbb{Z}}^0 \subset \mathbb{R}^d\) ein Polygon, \(n \in \mathbb{N}_0\) der Grad, \(m \in \mathbb{N}_0\) die Unterteilungstiefe
+\\\\
+\begin{minipage}{\textwidth}
+LANE-RIESENFELD
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Fuer $k = 1,...,m$ {
+
+	// verdopple
+	Fuer $i \in \mathbb{Z}$ {
+		$d_{2i}^0 = d_{2i+1}^0 = c_i^{k-1}$
+	}
+
+	// Mittele
+	Fuer $j = 1,...,n$ {
+		Fuer $i \in \mathbb{Z}$ {
+			$d_i^j = \frac{1}{2} \cdot (d_{i-1}^{j-1}+d_i^{j-1})$ 
+		}
+	}
+
+	// benenne um
+	Fuer$i \in \mathbb{Z}$ {
+		$c_i^k = d_i^n$
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\subsection{Unterteilungsmatrizen}
+Zur Analyse des LR-Algorithmus können die Koordinaten der Kontrollpolygone betrachtet werden. Es reicht somit ein skalarwertiges Polygon
+\[c := \begin{bmatrix} \vdots \\ c_{-1} \\ c_0 \\ c_1 \\ \vdots \end{bmatrix} \in \mathbb{R}^{\mathbb{Z}}\]
+zu unterteilen.
+Die Unterteilungsmatrizen \(U_n, n \in \mathbb{N}_0\) stellen den LR-Algorithmus dar und können durch \(n\)-fache Mittelung der Spalten einer biinfiniten Matrix \(D\) berechnet werden. Man erhält so
+\[U_1 = \frac{1}{2}
+\begin{bmatrix}
+	\ddots 	& 1 			& 				& 			\\
+			& 2 			& 				& 			\\
+			& 1 			& 1 			& 			\\
+			& 				& 2 			& 			\\
+			& 				& 1 			& \ddots 	\\
+\end{bmatrix},
+\]
+\[U_2 = \frac{1}{4}
+\begin{bmatrix}
+	\ddots 	& 1 			& 				&			\\
+			& 3 			& 				&			\\
+			& 3 			& 1 			&			\\
+			& 1 			& 3 			&			\\
+			& 				& 3 			&			\\
+			& 				& 1 			& \ddots 	\\
+\end{bmatrix},
+\]
+und allgemein
+\[U_n :=
+\begin{bmatrix}
+	\ddots 	& \vdots 		&				&			\\
+			& \alpha_0		&				&			\\
+			& \alpha_1		& \vdots		&			\\
+			& \alpha_2		& \alpha_0		&			\\
+			& \vdots		& \vdots		&			\\
+			& \alpha_{n+1}	& \alpha_{n-1} 	&			\\
+			& \vdots		& \alpha_n		&			\\
+			&				& \alpha_{n+1}	&			\\
+			&				& \vdots		& \ddots 	\\
+\end{bmatrix},
+\]
+wobei
+\[\alpha_i = \begin{cases} \frac{1}{2^n}, & falls~i=0,...,n \\ 0, & sonst \end{cases}\]
+die mit \(2^{-n}\) skalierten Binomialkoeffizienten sind.
+
+Die Zeilen der Matrix \(u_n\) enthalten alternierend die \(\alpha_i\) mit geraden und ungeraden Indexen.
+
+Die Unterteilung
+\[b:= \begin{bmatrix} \vdots \\ b_i \\ \vdots \end{bmatrix} := U_n \begin{bmatrix} \vdots \\ c_k \\ \vdots \end{bmatrix}\]
+des Polygons \(c\) berechnet sich daher nach den beiden Regeln
+\[b_{2i} = \sum_{k\in \mathbb{Z}} \alpha_{2i-2k}\cdot c_k\]
+und
+\[b_{2i+1} = \sum_{k\in \mathbb{Z}} \alpha_{2i+1-2k}\cdot c_k,\]
+die zur \textit{Unterteilungsgleichung}
+\[b_i = \sum_{k\in \mathbb{Z}} \alpha_{i-2k}\cdot c_k, i \in \mathbb{Z}\]
+zusammengefasst werden können.
+
+
+\subsection{Das Symbol}
+Die Unterteilungsgleichung kann als Polynommultiplikation aufgefasst werde. Dazu werden die Folge \(b_{\mathbb{Z}}\), \(\alpha_{\mathbb{Z}}\) und \(c_{\mathbb{Z}}\) als symbolische Polygone
+\[b(z) := \sum_{i \in \mathbb{Z}} b_i \cdot z^i,\]
+\[\alpha(z) := \sum_{i \in \mathbb{Z}} \alpha_i \cdot z^i,\]
+\[c(z) := \sum_{i \in \mathbb{Z}} c_i \cdot z^i,\]
+dargestellt. Multipliziert man \(\alpha(z)\) und \(c(z^2)\) symbolisch, so erhält man
+\[\alpha(z) \cdot c(z^2) = \sum_j \alpha_j\cdot z^j \cdot \sum_k c_k\cdot z^{2k} = b(z),\]
+das Laurent-Polynom des unterteilten Polygons. Daher hat die Unterteilungsgleichung die Form
+\[\beta(z) = \alpha(z)\cdot c(z^2).\]
+Das Polynom \(\alpha(z)\) stellt den LR-Algorithmus dar und kann gegen ein beliebiges anderes ersetzt werden, um einen anderen Unterteilungsalgorithmus zu erhalten. Es heißt das \textit{Symbol} des Unterteilungsalgorithmus.
+
+\subsubsection{Begrifflichkeiten}
+\begin{itemize}
+	\item Das Symbol des Unterteilungsalgorithmus heißt \textit{stationäre}, weil immer wieder der selbe Unterteilungsoperator angewendet wird
+	\item Der Unterteilungsoperator heißt \textit{linear}, weil er durch eine Matrix dargestellt werden kann
+\end{itemize}
+
+\subsubsection{Symbol des LR-Algorithmus}
+\[\alpha_n(z) = \frac{1}{2^n} \sum_{i=0}^{n+1} \binom{n+1}{i} \cdot z^i = \frac{1}{2^n}\cdot (1+z)^{n+1}\]
+
+
+\subsection{Das Differenzenschema}
+Neben dem Vorwärtsdifferenzenoperator \(\Delta\) gibt es den Rückwärtsdifferenzenoperator \(\nabla\), der eim Polygon \(c:=(c_i)_{i \in \mathbb{Z}}\) auf das Differenzenpolygon
+\[\nabla c := (\nabla c_i)_{i \in \mathbb{Z}}\]
+der Rückwärtsdifferenzen
+\[\nabla c_i := c_i - c_{i-1}\]
+abbildet. Er unterscheidet sich bis auf eine Indexverschiebung nicht vom Vortwärtsdifferenzenoperator.
+
+Unterteilt man dein Polygon \(c\) gemäß der Unterteilungsgleichung
+\[b(z) = \alpha(z) \cdot c(z^2)\]
+genügen die Differenzenpolygone \(b_{\nabla}(z) = \frac{\alpha(z)}{1+z} \cdot c_{\nabla}(z^2)\) und \(c_{\nabla}(z) = (1-z)\cdot c(z)\) der Unterteilungsgleichung
+\[b_{\nabla}(z) = \beta(z) \cdot c_{\nabla}(z^2),\]
+wobei \(\beta(z) = \frac{\alpha(z)}{1+z}\). \(\beta(z)\) das Differenzenschema zu \(\alpha(z)\) bezeichnet.
+
+
+\subsection{Uniforme Parametrisierung}
+Um zu zeigen, dasseine Polygonfolge gegen eine Kurve oder Funktion konvergiert, parametrisiert man die durch den LR-Algorithmus erzeugten Polygone.
+
+Sei \(c := \lbrack ...,c_{-1},c_0,c_1,...\rbrack^T\) ein skalierwertiges Polygon und sei \(d := \lbrack ...,d_{-1},d_0,d_1,...\rbrack^T\) dessen Differenzenpolygon.
+
+Nach \(k\)-maliger Unterteilung mit dem LR-Algorithmus ergeben sich die Polygone
+\[c^k := \begin{bmatrix} u_i^k \\ c_i^k \end{bmatrix}, i \in \mathbb{Z}\]
+und
+\[d^k := \begin{bmatrix} v_i^k \\ d_i^k \end{bmatrix}, i \in \mathbb{Z}.\]
+Wir fassen die Polygone \(c^k\) und \(d^k = \nabla c^k\) als stückweise lineare Funktionen \(c^k(x)\) und \(d^k(x)\) mit den Knoten \(u_i^k\), bzw. \(v_i^k\) auf, so dass
+\[c^k(u_i^k) = c_i^k\]
+und
+\[d^k(v_i^k) = d_i^k.\]
+
+\subsubsection{Folgerung 1}
+Die Ableitung \(\frac{d}{dx}c^k(x)\) ist eine stückweise konstante Funktion, für die über \((u_{i-1}^k, u_i^k)\)
+\[\frac{d}{dx}c(x) = \frac{\nabla c_i^k}{\nabla u_i^k} = 2^k d_i^k\]
+gilt.
+
+\subsubsection{Folgerung 2}
+Die stückweise lineare Funktion \(2^k d^k(x)\) approximiert die Ableitung \(\frac{d}{dx} c^k(x)\) und es gilt
+\[sup(x \in \mathbb{R})~|~\frac{d}{dx} c^k(x) - 2^k d^k(x)~| \in \mathcal{O}(2^{-k}).\]
