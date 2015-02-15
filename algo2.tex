@@ -1247,4 +1247,53 @@ Die Skalierten Differenzpolygone \(2^k d^k(x)\) (Ableitungspolygone) konvergiere
 \subsubsection{Folgerung 2}
 Induktiv folgt aus \textit{Folgerung 1}, dass die \(n\)-te Ableitung
 \[\frac{d^n}{dx^n} c_{\infty}(x)\]
-der Limesfunktion stückweise konstant ist. 
+der Limesfunktion stückweise konstant ist.
+
+
+
+\section{Unterteilungsalgorithmen für Flächen}
+
+\subsection{Tensorprodukt}
+Ein regelmäßiges biinfinites Kontrollnetz kann durch eine biinfinite Matrix
+\[C = c_{\mathbb{Z}^2}\]
+beschrieben werden. Die Matrizen \(U\) und \(V\) zweier stationärer Unterteilungsalgorithmen für Kurven (z.B. der Lane-Riesenfeld-Algorithmus) bilden das Kontrollnetz
+\[B := b_{\mathbb{Z}^2} := UCV^T,\]
+in dem alle Spalten von \(C\) mit \(U\) und dann alle Zeilen von \(UC\) mit \(V\) unterteilt werden. Das Paar \((U,V)\) heißt \textit{Tensorproduktunterteilungsschema} oder kurz \textit{Tepus}.
+
+Die Netze \(U^kC(V^T)^k\) konvergieren gegen eine Fläche, wenn \(U\) und \(V\) konvergente Kurvenunterteilungsalgorithmen sind.
+
+
+\subsection{Symbole}
+Die Matrix \(C=c_{\mathbb{Z}^2}\) hat das Symbol
+\[c(x) = \sum_{i \in \mathbb{Z}^2} c_i x^i.\]
+Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen mit den Symbolen \(\alpha(x)\) und \(\beta(x)\), hat das unterteilte Netz
+\[B := b_{\mathbb{Z}^2} := UCV^2\]
+das Symbol
+\[b(x,y) := \alpha(x) \cdot c(x^2,y^2) \cdot \beta(y).\]
+Das Produkt
+\[\gamma(x,y) := \alpha(x) \cdot \beta(y)\]
+ist das \textit{Symbol des Tepus} \((U,V)\) und die Unterteilungsgleichung ist
+\[b(x) = \gamma(x) \cdot c(x^2).\]
+Multipliziert man die Unterteilungsgleichung aus, erhält sie die Form
+\[b_i = \sum_{j \in \mathbb{Z}^2} \gamma_{i-2j} \cdot c_j.\]
+
+
+\subsection{Masken}
+Sei \(\Gamma := \gamma_{\mathbb{Z}^2}\) eine biinfinite Matrix und sei
+\[\gamma(x,y) := \lbrack ...,x^{-1},x^0,x^1,...\rbrack \cdot \Gamma \cdot \begin{bmatrix} \vdots \\ y^{-1} \\ y^0 \\ y^1 \\ \vdots \end{bmatrix}\]
+das Symbol eines Unterteilungsalgorithmus. Die Teilmatrizen
+\[\Gamma_i := \lbrack \gamma_{i-2j} \rbrack_{j \in \mathbb{Z}^2}\]
+für \(i=(0,0),~(1,0),~(0,1),~(1,1)\) heißen \textit{Masken}. Sie werden graphisch dargestellt, indem die \(\gamma_{i-2j} \ne 0\) an die Punkte eines Teilnetzes geschrieben werden, mt denen sie multipliziert werden. Der resultierende, gewichtete Punkt wird durch einem ausgefüllten, schwarzen Punkt gekennzeichnet.
+
+\subsubsection{Beispiel: Mittelungsoperator}
+Der Mittelunsoperator \((M,M)\) mit dem Symbol
+\[\mu(x,y)= \frac{1}{4}(1+x)(1+y)\]
+hat nur eine Maske und interpoliert den Mittelpunkt aus vier Eckpunkten. Die zugehörige Unterteilungsgleichung ist
+\[b(x) = \mu(x) \cdot c(x).\]
+Die Maske des Mittelungsoperators kann für beliebige Netze und beliebige geometrische Figuren verfeinert werden.
+
+
+\subsection{Konvergenz}
+Wenn sich die Gewichte jeder Maske eines Unterteilungsalgorithmus für regelmäßige Vierecksnetzezu \(1\) summieren und die maximale Kantenlänge \(k\)-mal unterteilter Netze für \(k \rightarrow \infty\) gegen \(0\) geht, konvrgieren die Netze gegen eine stetige Fläche.
+
+Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilungsalgorithmen für regelmäßige Vierecksnetze aufgefasst werden.
