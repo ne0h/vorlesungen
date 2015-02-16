@@ -1297,3 +1297,158 @@ Die Maske des Mittelungsoperators kann für beliebige Netze und beliebige geomet
 Wenn sich die Gewichte jeder Maske eines Unterteilungsalgorithmus für regelmäßige Vierecksnetzezu \(1\) summieren und die maximale Kantenlänge \(k\)-mal unterteilter Netze für \(k \rightarrow \infty\) gegen \(0\) geht, konvrgieren die Netze gegen eine stetige Fläche.
 
 Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilungsalgorithmen für regelmäßige Vierecksnetze aufgefasst werden.
+
+
+
+\section{Textsuche}
+Im Folgenden bezeichnet \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) einen Text und \(s = s_1,...s_m \in A^m\) einen Suchtext, für den bestimmt werden soll, ob er in \(t\) und gegebenenfalls an welcher Stelle er auftritt. Es wird vorausgesetzt, dass \(m < n\).
+
+\subsection{Naive Suche}
+\begin{minipage}{\textwidth}
+NAIVE-SUCHE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+i = 0
+While $i \leq n-m$ {
+	j = m
+	While $j > 0$ and $s_j = t_{i+j}$ {
+		j--
+	}
+	Falls $j == 0$ {
+		Return i
+	} sonst {
+		i++
+	}
+}
+\end{lstlisting}
+\end{minipage}
+Der Aufwand für diesen Algorithmus liegt im schlechtesten Fall in \(\Theta(m\cdot n)\).
+
+
+\subsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
+Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
+\[\nu \rightarrow \{0,...,m\}\]
+\[a \mapsto \nu(a),\]
+wobei
+\[\nu(a) := min\{k~|~a \notin s_{k+1},...,s_m~und~(a=s_k \lor k=0)\}\]
+
+\subsubsection{Vorgehen anschaulich}
+Die Beschreibung entstammt der deutschen Wikipedia\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
+\begin{itemize}
+	\item Muster wird linksbündig unter den Text geschrieben und von rechts nach links mit dem Text verglichen
+	\item Sobald ein Mismatch auftritt, wird berechnet wie weit das Suchmuster nach rechts verschoben werden kann
+	\item Existiert der entsprechende Buchstabe nicht im Muster, kann um die ganze Länge des Musters verschoben werden
+\end{itemize}
+Die Funktion \(\nu\) kann mit einem Aufwand in \(\mathcal{O}(|A|+m)\) vorberechnet werden.
+
+
+\subsection{Die Suffix-Heuristik (Good-Suffix-Heuristik)}
+Mit einer zweiten Heuristik lässt sich die Laufzeit der Naiven Suche noch weiter reduzieren, so dass sie in \(\mathcal{O}(n+m)\) liegt.
+
+\subsubsection{Vorgehen anschaulich}
+Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
+
+
+\subsection{Der Algorithmus von Boyer und Moore}
+Der Algorithmus von Boyer und Mooreerweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
+
+\begin{minipage}{\textwidth}
+BOYER-MOORE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+i = 0
+While $i \leq n-m$ {
+	j = m
+	While $j > 0$ and $s_j = t_{i+j}$ {
+		j--
+	}
+	Falls $j == 0$ {
+		Return i
+	} sonst {
+		$\nu = \nu(t_{i+j})$
+		Falls $\nu < j$ {
+			$i = i+max \{j-v,\sigma(j)\}$
+		} sonst {
+			$i = i + max\{m-\nu+1,\sigma(j)\}$
+		}
+	}
+}
+\end{lstlisting}
+\end{minipage}
+In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
+
+
+\subsection{Berechnung der Suffixvorkommensfunktion}
+
+\subsubsection{Definition Präsuffix}
+Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und das größte echte Präsuffix \(geps(w)\).
+\\\\
+Sei \(w_j := s_{j+1},...,s_m\) und
+\[\gamma(j) := |gpes(w_j|.\]
+Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert. Insbesondere ist \(\gamma(m-1)=0\).
+
+Mit Hilfe von \(\gamma\) lässt sich die Funktion \(\sigma\) so darstellen:
+\[\sigma(j) = min\Big( \{k\in \{1,...,j\} ~|~\gamma(j-k) = m-j\} \cup \{m-\gamma(0)\}\Big).\]
+Aus
+\[\gamma(j-k) = m-j\]
+folgt mit \(i := j-k\)
+\[j = m-\gamma(i)~und\]
+\[k = m-\gamma(i)-1.\]
+
+\subsubsection{Berechnung von \(\sigma\)}
+\begin{itemize}
+	\item Eingabe: \(\gamma(0,...,m)\)
+	\item Ausgabe: \(\sigma(1,...,m)\)
+\end{itemize}
+
+\begin{minipage}{\textwidth}
+\(\sigma\)
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+For $j=1,...,m$ {
+	$\sigma = m-\gamma(0)$
+}
+For $i = 0,...,m-1$ {
+	$k = m-\gamma(i)-1$
+	$j = m-\gamma(i)$
+
+	Falls $\sigma(j) > k$ {
+		$\sigma(j) = k$
+	}
+}
+\end{lstlisting}
+\end{minipage}
+It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
+
+\subsubsection{Berechnung von \(\gamma\)}
+\(gpes(w_{i-1})\) verkürzt um \(s_i\) ist ebenfalls Präsuffix von \(w_i\), daher gilt
+\[\gamma(i-1) -1 \leq \gamma(i).\]
+Falls \(j := m-\gamma(i)\) und \(s_i \ne s_j\), ist \(geps(w_{i-1})\) verkürzt um \(s_i\) auch Präsuffix von \(w_j\). Daraus folgt der Algorithmus:
+\begin{itemize}
+	\item Eingabe: \(s_1,...,s_m\)
+	\item Ausgabe: \(\gamma(0,...,m-1)\)
+\end{itemize}
+
+\begin{minipage}{\textwidth}
+\(\gamma\)
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+$\gamma(m-1) = 0$
+For $i=m-1,...,1$ {
+	$j = m-\gamma(i)$
+	While $s_i \ne s_j$ und $\gamma(j) > 0$ {
+		$j = m-\gamma(j)$
+	}
+
+	Falls $s_i == s_j$ {
+		$\gamma(j-1) = \gamma(j) + 1$
+	} sonst {
+		$\gamma(i-1) = 0$
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Aufwand von \(\gamma\)}
+Der Aufwand für \(\gamma\) liegt in \(\mathcal{O}(m)\), denn
+\begin{itemize}
+	\item \(j\) wird in Zeile \(5\) erhöht
+	\item und in Zeile \(3\) wegen Zeile \(9\) jeweils um \(1\) größer.
+\end{itemize}
+Da \(j\) anfangs \(m\) ist und immer \(\leq m\) ist, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
