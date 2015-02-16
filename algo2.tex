@@ -64,7 +64,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\item \textbf{Algorithmus}
 	\begin{enumerate}
 		\item Ermittle den Abfluss aus Überschuss und Restkapazität: \(min\{u(x), k_f(x,y)\}\)
-		\item Erhöhe den Fluss auf der Kante \(x,y)\)
+		\item Erhöhe den Fluss auf der Kante \((x,y)\)
 		\item Aktualisiere die Überschusswerte an \(x\) und \(y\)
 	\end{enumerate}
 \end{itemize}
@@ -108,25 +108,33 @@ Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusc
 
 \subsubsection{Operationen}
 
-\paragraph{\(LEERE(x)\)}
-\begin{enumerate}
-	\item Solange \(u(x)\ > 0\)
-	\item Falls es einen puschbaren Nachbarknoten gibt: \(PUSCH(x,y)\)
-	\item Falls nicht, \(LIFTE(x)\)
-\end{enumerate}
-
-\paragraph{\(AN~DIE~SPITZE\)}
-\begin{enumerate}
-	\item Initialisiere wie in \textit{PRAEFLUSS-PUSCH}
-	\item Generierte die Knotenliste \(L\)
-	\item Iteriere über alles Knoten
-	\item Bestimme für jeden Knoten die Anzahl der Nachbarknoten
-	\item Iteriere über \(L\)
-	\begin{enumerate}
-		\item \(LEERE(x)\)
-		\item Wenn erfolgreich geleert wurde, setze den aktuellen Knoten an die Spitze von \(L\)
-	\end{enumerate}
-\end{enumerate}
+\begin{minipage}{\textwidth}
+LEERE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $u(x) > 0$ {
+	Falls es einen puschbaren Nachbarknoten gibt {
+		$PUSCH(x,y)$
+	} sonst {
+		$LIFTE(x)$
+	}
+}
+\end{lstlisting}
+\end{minipage}
+\\\\
+\begin{minipage}{\textwidth}
+AN-DIE-SPITZE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Initialisiere wie in $PRAEFLUSS-PUSCH$
+Generiere Knotenliste $L$
+Forall Knoten {
+	Bestimme Anzahl der Nachbarknoten
+}
+Forall $L$ {
+	$LEERE(x)$
+	Setze aktuellen Knoten an die Spitze von $L$
+}
+\end{lstlisting}
+\end{minipage}
 
 \subsubsection{Laufzeit}
 \[\mathcal{O}(|V|^3)\]
@@ -212,14 +220,16 @@ Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsva
 \end{itemize}
 
 \subsubsection{Algorithmus zur Berechnung des Schnitts}
-\begin{enumerate}
-	\item Solange \(|V| \geq 3\)
-	\begin{enumerate}
-		\item Wähle zufällig eine Kante \((x,y)\)
-		\item Entferne alle \((x,y)\) aus \(E\)
-		\item Verschmelze \(x\) mit \(y\)
-	\end{enumerate}
-\end{enumerate}
+\begin{minipage}{\textwidth}
+SCHNITT
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $|V| \geq 3$ {
+	Waehle zufaellig eine Kante $(x,y)$
+	Entferne alle $(x,y)$ aus $E$
+	Verschmelze $x$ mit $y$
+}
+\end{lstlisting}
+\end{minipage}
 
 
 
@@ -285,10 +295,10 @@ Ein binärer Spielbaum ist ein balancierter Binärbaum gerader Höhe \(2k\) mit 
 \subsubsection{Bestimme den Wurzelwert aus den Blattwerten}
 \begin{minipage}{\textwidth}
 WERT(x)
-\begin{lstlisting}[frame=single,numbers=left]
-Ermittle die Kindknoten x in stochastischer Reihenfolge
-Ermittle WERT(y)
-Falls (w=1) gib 0 aus, ansonsten gib (0 NOR WERT(z)) aus
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Ermittle die Kindknoten $x$ in stochastischer Reihenfolge
+Ermittle $WERT(y)$
+Falls $w==1$ gib $0$ aus, ansonsten gib $(0 \downarrow WERT(z))$ aus
 \end{lstlisting}
 \end{minipage}
 
@@ -314,21 +324,21 @@ Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Po
 \\\\
 \begin{minipage}{\textwidth}
 BRZ
-\begin{lstlisting}[frame=single,numbers=left]
-k = 1
-forall P_i {
-	Bestimme Schnittmenge mit P
-	Falls es Schittpunkte gibt: k++
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+$k = 1$
+Forall $P_i$ {
+	Bestimme Schnittmenge mit $P$
+	Falls es Schittpunkte gibt: $k++$
 }
-l = 1
-Falls es ein j gibt: Q_j zerlegt P:
-	l += j
-Wurzel = Q_l
-Falls k >= 3
-	Q = Schnittmenge von P und dem li. HR von Q_l
-	li. Wurzelteilbaum = BRZ(Q,Q_1,...,Q_{k-1})
-	Q = Schnittmenge von P und dem re. HR von Q_l
-	ere. Wurzelteilbaum = BRZ(Q,Q_1,...,Q_{k-1})
+$l = 1$
+Falls es ein $j$ gibt: $Q_j$ zerlegt $P$:
+	$l += j$
+Wurzel = $Q_l$
+Falls $k \geq 3$
+	$Q$ = Schnittmenge von $P$ und dem li. HR von $Q_l$
+	linker Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
+	$Q$ = Schnittmenge von $P$ und dem re. HR von $Q_l$
+	rechter Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
 Return Wurzel und Teilbaeume
 \end{lstlisting}
 \end{minipage}
@@ -393,10 +403,10 @@ Wir betrachten ein Labyrinth \(L\) und einen Roboter \(R\) mit Tastsensor und Dr
 \\\\
 \begin{minipage}{\textwidth}
 PLEDGE-Strategie
-\begin{lstlisting}[frame=single,numbers=left]
-while R in L {
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $R \in L$ {
 	Gehe vorwaerts bis Wand kontaktiert wird
-	while R in L OR Drehwinkel = 0 {
+	While $R \in L$ OR Drehwinkel = $0$ {
 		Gehe links der Wand
 	}
 }
@@ -409,13 +419,13 @@ Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunk
 \\\\
 \begin{minipage}{\textwidth}
 WANZE
-\begin{lstlisting}[frame=single,numbers=left]
-while r != z {
-	Laufe in Richtung z bis r == z
-			OR r nicht aus einem Polygon herauskommt
-	Falls r != z {
-		Suche den kuerzesten Punkt q an P_i zu z
-		Laufe zu q
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $r \ne z$ {
+	Laufe in Richtung $z$ bis $r == z$
+			OR $r$ nicht aus einem Polygon herauskommt
+	Falls $r \ne z$ {
+		Suche den kuerzesten Punkt $q$ an $P_i$ zu $z$
+		Laufe zu $q$
 	}
 }
 \end{lstlisting}
@@ -433,9 +443,9 @@ Ziel: Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \
 \\\\
 \begin{minipage}{\textwidth}
 FIRST-FIT
-\begin{lstlisting}[frame=single,numbers=left]
-Forall i = 1,...,m {
-	Fuege a_1 dem ersten Behaelter hinzu | a_i + A_j <= h
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+For $i = 1,...,m$ {
+	Fuege $a_1$ dem ersten Behaelter hinzu | $a_i + A_j \leq h$
 }
 \end{lstlisting}
 \end{minipage}
@@ -457,12 +467,12 @@ Ziel: Finde die Tür an einer langen, unüberschaubaren Wand.
 \\\\
 \begin{minipage}{\textwidth}
 Türsuche
-\begin{lstlisting}[frame=single,numbers=left]
-i = 1
-while Tuer nicht gefunden {
-	gehe i Meter in eine Richtung
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+$i = 1$
+While Tuer nicht gefunden {
+	gehe $i$ Meter in eine Richtung
 	aendere Laufrichtung und gehe zurueck
-	i++
+	$i++$
 }
 \end{lstlisting}
 \end{minipage}
@@ -474,15 +484,15 @@ Verallgemeinerung der Türsuche. Ziel: Finden des Ziels \(z\) vom Startpunkt \(s
 \\\\
 \begin{minipage}{\textwidth}
 Sternsuche
-\begin{lstlisting}[frame=single,numbers=left]
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
 # berechne Halbgeraden
-Forall i in N_0 {
-	f_i = (m/(m-1))^i
+Forall $i \in \mathcal{N}_0$ {
+	$f_i = (\frac{m}{m-1})^i$
 }
-i = 0
-While z nicht gefunden {
-	gehe f_i Einheiten auf H_i entlang und zurueck
-	i++
+$i = 0$
+While $z$ nicht gefunden {
+	gehe $f_i$ Einheiten auf $H_i$ entlang und zurueck
+	$i++$
 }
 \end{lstlisting}
 \end{minipage}
