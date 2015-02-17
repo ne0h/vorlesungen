@@ -38,7 +38,7 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 		\item Solange es einen Pfad von \(q\) nach \(s\) gibt, erhöhe einen beliebigen Pfad
 	\end{enumerate}
 	\item Terminiert Ford-Fulkerson, ist \(f\) maximal
-	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f | f~Fluss~in~F\})\)
+	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f | f~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^{*} s\) kann in \(|E|\) Schritten gefunden werden
 \end{itemize}
 
 
@@ -112,6 +112,7 @@ Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusc
 LEERE
 \begin{lstlisting}[frame=single,numbers=left,mathescape]
 While $u(x) > 0$ {
+	// Beginne mit dem hintersten Nachbarknoten
 	Falls es einen puschbaren Nachbarknoten gibt {
 		$PUSCH(x,y)$
 	} sonst {
@@ -131,7 +132,8 @@ Forall Knoten {
 }
 Forall $L$ {
 	$LEERE(x)$
-	Setze aktuellen Knoten an die Spitze von $L$
+	Setze aktuellen Knoten an die Spitze von $L$,
+				falls erhoeht wurde
 }
 \end{lstlisting}
 \end{minipage}
