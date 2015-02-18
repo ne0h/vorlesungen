@@ -162,13 +162,12 @@ Sei \(G=(V,E)\) ein Graph mit einer Paarung \(P\) und einer maximalen Paarung \(
 Die Kanten dieser Wege liegen alternierend in \(P\) und \(Q\) \(\rightarrow\) Zyklen haben eine gerade Länge.
 
 \subsubsection{Definition}
-Es gibt \(k=|Q\setminus (P \cap Q)| - |P\setminus (P \cap Q)|\) Wege, auf denen \(P\) vergrößert werden kann.
+Es gibt \(k= |Q|-|P|=|Q\setminus (P \cap Q)| - |P\setminus (P \cap Q)|\) Wege, auf denen \(P\) vergrößert werden kann. Die Endkanten liegen beiden \(\in Q\).
 
 \subsubsection{Folgerung}
 Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 
 \paragraph{Algorithmus zur Vergößerung}
-Scheitert in allgemeinen Graphen, funktioniert lediglich in bipartiten Graphen.
 \begin{enumerate}
 	\item Suche \((x,y) \in E\), wobei \(x\) mit keinem \(z\in V\) gepaart
 	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort
