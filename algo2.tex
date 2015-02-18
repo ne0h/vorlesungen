@@ -328,24 +328,33 @@ Folgender Algorithmus erzeugt binäre RZBs für den Raum:
 
 \subsubsection{Eingabe}
 Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Polygone \(P_1,...,P_n \subset \mathbb{R}^3\).
-\\\\
+
+\subsubsection{Vorgehen anschaulich}
+\begin{enumerate}
+	\item Sortiere Polygone aus, die keine Schnittfläche mit dem Polyeder gemeinsam haben
+	\item Falls es ein Polygon gibt, das den Polyeder komplett teilt, nehme dieses zum Trennen. Gibt es keines nehme das erste aus \(Q\)
+	\item Teile den Polyeder und fahre rekursiv fort. Alle aktuellen Polygone werden mitübergeben und im nächsten Iterationsschritt aussortiert
+\end{enumerate}
+
 \begin{minipage}{\textwidth}
 BRZ
 \begin{lstlisting}[frame=single,numbers=left,mathescape]
 $k = 1$
 Forall $P_i$ {
-	Bestimme Schnittmenge mit $P$
-	Falls es Schittpunkte gibt: $k++$
+	Bestimme Schnittflaeche mit $P$
+	Falls es eine Schittflaeche gibt: $k++$
 }
 $l = 1$
-Falls es ein $j$ gibt: $Q_j$ zerlegt $P$:
-	$l += j$
+Falls es ein $j$ gibt: $Q_j$ zerlegt $P$ {
+	$l = j$
+}
 Wurzel = $Q_l$
-Falls $k \geq 3$
+Falls $k \geq 3$ {
 	$Q$ = Schnittmenge von $P$ und dem li. HR von $Q_l$
 	linker Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
 	$Q$ = Schnittmenge von $P$ und dem re. HR von $Q_l$
 	rechter Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
+}
 Return Wurzel und Teilbaeume
 \end{lstlisting}
 \end{minipage}
