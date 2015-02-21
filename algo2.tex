@@ -101,7 +101,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusch} beschleunigt.
 
 \begin{itemize}
-	\item Idee: Strukturierstes enladen der Knoten
+	\item Idee: Strukturiertes Enladen der Knoten
 	\item Die Knoten werden über eine Liste verwaltet
 	\item Geliftete Knoten werden an die Spitze der Liste gesetzt
 \end{itemize}
@@ -292,7 +292,7 @@ Verwendung des MiniMax-Theorems zur Laufzeitabschätzung von stochastischen Algo
 
 \subsubsection{MiniMax-Theorem von Yao}
 \[\forall p,q: min_j~(p^T \cdot M \cdot e_j) \leq K_v \leq max_i~(e_i^T \cdot M \cdot q)\]
-Hiermit kann die worst-case-Laufzeit aller stochastischer Algorithmen durch die Laufzeit des schnellsten Deterministischen Algorithmus nach unten abgeschätzt werden.
+Hiermit kann die worst-case-Laufzeit aller stochastischer Algorithmen durch die Laufzeit des schnellsten deterministischen Algorithmus nach unten abgeschätzt werden.
 
 
 \subsection{Spielbaumauswertung}
@@ -451,7 +451,7 @@ Wanze terminiert.
 \subsubsection{Universelles Steuerwort}
 Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
 \\\\
-Satz: Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompas genügt also zur Zielfindung.
+\textbf{Satz:} Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompas genügt also zur Zielfindung.
 
 
 \subsection{Behälterproblem}
@@ -818,8 +818,8 @@ Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht w
 	\item Prinzip: Iterative Auswahl des "`besten"' Kindknotens
 	\item \textbf{Probleme}
 	\begin{itemize}
-		\item Bestimmung des "`besten"' Nachfolgers kann sehr auswendig sein
-		\item Eventuell sind Rückstritte nötig, da der Weg zur optimalen Lösung nicht monoton verbessernd ist
+		\item Bestimmung des "`besten"' Nachfolgers kann sehr aufwendig sein
+		\item Eventuell sind Rückschritte nötig, da der Weg zur optimalen Lösung nicht monoton verbessernd ist
 	\end{itemize}
 \end{itemize}
 
@@ -828,8 +828,8 @@ Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht w
 
 \subsubsection{Probleme bisher}
 \begin{itemize}
-	\item Bei kombinatorischem steilsten Abstieg mpssen die Kosten jeweils für alle Nachfolger berechnet werden (hoher Aufwand). Lösungsidee: Nachfolger zufällig wählen
-	\item Steilster A- oder Abstieg kann zu lokalem statt globalen Optimum führen. Lösungsidee: Unter Umständen auch "`schlechtere"' Lösungen im nächsten Iterationsschritt akzeptieren
+	\item Bei kombinatorischem steilsten Abstieg müssen die Kosten jeweils für alle Nachfolger berechnet werden (hoher Aufwand). Lösungsidee: Nachfolger zufällig wählen
+	\item Steilster An- oder Abstieg kann zu lokalem statt globalen Optimum führen. Lösungsidee: Unter Umständen auch "`schlechtere"' Lösungen im nächsten Iterationsschritt akzeptieren
 \end{itemize}
 
 \subsubsection{Grundalgorithmus}
@@ -851,9 +851,9 @@ Gebe $q$ aus
 
 \subsubsection{Simuliertes Tempern}
 \begin{itemize}
-	\item Technik zur Züchtung von Kristellen (beim Härten von Stahl)
+	\item Technik zur Züchtung von Kristallen (beim Härten von Stahl)
 	\item Temperatur wird kontrolliert abgesenkt
-	\item Dabei sind die Energie des Systems nicht monoton
+	\item Dabei sinkt die Energie des Systems nicht monoton
 \end{itemize}
 
 \paragraph{Maximumsalgorithmus}
@@ -899,7 +899,7 @@ if $k>K$ {
 
 \subsubsection{Rekordjagd-Algorithmus}
 \begin{itemize}
-	\item Der bisher höchste wird (Rekord) wird gespeichert
+	\item Der bisher höchste Wert (Rekord) wird wird gespeichert
 	\item Dieser darf nur um eine bestimmte Toleranz \(\delta\) unterschritten werden
 	\item Der Rekord wird regelmäßig abgesenkt
 	\item Die Akzeptanz \(c(p) \geq Rekord-\sigma\) ist unabhängig von \(q\)
@@ -912,8 +912,8 @@ if $k>K$ {
 	\item \textbf{Feststellungen von Dueck, Scheuer und Wallmeister}
 	\begin{itemize}
 		\item Nur Schwellwert-Verfahren und simuliertes Tempern können aus kleinen, aber tiefen lokalen Minima entkommen
-		\item Allerdings sind bei hoch-nicht-lineare Optimeirungsaufgaben die Extremwerte im Allgemeinen weder markant noch tief
-		\item Sintflut- und Schellwert-Verfahren sind dem simulierten Tempern überlegen
+		\item Allerdings sind bei hoch-nicht-lineare Optimierungsaufgaben die Extremwerte im Allgemeinen weder markant noch tief
+		\item Sintflut- und Schwellwert-Verfahren sind dem simulierten Tempern überlegen
 		\item Der Sintflut-Algorithmus ist fast genauso gut wie das Schwellwert-Verfahren, nicht ganz so stabil in der Qualität der Lösungen, dafür jedoch ewas schneller
 		\item Das Schwellwert-Verfahren ist die Methode der Wahl
 		\item Bei einem reichhaltigen Sortiment von Veränderungsschritten wird besser optimiert
@@ -922,20 +922,20 @@ if $k>K$ {
 
 
 \subsection{Evolutionäre Algorithmen}
-\textbf{Idee:} nachbilden des Evolutionsprinzips aus der Biologie.
+\textbf{Idee:} Nachbilden des Evolutionsprinzips aus der Biologie.
 
 \subsubsection{Einführung}
 \begin{itemize}
 	\item Eine \textit{Population} besteht aus \textit{Individuen}
 	\item Ein \textit{Individuum} besitzt einen \textit{Genotyp} (Merkmalsvektor) \(q \in \mathbb{R}^n\) und einen \textit{Phänotyp} (Bewertung bzw. Fitness)
-	\textit{Indiviuen} können sich fortpflanzen und ihren \textit{Genotyp} verändern (Mutation). Haben sie zwei oder mehr Eltern heißen sie \textit{Kreuzungen}, haben sie nur einen Eltern sind es \textit{Klone}
+	\textit{Individuen} können sich fortpflanzen und ihren \textit{Genotyp} verändern (Mutation). Haben sie zwei oder mehr Eltern heißen sie \textit{Kreuzungen}, haben sie nur einen Eltern sind es \textit{Klone}
 	\item Die Größe der \textit{Population} wird einigermaßen konstant gehalten, d.h. es werden immer wieder Lösungen verworfen ("`survival of the fittest"')
 \end{itemize}
 
 \subsubsection{Evolutionsstrategien}
 \begin{itemize}
 	\item Ein Individuum wird durch \(q \in \mathbb{R}^n\) und einen Streuungsvektor \(\sigma \in \mathbb{R}^n\) repräsentiert
-	\item Nachkommen mutieren nach der Regel \(q^(t+1) = q^t+d\), wobei \(d\) zufällig normal- oder geometrisch verteilt ist mit Streuungsvektor \(\sigma\)
+	\item Nachkommen mutieren nach der Regel \(q^{(t+1)} = q^t+d\), wobei \(d\) zufällig normal- oder geometrisch verteilt ist mit Streuungsvektor \(\sigma\)
 	\item \(\sigma\) kann bei der Evolution mitverändert werden
 \end{itemize}
 
@@ -986,7 +986,7 @@ if $k>K$ {
 		\item Die Kreuzungspartner werden zufällig festgelegt
 		\item Kreuzung per Kreuzprodukt
 	\end{itemize}
-	\item Mutation: Jedes Bit des Merkmalvektors wird mit einer sehr kleinen Mutationswahrscheinlichkeit \(p_m\) invertiert
+	\item \textbf{Mutation:} Jedes Bit des Merkmalvektors wird mit einer sehr kleinen Mutationswahrscheinlichkeit \(p_m\) invertiert
 \end{enumerate}
 
 
@@ -1008,7 +1008,7 @@ if $k>K$ {
 
 
 \subsection{Partikel-Schwarm-Optimierung}
-\textbf{Idee:} Übertragen des Verhaltens von Fisch- und Vogelschwärme auf allgemeine Optimierung.
+\textbf{Idee:} Übertragen des Verhaltens von Fisch- und Vogelschwärmen auf allgemeine Optimierung.
 
 \subsubsection{Einführung}
 Ein Schwarm besteht aus Partikeln. Zum \(i-\)ten Partikel gehören seine
@@ -1060,7 +1060,7 @@ Danach suchen die Ameisen wiederholt erneut eine Rundreise, bis eine Abbruchbedi
 Mit Unterteilungsalgorithmen lassen sich Kurven und Flächen beliebiger Gestalt erzeugen. In der Regel wird ein initiales Polygon wiederholt verfeinert und geglättet, so dass eine konvergente Polgonenfolge entsteht.
 
 \subsection{Der Algorithmus}
-\textbf{Idee:} Eine Bézierkurve kann geteilt und durch zwei aneinandrgesetzte Bézierkurven dargestellt werden. Dies wird rekursiv fortgesetzt.
+\textbf{Idee:} Eine Bézierkurve kann geteilt und durch zwei aneinandergesetzte Bézierkurven dargestellt werden. Dies wird rekursiv fortgesetzt.\footnote{\url{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}}
 
 Der Algorithmus besteht daher mit der Eingabe
 \[b_0^0,...b_n^0 \subset \mathbb{R}^d\]
@@ -1112,7 +1112,7 @@ ist stückweise konstant. Die Parametrisierung des Differenzenpolygons ist stüc
 
 
 \section{Der Algorithmus von Lane und Riesenfeld}
-Lane und Riesenfeld veröffentlichten 1980 einen Unterteilungsalgorithmus um stückweise polynomielle Kurven (Splines) zu erzeugen. Dabei handelt es sich um einen stationären Unterteilungsalgorithmus, der durch eine einzige wiederholt anzuwendende lineare Operation beschreibar sind.
+Lane und Riesenfeld veröffentlichten 1980 einen Unterteilungsalgorithmus um stückweise polynomielle Kurven (Splines) zu erzeugen. Dabei handelt es sich um einen stationären Unterteilungsalgorithmus, der durch eine einzige, wiederholt anzuwendende lineare Operation beschreibar ist.
 
 \subsection{Der Algorithmus}
 Der Algorithmus erzeugt eine Folge von Polygone (Kontrollpolygone), die den Grenzwert der Folge, die Limeskurve, definieren und deren Form beeinflussen
@@ -1210,7 +1210,7 @@ Die Unterteilungsgleichung kann als Polynommultiplikation aufgefasst werde. Dazu
 \[c(z) := \sum_{i \in \mathbb{Z}} c_i \cdot z^i,\]
 dargestellt. Multipliziert man \(\alpha(z)\) und \(c(z^2)\) symbolisch, so erhält man
 \[\alpha(z) \cdot c(z^2) = \sum_j \alpha_j\cdot z^j \cdot \sum_k c_k\cdot z^{2k} = b(z),\]
-das Laurent-Polynom des unterteilten Polygons. Daher hat die Unterteilungsgleichung die Form
+die Laurent-Polynome des unterteilten Polynoms. Daher hat die Unterteilungsgleichung die Form
 \[\beta(z) = \alpha(z)\cdot c(z^2).\]
 Das Polynom \(\alpha(z)\) stellt den LR-Algorithmus dar und kann gegen ein beliebiges anderes ersetzt werden, um einen anderen Unterteilungsalgorithmus zu erhalten. Es heißt das \textit{Symbol} des Unterteilungsalgorithmus.
 
@@ -1292,8 +1292,8 @@ Die Netze \(U^kC(V^T)^k\) konvergieren gegen eine Fläche, wenn \(U\) und \(V\) 
 \subsection{Symbole}
 Die Matrix \(C=c_{\mathbb{Z}^2}\) hat das Symbol
 \[c(x) = \sum_{i \in \mathbb{Z}^2} c_i x^i.\]
-Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen mit den Symbolen \(\alpha(x)\) und \(\beta(x)\), hat das unterteilte Netz
-\[B := b_{\mathbb{Z}^2} := UCV^2\]
+Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen für Kurven mit den Symbolen \(\alpha(x)\) und \(\beta(x)\), hat das unterteilte Netz
+\[B := b_{\mathbb{Z}^2} := UCV^T\]
 das Symbol
 \[b(x,y) := \alpha(x) \cdot c(x^2,y^2) \cdot \beta(y).\]
 Das Produkt
@@ -1312,7 +1312,7 @@ das Symbol eines Unterteilungsalgorithmus. Die Teilmatrizen
 für \(i=(0,0),~(1,0),~(0,1),~(1,1)\) heißen \textit{Masken}. Sie werden graphisch dargestellt, indem die \(\gamma_{i-2j} \ne 0\) an die Punkte eines Teilnetzes geschrieben werden, mt denen sie multipliziert werden. Der resultierende, gewichtete Punkt wird durch einem ausgefüllten, schwarzen Punkt gekennzeichnet.
 
 \subsubsection{Beispiel: Mittelungsoperator}
-Der Mittelunsoperator \((M,M)\) mit dem Symbol
+Der Mittelungsoperator \((M,M)\) mit dem Symbol
 \[\mu(x,y)= \frac{1}{4}(1+x)(1+y)\]
 hat nur eine Maske und interpoliert den Mittelpunkt aus vier Eckpunkten. Die zugehörige Unterteilungsgleichung ist
 \[b(x) = \mu(x) \cdot c(x).\]
