@@ -26,7 +26,7 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 \begin{itemize}
 	\item Der negative Fluss soll lediglich die Darstellung vereinfachen und ist ansonsten uninteressant
 	\item In alle Knoten außer in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus
-	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengafasst werden (mit unendlichen Zu- und Abflüssen)
+	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengefasst werden (mit unendlichen Zu- und Abflüssen)
 \end{itemize}
 
 
@@ -45,6 +45,7 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 \subsection{Algorithmus von Edmonds und Karp}
 \begin{itemize}
 	\item Idee: Anwendung von Ford-Fulkerson immer längs eines kürzesten Pfades (Breitensuche)
+	\item Terminiert auch für beliebige reelle Kapazitäten
 	\item Aufwand: \(\mathcal{O} (|E|^2 \cdot |V|)\)
 \end{itemize}
 
@@ -184,7 +185,7 @@ Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 
 
 \subsection{Maximal gewichtete Paarung}
-Gesucht: Maximal gewichtete Paarung eines ungerichteten Graph:
+\textbf{Gesucht:} Maximal gewichtete Paarung eines ungerichteten Graph:
 \[\Gamma(P) := \Sigma \gamma (P)\]
 
 \subsubsection{Annahme}
@@ -266,7 +267,7 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 	\item \(q := \lbrack q_1,...,q_n \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(B\)
 	\item Erwartungswert des Gewinns von \(A\): \(\mathbb{E}\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
 	\item Optimale Strategie von \(A\): \(min_q~(p^T \cdot M \cdot q)\)
-	\item Optimale Stratie für beide: \\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
+	\item Optimale Strategie für beide: \\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
 \end{enumerate}
 
 \subsubsection{Von-Neumanns-MiniMax-Theorem}
@@ -319,7 +320,7 @@ Falls $w==1$ gib $0$ aus, ansonsten gib $(0 \downarrow WERT(z))$ aus
 Teile die affine Ebene \(A\) anhand einer Halbgeraden \(S_1\) in die Ebenen \(A_0\) und \(A_1\). Fahre rekursiv fort.
 
 \subsubsection{Raumzerlegungsbaum}
-Die Entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus).
+Die entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus).
 Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
 
 
@@ -390,7 +391,7 @@ bildet den Halbraum \(u^{\leq}\).
 
 
 \subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
-Die Formeln gelten nicht nur für Polyeder, sondern für beliebige geschlossene Netze mit topologischen Geschlecht \(2\)., d.h. Netze, die bis auf Verbindungsformen eine Kugeloberfläche darstellen.
+Die Formeln gelten nicht nur für Polyeder, sondern für beliebige geschlossene Netze mit topologischen Geschlecht \(2\), d.h. Netze, die bis auf Verbindungsformen eine Kugeloberfläche darstellen.
 
 \subsubsection{Eulers Formel}
 Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
@@ -398,7 +399,7 @@ Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
 
 \subsubsection{Triangulation von Polyedern}
 Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden. Werden \(k\) Kanten hinzugefügt gilt:
-\[3(f+k) = 2(e+k\]
+\[3(f+k) = 2(e+k)\]
 Daraus folgt der mittlere Knotengrad
 \[\frac{2e}{v} \leq 6\]
 und dazu die mittlere Kantenzahl pro Seite
@@ -451,11 +452,11 @@ Wanze terminiert.
 \subsubsection{Universelles Steuerwort}
 Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
 \\\\
-\textbf{Satz:} Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompas genügt also zur Zielfindung.
+\textbf{Satz:} Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompass genügt also zur Zielfindung.
 
 
 \subsection{Behälterproblem}
-Ziel: Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (Problem ist NP-hart).
+\textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (Problem ist NP-hart).
 \\\\
 \begin{minipage}{\textwidth}
 FIRST-FIT
@@ -471,7 +472,7 @@ Die Laufzeit is in \(\mathcal{O}(n)\).
 Größe der Lösung eines Problems \(P\)
 \begin{itemize}
 	\item Optimaler Algorithmus: \(k_{opt}: \epsilon \rightarrow \mathbb{N}\)
-	\item Korrektor Algorithmus \(A\): \(k_A: \epsilon \rightarrow \mathbb{N}\)
+	\item Korrekter Algorithmus \(A\): \(k_A: \epsilon \rightarrow \mathbb{N}\)
 \end{itemize}
 Es gilt:
 \[k_A \leq a+c\cdot k_{opt}~(a,c \in \mathbb{R})\]
@@ -479,7 +480,7 @@ Es gilt:
 
 
 \subsection{Türsuche}
-Ziel: Finde die Tür an einer langen, unüberschaubaren Wand.
+\textbf{Ziel:} Finde die Tür an einer langen, unüberschaubaren Wand.
 \\\\
 \begin{minipage}{\textwidth}
 Türsuche
@@ -659,7 +660,7 @@ While moeglich {
 
 
 \subsection{Flussmaximierung}
-Die Suche nach einem maximalen Fluss in einerm Flussnetzwerk kann als lineares Programm angesehen werden.
+Die Suche nach einem maximalen Fluss in einem Flussnetzwerk kann als lineares Programm angesehen werden.
 
 \textbf{Gegeben:} Gerichteter Graph mit Kapazitätsbeschriftung.
 \\\\
@@ -861,7 +862,7 @@ Gebe $q$ aus
 \\\\
 Verschlechterungen werden akzeptiert, wenn die \textit{Aktzeptanzbedingung}
 \[exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack\]
-gilt. Bei großen Temperaturen werden verschlechterungen eher akzeptiert als bei kleinen (beispielsweise bei lokalen Maxima).
+gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei kleinen (beispielsweise bei lokalen Maxima).
 \\\\
 \begin{minipage}{\textwidth}
 \begin{lstlisting}[frame=single,numbers=left,mathescape]
@@ -1140,7 +1141,7 @@ Fuer $k = 1,...,m$ {
 	}
 
 	// benenne um
-	Fuer$i \in \mathbb{Z}$ {
+	Fuer $i \in \mathbb{Z}$ {
 		$c_i^k = d_i^n$
 	}
 }
@@ -1231,7 +1232,7 @@ der Rückwärtsdifferenzen
 \[\nabla c_i := c_i - c_{i-1}\]
 abbildet. Er unterscheidet sich bis auf eine Indexverschiebung nicht vom Vortwärtsdifferenzenoperator.
 
-Unterteilt man dein Polygon \(c\) gemäß der Unterteilungsgleichung
+Unterteilt man ein Polygon \(c\) gemäß der Unterteilungsgleichung
 \[b(z) = \alpha(z) \cdot c(z^2)\]
 genügen die Differenzenpolygone \(b_{\nabla}(z) = \frac{\alpha(z)}{1+z} \cdot c_{\nabla}(z^2)\) und \(c_{\nabla}(z) = (1-z)\cdot c(z)\) der Unterteilungsgleichung
 \[b_{\nabla}(z) = \beta(z) \cdot c_{\nabla}(z^2),\]
@@ -1239,7 +1240,7 @@ wobei \(\beta(z) = \frac{\alpha(z)}{1+z}\). \(\beta(z)\) das Differenzenschema z
 
 
 \subsection{Uniforme Parametrisierung}
-Um zu zeigen, dasseine Polygonfolge gegen eine Kurve oder Funktion konvergiert, parametrisiert man die durch den LR-Algorithmus erzeugten Polygone.
+Um zu zeigen, dass eine Polygonfolge gegen eine Kurve oder Funktion konvergiert, parametrisiert man die durch den LR-Algorithmus erzeugten Polygone.
 
 Sei \(c := \lbrack ...,c_{-1},c_0,c_1,...\rbrack^T\) ein skalierwertiges Polygon und sei \(d := \lbrack ...,d_{-1},d_0,d_1,...\rbrack^T\) dessen Differenzenpolygon.
 
@@ -1267,7 +1268,7 @@ Die Funktion \(c^k(x)\) konvergiert gegen eine Funktion \(c_{\infty}(x)\) so, da
 \[sup(x \in \mathbb{R})~|~c_{\infty}(x) - c^k(x)~|~\in \mathcal{O}(4^{-k}).\]
 
 \subsubsection{Folgerung 1}
-Die Skalierten Differenzpolygone \(2^k d^k(x)\) (Ableitungspolygone) konvergieren gegen
+Die skalierten Differenzpolygone \(2^k d^k(x)\) (Ableitungspolygone) konvergieren gegen
 \[\frac{d}{dx} c_{\infty}(x).\]
 
 \subsubsection{Folgerung 2}
@@ -1320,7 +1321,7 @@ Die Maske des Mittelungsoperators kann für beliebige Netze und beliebige geomet
 
 
 \subsection{Konvergenz}
-Wenn sich die Gewichte jeder Maske eines Unterteilungsalgorithmus für regelmäßige Vierecksnetzezu \(1\) summieren und die maximale Kantenlänge \(k\)-mal unterteilter Netze für \(k \rightarrow \infty\) gegen \(0\) geht, konvrgieren die Netze gegen eine stetige Fläche.
+Wenn sich die Gewichte jeder Maske eines Unterteilungsalgorithmus für regelmäßige Vierecksnetzezu \(1\) summieren und die maximale Kantenlänge \(k\)-mal unterteilter Netze für \(k \rightarrow \infty\) gegen \(0\) geht, konvergieren die Netze gegen eine stetige Fläche.
 
 Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilungsalgorithmen für regelmäßige Vierecksnetze aufgefasst werden.
 
@@ -1375,7 +1376,9 @@ Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix 
 
 
 \subsection{Der Algorithmus von Boyer und Moore}
-Der Algorithmus von Boyer und Mooreerweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
+Der Algorithmus von Boyer und Moore erweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
+\\\\
+Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters. Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
 
 \begin{minipage}{\textwidth}
 BOYER-MOORE
