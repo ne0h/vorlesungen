@@ -184,6 +184,94 @@ Was passiert, wenn Licht auf eine Oberfläche trifft?
 	\item Spekular: Perfekte Spiegelung (Einfallswinkel = Ausfallswinkel)
 \end{itemize}
 
+\subsubsection{BRDFs}
+Bidirektionale Reflektanz-Verteilungsfunktion (Bidirectional Reflectance Distribution Function)
+\begin{itemize}
+	\item Radiometrisches Konzept, um die Reflexion an einem Oberflächenpunkt zu beschreiben
+	\item \textbf{Entwicklung von BRDFs}
+	\begin{itemize}
+		\item Messung von realen Materialproben mit einem Goniorereflektometer
+		\item Phänomenologisch-motivierte Modelle: Wenige, intuitiv verständliche Parameter; nur in beschränktem Maße realistisch
+		\item Physikalisch-motivierte Modelle: Exakte Resultate; Einstellung der Parameter allerdings schwierig
+	\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Phong-Bleuchtungsmodell}
+Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
+\begin{itemize}
+	\item Ambient: Indirekte Beleuchtung, Licht von anderen Oberflächen
+	\item Diffus: Nach dem Lambertschen Gesetz
+	\item Spekular: Imperfekte Spiegelung
+	\begin{itemize}
+		\item Durch gerichtete Reflexion entstehen Glanzlichter
+		\item Findet nur in Richtung des Ausfallswinkels statt (Geometrisch: Spiegelung des Lichtvektors an der Normalen)
+		\item Größe des Fokus abhängig vom Phong-Exponenten (großer Exponent \(\rightarrow\) kleiner Kegel)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Formel zur Berechnung}
+\[I = k_a\cdot I_L + k_d\cdot I_L \cdot (n\cdot L) + k_s\cdot I_L \cdot (R_L \cdot V)^n\]
+
+\subsubsection{Stereo-Rendering}
+\textbf{Idee:} Für jedes Auge ein anderes Bild durch die Einführung einer zweiten Kamera.
+
+\subsubsection{Schattierung von Dreiecksnetzen}
+\begin{itemize}
+	\item Stückweise lineare Approximation einer (gekrümmten) Oberfläche durch Dreiecke
+	\item Flat Shading: Verwendung der Dreiecksnormalen zur Beleuchtungsberechnung (Interpolation der Normalen der Eckpunkte)
+	\item Scharfe Kanten brauchen mehrere Normalen
+	\item Typischerweise werden drei Eckpunkte, drei Normalen sowie zusätzliche Attribute (beispielsweise Farben) gespeichert
+	\item Phong Shading: Beleuchtungsberechnung mit interpolierten Normalen
+\end{itemize}
+
+\subsubsection{Licht und Schatten}
+\begin{itemize}
+	\item Objekte können Schatten werfen
+	\item Schattenstrahl: Senden eines Strahls von der Oberfläche zur Lichtquelle hin, um zu gucken, ob ein anderes Objekt geschnitten wird
+	\item Problem: Endliche Genauigkeit der Gleitkommadarstellung, dadurch treten Artefakte auf und die Strahl schneidet eventuell die Oberfläche von der er startet nochmal
+	\item \textbf{Lösungen}
+	\begin{itemize}
+		\item Teste explizit, ob das geschnittene Objekt bereits geschnitten wurde
+		\item Starte etwas weiter weg von der Oberfläche
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Arten von Lichtquellen}
+\begin{itemize}
+	\item Punktlichtquellen: Definiert durch Position und Intensität. Bei realen Lichtquellen: Abfall der Intensität mit dem Abstandsquadrat
+	\item Paralleles Licht: Definiert durch Richtung und Flussdichte, z.B. Sonnenlicht
+	\item \textbf{Andere Lichtquellentypen}
+	\begin{itemize}
+		\item Strahler (Spot-Lights): Lichtkegel mit Abstrahlcharakteristik \(cos^n \Theta\)
+		\item Flächenlichtquellen
+		\item Punktlichtquellen mit Richtungscharakteristik
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Primär- und Sekundärstrahlen}
+\begin{itemize}
+	\item Ray Tracing basiert auf den Gesetzen der geometrischen Optik
+	\item Grundidee: Strahlenverfolgung vom Auge aus
+	\item Rekursion um Spiegelung und Lichtbrechung darzustellen \(\rightarrow\) Sekundärstrahlen: Reflexionsstrahlen und Transmissionsstrahlen
+	\item Steigende Genauigkeit mit steigender Rekursionstiefe
+\end{itemize}
+
+\subsubsection{Snellsches Brechungsgesetz}
+\begin{itemize}
+	\item Beschreiben der Richtungsänderung einer Welle (Licht) beim Übergang von einem Medium in ein anderes mit unterschiedlicher Brechungszahl
+	\item Licht bewegt sich in unterschiedlichen Medien unterschiedlich schnell: \(\eta = \frac{c_{Vakuum}}{c_{Medium}}\)
+	\item Die Brechzahl \(\eta\) ist wellenlängenabhängig \(\rightarrow\) Aufspaltung in unterschiedliche Wellenlängen (Dispersion)
+	\item \textbf{Brechungsgesetz}
+	\begin{itemize}
+		\item \(\eta_i sin(\Theta_i) = \eta_t sin(\Theta_t)\)
+		\item Übergang ins optisch dichtere Medium (\(\eta_t > \eta_i\)): Brechung zum Lot hin
+		\item Übergang ins optisch dünnere Medium (\(\eta_t < \eta_i\)): Brechung vom Lot weg
+	\end{itemize}
+	\item Fresnel-Effekt: Verteilung der Strahlendichte
+	\item Totalreflexion: Wird beim Übergang ein bestimmter Grenzwinkel überschritten wird der Strahl komplett reflektiert
+\end{itemize}
+
 
 
 \section{Appendix A: Baryzentrische Koordinaten}

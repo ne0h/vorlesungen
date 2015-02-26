@@ -11,6 +11,7 @@ Aktuell enthalten
 
 * Algorithmen 2
 * BWL C/FR
+* Computergrafik
 * Echtzeitsysteme
 * Financial Management
 * Investments
