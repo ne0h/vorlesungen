@@ -272,6 +272,77 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\item Totalreflexion: Wird beim Übergang ein bestimmter Grenzwinkel überschritten wird der Strahl komplett reflektiert
 \end{itemize}
 
+\subsubsection{Aliasing}
+\begin{itemize}
+	\item Aliasing-Effekte entstehen durch (falsche) Abtastung von Signalen
+	\item \textbf{Lösungsansätze}
+	\begin{itemize}
+		\item Filterung des Signals vor der Abtastung zur Entfernung von hohen Frequenzen: Im allgemeinen Fall nicht möglich
+		\item Höhere Abtastrate des Signals und anschließend mitteln (Überabtastung, Supersampling)
+	\end{itemize}
+	\item Abtasttheorem von Nyquist und Shannon: Ein kuntinuierliches, bandbegrenztes Signal mit einer maximalen Frequenz \(f_{max}\) muss mit einer Frequenz größer als \(2f_{max}\) abgetastet werden, damit aus dem diskreten Signal das Ursprungssignal exakt rekonstruiert werden kann.
+\end{itemize}
+
+\subsubsection{Supersampling-Strategien}
+\begin{itemize}
+	\item \textbf{Uniformes Supersampling}
+	\begin{itemize}
+		\item Statt Abtastung eines Punktes innerhalb eines Pixels wird \(k^2\)-mal im selben Intervall abgetastet
+		\item Abstand zwischen den Samples muss immer gleich sein
+	\end{itemize}
+	\item \textbf{Adaptives Supersampling}
+	\begin{itemize}
+		\item Heute kaum noch verwendet
+		\item Ist die Farbdifferenz benachbarter Samples zu groß, dann werden die Pixel mehrfach unterteilt
+		\item Einfarbige Pixel benötigen im Schnitt nur ein Sample, Kanten werden trotzdem geglättet
+	\end{itemize}
+	\item \textbf{Stochastisches Supersampling}
+	\begin{itemize}
+		\item Uniformes Supersampling oft nicht ausreichend für um hohe Frequenzen aufzulösen
+		\item Unterteilt Pixel in ein Gitter und wählt zufällig einen Punkt pro Zelle (Stratified Sampling)
+		\item Reduziert Alising, führt aber zu mehr Rauschen, was allerdings von der menschlichen Wahrnehmung als weniger störend empfunden wird
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Distributed Ray Tracing}
+
+\subsubsection{Probleme des Whitted-Style Ray Tracing}
+\begin{itemize}
+	\item Bilder sehen zu makellos aus
+	\item Perfekte Spiegelung und Transmission
+	\item Harte Schattenkanten
+	\item Unendlich Schärfentiefe
+\end{itemize}
+
+\subsubsection{Weiche Schatten}
+\begin{itemize}
+	\item Reale Lichtquellen besitzen endliche Ausdehnung
+	\item Schatten beginnen am Objekt mit harten Kanten, die mit wachsendem Abstand weicher werden
+\end{itemize}
+
+\subsubsection{Bewegungsunschärfe}
+\begin{itemize}
+	\item Verteilung der Strahlen in der Zeit: Objekte bewegen sich in einem Zeitintervall
+	\item Erzeuge verschiedene Strahlen pro Pixel und mittlere die Farbwerte
+	\item Vgl. Blichtungszeit bei realen Kameras
+\end{itemize}
+
+\subsubsection{Tiefenunschärfe}
+\begin{itemize}
+	\item "`Modell der dünnen Linse"'
+	\item Verteilung der Strahlen in der Breite
+	\item Wähle einen Punkt auf der Bildebene und der Linse und berechne dadurch den Punkt auf der Fokusebene
+\end{itemize}
+
+\subsection{Imperfekte Spiegelung und Transmission: Distributed Ray Tracing}
+\begin{itemize}
+	\item Mehrere Strahlen für Spiegelung und Transmission
+	\item An jedem Schnittpunkt werden viele Sekundärstrahlen weiterverfolgt
+	\item (Quasi-)zufällige Richtung
+	\item Gewichtung nach der BRDF
+	\item Durch Rekursion wird ein verzweigter "`Strahlenbaum"' aufgebaut
+\end{itemize}
 
 
 \section{Transformationen und homogene Koordinaten}
