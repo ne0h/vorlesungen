@@ -108,6 +108,23 @@ Definiert durch:
 	\item Für alle Objekte: Finde Pixel, die das Objekt bedeckt und bestimme Pixelfarbe
 \end{itemize}
 
+\subsubsection{Bildsynthese}
+\begin{itemize}
+	\item Erzeuge ein Rasterbild aus einer Szenenbeschreibung (Objekte), also bestimme, welche Objekte die Farbe jedes Pixels beeinflussen
+	\item \textbf{Objektbasiert (Object-Order Rendering)}
+	\begin{enumerate}
+		\item Betrachte ein Objekt/Fläche nach der anderen
+		\item Finde heraus, welche Pixel das Objekt bedecken
+		\item Bestimme die Pixelfarbe
+	\end{enumerate}
+	\item \textbf{Bildbasiert (Image-Order Rendering)}
+	\begin{enumerate}
+		\item Betrachte einen Pixel nach dem anderen
+		\item Finde heraus, welches Objekt an dieser Stelle sichtbar ist
+		\item Bestimme die Pixelfarbe
+	\end{enumerate}
+\end{itemize}
+
 \subsubsection{Strahlentypen}
 \begin{itemize}
 	\item Sichtstrahl: Halbgerade von der Kamera durch den Pixel
@@ -121,6 +138,22 @@ Definiert durch:
 	\item Berechne Farbe und Schattierung (shading)
 	\item Rekursive Fortsetzung der Strahlenverfolgung
 \end{itemize}
+
+\subsubsection{Prinzipielles Vorgehen im Detail}
+\begin{enumerate}
+	\item \textbf{ray generation}
+	\begin{itemize}
+		\item Erzeugung von Sichtstrahlen (vom Betrachter zur Bildebene) durch jeden Pixel der Bildebene
+		\item Die Bildebene ist festgelegt durch den Abstand zur Kamera und die Größe der Ebene
+		\item Typischerweise ist das Sichtfeld orthogonal mittleren Sichtstrahl und symmetrisch 
+	\end{itemize}
+	\item \textbf{ray intersection}
+	\begin{itemize}
+		\item Finde Objekt, das den Sichtstrahl schneidet und dessen Schnittpunkt der Kamera am nächsten ist
+		\item Schnittpunktberechnung beispielsweise über Baryzentrische Koordinaten
+	\end{itemize}
+	\item \textbf{shading}
+\end{enumerate}
 
 
 \subsection{Materialeigenschaften}
@@ -144,3 +177,44 @@ Was passiert, wenn Licht auf eine Oberfläche trifft?
 	\item Das Verhältnis ist abhängig vom Einfallswinkel (\textit{Fresnel-Effekt}) und den Brechungsindizes beider Materialien
 \end{itemize}
 
+\subsubsection{Reflexion}
+\begin{itemize}
+	\item Diffus: Licht erhellt das Objekt gleichmäßig
+	\item Glänzend (imperfekt spiegelnd): Licht wirft einen Kegel in Richtung Ausfallswinkel
+	\item Spekular: Perfekte Spiegelung (Einfallswinkel = Ausfallswinkel)
+\end{itemize}
+
+
+
+\section{Appendix A: Baryzentrische Koordinaten}
+Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
+
+\subsection{Anwendungen}
+
+\subsubsection{Liegt ein Punkt innerhalb eines Dreiecks?}
+Der Punkt \(Q = \lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3\) liegt innerhalb des Dreiecks \(\triangle(P_1,P_2,P_3)\), wenn \(\lambda_1,\lambda_2,\lambda_3\) positiv sind.
+
+\subsubsection{Lineare Interpolation von Farbwerten}
+\begin{itemize}
+	\item \textbf{Gegeben:} Eine Farbe \(c_1,c_2,c_3\) als RGB-Triple zu jedem Eckpunkt.
+	\item \textbf{Gesucht:} Die interpolierte Farbe \(c_Q\) an einem Punkt \(Q\) auf dem Dreieck
+	\item \textbf{Lösung:} Berechne \(\lambda_1,\lambda_2,\lambda_3\), dann ist \(c_Q=\lambda_1 c_1+\lambda_2 c_2 + \lambda_3 C_3\)
+\end{itemize}
+
+\subsubsection{Berechnung des Schnittpunkts eines Dreiecks und einer Geraden}
+\begin{enumerate}
+	\item \(r(t) = e+t\cdot d\), \(|d|=1\)
+	\item Gleichsetzen
+	\begin{itemize}
+		\item \(r(t) = Q(\lambda_2,\lambda_3)\)
+		\item \(e+t\cdot d = P_1+\lambda_2(P_2-P_1)+\lambda_3(P_3-P_1)\)
+		\item Schnittpunkt, wenn \(\lambda_2+\lambda_3<1 \wedge \lambda_2 > 0 \wedge \lambda_3 >0\)
+	\end{itemize}
+	\item 3 Gleichungen mit 3 Unbekannten: \(e_x+t\cdot d_x=P_{1,x}+\lambda_2(P_{2,x}-P_{1,x})+\lambda_3(P_{3,x}-P_{1,x},...\)
+	\item Lösung mittels Cramerscher Regel
+	\begin{itemize}
+		\item Baryzentrische Koordinaten müssen noch auf Positivität getestet werden
+		\item Direkte Umsetzung im Programmcode
+		\item Effizient, ohne Umweg über Ebenengleichung
+	\end{itemize}
+\end{enumerate}
