@@ -274,6 +274,117 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 
 
 
+\section{Transformationen und homogene Koordinaten}
+\begin{itemize}
+	\item Eine Transformation bildet einen Punkt \(x\) auf einen Punkt \(x'\) ab
+	\item Transformationen werden mit Abbildungsmatrizen beschrieben: \(T(x) = Ax\)
+	\item Beispiele: Platzierung von Objekten, Animation, Deformation, Echtzeitschatten, usw.
+\end{itemize}
+
+\subsubsection{Grundlegende Transformationen}
+\begin{itemize}
+	\item Identität, Translation (Verschiebung), Rotation, isotrope Skalierung
+	\item Können beliebig kombiniert werden
+	\item Sind umkehrbar/invertierbar
+\end{itemize}
+
+\subsubsection{Transformationsgruppen}
+\begin{itemize}
+	\item Euklidische Transformationen: Erhalten Abstände, Inhaltsgrößen und Winkel (Translation, Identität, Rotation)
+	\item Ähnlichkeiteabbildungen: Erhalten lediglich die Winkel (isotrope Skalierung, sowie alle euklidischen Transformationen)
+	\item Lineare Abbildungen: Identität, Rotation, isotrope Skalierung, Skalierung, Spiegelung, Scherung
+	\item Affine Abbildung: Parallele Linien werden erhalten (alle bisher genannten Abbildungen)
+	\item Projektive Abbildungen: Geraden werden auf Geraden abgebildet (auch alle bisher genannten Abbildungen)
+\end{itemize}
+
+
+\subsection{2D Transformationen}
+\begin{itemize}
+	\item Beschreibung mittels Vektor-Matrix-Multiplikation
+	\item Skalierung: Ändert Längen
+	\item Scherung: Verschiebung parallel zu einer Achse (Flächeninhalt bleibt erhalten)
+	\item Spiegelung: Spiegelungen sind negative Skalierungen
+	\item Rotationen um den Winkel \(\phi\)
+\end{itemize}
+
+\subsubsection{Zusammengesetzte 2D Transformationen}
+\begin{itemize}
+	\item Hintereinanderausführen von Tranformationen
+	\item Transformationen werden von rechts angewendet
+	\item Im Allgemeinen nicht kommutativ: Reihenfolge ist entscheidend
+\end{itemize}
+
+
+\subsection{3D Transformationen}
+
+\subsubsection{Rotation}
+\begin{itemize}
+	\item \(R_x\) dreht die \(y\)-Achse in Richtung \(z\)-Achse
+	\item \(R_y\) dreht die \(z\)-Achse in Richtung \(x\)-Achse
+	\item \(R_z\) dreht die \(x\)-Achse in Richtung \(y\)-Achse
+\end{itemize}
+
+
+\subsection{Affine Abbildungen}
+\begin{itemize}
+	\item Kombination aus linearer Abbildung und Translation
+	\item \textbf{Eigenschaften}
+	\begin{itemize}
+		\item Linien werden auf Linien abgebildet, parallele Linien bleiben parallel
+		\item Teilverhältnistreu
+		\item Nicht winkelerhaltend
+	\end{itemize}
+	\item Beispiele: Rotation, Translation, Skalierung, Scherung
+\end{itemize}
+
+
+\subsection{Homogene Koordinaten}
+\begin{itemize}
+	\item Ergänzen den euklischen/affinen Raum um Fernpunkte
+	\item Parallele Geraden schneiden sich
+	\item Anwendung: Beschreiben von affinen Punkte und Richtungen, beschreiben von Translationen durch Matrizen
+\end{itemize}
+
+\subsubsection{Homogene Koordinaten bei affinen Abbildungen}
+\begin{itemize}
+	\item Ziel: Beschreibung von affinen Punkten und Richtungen, sowie affinen Abbildungen mit Matrizen
+	\item Vorteil: Zusammengesetzte affine Transformation
+	\item Hinzufügen einer \(1\) als dritte Koordinate (im 2D)
+\end{itemize}
+
+
+\subsection{Koordinatensysteme in der Computergrafik}
+\begin{enumerate}
+	\item Objektkoordinaten: Objekte in einer Szene werden zur Modellierung in ihrem eigenen Koordinatensystem angegeben
+	\item Weltkoordinaten: Die Platzierung von Objekten erfolgt dann durch Translation, Rotation, Skalierung, etc.
+	\item Kamerakoordinaten: Anschließend erfolgt die Transformation in das Kamerakoordinatensystem
+\end{enumerate}
+
+
+\subsection{Hierarchisches Modellieren}
+\begin{itemize}
+	\item Modellieren komplexer Szenen wird einfacher, wenn Kopien von Instanzen erstellt werden und Objekte zu Gruppen zusammengefasst werden
+	\item Beispiel: Modell eines Autos mit Karosserie, Rädern, Reifen, Felgen und Schrauben
+	\item Durch das Gruppieren von Objekten entsteht ein \textit{Szenengraph}
+	\item Szenengraphen erlauben effiziente Operationen in komplexen Szenen
+\end{itemize}
+
+
+\subsection{Transformation von Normalen}
+\begin{itemize}
+	\item Lineare und affine Transformationen sind im Allgemeinen nicht winkeltreu \(\rightarrow\) Normalen können nicht einfach mittransformiert werden
+	\item Verwendung von homogenen Koordinaten: Transformation der Tangentenebene zur Normalen, nicht den Normalenvektor selbst
+\end{itemize}
+
+
+\subsection{Transformationen und Schnitttests}
+\begin{itemize}
+	\item Schwierigkeit: Berechnung von Schnittpunkten bei zusammengesetzten Transformationen
+	\item Idee: Schnittpunktberechnung in Modellkoordinaten
+\end{itemize}
+
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
@@ -306,3 +417,32 @@ Der Punkt \(Q = \lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3\) liegt innerhalb 
 		\item Effizient, ohne Umweg über Ebenengleichung
 	\end{itemize}
 \end{enumerate}
+
+
+
+\section{Appendix B: Transformationen}
+
+\subsection{2D Transformationen}
+
+\subsubsection{Skalierung}
+\[scale(s_x,s_y) = \begin{pmatrix} s_x & 0 \\ 0 & s_y \end{pmatrix}\]
+
+\subsubsection{Scherung horizontal}
+\[shear_x(s) = \begin{pmatrix} 1 & s \\ 0 & 1 \end{pmatrix}\]
+
+\subsubsection{Scherung vertikal}
+\[shear_y(s) = \begin{pmatrix} 1 & 0 \\ s & 1 \end{pmatrix}\]
+
+\subsubsection{Spiegelung}
+\[\begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}~bzw.~\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}\]
+
+\subsubsection{Rotation}
+\[rotate(\phi) = \begin{pmatrix} cos\phi & -sin\phi \\ sin\phi & cos\phi \end{pmatrix}\]
+
+
+\subsection{3D Transformationen}
+
+\subsubsection{Rotation}
+\[R_x(\phi) = \begin{pmatrix} 1 & 0 & 0 \\ 0 & cos\phi & -sin\phi \\ 0 & sin\phi & cos\phi \end{pmatrix}\]
+\[R_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi \\ 0 & 1 & 0 \\ -sin\phi & 0 & cos\phi \end{pmatrix}\]
+\[R_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 \\ sin\phi & cos\phi & 0 \\ 0 & 0 & 1 \end{pmatrix}\]
