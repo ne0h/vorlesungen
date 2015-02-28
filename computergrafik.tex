@@ -385,6 +385,213 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 
 
 
+\section{Texturen}
+\begin{itemize}
+	\item Idee: Realistischeres Aussehen einer Oberfläche kann man durch "`Feinstrukturierung"' pro Pixel erreichen
+	\item Geormetrie wird mit Bildern kombiniert
+	\item Texture Mapping: Wie wird einem Punkt auf der Oberfläche eine Stelle in der Textur zugeordnet?
+\end{itemize}
+
+
+\subsection{Mapping von Texturen}
+\begin{itemize}
+	\item 1D Textur: Parameter entlang einer der drei Achsen
+	\item \textbf{2D Textur}
+	\begin{itemize}
+		\item Planare Projektion eines Bildes in der \(x-Y\)-Ebene
+		\item Standardkörper mit natürlicher Parametrisierung (z.B. Punkte auf einer Kugel lassen mittels Polarkoordinaten ausdrücken)
+		\item Sphärische Koordinaten oder zyklindrische Parametrisierung: Darstellung der Objektkoordinaten in Polarkoordinaten
+		\item Würfel Parametrisierung: Würfeltextur wird dort ausgelesen, wo ein Strahl vom Objektmittelpunkt einen umgebenden Würfel schneidet
+		\item Flächenparameter: Beschreibung beispielsweise mit Hilfe von Bézier-/Splinepatches
+	\end{itemize}
+	\item Zweiphasen-Mapping: Texturierung beliebiger Objekte mit Standardkörpern als Zwischenschritte
+\end{itemize}
+
+\subsubsection{Texturkoordinaten für Dreiecksnetze}
+\begin{itemize}
+	\item Parametrisierung für jeden Vertrex wird in der Texturkoordinaten gespeichert
+	\item Interpolation mit baryzentrischen Koordinaten
+\end{itemize}
+
+\subsubsection{Texture Wrapping}
+\begin{itemize}
+	\item Repeat/Wrapping: Fortsetzen einer Textur über \(\lbrack 0,1 \rbrack^2\) hinaus
+	\item Adressierung wird für jede Dimension separat gewählt
+\end{itemize}
+
+\subsubsection{Texture Mapping und Aliasing}
+\begin{itemize}
+	\item Aliasingeffekte können durch Unterabtastung auftreten
+	\item Entscheident: Verhältnis der Abtastfrequenz am Bildschirm zur Auflösung der projizierten Textur
+\end{itemize}
+
+\subsection{Texture Filterung}
+\begin{itemize}
+	\item \textbf{Vergrößerung (Magnification)}
+	\begin{itemize}
+		\item Abbildung weniger Texel auf viele Pixel
+		\item Nearest Neighbor: Verwende Farbe des nächstliegenden Texels
+		\item Bilineare Interpolation zur Glättung des Signals
+	\end{itemize}
+	\item \textbf{Textur-Filter}
+	\begin{itemize}
+		\item Die menschliche Wahrnehmung nimmt Unstetigkeiten nur bis zur zweiten Ableitug wahr \(\rightarrow\) Verwendung von Interpolation höherer Ordnung
+		\item Bikubische Interpolation (benötigt Zugriff auf \(4~x~4\) Texel
+	\end{itemize}
+	\item \textbf{Verkleinerung (Minification)}
+	\begin{itemize}
+		\item Abbildung mehrerer Texel auf einen Pixel
+		\item Wird nur ein Texel ausgelesen, obwohl der Pixel im Texturraum mehrere Texel bedeckt entstehen Aliasing-Artefakte durch Unterabtastung
+		\item Möglichkeiten
+		\begin{itemize}
+			\item Vorfilterung des Signals (hohe Frequenzen vor der Abtastung entfernen)
+			\item Überabtastung/Supersamling (in der Regel zu teuer)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Mip-Mapping}
+	\begin{itemize}
+		\item Einfache Vorfilterung von Texturen (Auflösungspyramide)
+		\item Rekursive Speicherung von Texturen mit \(\frac{1}{4}\) Größe
+		\item Meist Mittelung über je \(2~x~2\) Texel
+		\item Insgesamt nur 33\% mehr Speicherbedarf
+		\item Wahl der Mip-Map Stufe \(n\): \(Texelgroesse(n) \leq Groesse~Pixelfootprint~auf~Textur < Texelgroesse(n+1)\)
+	\end{itemize}
+	\item \textbf{Anisotrope Texturfilterung}
+	\begin{itemize}
+		\item Map-Mapping resultiert oft in sehr verschwaschenen Details
+		\item Der Abdruck eines Pixels im Texturraum ist oft eher länglich
+		\item RIPmaps (Rectangular MipMaps, in der Praxis selten): Rechteckige Vorfilterung entlang jeder Achse
+		\item Vierfacher Speicherbedarf
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Bestimmung des Footprints}
+\begin{enumerate}
+	\item Schicke einen Primärstrahl durch die Ecken eines Pixels
+	\item Bestimme die vier Texturkoordinaten
+	\item Differenzen der Texturkoordinaten liefern die Größe des Footprints
+	\item Textur-Lookup an der berechneten Stelle mit der entsprechenden Filterung
+\end{enumerate}
+
+\subsubsection{Multitexturing}
+\begin{itemize}
+	\item Komplexe optische Effekte durch Kombination mehrerer Texturen
+	\item Texturen enthalten oft auch andere Informationen, nicht nur Farbe
+\end{itemize}
+
+
+\subsection{Texturierungstechniken}
+\begin{itemize}
+	\item \textbf{Diffuse Textur}
+	\begin{itemize}
+		\item Kontrolle der Eigenfarbe eines Materials
+		\item Bsp. Phong-Beleuchtungsmodell: \(k_d\) entstammt der Textur
+	\end{itemize}
+	\item \textbf{Bump oder Normal Mapping}
+	\begin{itemize}
+		\item Variation der Normalen einer Oberfläche durch Verwendung einer \textit{Bump Map} oder \textit{Displacement Map}
+		\item Die Fläche bleibt geometrisch flach, nur die Normalen verändern sich
+		\item Berechnung meist im Tangentenraum
+	\end{itemize}
+	\item \textbf{Gloss Map/Gloss-Textur}
+	\begin{itemize}
+		\item Kontrolle der Stärke und Streuung der spekularen Reflexion
+		\item Bsp. Phong-Beleuchtungsmodell: \(k_s\) und \(n\) aus der Textur
+	\end{itemize}
+	\item \textbf{Displacement Mapping}
+	\begin{itemize}
+		\item Verschiebung der Oberfläche und Änderung der Normalen
+		\item Keine reine Änderung der Beleuchtungsberechnung
+		\item Bsp. Geometrie-Tesselierung und Verschiebung mit GPU-Unterstützung
+	\end{itemize}
+	\item \textbf{Inverse Displacement Mapping}
+	\begin{itemize}
+		\item Besonders schnelle Approximation, beispielsweise geeignet um Bodendetails darzustellen (Silhouetten meist problematisch)
+		\item Geometrie wird nicht wirklich erzeugt, Schnittpunktberechnung wird im Texturraum durchgeführt
+	\end{itemize}
+	\item \textbf{Ambient Occlusion}
+	\begin{itemize}
+		\item Kontrolle des ambienten Anteils des Beleuchtungsmodells
+		\item \(k_a\) entstammt der Textur, meistens wird auch der diffuse Term modifiziert
+	\end{itemize}
+	\item \textbf{Textur-Atlas}
+	\begin{itemize}
+		\item Spezielle Bijektive Parametrisierung: Jedem Oberflächenpunkt entspricht eine Stelle in der Textur
+		\item Erstellung aufwendig per Hand oder automatisch
+		\item Anwendungen
+		\begin{itemize}
+			\item Speichern einer Funktion/Daten auf der Oberfläche
+			\item Erstellen der Textur direkt aus dem Objekt
+			\item Berechnung von Normal-Maps aus fein aufgelösten Dreiecksnetzen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Transparenz und Alpha-Test}
+\begin{itemize}
+	\item Rasterbilder werden oft mit 32 Bit/Pixel gespeichert (zusätzlicher 8 Bit Alpha-Kanal)
+	\item (Semi-)Transparenz: Verwende Alpha-Kanal um die Transparenz der Oberfläche an einem Punkt zu bestimmen
+	\item Alpha-Test: Verwerfe Objekt-/Schnittpunkt, wenn \(\alpha < threshold\)
+\end{itemize}
+
+
+\subsection{3D-Texturen für Oberflächen}
+\begin{itemize}
+	\item Probleme von 2D-Texturen: Tapeteneffekt, Verzerrung bei großer Flächenkrümmung
+	\item \textbf{Solid-Texturen}
+	\begin{itemize}
+		\item "`Herausschneiden einer Skulptur"', z.B. aus einem Holz- oder Mamorblock
+		\item Vorteil: Parametrisierung fällt weg
+		\item Nachteil: Großer Speicherbedarf der Textur
+		\item Erstellung sehr aufwendig
+	\end{itemize}
+	\item Solid-Textures: Prozedurales Erzeugen von 3D-Texturen
+\end{itemize}
+
+
+\subsection{Reflection/Environment-Mapping}
+\begin{itemize}
+	\item Darstellung reflektierender Objekte mit Spiegelung
+	\item Approximation der Reflexion ohne Ray Tracing
+	\item Idee: Speichern eines Bilds der Umgebung in einer Textur
+	\item Entspricht anschaulich einer Textur auf einer virtuellen Kugel um ein Objekt/die Szene
+	\item \textbf{Parametrisierungen}
+	\begin{itemize}
+		\item Latidute/Longtitude-Maps: Parametrisierung über Winkel, allerdings vergleichweise teuer in der Berechnung und ungleichmäßige Abtastung an den Polen
+		\item Sphere-Mapping
+		\begin{itemize}
+			\item Speicherung ebenfalls in 2D-Textur
+			\item Aufnahme soll mit einem Fotoapperat möglich sein
+			\item Idealisierte Annahme: Bei der Aufnahme sollen alle Primärstrahlen parallel sein (kleine Spiegelkugel wird mit einem Teleobjekt fotografiert)
+			\item Probleme
+			\begin{itemize}
+				\item Abtastrate maximal für Richtung entgegen der Aufnahmerichtung
+				\item Singularität in Aufnahmerichtung (am Rand)
+				\item Ungleiche Abtastung
+			\end{itemize}
+		\end{itemize}
+		\item Kubische Environment Maps
+		\begin{itemize}
+			\item Abbilden der Umgebung auf einen Würfel
+			\item Texturfilterung wie bei Mip-Mapping möglich
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Aufnahme von Environment-Maps}
+	\begin{itemize}
+		\item In der Praxis: Meist mit spiegelden Chromkugeln
+		\item Mehrere Aufnahmen zum nachträglichen Entfernen des Fotoapparats (HDR-Fotografie)
+		\item Umrechnung in andere Parametrisierungen möglich
+	\end{itemize}
+	\item \textbf{Vorfilterung}
+	\begin{itemize}
+		\item Statt mehrfachem Abtasten wird die Textur vorgefiltert
+		\item Größe und Form des richtigen Winkelbereichs abhängig von Material und parametrisierung
+	\end{itemize}
+\end{itemize}
+
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
