@@ -592,6 +592,209 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 
 
 
+\section{Räumliche Datenstrukturen}
+
+\subsubsection{Optimierung des Ray Tracings}
+\begin{itemize}
+	\item Der wesentliche Rechenanteil des Ray Tracings entsteht durch das Finden von Schnittpunkten (ca. 90\%, skaliert schlecht)
+	\item \textbf{Optimierungsansätze}
+	\begin{itemize}
+		\item Schnellerer Schnittalgorithmen? Wenig Spielraum zur Optimierung
+		\item Weniger Strahlen: Verlust von Details; Unschärfen
+		\item Weniger Schnittberechnungen: Vermeidung von Berechnung bei weit entfernten Objekten
+		\item Schnittpunkte mit "`dicken"' Strahlen (nicht Teil der Vorlesung)
+		\item Einführung von Datenstrukturen zur Raumunterteilung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Raumunterteilung}
+
+\subsubsection{Idee/Ziel}
+\begin{itemize}
+	\item Finde potentiell geschnittene Objekte schneller
+	\item Teste keine Objekte, die nicht in Frage kommen
+\end{itemize}
+
+
+\subsection{Hüllkörper}
+\begin{itemize}
+	\item Reduziert Schnitttest: Prüfe, ob ein Schnitt mit einer Umgebungsgeometrie ("`Hüllkörper"') existiert \(\rightarrow\) schneller Ausschluss des Schnitttests
+	\item Hüllkörper möglichst enganliegend
+	\item Lohnen nur, wenn die Geometrie entsprechend detailliert ist
+\end{itemize}
+
+\subsubsection{Axis Aligned Bounding Box}
+\begin{itemize}
+	\item Sechs orthogonale Ebenen, die das Objekt umschließen
+	\item Bestimme nahsten Schnittpunkt \textit{innerhalb} der Box
+	\item \textbf{Optimierungen}
+	\begin{itemize}
+		\item Mehrere Strahlen parallel
+		\item Hierarchien von Bounding Boxes
+	\end{itemize}
+\end{itemize}
+
+\subsection{Bounding-Volume-Hierarchie}
+\begin{itemize}
+	\item Idee: Hierarchie von einschließenden Hüllkörpern, automatisches Zusammenfassen von Objekten und Gruppen von Objekten
+	\item Vorteile: Adaptivität der Raumunterteilung; schnellere Suche, da Objektgruppen ausgeschlossen werden können
+	\item \textbf{Aufbau der Hierarchie}
+	\begin{enumerate}
+		\item Bestimme die gemeinsame Bounding Box aller Objekte
+		\item Teile die Objekte in zwei Gruppen auf
+		\item Verfahre so rekursiv weiter
+	\end{enumerate}
+	\item Schnittberechnung: Überprüfe auf Schnitt mit der Wurzel und steige rekursiv ab. Prüfe anschließend die weiter entfernten Knoten
+	\item Problem: Bei überlappenden Hüllkörpern können mehrere Schnittpunkte hintereinander entstehen
+	\item \textbf{Fazit}
+	\begin{itemize}
+		\item Vorteile
+		\begin{itemize}
+			\item Konstruktion und Traversierung ist einfach
+			\item Resultiert in einem Binärbaum: Fixe, geringe Verzweigung
+			\item Komplixität: Im Mittel \(\mathcal{O}(log~n)\) Schnitttests statt \(\mathcal{O}(n)\)
+		\end{itemize}
+		\item Herausforderungen
+		\begin{itemize}
+			\item Finden einer guten Unterteilung ist schwierig
+			\item Ungeschickte Unterteilung kann zu schlechter Aufteilung führen
+		\end{itemize}
+	\end{itemize}
+	\item Performance: Beschleunigung 2200x (Aufbau nicht berücksichtigt)
+\end{itemize}
+
+
+\subsection{Regulär Gitter}
+\begin{itemize}
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item Unterteilung des Raums in Zellen gleicher Forum und Größe
+		\item Eintrag der Objekte in Zellen, die von ihnen geschnitten werden
+		\item Traversierung der vom Strahl getroffenen Zellen
+		\item Schnittberechnung mit den enthaltenen Objekten
+	\end{enumerate}
+	\item Vermeidung mehrfacher Schnitttests: Markiere Objekt als getestet
+	\item Mailboxing: Cache Schnitttests, die außerhalb der Zelle sind
+	\item \textbf{Fazit}
+	\begin{itemize}
+		\item Vorteile
+		\begin{itemize}
+			\item Einfach zu konstruieren
+			\item Einfach zu traversieren
+		\end{itemize}
+		\item Nachteile
+		\begin{itemize}
+			\item In der Regel mur wenige Zellen belegt
+			\item Unter Umständen viel Geometrie in wenigen Zellen konzentriert
+		\end{itemize}
+	\end{itemize}
+	\item Performance: Beschleunigung 2200x (Aufbau nicht berücksichtigt)
+\end{itemize}
+
+
+\subsection{Adaptive Gitter}
+\begin{itemize}
+	\item Idee: Rekursive Unterteilung einer Zelle bis
+	\begin{itemize}
+		\item sie nur noch eine vorgegebene Anzahl Primitive enthält, oder
+		\item eine maximale Zahl an Unterteilungen durchgeführt wurde
+	\end{itemize}
+	\item \textbf{Oktalbaum (Octrees)}
+	\begin{itemize}
+		\item Aufbau
+		\begin{enumerate}
+			\item Beginne mit der Bounding Box für die ganze Szene
+			\item Rekursive 1-zu-8 Unterteilung
+		\end{enumerate}
+		\item Adaptive Unterteilung erlaubt große Schritte im leeren Raum
+		\item Feine Unterteilung dort (und nur dort) wo Geometrie ist
+		\item Traversierung relativ teuer: Viele Auf- und Abbewegung in der Hierarchie
+	\end{itemize}
+	\item \textbf{Verschachtelte Gitter}
+	\begin{itemize}
+		\item Kombination aus regulären Gittern und Octrees
+		\begin{itemize}
+			\item Nutze effiziente Traversierung von regulären Gittern
+			\item Nutze Adaptivität einer hierarchischen Repräsentation
+		\end{itemize}
+		\item Aufbau
+		\begin{enumerate}
+			\item Grobes Gitter für Bounding Box der Szene
+			\item Bounding Box von Objekt/Primitiv/Gruppen mit dicht gepackten Objekten werden durch neues Gitter ersetzt
+		\end{enumerate}
+		\item Problem: Was sind gute Gruppen?
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Baumstrukturen}
+
+\subsubsection{BSP-Baum (Binary Space Partitioning Tree)}
+\begin{itemize}
+	\item Idee: Erweiterung von Binärbäumen auf \(k\) Dimensionen
+	\item Verwende Ebenen um den Raum rekursiv zu unterteilen \(\rightarrow\) ergibt Binärbaumstruktur
+	\item Die Unterteilungsebenen können beliebig orientiert sein
+	\item \textbf{Konstruktion}
+	\begin{enumerate}
+		\item Initialisiere Wurzelknoten: Enthält alle Objekte der Szene
+		\item Unterteile bis maximale Elementzahl pro Knoten oder maximale Rekursionstiefe erreicht ist
+		\item Teile die Primitive in einen rechten und einen linken Kindknoten auf
+	\end{enumerate}
+	\item \textbf{Vergleich mit BHV}
+	\begin{itemize}
+		\item Echte Raumunterteilung: Knoten überlappen sich nicht
+		\item Gute Anpassung an Geometrie möglich
+		\item Blattknoten speichern die Primitive, Knoten speichern die Split-Ebenen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{kD-Baum}
+\begin{itemize}
+	\item Split-Ebenen senkrecht zu den Achsen
+	\item Primitive, die eine Split-Ebene schneiden werden meist in beide Kindknoten eingefügt
+\end{itemize}
+
+
+\subsection{Konstruktion "`guter"' kD-Bäume und BHV}
+
+\subsubsection{Bestimmunf der optimalen Schnittebene}
+\begin{itemize}
+	\item Räumliches Mittel: Teile Knoten in der Mitte entlang der Achse mit der größten Ausdehnung oder in regelmäßiger Reihenfolge (Aufwand in \(\mathcal{O}(n~log~n)\))
+	\item Objektmittel: So dass beide Kindknoten gleich viele Elemente enthalten (Aufbau in \(\mathcal{O}(n~log^2~n)\))
+	\item Kostenfunktion: Im Mittel sollen zufällige Strahlen, die den betrachteten Knoten schneiden den gleichen Aufwand verursachen. Daraus resultiert ein balancierter Baum (Aufwand in \(\mathcal{O}(n~log^2~n\))
+\end{itemize}
+
+\subsubsection{Surface Area Heuristic (Kostenfunktion)}
+\begin{itemize}
+	\item Idee: Stelle eine Kostenfunktion auf und minimiere
+	\item Unterteilung nur dann, wenn die Kosten dadurch geringer werden, als den Schnitt mit allen Objekten des Knotens zu berechnen
+	\item Einsetzbar für BSP-Bäume, kD-Bäume und BHVs
+	\item Kostenoptimierte Unterteilung: Isolation von komplexen Szenenteilen mit großen dünnbesetzten/leeren Bereichen
+	\item \textbf{Unterteilung/Bestimmung der Unterteilung}
+	\begin{itemize}
+		\item Aufwendig, da der Suchraum groß sein kann
+		\item Daher meist approximierte Konstruktion
+		\item Gut konstruierte Bäume bzw. BHVs können um ein Vielfaches schneller sein als schlecht optimierte
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Richtungsunterteilung}
+\begin{itemize}
+	\item Idee: Unterteile Objekte nach der Richtung, in der sie liegen
+	\item Optional: Jeweils nach Entfernung
+	\item Beschleunigen beispielsweise Schattentests bei Punktlichtquellen
+	\item Werden sehr selten eingesetzt
+\end{itemize}
+
+\subsubsection{Modernes Ray Tracing: SIMD-Optimierung}
+\begin{itemize}
+	\item Kohärente Strahlenpakete: Gruppen von Strahlen mit ähnlichem Ursprung und Richtung
+	\item Können oft sehr schnell verarbeitet werden
+\end{itemize}
+
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
