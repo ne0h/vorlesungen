@@ -923,7 +923,47 @@ Wir betrachten zwei Arten Projektionen:
 	\item Orthographische Kamera: Parallele Sichtstrahlen, senkrecht zur Bildebene
 	\item Perspektifische Kamera: Sichtstrahlen ausgehend von einem Projektionszentrum
 	\item Zusätzliches Koordinatensystem: Clip Kordinaten
+	\item z-Wert zur Sichtbarkeitsbestimmung verwenden
+	\item Gesucht: Projektionstranformation, die das Sichtvolumen auf den Einheitswürfel abbildet \(\rightarrow\) einheitliche Behandlung unterschiedlicher Projektionen
+	\item \textbf{Optionen}
+	\begin{enumerate}
+		\item Clipping gegen das Frustum in Welt- oder Kamerakoordinaten, vor der Projekttransformation
+		\item Clipping in homogenen Clip-Koordinaten, nach der Projekttransformation, aber vor dem Dehomogenisieren
+		\begin{enumerate}
+			\item Projektionstransformation
+			\item Clipping in homogene Koordinaten
+			\item Perspektivische Divison \(\rightarrow\) ergibt Normalized Device Coords. (Einheitswürfel)
+			\item Projektion auf Bildschirmkoordinaten und Viewport Transformation
+		\end{enumerate}
+	\end{enumerate}
 \end{itemize}
+
+\subsubsection{Perspektivisch-korrekte Attribut-Interpolation}
+\begin{itemize}
+	\item Lineare Interpolation im Bildraum (bisher) führt zu Verzerrungen
+	\item Lösung: Affine Interpolation (erhält die Längenverhältnisse)
+\end{itemize}
+
+
+\subsection{Rasterisierung vs. Raytracing}
+\begin{itemize}
+	\item \textbf{Rasterierung}
+	\begin{itemize}
+		\item Sehr effizient, Hardware-Umsetzung ist einfach
+		\item Nur für Primärstrahlen: Globale Effekte (Schatten, Spiegelungen, etc) nur über spezielle Techniken
+		\item Handhabung komplexer Szenen durch räumliche Datenstrukturen
+		\item Spezielle Techniken, z.B. zur Einschränkung der Schattenberechnung auf sichtbare Flächen
+		\item Echtzeit-Rendering
+	\end{itemize}
+	\item \textbf{Raytracing}
+	\begin{itemize}
+		\item Konzeptionell einfaches Verfahren
+		\item Sekundärstrahlen, komplexe Beleuchtungseffekte sind einfach
+		\item Handhabung komplexer Szenen durch räumliche Datenstrukturen
+		\item Offline Rendering, bedingt interaktives Rendering
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{Appendix A: Baryzentrische Koordinaten}
