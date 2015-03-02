@@ -867,6 +867,65 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 
 
 
+\section{Rasterisierung, Clipping und Projektionstransformation}
+Interaktive/Echtzeitgrafik basiert meist auf Rasterisierung
+\begin{itemize}
+	\item Repräsentation von Oberflächen meist durch Dreiecke
+	\item Abbilden der Dreiecke auf 2D Bildschirmkoordinaten
+	\item Rasterisierung der Dreicke
+	\item Interpolation von Farben, Texturkoordinaten, Tiefenwert, etc
+	\item Verdeckungsberechnung, Tiefentest
+\end{itemize}
+
+
+\subsection{Tiefenpuffer}
+\begin{itemize}
+	\item Idee: Speichere für jeden Pixel die Distanz zur nahsten Fläche
+	\item Entfernung/Tiefenwert wird pro Vertex berechnet und interpoliert
+	\item Zusätzlich zum Framebuffer gibt es einen Z-Buffer
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Speicherbedarf (heutzutage nicht mehr)
+		\item Begrenzte Genauigkeit
+		\item Transparente Flächen können nicht behandelt werden
+		\item Viel unnötiger Aufwand in Szenen mit hoher Tiefenkomplexität
+	\end{itemize}
+	\item \textbf{Vorteile}
+	\begin{itemize}
+		\item Dreiecke können in beliebiger Reihenfolge verarbeitet werden (wichtig für Grafikhardware)
+		\item Z-Buffering ist Standard in allen Rasterisierern
+		\item Für die meisten Probleme existieren heute spezielle Lösungen oder Render-Techniken
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Clipping}
+\begin{itemize}
+	\item Abschneiden von Linien/Polygon-Teilen, die außerhalb des Bildschirms liegen
+	\item Wichtig für die Effiziens, die Rasterisierung und beispielsweise auch für Constructive Solid Geometry
+	\item Ansätze: On-the-fly während der Rasterisierung oder besser analytisch
+\end{itemize}
+
+\subsubsection{Clipping von Polygonen}
+\begin{itemize}
+	\item Naives Clipping: Brute-Force (Teste nur Pixel am Bildschirm) oder Scanline (zeichne nur Scanlines innerhalb des Bildes)
+	\item \textbf{Sutherland-Hodgeman Polygon Clipping}
+	\begin{itemize}
+		\item Clipping gegen eine Kante nach der anderen
+		\item Effizient: Nach jeder Kante erhält man ein geschlossenes Polygon; erlaubt Pipelining
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Projektion}
+Wir betrachten zwei Arten Projektionen:
+\begin{itemize}
+	\item Orthographische Kamera: Parallele Sichtstrahlen, senkrecht zur Bildebene
+	\item Perspektifische Kamera: Sichtstrahlen ausgehend von einem Projektionszentrum
+	\item Zusätzliches Koordinatensystem: Clip Kordinaten
+\end{itemize}
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
