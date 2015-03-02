@@ -966,6 +966,245 @@ Wir betrachten zwei Arten Projektionen:
 
 
 
+\section{OpenGL und Grafik-Hardware}
+
+\subsubsection{Verarbeitung in der Grafik-Pipeline}
+\begin{itemize}
+	\item Applikation
+	\item Geometrieverarbeitung: Vertices \(\rightarrow\) Primitive
+	\item Rasterisierung: Primitive \(\rightarrow\) Fragmente
+	\item Pro-Fragment-Operationen: Fragmente \(\rightarrow\) Pixel
+	\item Framebuffer
+\end{itemize}
+
+
+\subsection{OpenGL}
+\begin{itemize}
+	\item Plattform-, hardware und programmiersprachenunabhängige Programmierschnittstelle für Grafik-Hardware
+	\item Fenstersystemneutral
+	\item OpenGL implementiert die Grafik-Pipeline
+	\item Zustandsmaschine: Die Verarbeitung in der Grafik-Pipeline wird konfiguriert; ein Zustand bleibt erhalten bis er explizit geändert wird
+	\item Client-Server Konzept
+	\item Shading Language GLSL für Programmierung der Geometrie- und Fragmentverareitung
+	\item Heute sind große Teile der Grafik-Pipeline frei programmierbar
+\end{itemize}
+
+
+\subsection{Klassisches OpenGL}
+
+\subsubsection{Struktur einer GLUT Anwendung}
+\begin{enumerate}
+	\item Initialisiere, konfiguriere und öffne Fenster mit Render-Kontext
+	\item Initialisiere OpenGL States (es gibt einen Default-Zustand)
+	\item Registriere Callback-Funktionen: Zeichnen, Benutzereingabe, Mauseingabe, Animation, etc
+	\item Warte in Ereignisschleife
+\end{enumerate}
+
+\subsubsection{Bestandteile eines Framebuffers}
+\begin{itemize}
+	\item Color Buffer: Enthält die Pixeldaten mit den Farbwerten
+	\item Z-Buffer: Enthält die Tiefenwerte
+	\item Double Buffer: Front Buffer enthält das gerade dargestellte Bild, im Back Puffer wird unsichtbar das nächste Bild erzeugt
+\end{itemize}
+
+\subsubsection{Primitive und Vertex-Attribute}
+\begin{itemize}
+	\item Vertizes werden wie angegeben verbunden mit \textit{glBegin(primType); ...; glEnd();}
+	\item Zusätzliche Attribute: \textit{glColor*();}, \textit{glNormal*();} oder \textit{glTexCoord*();}
+	\item Globale Zustände müssen vor \textit{glBegin} gesetzt werden
+\end{itemize}
+
+\subsubsection{Vertizes in der Grafik-Pipeline}
+\begin{enumerate}
+	\item Primitive werden aus dem Strom von Vertices zusammengesetzt
+	\item Zusammensetzen der Primitiven (Primitive Assembly)
+	\item Clipping und Rasterisierung (ohne eigenes Zutun)
+\end{enumerate}
+
+\subsubsection{Transformations-Pipeline}
+\begin{enumerate}
+	\item Object: Vertex \(\rightarrow\) ModelView Matrix
+	\item Eye: ModelView Matrix \(\rightarrow\) Projektionsmatrix
+	\item Clip: Projektionsmatrix \(\rightarrow\) Perspective Division
+	\item Normalized Device: Perspective Division \(\rightarrow\) ViewPort Transform
+	\item Window: Viewport Transorm \(\rightarrow\)
+\end{enumerate}
+
+\subsubsection{Zusammengesetzte Transformationen}
+\begin{itemize}
+	\item Globale Sicht (wie wird das Objekt transformiert: Platzieren/Bewegen des Objekts relativ zum Ursprung der Weltkoordinaten; Reihenfolge im Code rückwärts
+	\item Lokale Sicht (wie sieht das Koordinatensystem aus, in dem das Objekt liegt?): Bewege das lokale Koordinatensystem der Objekt; Reihenfolge im Code vorwärts
+\end{itemize}
+
+\subsubsection{Hierarchische Modellierung}
+Verwende Push/Pop auf ModelView-Matrix-Stack.
+
+\subsubsection{Backface Culling}
+\begin{itemize}
+	\item Bei Dreiecken und Polygonen wird zwischen Voder- und Rückseite unterschieden
+	\item Flächen, auf deren Rückseite man blickt, kann man verwerfen lassen
+\end{itemize}
+
+\subsubsection{Beleuchtung und Schattierung}
+\begin{itemize}
+	\item Einschalten der Bleuchtungsberechnung: \(glEnable(GL_LIGHTNING)\)
+	\item Beleuchtungsberechnung in Kamerakoordinaten. OpenGL unterstützt nativ lediglich Gouraud Shading
+	\item Gouraud Shading: Berechnung pro Vertex; Machsche Effekte, verpasste Glanzlichter
+	\item Phong Shading: Berechnung der Beleuchtung pro Pixel/Fragment; Interpolation der Normale
+	\item \textbf{Blinn-Phong-Modell}
+	\begin{itemize}
+		\item Abwandlung des spekularen Teils des Phong Modells
+		\item Ersetzt den Reflexionsvektor \(R_L\) durch den \textit{Halfway-Vektor} \(H\) und einen neuen Exponenten: \(I_S = k_S \cdot I_L \cdot (N \cdot H)^n\)
+		\item Beleuchtungsberechnung erfolgt pro Vektor
+		\item Vertextfarbe setzt sich zusammen aus: Materialemission, globales ambientes Licht, abgeschwächte ambiente, diffuse und spekulare Beiträge aller Lichtquellen
+		\item Nach der Bleuchtungsberechnung werden die Werte auf \(\lbrack 0;1\rbrack\) begrenzt
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Z-Fighting}
+\begin{itemize}
+	\item Polygone, die sich in der selben Ebene überlagern bereiten Probleme
+	\item Entstehung beispielsweise: Rundungsfehler bei der Tiefe bei projizierten Flächen
+	\item Lösung: Tiefenwerte werden leicht um einen konstanten Offset und einen neigungsabhängigenOffset verschoben
+\end{itemize}
+
+\subsubsection{Rasterisierung und Antialiasing}
+\begin{itemize}
+	\item Verwendung von (starrem) Supersampling: Fixes Abtastschema mit anschließender Mittelung der "`Subpixels"'
+	\item \textbf{Coverage Sample Antialiasing}
+	\begin{itemize}
+		\item Verwendet einige Samples (z.B. 4) wie bisher
+		\item Weitere Samples (z.B. 12) nur zur Berechnung der Sichtbarkeit
+		\item Zuordnung schattierte Samples und Sichtbarkeits-Samples
+		\item Idee: Schattierungsberechnung ist teurer als Sichtbarkeit
+	\end{itemize}
+	\item In OpenGL: Festgelegt bei der Erzeugung des Framebuffers (z.B. mit \(GLUT_MULTISAMPLE\)
+\end{itemize}
+
+
+\subsection{Modernes OpenGL}
+\begin{itemize}
+	\item Die OpenGL-API hat sich mit der Hardware weiterentwickelt (extrem hohe Rechenleistung von GPUs)
+	\item Wesentliche Änderungen mit dem Ziel eine schlankere API zu schaffen: Keine Fixed-Function-Pipeline und keine Hilfsfunktionen mehr
+	\item Core Profil: Entrümpelt, alle alte Funktionalität muss selbst programmiert werden
+	\item Kompatibilitätsprofil für die alte FUnktionalität
+\end{itemize}
+
+\subsubsection{OpenGL Pipeline}
+\begin{enumerate}
+	\item \textbf{Geometrieverarbeitung: Vertex Shader}
+	\begin{itemize}
+		\item Programmierung mit der C-ähnlichen OpenGL Shading Language
+		\item Transformation einzelner Vertizes und Verarbeitung deren Attribute
+		\item Keine Vertexerzeugung/Vertexlöschung/Informationen über andere Vertizes
+		\item Berechnung von Attributen, die für Fragmente interpoliert werden sollen: Z.B. Beleuchtung per Vertex (Gouraud Shading) order Normalen für Phong Shading
+	\end{itemize}
+	\item \textbf{Geometrieverarbeitung: Assembly und Tessellation}
+	\begin{itemize}
+		\item Primitiv Assembly: Setzt aus den Vertices die angeforderten Primitive zusammen und ist nicht programmierbar
+		\item Tessellation
+		\begin{enumerate}
+			\item Tessellation Control Shader: Bestimmt die Unterteilung
+			\item Tessellation: Führt die Unterteilung durch (nicht programmierbar)
+			\item Tessellation Evaluation Shader: Arbeitet auf der resultierenden Geometrie
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{Geometrieverarbeitung: Geometry Shader, Clipping, Rasterization}
+	\begin{itemize}
+		\item Geometry Shader: Bearbeitet Primitive; kann Primitive vervielfachen, entfernen, umwandlen; programmierbar; optional
+		\item Clipping: Verwirft unsichtbare Punktprimitive; verändert Dreiecke durch Schnitt mit Sichtvolumen; nicht programmierbar
+		\item Anschließend: Perspektivische Division (nicht programmierbar) und Rasterisierung dzur Generation von Fragmenten für den Ausgabepuffer
+	\end{itemize}
+	\item \textbf{Fragmentverarbeitung}
+	\begin{itemize}
+		\item Wird für jedes Fragment ausgeführt
+		\item Berechnet Farbe, Transparenz und optional Tiefe pro Fragment (z.B. Phong Shading)
+		\item Eingabe-Attribute werden innerhalb des Primitivs interpoliert
+		\item Tiefentest und Blending
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Möglichkeiten mit programmierbarer Grafik-hardware}
+\begin{itemize}
+	\item Beliebige Beleuchtungsberechnung und Materialen programmierbar: Direkte, prozudurale Texturierung; komplexe Datenstrukturen
+	\item Komplexe Geometrieberechnung und Animation
+\end{itemize}
+
+\subsubsection{Texturen in OpenGL}
+\begin{itemize}
+	\item Rasterbilder mit frei wählbarer Größe, Komponentenzahl, Layout, Datentyp
+	\item Texturen sind OpenGL-Objekte
+	\item Müssen zur Verwendung an Textureinheiten gebunden werden
+	\item Automatische Erzeugung von MipMaps
+	\item Textture Wrapping: Forsetzen von quadratischen Texturen
+\end{itemize}
+
+\subsubsection{Index Buffers und Shared Vertex Repräsentation}
+\begin{itemize}
+	\item Indexed Face Set: Verwende Array mit Vertizes und weiteren Attributen
+	\item Vorteil: Weniger Daten (ein Vertex ist Eckpunkt mehrerer Dreiecke)
+	\item Vertex Cache: GPUs speichern Ergebnisse der letzten verarbeiteten Vertizes, funktioniert nur mit indizierten Vertizes
+\end{itemize}
+
+\subsubsection{Shadow Mapping}
+\begin{itemize}
+	\item Idee: Eine textur speichert, wie weit die nahsten Oberflächen von der Lichtquelle entfernt sind
+	\item Wir betrachten hier nur Spotlight, gedankliches Ersetzen der Lichtquelle durch eine Kamera
+	\item Die gespeicherte Entfernung entspricht der tatsächlichen Entfernung
+	\item Für jede Lichtquelle kann eine Shadow Map erzeugt werden, die später während dem Rendering als Schattentest verwendet wird
+	\item Funktioniert eingeschränkt auch mit klassischem OpeGL
+\end{itemize}
+
+\subsubsection{Fragmentverarbeitung}
+\begin{itemize}
+	\item Durch Rasterisierung werden Fragmente erzeugt
+	\item Vor dem Schreiben in den Framebuffer müssen die Fragmente Tests und Framebuffer-Operationen durchlaufen
+	\begin{enumerate}
+		\item Scissor Test
+		\begin{itemize}
+			\item Entfernt Fragmente außerhalb eines Rechtecks
+			\item Wird verwendet, um kleinere Bereiche des Fensters zu aktualisieren
+			\item Vergleichbar mit einer rechteckigen Stencil-Maske
+		\end{itemize}
+		\item Stencil Test
+		\begin{itemize}
+			\item "`Stantmaske"', die oft verwendet wird, um Zustände für jeden Pixel zu speichern
+			\item Es kann entschieden werden, ob ein Fragment gezeichnet wird
+			\item Typische Anwendungen: Maskierung von Anwendungen, projektive Schatten, Stencil Routing
+		\end{itemize}
+		\item Tiefentest (Depth Buffer Test)
+		\item Blending: Farbkombination von erzeugten Fragmenten und Pixel; jede Komponente wird separat berechnen; Anwendungsbeispiel: Zeichnen eines semitransparenten Objekts über ein opakes
+		\item Dithering: Historisch, nur für Hardware ohne TrueColor Darstellung
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Alpha-Test}
+\begin{itemize}
+	\item Idee: Verwerfe Fragmente aufgrund ihres Alpha-Wertes (Definition einer Schranke)
+	\item Im Core-Profil von modernem OpenGL nicht mehr vorhanden
+	\item Muss händisch implementiert werden, ist dann aber flexibler als ein konfigurierbarer Alpha-Test
+\end{itemize}
+
+\subsubsection{Semitransparente Objekte}
+\begin{itemize}
+	\item Darstellung semitransparenter Objekte erfordert Tiefensortierung, weil Blending im Allgemeinen nicht kommutativ ist
+	\item Semitransparenz ohne Blending: Setze Pixel beim Rasterisieren entsprechend eines Binärmusters mit Anteil der Einsen entsprechend der Opazität. Wichtig: Unterschiedliche Muster, sonst kein Transparenzeffekt
+\end{itemize}
+
+\subsubsection{Accumulation Buffer: Bewegungsunschärfe}
+\begin{itemize}
+	\item Zwischenspeichern zur Kombination mehrerer Rendering-Schritte
+	\item Zeichne mehrerer Bilder zu verschiedenen Zeitpunkten
+\end{itemize}
+
+\subsubsection{Stereo/Double Buffering}
+\begin{itemize}
+	\item Erzeuge je ein Bild für jedes Auge
+	\item Quad Buffer benötigt (2x Front und 2x Back Buffer)
+\end{itemize}
+
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
