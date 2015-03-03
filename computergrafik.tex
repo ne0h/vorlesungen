@@ -1168,7 +1168,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\end{itemize}
 		\item Stencil Test
 		\begin{itemize}
-			\item "`Stantmaske"', die oft verwendet wird, um Zustände für jeden Pixel zu speichern
+			\item "`Stantzmaske"', die oft verwendet wird, um Zustände für jeden Pixel zu speichern
 			\item Es kann entschieden werden, ob ein Fragment gezeichnet wird
 			\item Typische Anwendungen: Maskierung von Anwendungen, projektive Schatten, Stencil Routing
 		\end{itemize}
@@ -1202,6 +1202,158 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\item Erzeuge je ein Bild für jedes Auge
 	\item Quad Buffer benötigt (2x Front und 2x Back Buffer)
 \end{itemize}
+
+
+
+\section{Prozedurale Modelle}
+\begin{itemize}
+	\item Kompakte Beschreibung statt Speicherung
+	\item Erzeugung von großen Szenen oder viel Inhalt
+	\item Modellieren von natürlichen Phänomenen
+\end{itemize}
+
+
+\subsection{Rauschen, Turbulenzen und prozedurale Texturen}
+\begin{itemize}
+	\item \textbf{Zufallszahlen}
+	\begin{itemize}
+		\item Weißes Rauschen: Energie in allen Frequenzbereichen verteilt
+		\item Rotes Rauschen: Energie vor allem in niedrigen Frequenzen \(\rightarrow\) Kohärenz
+	\end{itemize}
+	\item Natürliche Objekte zeigen stochastische Veriationen bei räumlicher Kohärenz \(\rightarrow\) zufällige Strukturen können aus Rauschtexturen berechnet werden
+	\item \textbf{Anorderungen an Rausch-/Noise-Funktionen}
+	\begin{itemize}
+		\item Reproduzierbar
+		\item Keine (sichtbare) Periodizität
+		\item Begrenzter Wertebereich und definierte Frequenzverteilung
+		\item Räumliche Korrelation
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Noise-Funktionen nach Ken Perlin (1985)}
+\begin{itemize}
+	\item \textit{Die} Grundlage für stochastische Modellierung/prozedurale Texturen
+	\item Erzeugen Bilder aus Pseudozufallszahlen
+	\item \textbf{Klassen von Noise-Funktionen}
+	\begin{itemize}
+		\item Lattice Value Noise: Werte aus einem Gitter
+		\item Lattice Gradient Noise (nicht Teil der Vorlesung)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Lattice Value Noise}
+\begin{itemize}
+	\item Pseudozufallszahlen aus einem Gitter
+	\item Räumliche Korrelation und Bandbegrenzung durch Interpolation
+	\item Unterschiedlicher Abstand liefert ein anderes Frequenzspektrum
+	\item \textbf{Elegantes Vorgehen zur Erzeugung}
+	\begin{enumerate}
+		\item Erzeuge einmalig ein 1D-Array mit Zufallszahlen
+		\item Verwende Hash-Funktion um darauf zuzugreifen
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Rauschen}
+\begin{itemize}
+	\item Ausswertung der Noisefunktion an Position \(x\) mit Frequenz \(f\) und Offset \(o\): \(n(fx+o)\)
+	\item Die Fequenz bestimmt die Größe der Strukturen
+\end{itemize}
+
+\subsubsection{Turbulenz}
+\begin{itemize}
+	\item Spektrale Synthese: Kombination unterschiedlicher Frequenzbereiche
+	\item (Gewichtete) Summe von \(k\) Oktaven: \(turbulence(x) = \sum_k (\frac{1}{2})^k \cdot n \cdot (2^k\cdot x)\)
+	\item Turbulenz mit Strukturen: Color Mapping durch eine Sinus-Funktion
+	\item Können kombiniert werden
+	\item \textbf{Beispiel: Feueranimation}
+	\begin{itemize}
+		\item 4D-Turbulenztextur mit mehreren Oktaven
+		\item Zeitliche Variationen: Räumliche Kohärenz wird zu zeitlicher Kohärenz
+	\end{itemize}
+	\item \textbf{Weitere Anwendungen}
+	\begin{itemize}
+		\item Bump/Displacement Mapping: Noise-/Turbulenzfunktion als Höhenfeld
+		\item Prozedurale Landschaften: Höhenfelder und Texturen generiert aus Noise-Funktion
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Prozedurale Texturen}
+\begin{itemize}
+	\item \textbf{Algorithmische Beschreibung von Texturen}
+	\begin{itemize}
+		\item Kompakte Repräsentation
+		\item Auflösungsunabhängig
+		\item Für beliebig große Flächen
+		\item Parametrisierbar (z.B. mehrere Sorten Holz)
+	\end{itemize}
+	\item \textbf{Implizite Methode}
+	\begin{itemize}
+		\item Aufruf des Shaders für jeden Pixel/Schnittpunkt
+		\item Benötigt eventuell Zugriff auf benachbarte Pixel
+		\item Filterung st nicht trivial (bei Turbulenzen schon)
+	\end{itemize}
+	\item \textbf{Explizite Methode}
+	\begin{itemize}
+		\item Generiere 2D/3D-Textur vor der Verwendung
+		\item Verwende Texture-Mapping
+		\item Vorteil: Texture-Filtering ist einfach
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Textursynthese}
+\begin{itemize}
+	\item Oft kleine Textur (Exemplar) vorgegeben (z.B. extrahiert aus einer Fotografie)
+	\item Kachelung führt zu sichtbaren Wiederholungen
+	\item Ziel: Berechnen einer großen Textur, die genauso "`aussieht"'
+	\item Verfahren in der Vorlesung langsam: Keine Auswertung zur Laufzeit
+\end{itemize}
+
+\subsubsection{Pixelbasierte Textursynthese}
+\begin{itemize}
+	\item Ausgabetextur wird Pixel für Pixel erzeugt
+	\item Betrachte Nachbarschaft des nächsten zu erzeugenden Pixels (Nachbarschaft i.d.R. klein, aber groß genug um die Struktur aufzufassen) und suche ähnliche Nachbarschaften in der Eingabetextur
+	\item Kopiere den Pixel einer der ähnlichsten Nachbarschaften mit stochastischer Variation
+	\item Durch die Suche nach Nachbarschaften sehr langsam
+	\item Berücksichtigung der Perspektive ist möglich
+\end{itemize}
+
+
+\subsection{Hypertextures}
+\begin{itemize}
+	\item Ziel: Erzeugung von komplexen 3D Texturen (beispielsweise Feuer oder Wolken)
+	\item Beschreibung der Hypertexture-Objekte durch eine Dichtefunktion \(D\) im \(\mathbb{R}^3\)
+	\item \textbf{Dichtefunktion}
+	\begin{itemize}
+		\item Innen: \(D(X) = 1\); außen: \(D(x) = 0\); Übergangsbereich: \(0 < D(x) < 1\)
+		\item Beispiel: Dichtefunktion ohne Transparenz:  \(D(x) = sphere \bigg(x\cdot \Big( 1+\sum_i \frac{1}{2^i} \cdot n(2^i f x) \Big) \bigg),~sphere(x)=\begin{cases} 1 & |x| < 1 \\ 0 & sonst \end{cases}\)
+	\end{itemize}
+	\item Ray Marching (opake Objekte): Gehe in kleinen Schritten den Strahl entlang und prüfe, ob \(D(X) = 1 \); viele verschiedenen Optimierung (Anpassen der Schrittweite, binäre Suche, etc.)
+	\item Ray Marching (semitransparente Objekte): Akkumuliere Opazität entlang des Strahls
+\end{itemize}
+
+
+\subsection{Distanzfelder}
+\begin{itemize}
+	\item Implizite Darstellung von soliden Objekten
+	\item Eine Distanzfunktion liefert zu jedem Punkt \(x\) die kürzeste Entfernung zur Oberfläche \(f(x) = 0\)
+	\item Beispiel: Kugel mit \(f(x) = |x-m|-r\)
+	\item Wird \(f(x)\) diskret gespeichert (beispielsweise in einer 3D-Textur), dann spricht man von einem Distanzfeld
+	\item \textbf{Schnittpunktberechnung}
+	\begin{itemize}
+		\item Shere Tracing: Finden des Schnittpunkts durch Ray Marching unter Ausnutzung der Distanzfunktion (man kann immer eine Strecke \(f(x)\) zurücklegen, ohne einen Schnittpunkt zu verpassen)
+		\item Mehrere Schritte für Strahlen, die Objekte knapp verpasst haben
+	\end{itemize}
+	\item \textbf{Verknüpfung von Distanzfunktionen: Constructive Solid Geometry (CSO)}
+	\begin{itemize}
+		\item Verwende Boolsche Algebra, um komplexe Objekte zu erzeugen
+		\item Verknüpfung von Operationen um neue Objekte zu erhalten
+		\item CSG ist auch mit anderen Repräsentationen möglich (z.B. Dreiecksnetze), aber u.U. deutlich aufwendiger
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{L-Systeme}
 
 
 
