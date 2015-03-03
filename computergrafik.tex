@@ -1379,6 +1379,81 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 
 
 
+\section{Kurven und Flächen}
+\begin{itemize}
+	\item Definition einer glatten, parametrischen Kurve \(P(u)\) durch Platzieren einer "`Kontrollpunkte"'
+	\item Interpolation: Kurve geht durch alle vorgegebenen Punkte: Kann instabil sein und Überschwinger erzeugen
+	\item Approximation: Die Kurve geht nicht durch alle Punkte (oder auch durch gar keinen): Erlaubt Kurfen mit "`angenehmeren"' Eigenschaften
+\end{itemize}
+
+\subsubsection{Beispiel Bézierkurfen}
+\begin{itemize}
+	\item Definiert durch vier Kontrollpunkte \(b_i\)
+	\item Die Kurve geht durch \(b_0\) und \(b_3\) und approximiert \(b_1\) und \(b_2\)
+	\item Die Kurve liegt innerhalb der konvexen Hülle ihrer Kontrollpunkte
+	\item Mathematische Beschreibung mit einem kubischen Polynom \(P(u) = (1-u)^3b_0 + 3u(1-u)^2b_1 + 3u^2(1-u)b_2 + u^3b_3\)
+\end{itemize}
+
+
+\subsection{Polynomkurven}
+\begin{itemize}
+	\item \(d\)-dimensionale Polynomkurve mit \(P(u) = \sum_{i=0}^n a_iui,~a_i \in \mathbb{R}^d\)
+	\item Bernstein-Polynome \(B_i^3\) als Gewichtungsfunktion
+	\item Anschaulich: Jedes \(B_i^3\) legt den Einfluss von \(b_i\) auf die Kurve an der Stelle \(u\) fest
+\end{itemize}
+
+
+\subsection{Bézierkurven}
+\begin{itemize}
+	\item Allgemeine Definition: \(F(u) = \sum_{i=0}^n B_i^n(u) \cdot b_i,~b_i \in \mathbb{R}^d\)
+	\item \textbf{Eigenschaften}
+	\begin{itemize}
+		\item Bernstein-Polynome vom Grad 1 resultieren in lineare Interpolation
+		\item \(F(u)\) liegt ind er konvexen Hülle des Kontrollpolynoms
+		\item Variationsreduzierung: "`Eine Bézierkurve \(F\) wackelt nicht stärker als ihr Kontrollpolygon \(B\)"'
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Algorithmus von de Casteljau}
+\begin{itemize}
+	\item Effiziente Auswertung und Unterteilung von Bézierkurven
+	\item Berechnung von \(F(u) = \sum_i\ B_i^n(u)b_i\) durch fortgesetzte lineare Interpolation, ohne die Bernstein-Polynome zu berechnen
+\end{itemize}
+
+
+\subsection{Béziersplines}
+\begin{itemize}
+	\item Modellieren von komplexeren Formen mit Bézierkurven
+	\begin{enumerate}
+		\item Verwende eine Bézierkurve von hohem Grad
+		\item Füge mehrere Bézierkurven niedrigen Grades stückweise aneinander
+	\end{enumerate}
+	\item Béziersplines: Stückweise polynomielle Kurve, deren einzelne Abschnitte durch Bézierkurven beschrieben sind
+	\item \textbf{Stetigkeit}
+	\begin{itemize}
+		\item \(C^0\)-stetig: Stetig, keine Sprungstelle
+		\item \(C^1\)-stetig: Zusätzlich gleicher Tangentenvektor
+		\item \(C^2\)-stetig: Zusätzlich gleicher Schmiegekreis
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Tensorproduktflächen}
+\begin{itemize}
+	\item Erweiterung einer zweidimensionalen Kurve durch eine weitere zweidimensionale Kurve zu einer Fläche (Tensorprodukt-Bézier-Fläche)
+	\item \(S(u,v) = \sum_{i=0}^n \sum_{j=0}^m B_j^n(u) \cdot B_j^m(v) \cdot b_{i,j}\)
+	\item Die Kontrollpunkte \(b_{i,j}\) bilden das Kontrollnetz
+	\item \textbf{Eigenschaften}
+	\begin{itemize}
+		\item Konvexe Hülle-Eigenschaft
+		\item Interpolation der vier Ecken des Kontrollnetztes
+		\item Die Fläche ist tangential zu den Exkpunkten
+		\item Die Rundkurven der Flche sind Bézierkurven
+		\item Variationsreduzierung gilt nicht
+	\end{itemize}
+\end{itemize}
+
+
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
 
