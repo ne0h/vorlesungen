@@ -9,7 +9,7 @@ Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\fo
 \subsubsection{Gammakorrektur}
 \begin{itemize}
 	\item Bilder sind oft zu hell oder zu dunkel
-	\item Korrekturfunktion für das menschlichem Empfinden vpn physikalischen Helligkeitsunterschieden
+	\item Korrekturfunktion für das menschlichem Empfinden von physikalischen Helligkeitsunterschieden
 	\item Ein idealer Monitor bildet einen Pixel-Wert \(n\) auf die Intensität \(I(n)\) ab
 	\item Vergleichsweise wenige Stufen sind ausreichend
 \end{itemize}
@@ -63,13 +63,13 @@ Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\fo
 Die Menge der Farben, die mit einem bestimmten Modell beschrieben werden können.
 
 \subsubsection{Graßmannsche Gesetze}
-Jeder Farbeindruc kann mit drei Grundgrößen beschrieben werden.
+Jeder Farbeindruck kann mit drei Grundgrößen beschrieben werden.
 
 
 \subsection{CIE Color Matching Functions}
 \begin{itemize}
 	\item Wahrnehmungsexperimente: Referenzfarbe vorgegeben, soll durch drei Grundfarben reproduziert werden
-	\item Problem: Nicht alle Farben konnte reproduziert werden
+	\item Problem: Nicht alle Farben konnten reproduziert werden
 	\item Lösung: Primärfarben als negativer Vergleichwert
 \end{itemize}
 
@@ -110,7 +110,7 @@ Definiert durch:
 
 \subsubsection{Bildsynthese}
 \begin{itemize}
-	\item Erzeuge ein Rasterbild aus einer Szenenbeschreibung (Objekte), also bestimme, welche Objekte die Farbe jedes Pixels beeinflussen
+	\item Erzeuge ein Rasterbild aus einer Szenenbeschreibung (Objekte), bestimme also, welche Objekte die Farbe jedes Pixels beeinflussen
 	\item \textbf{Objektbasiert (Object-Order Rendering)}
 	\begin{enumerate}
 		\item Betrachte ein Objekt/Fläche nach der anderen
@@ -145,7 +145,7 @@ Definiert durch:
 	\begin{itemize}
 		\item Erzeugung von Sichtstrahlen (vom Betrachter zur Bildebene) durch jeden Pixel der Bildebene
 		\item Die Bildebene ist festgelegt durch den Abstand zur Kamera und die Größe der Ebene
-		\item Typischerweise ist das Sichtfeld orthogonal mittleren Sichtstrahl und symmetrisch 
+		\item Typischerweise ist das Sichtfeld orthogonal zum mittleren Sichtstrahl und symmetrisch 
 	\end{itemize}
 	\item \textbf{ray intersection}
 	\begin{itemize}
@@ -206,7 +206,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\begin{itemize}
 		\item Durch gerichtete Reflexion entstehen Glanzlichter
 		\item Findet nur in Richtung des Ausfallswinkels statt (Geometrisch: Spiegelung des Lichtvektors an der Normalen)
-		\item Größe des Fokus abhängig vom Phong-Exponenten (großer Exponent \(\rightarrow\) kleiner Kegel)
+		\item Größe des Fokus abhängig vom Phong-Exponenten und damit vom Material (großer Exponent \(\rightarrow\) kleiner Kegel)
 	\end{itemize}
 \end{itemize}
 
@@ -280,7 +280,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 		\item Filterung des Signals vor der Abtastung zur Entfernung von hohen Frequenzen: Im allgemeinen Fall nicht möglich
 		\item Höhere Abtastrate des Signals und anschließend mitteln (Überabtastung, Supersampling)
 	\end{itemize}
-	\item Abtasttheorem von Nyquist und Shannon: Ein kuntinuierliches, bandbegrenztes Signal mit einer maximalen Frequenz \(f_{max}\) muss mit einer Frequenz größer als \(2f_{max}\) abgetastet werden, damit aus dem diskreten Signal das Ursprungssignal exakt rekonstruiert werden kann.
+	\item Abtasttheorem von Nyquist und Shannon: Ein kontinuierliches, bandbegrenztes Signal mit einer maximalen Frequenz \(f_{max}\) muss mit einer Frequenz größer als \(2f_{max}\) abgetastet werden, damit aus dem diskreten Signal das Ursprungssignal exakt rekonstruiert werden kann.
 \end{itemize}
 
 \subsubsection{Supersampling-Strategien}
@@ -300,7 +300,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\begin{itemize}
 		\item Uniformes Supersampling oft nicht ausreichend für um hohe Frequenzen aufzulösen
 		\item Unterteilt Pixel in ein Gitter und wählt zufällig einen Punkt pro Zelle (Stratified Sampling)
-		\item Reduziert Alising, führt aber zu mehr Rauschen, was allerdings von der menschlichen Wahrnehmung als weniger störend empfunden wird
+		\item Reduziert Aliasing, führt aber zu mehr Rauschen, was allerdings von der menschlichen Wahrnehmung als weniger störend empfunden wird
 	\end{itemize}
 \end{itemize}
 
@@ -324,7 +324,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 \subsubsection{Bewegungsunschärfe}
 \begin{itemize}
 	\item Verteilung der Strahlen in der Zeit: Objekte bewegen sich in einem Zeitintervall
-	\item Erzeuge verschiedene Strahlen pro Pixel und mittlere die Farbwerte
+	\item Erzeuge verschiedene Strahlen pro Pixel und mittle die Farbwerte
 	\item Vgl. Blichtungszeit bei realen Kameras
 \end{itemize}
 
@@ -363,7 +363,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 \subsubsection{Transformationsgruppen}
 \begin{itemize}
 	\item Euklidische Transformationen: Erhalten Abstände, Inhaltsgrößen und Winkel (Translation, Identität, Rotation)
-	\item Ähnlichkeiteabbildungen: Erhalten lediglich die Winkel (isotrope Skalierung, sowie alle euklidischen Transformationen)
+	\item Ähnlichkeitsabbildungen: Erhalten lediglich die Winkel (isotrope Skalierung, sowie alle euklidischen Transformationen)
 	\item Lineare Abbildungen: Identität, Rotation, isotrope Skalierung, Skalierung, Spiegelung, Scherung
 	\item Affine Abbildung: Parallele Linien werden erhalten (alle bisher genannten Abbildungen)
 	\item Projektive Abbildungen: Geraden werden auf Geraden abgebildet (auch alle bisher genannten Abbildungen)
@@ -460,7 +460,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 \section{Texturen}
 \begin{itemize}
 	\item Idee: Realistischeres Aussehen einer Oberfläche kann man durch "`Feinstrukturierung"' pro Pixel erreichen
-	\item Geormetrie wird mit Bildern kombiniert
+	\item Geometrie wird mit Bildern kombiniert
 	\item Texture Mapping: Wie wird einem Punkt auf der Oberfläche eine Stelle in der Textur zugeordnet?
 \end{itemize}
 
@@ -470,8 +470,8 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\item 1D Textur: Parameter entlang einer der drei Achsen
 	\item \textbf{2D Textur}
 	\begin{itemize}
-		\item Planare Projektion eines Bildes in der \(x-Y\)-Ebene
-		\item Standardkörper mit natürlicher Parametrisierung (z.B. Punkte auf einer Kugel lassen mittels Polarkoordinaten ausdrücken)
+		\item Planare Projektion eines Bildes in der \(X-Y\)-Ebene
+		\item Standardkörper mit natürlicher Parametrisierung (z.B. Punkte auf einer Kugel lassen sich mittels Polarkoordinaten ausdrücken)
 		\item Sphärische Koordinaten oder zyklindrische Parametrisierung: Darstellung der Objektkoordinaten in Polarkoordinaten
 		\item Würfel Parametrisierung: Würfeltextur wird dort ausgelesen, wo ein Strahl vom Objektmittelpunkt einen umgebenden Würfel schneidet
 		\item Flächenparameter: Beschreibung beispielsweise mit Hilfe von Bézier-/Splinepatches
@@ -481,7 +481,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 
 \subsubsection{Texturkoordinaten für Dreiecksnetze}
 \begin{itemize}
-	\item Parametrisierung für jeden Vertrex wird in der Texturkoordinaten gespeichert
+	\item Parametrisierung für jeden Vertex wird in der Texturkoordinaten gespeichert
 	\item Interpolation mit baryzentrischen Koordinaten
 \end{itemize}
 
@@ -508,7 +508,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\item \textbf{Textur-Filter}
 	\begin{itemize}
 		\item Die menschliche Wahrnehmung nimmt Unstetigkeiten nur bis zur zweiten Ableitug wahr \(\rightarrow\) Verwendung von Interpolation höherer Ordnung
-		\item Bikubische Interpolation (benötigt Zugriff auf \(4~x~4\) Texel
+		\item Bikubische Interpolation (benötigt Zugriff auf 4x4 Texel
 	\end{itemize}
 	\item \textbf{Verkleinerung (Minification)}
 	\begin{itemize}
@@ -651,7 +651,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\end{itemize}
 	\item \textbf{Aufnahme von Environment-Maps}
 	\begin{itemize}
-		\item In der Praxis: Meist mit spiegelden Chromkugeln
+		\item In der Praxis: Meist mit spiegelnden Chromkugeln
 		\item Mehrere Aufnahmen zum nachträglichen Entfernen des Fotoapparats (HDR-Fotografie)
 		\item Umrechnung in andere Parametrisierungen möglich
 	\end{itemize}
