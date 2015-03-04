@@ -211,7 +211,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 \end{itemize}
 
 \subsubsection{Formel zur Berechnung}
-\[I = k_a\cdot I_L + k_d\cdot I_L \cdot (n\cdot L) + k_s\cdot I_L \cdot (R_L \cdot V)^n\]
+\[I = k_a\cdot I_L + k_d\cdot I_L \cdot (N \cdot L) + k_s\cdot I_L \cdot (R_L \cdot V)^n\]
 
 \subsubsection{Stereo-Rendering}
 \textbf{Idee:} Für jedes Auge ein anderes Bild durch die Einführung einer zweiten Kamera.
@@ -1556,7 +1556,7 @@ Der Punkt \(Q = \lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3\) liegt innerhalb 
 	\item \(degrees\), \(radians\)
 	\item \(\lbrack a \rbrack sin \lbrack h \rbrack\), \(\lbrack a \rbrack cos \lbrack h \rbrack\), \(\lbrack a \rbrack tan \lbrack h \rbrack\)
 	\item \(abs\), \(sign\), \(floor\)
-	\item \(length\), \(distance\), \(dot\), \(normalize\)
+	\item \(length\), \(distance\), \(dot\), \(normalize\), \(reflect\)
 \end{itemize}
 
 
@@ -1591,7 +1591,7 @@ void main() {
 Fragment-Shader
 \begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
 uniform sampler2D tex;
-in 		vec2 texCoord;
+in vec2 texCoord;
 
 void main() {
 	vec3 ogl = texture(tex, texCoord).rgb;
@@ -1667,3 +1667,20 @@ void main() {
 }
 \end{lstlisting}
 \end{minipage}
+
+\subsubsection{Phong Shading}
+Alle Richtungsvektoren müssen normiert werden.
+\begin{itemize}
+	\item \textbf{Vertex Shader}
+	\begin{itemize}
+		\item Position in Clip-Koordinaten und Weltkoordinaten
+		\item Normale in Weltkoordinaten
+		\item Weitergeben der Texturkoordinate
+	\end{itemize}
+	\item \textbf{Fragment Shader}
+	\begin{itemize}
+		\item Berechnung von \(k_d\) (der Farbe) aus der Textur
+		\item Berechnung der Beleuchtung für alle Lichtquellen und Summieren der Ergebnisse
+		\item Formel: \(\Big( k_d max(0,L\cdot N) + k_s max(0,R\cdot L)^n \Big) \frac{I_l}{\|x-x_l\|^2}\)
+	\end{itemize}
+\end{itemize}
