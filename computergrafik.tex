@@ -1441,7 +1441,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 \subsection{Tensorproduktflächen}
 \begin{itemize}
 	\item Erweiterung einer zweidimensionalen Kurve durch eine weitere zweidimensionale Kurve zu einer Fläche (Tensorprodukt-Bézier-Fläche)
-	\item \(S(u,v) = \sum_{i=0}^n \sum_{j=0}^m B_j^n(u) \cdot B_j^m(v) \cdot b_{i,j}\)
+	\item \(S(u,v) = \sum_{i=0}^n \sum_{j=0}^m B_i^n(u) \cdot B_j^m(v) \cdot b_{i,j}\)
 	\item Die Kontrollpunkte \(b_{i,j}\) bilden das Kontrollnetz
 	\item \textbf{Eigenschaften}
 	\begin{itemize}
@@ -1515,3 +1515,155 @@ Der Punkt \(Q = \lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3\) liegt innerhalb 
 \[R_x(\phi) = \begin{pmatrix} 1 & 0 & 0 \\ 0 & cos\phi & -sin\phi \\ 0 & sin\phi & cos\phi \end{pmatrix}\]
 \[R_y(\phi) = \begin{pmatrix} cos\phi & 0 & sin\phi \\ 0 & 1 & 0 \\ -sin\phi & 0 & cos\phi \end{pmatrix}\]
 \[R_z(\phi) = \begin{pmatrix} cos\phi & -sin\phi & 0 \\ sin\phi & cos\phi & 0 \\ 0 & 0 & 1 \end{pmatrix}\]
+
+
+
+\section{Appendix C: OpenGl Shading Language (GLSL)}
+\begin{itemize}
+	\item Separate Verarbeitung pro Vertex, Primitiv oder Fragment
+	\item Shader sind OpenGL-Objekte und stehen über OpenGL-Aufrufe zur Verfügung
+	\item C-ähnlich
+	\item Funktionen und Überladen von Funktionen ist möglich
+	\item Rekursion ist nicht vorgesehen, da es keinen Stack auf GPUs gibt
+\end{itemize}
+
+\subsubsection{Datentypen}
+\begin{itemize}
+	\item Basis-Datentypen: float, double, bool, int, half
+	\item Vektoren mit 2,3 oder 4 Komponenten: \(vec\{x,y,z\}\)
+	\item Matrizen 2x2, 3x3 oder 4x4: [d]mat2
+	\item Sampler: Speichern von Textureinheiten \(sampler\lbrack 1,2,3\rbrack D\)
+\end{itemize}
+
+\subsubsection{Definition des Verwendungszweck von Variablen}
+\begin{itemize}
+	\item \(const\): Konstante, zur Compile-Zeit festgelegt
+	\item \(uniform\): read-only, globale Variablen, die pro Aufruf konstant bleiben und von der Applikation gesetzt werden
+	\item \(in\): Eingabeattribut des aktuellen Shaders
+	\item \(out\): Ausgabeattribut des aktuellen Shaders
+	\item \(attribute\): Vertexattribute, read-only, nur im Vertex-Shader
+	\item \(varying\): Weitergegebene/interpolierte Werte
+\end{itemize}
+
+\subsubsection{Transformationspipeline}
+\begin{itemize}
+	\item Objektkoordinaten \(\rightarrow\) Kamerakoordinaten: \(gl\_ModelViewMatrix\)
+	\item Objektkoordinaten \(\rightarrow\) Clip Koordinaten: \(gl\_ModelViewProjectionMatrix\)
+\end{itemize}
+
+\subsubsection{Build-In Funktionen}
+\begin{itemize}
+	\item \(degrees\), \(radians\)
+	\item \(\lbrack a \rbrack sin \lbrack h \rbrack\), \(\lbrack a \rbrack cos \lbrack h \rbrack\), \(\lbrack a \rbrack tan \lbrack h \rbrack\)
+	\item \(abs\), \(sign\), \(floor\)
+	\item \(length\), \(distance\), \(dot\), \(normalize\)
+\end{itemize}
+
+
+\subsection{Beispiele}
+
+\subsubsection{Minimalbeispiel}
+\begin{minipage}{\textwidth}
+Vertex-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+uniform mat4 matrixMVP;
+in vec4 in_position;
+
+void main() {
+	gl_Position = matrixMVP * in_position;
+}
+\end{lstlisting}
+\end{minipage}
+\\\\
+\begin{minipage}{\textwidth}
+Fragment-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+out vec4 out_color;
+
+void main() {
+	out_color = vec(1.0, 1.0, 1.0, 0.0);
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Texturierung im Fragment Shader}
+\begin{minipage}{\textwidth}
+Fragment-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+uniform sampler2D tex;
+in 		vec2 texCoord;
+
+void main() {
+	vec3 ogl = texture(tex, texCoord).rgb;
+	out_frag_color = vec4(kd * ogl.rgb, 1.0);
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Diffuse Beleuchtung}
+\begin{minipage}{\textwidth}
+Vertex-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+uniform mat4 matrixMVP, matrixMV, matrixNrml;
+uniform vec3 lightSourcePos;
+in  vec4 in_position;
+in  vec3 in_normal;
+out vec4 color;
+
+void main() {
+	gl_Position = matrixMVP * in_position;
+
+	// Beleuchtungsberechnung in Kamerakoordinaten
+	vec3 P = vec3(matrixMV * in_position);
+	vec3 N = normalize(vec3(matrixNrml * vec4(in_normal, 0.0)));
+	vec3 L = normalize(lightSourcePos - P);
+	color  = vec4(max(0.0, dot(L, N)));
+}
+\end{lstlisting}
+\end{minipage}
+\\\\
+\begin{minipage}{\textwidth}
+Fragment-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+in  vec4 color;
+out vec4 out_color;
+
+void main() {
+	out_color = color;
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Per-Pixel Beleuchtung}
+\begin{minipage}{\textwidth}
+Vertex-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+uniform mat4 matrixMVP, matrixMV, matrixNrml;
+uniform vec3 lightSourcePos;
+in  vec4 in_position;
+in  vec3 in_normal;
+out vec3 L, N;
+
+void main() {
+	gl_Position = matrixMVP * in_position;
+
+	// Beleuchtungsberechnung in Kamerakoordinaten
+	vec3 P = vec3(matrixMV * in_position);
+		 N = vec3(matrixNrml * vec4(in_position));
+		 L = lightSourcePos - P;
+}
+\end{lstlisting}
+\end{minipage}
+\\\\
+\begin{minipage}{\textwidth}
+Fragment-Shader
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=GLSL]
+in  vec3 L, N;
+out vec4 out_color;
+
+void main() {
+	float kd = max(0.0, dot(normalize(L) * normalize(N)));
+	out_color = vec(kd);
+}
+\end{lstlisting}
+\end{minipage}
