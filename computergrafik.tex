@@ -29,6 +29,12 @@ Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\fo
 	\item Stäbchen: Für skotopisches, monochromatisches Sehen (Nachtsehen); lichtempfindlicher, überall auf der Retina
 \end{itemize}
 
+\subsubsection{Metamerie}
+Verschieden zusammengesetzte Lichtspektren können beim Menschen die gleiche Farbwahrnehmung hervorrufen.
+
+\subsubsection{Farbtemperatur und Schwarzkörperstrahlung}
+Die Farbtemperatur ist definiert als die Temperatur eines Schwarzen Körpers, des sogenannten Planckschen Strahlers, die zu einer bestimmten Farbe des Lichts gehört, das von dieser Strahlungsquelle ausgeht. Konkret ist es die Temperatur, deren Lichtwirkung bei gleicher Helligkeit und unter festgelegten Beobachtungsbedingungen der zu beschreibenden Farbe am ähnlichsten ist.\footnote{\url{http://de.wikipedia.org/wiki/Farbtemperatur}}
+
 \subsubsection{Farbmischungen}
 \begin{itemize}
 	\item \textbf{Additiv}
@@ -50,17 +56,28 @@ Zusammenfassung der Vorlesung "`Computergrafik"' aus dem Wintersemester 2014.\fo
 		\item Farbton (Hue), Sättigung (Saturation) und Helligkeit (Value)
 		\item Darstellung als Zylinder oder hexagonaler Kegel
 		\item Anwendung: Benutzerschnittstellen, da intuitiv
+		\item Weder additiv noch subtraktiv
 	\end{itemize}
 	\item \textbf{XYZ}
 	\begin{itemize}
 		\item Beschreibung aller wahrnehmbaren Farben
+		\item Eentspricht der menschlichen Farbwahrnehmung des Auges
 		\item Farbraum mit rein positiven Color Matching Funktionen
 		\item Lineare Abbildung \[XYZ \Leftrightarrow RGB\]
+	\end{itemize}
+	\item \textbf{XYY}
+	\begin{itemize}
+		\item Darstellung aller sichtbaren Farben
+		\item Normalisierung auf der \(X+Y+Z=1\)-Ebene mit anschließender Projektion auf die \(XY\)-Ebene
+		\item Farben auf der Strecke zwischen zwei Punkten können durch additives Mischen der Farben an den Endpunkten erreicht werden
 	\end{itemize}
 \end{itemize}
 
 \subsubsection{Farbraum}
 Die Menge der Farben, die mit einem bestimmten Modell beschrieben werden können.
+
+\subsubsection{Gamut}
+Die Menge aller Farben, die ein Gerät darstellen kann (z.B. Scanner, Drucker, Monitor, etc).
 
 \subsubsection{Graßmannsche Gesetze}
 Jeder Farbeindruck kann mit drei Grundgrößen beschrieben werden.
@@ -219,7 +236,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 \subsubsection{Schattierung von Dreiecksnetzen}
 \begin{itemize}
 	\item Stückweise lineare Approximation einer (gekrümmten) Oberfläche durch Dreiecke
-	\item Flat Shading: Verwendung der Dreiecksnormalen zur Beleuchtungsberechnung (Interpolation der Normalen der Eckpunkte)
+	\item Flat Shading: Verwendung der Dreiecksnormale zur Beleuchtungsberechnung (Interpolation der Normalen der Eckpunkte)
 	\item Scharfe Kanten brauchen mehrere Normalen
 	\item Typischerweise werden drei Eckpunkte, drei Normalen sowie zusätzliche Attribute (beispielsweise Farben) gespeichert
 	\item Phong Shading: Beleuchtungsberechnung mit interpolierten Normalen
@@ -507,7 +524,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\end{itemize}
 	\item \textbf{Textur-Filter}
 	\begin{itemize}
-		\item Die menschliche Wahrnehmung nimmt Unstetigkeiten nur bis zur zweiten Ableitug wahr \(\rightarrow\) Verwendung von Interpolation höherer Ordnung
+		\item Die menschliche Wahrnehmung nimmt Unstetigkeiten nur bis zur zweiten Ableitung wahr \(\rightarrow\) Verwendung von Interpolation höherer Ordnung
 		\item Bikubische Interpolation (benötigt Zugriff auf 4x4 Texel
 	\end{itemize}
 	\item \textbf{Verkleinerung (Minification)}
@@ -524,7 +541,7 @@ Phänomologisches Modell, das die Reflexion mit drei Komponenten modelliert:
 	\begin{itemize}
 		\item Einfache Vorfilterung von Texturen (Auflösungspyramide)
 		\item Rekursive Speicherung von Texturen mit \(\frac{1}{4}\) Größe
-		\item Meist Mittelung über je \(2~x~2\) Texel
+		\item Meist Mittelung über je 2x2 Texel
 		\item Insgesamt nur 33\% mehr Speicherbedarf
 		\item Wahl der Mip-Map Stufe \(n\): \(Texelgroesse(n) \leq Groesse~Pixelfootprint~auf~Textur < Texelgroesse(n+1)\)
 	\end{itemize}
@@ -1047,7 +1064,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 
 \subsubsection{Beleuchtung und Schattierung}
 \begin{itemize}
-	\item Einschalten der Bleuchtungsberechnung: \(glEnable(GL_LIGHTNING)\)
+	\item Einschalten der Beleuchtungsberechnung: \(glEnable(GL\_LIGHTNING)\)
 	\item Beleuchtungsberechnung in Kamerakoordinaten. OpenGL unterstützt nativ lediglich Gouraud Shading
 	\item Gouraud Shading: Berechnung pro Vertex; Machsche Effekte, verpasste Glanzlichter
 	\item Phong Shading: Berechnung der Beleuchtung pro Pixel/Fragment; Interpolation der Normale
@@ -1057,7 +1074,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\item Ersetzt den Reflexionsvektor \(R_L\) durch den \textit{Halfway-Vektor} \(H\) und einen neuen Exponenten: \(I_S = k_S \cdot I_L \cdot (N \cdot H)^n\)
 		\item Beleuchtungsberechnung erfolgt pro Vektor
 		\item Vertextfarbe setzt sich zusammen aus: Materialemission, globales ambientes Licht, abgeschwächte ambiente, diffuse und spekulare Beiträge aller Lichtquellen
-		\item Nach der Bleuchtungsberechnung werden die Werte auf \(\lbrack 0;1\rbrack\) begrenzt
+		\item Nach der Beleuchtungsberechnung werden die Werte auf \(\lbrack 0;1\rbrack\) begrenzt
 	\end{itemize}
 \end{itemize}
 
@@ -1078,7 +1095,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\item Zuordnung schattierte Samples und Sichtbarkeits-Samples
 		\item Idee: Schattierungsberechnung ist teurer als Sichtbarkeit
 	\end{itemize}
-	\item In OpenGL: Festgelegt bei der Erzeugung des Framebuffers (z.B. mit \(GLUT_MULTISAMPLE\)
+	\item In OpenGL: Festgelegt bei der Erzeugung des Framebuffers (z.B. mit \(GLUT\_MULTISAMPLE\))
 \end{itemize}
 
 
@@ -1087,7 +1104,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\item Die OpenGL-API hat sich mit der Hardware weiterentwickelt (extrem hohe Rechenleistung von GPUs)
 	\item Wesentliche Änderungen mit dem Ziel eine schlankere API zu schaffen: Keine Fixed-Function-Pipeline und keine Hilfsfunktionen mehr
 	\item Core Profil: Entrümpelt, alle alte Funktionalität muss selbst programmiert werden
-	\item Kompatibilitätsprofil für die alte FUnktionalität
+	\item Kompatibilitätsprofil für die alte Funktionalität
 \end{itemize}
 
 \subsubsection{OpenGL Pipeline}
@@ -1097,11 +1114,11 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\item Programmierung mit der C-ähnlichen OpenGL Shading Language
 		\item Transformation einzelner Vertizes und Verarbeitung deren Attribute
 		\item Keine Vertexerzeugung/Vertexlöschung/Informationen über andere Vertizes
-		\item Berechnung von Attributen, die für Fragmente interpoliert werden sollen: Z.B. Beleuchtung per Vertex (Gouraud Shading) order Normalen für Phong Shading
+		\item Berechnung von Attributen, die für Fragmente interpoliert werden sollen: Z.B. Beleuchtung per Vertex (Gouraud Shading) oder Normalen für Phong Shading
 	\end{itemize}
 	\item \textbf{Geometrieverarbeitung: Assembly und Tessellation}
 	\begin{itemize}
-		\item Primitiv Assembly: Setzt aus den Vertices die angeforderten Primitive zusammen und ist nicht programmierbar
+		\item Primitive Assembly: Setzt aus den Vertices die angeforderten Primitive zusammen und ist nicht programmierbar
 		\item Tessellation
 		\begin{enumerate}
 			\item Tessellation Control Shader: Bestimmt die Unterteilung
@@ -1113,7 +1130,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\begin{itemize}
 		\item Geometry Shader: Bearbeitet Primitive; kann Primitive vervielfachen, entfernen, umwandlen; programmierbar; optional
 		\item Clipping: Verwirft unsichtbare Punktprimitive; verändert Dreiecke durch Schnitt mit Sichtvolumen; nicht programmierbar
-		\item Anschließend: Perspektivische Division (nicht programmierbar) und Rasterisierung dzur Generation von Fragmenten für den Ausgabepuffer
+		\item Anschließend: Perspektivische Division (nicht programmierbar) und Rasterisierung zur Generation von Fragmenten für den Ausgabepuffer
 	\end{itemize}
 	\item \textbf{Fragmentverarbeitung}
 	\begin{itemize}
@@ -1124,7 +1141,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\end{itemize}
 \end{enumerate}
 
-\subsubsection{Möglichkeiten mit programmierbarer Grafik-hardware}
+\subsubsection{Möglichkeiten mit programmierbarer Grafik-Hardware}
 \begin{itemize}
 	\item Beliebige Beleuchtungsberechnung und Materialen programmierbar: Direkte, prozudurale Texturierung; komplexe Datenstrukturen
 	\item Komplexe Geometrieberechnung und Animation
@@ -1136,7 +1153,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\item Texturen sind OpenGL-Objekte
 	\item Müssen zur Verwendung an Textureinheiten gebunden werden
 	\item Automatische Erzeugung von MipMaps
-	\item Textture Wrapping: Forsetzen von quadratischen Texturen
+	\item Texture Wrapping: Forsetzen von quadratischen Texturen
 \end{itemize}
 
 \subsubsection{Index Buffers und Shared Vertex Repräsentation}
@@ -1168,12 +1185,12 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\end{itemize}
 		\item Stencil Test
 		\begin{itemize}
-			\item "`Stantzmaske"', die oft verwendet wird, um Zustände für jeden Pixel zu speichern
+			\item "`Stanzmaske"', die oft verwendet wird, um Zustände für jeden Pixel zu speichern
 			\item Es kann entschieden werden, ob ein Fragment gezeichnet wird
 			\item Typische Anwendungen: Maskierung von Anwendungen, projektive Schatten, Stencil Routing
 		\end{itemize}
 		\item Tiefentest (Depth Buffer Test)
-		\item Blending: Farbkombination von erzeugten Fragmenten und Pixel; jede Komponente wird separat berechnen; Anwendungsbeispiel: Zeichnen eines semitransparenten Objekts über ein opakes
+		\item Blending: Farbkombination von erzeugten Fragmenten und Pixel; jede Komponente wird separat berechnen
 		\item Dithering: Historisch, nur für Hardware ohne TrueColor Darstellung
 	\end{enumerate}
 \end{itemize}
@@ -1185,16 +1202,24 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\item Muss händisch implementiert werden, ist dann aber flexibler als ein konfigurierbarer Alpha-Test
 \end{itemize}
 
+\subsubsection{Blending}
+\begin{itemize}
+	\item Anwendungsbeispiel: Zeichnen eines semitransparenten Objekts über ein opakes
+	\item \textit{glBlendFunc(GL\_SRC\_ALPHA, GL\_MINUS\_SRC\_ALPHA)}
+	\item \textit{glBlendEquaction(GL\_FUNC\_ADD)}
+\end{itemize}
+
 \subsubsection{Semitransparente Objekte}
 \begin{itemize}
 	\item Darstellung semitransparenter Objekte erfordert Tiefensortierung, weil Blending im Allgemeinen nicht kommutativ ist
 	\item Semitransparenz ohne Blending: Setze Pixel beim Rasterisieren entsprechend eines Binärmusters mit Anteil der Einsen entsprechend der Opazität. Wichtig: Unterschiedliche Muster, sonst kein Transparenzeffekt
 \end{itemize}
 
-\subsubsection{Accumulation Buffer: Bewegungsunschärfe}
+\subsubsection{Accumulation Buffer}
 \begin{itemize}
-	\item Zwischenspeichern zur Kombination mehrerer Rendering-Schritte
+	\item Zwischenspeichern zur Kombination mehrerer Rendering-Schritte mit anschließender Durchschnittsbildung
 	\item Zeichne mehrerer Bilder zu verschiedenen Zeitpunkten
+	\item Anwendungen: Beispielsweise Bewegungsunschärfe, Tiefenunschärfe, weiche Schatten, Antialiasing
 \end{itemize}
 
 \subsubsection{Stereo/Double Buffering}
@@ -1344,7 +1369,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 		\item Shere Tracing: Finden des Schnittpunkts durch Ray Marching unter Ausnutzung der Distanzfunktion (man kann immer eine Strecke \(f(x)\) zurücklegen, ohne einen Schnittpunkt zu verpassen)
 		\item Mehrere Schritte für Strahlen, die Objekte knapp verpasst haben
 	\end{itemize}
-	\item \textbf{Verknüpfung von Distanzfunktionen: Constructive Solid Geometry (CSO)}
+	\item \textbf{Verknüpfung von Distanzfunktionen: Constructive Solid Geometry (CSG)}
 	\begin{itemize}
 		\item Verwende Boolsche Algebra, um komplexe Objekte zu erzeugen
 		\item Verknüpfung von Operationen um neue Objekte zu erhalten
@@ -1386,7 +1411,7 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 	\item Approximation: Die Kurve geht nicht durch alle Punkte (oder auch durch gar keinen): Erlaubt Kurfen mit "`angenehmeren"' Eigenschaften
 \end{itemize}
 
-\subsubsection{Beispiel Bézierkurfen}
+\subsubsection{Beispiel Bézierkurven}
 \begin{itemize}
 	\item Definiert durch vier Kontrollpunkte \(b_i\)
 	\item Die Kurve geht durch \(b_0\) und \(b_3\) und approximiert \(b_1\) und \(b_2\)
@@ -1456,6 +1481,9 @@ Verwende Push/Pop auf ModelView-Matrix-Stack.
 
 \section{Appendix A: Baryzentrische Koordinaten}
 Baryzentrische Koordinaten dienen in der linearen Algebra und in der Geometrie dazu, die Lage von Punkten in Bezug auf eine gegebene Strecke, ein gegebenes Dreieck, ein gegebenes Tetraeder oder allgemeiner ein gegebenes Simplex zu beschreiben. Der Punkt wird dargestellt durch die Koeffizienten einer Affinkombination (also einer Linearkombination von Punkten, bei der die Summe der Koeffizienten 1 ist).\footnote{\url{http://de.wikipedia.org/wiki/Baryzentrische_Koordinaten}}
+
+\subsubsection{Geometrische Interpretation}
+\[\lambda_1 = \frac{A_{\triangle}(Q,P_2,P_3)}{A_{\triangle} (P_1,P_2,P_3)}, \lambda_2 = \frac{A_{\triangle}(Q,P_1,P_3)}{A_{\triangle} (P_1,P_2,P_3)}, \lambda_3 = \frac{A_{\triangle}(Q,P_1,P_2)}{A_{\triangle} (P_1,P_2,P_3)}\]
 
 \subsection{Anwendungen}
 
@@ -1581,7 +1609,7 @@ Fragment-Shader
 out vec4 out_color;
 
 void main() {
-	out_color = vec(1.0, 1.0, 1.0, 0.0);
+	out_color = vec4(1.0, 1.0, 1.0, 0.0);
 }
 \end{lstlisting}
 \end{minipage}
@@ -1649,8 +1677,8 @@ void main() {
 
 	// Beleuchtungsberechnung in Kamerakoordinaten
 	vec3 P = vec3(matrixMV * in_position);
-		 N = vec3(matrixNrml * vec4(in_position));
-		 L = lightSourcePos - P;
+	     N = vec3(matrixNrml * vec4(in_position));
+	     L = lightSourcePos - P;
 }
 \end{lstlisting}
 \end{minipage}
@@ -1663,7 +1691,7 @@ out vec4 out_color;
 
 void main() {
 	float kd = max(0.0, dot(normalize(L) * normalize(N)));
-	out_color = vec(kd);
+	out_color = vec4(kd);
 }
 \end{lstlisting}
 \end{minipage}
