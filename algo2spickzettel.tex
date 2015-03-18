@@ -37,3 +37,44 @@ gilt.
 \[\beta(z) = \frac{\alpha(z)}{1+z}\]
 \\\\
 Existiert das zweite Differenzschema, so gilt \(\beta(-1)=0\).
+
+\subsection{Minimax Theorem}
+Sei $M=\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix} $ dann ist $ min_y =  \begin{pmatrix} 
+x & 1-x 
+\end{pmatrix}
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix} = 0 $ Nullsetzen.\newline $max_x = 
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix}
+\begin{pmatrix}
+y \\
+1-y 
+\end{pmatrix} = 0 $ ebenfalls Nullsetzen.
+Die Nullstellen entsprechen dem Ergebnis. \newline Also ist $f(x,y)=(max_x,min_y)$ bzw. $(\begin{pmatrix}
+max_x \\
+1 - max_x
+\end{pmatrix}
+,
+\begin{pmatrix}
+min_y \\
+1 - min_y
+\end{pmatrix} )$ und der Wert ergibt sich durch Einsetzen in $ max_x \cdot min_y \cdot M=f(x,y) = 
+\begin{pmatrix} 
+x & 1-x 
+\end{pmatrix}
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix}
+\begin{pmatrix}
+y \\
+1-y 
+\end{pmatrix}$.
+
