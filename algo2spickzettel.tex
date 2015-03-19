@@ -24,6 +24,42 @@ Der maximale Fluss ist
 \end{itemize}
 
 
+\subsection{Lineare Programmierung}
+
+\begin{minipage}{\textwidth}
+SIMPLEX
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Solange ein $c_S > 0$
+	Falls alle $b_{is} \geq 0$
+		Keine Loesung
+	Sonst
+		Bestimme $r$ so, dass $\frac{b_r}{b_{rs}} = max_{(b_{is} < 0)}~\frac{b_i}{b_{is}}$
+		AUSTAUSCH
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+AUSTAUSCH(A, r, s)
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Forall $i \ne r$, $j \ne s$ {
+	$a_{ij}' = a_{ij} - \frac{a_{is} \cdot a_{rj}}{a_{rs}}$
+}
+# Pivotzeile
+Forall $i == r$, $j \ne s$ {
+	$a_{ij}' = -\frac{a_{ij}}{a_{rs}}$
+}
+# Pivotspalte
+Forall $i \ne r$, $j == s$ {
+	$a_{ij}' = \frac{a_{ij}}{a_{rs}}$
+}
+# Pivot
+Forall $i == r$, $j == s$ {
+	$a_{ij}' = \frac{1}{a_{rs}}$
+}
+\end{lstlisting}
+\end{minipage}
+
+
 \subsection{de Casteljau}
 \[\frac{\Delta B_0}{t} \frac{\Delta B_1}{t-1} = C(\Delta B,t)\]
 
