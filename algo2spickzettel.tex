@@ -67,6 +67,27 @@ Forall $i == r$, $j == s$ {
 
 \(\begin{pmatrix} 5 & 5 \\ 5 & 5 \end{pmatrix}\) kann zur Vereinfachung erstmal von der Ausgangsmatrix abgezogen, muss beim Ergebnis allerdings berücksichtigt werden.
 
+\subsubsection{Ausgleichen/Minimieren mit der Maximumsnorm}
+\textbf{Ziel:} Minimiere mit Hilfe der Maximusnorm \(\begin{pmatrix} y(-1) & -(-1) \\ y(0) & -1 \\ y(1) & -1 \end{pmatrix}\).
+\\\\
+Daraus ergibt sich das überbestimmte Gleichungssystem
+\[\begin{pmatrix} 1 & -1 \\ 1 & 0 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} -1 \\ 1 \\ 1\end{pmatrix}.\]
+\\\\
+Das Gleichungssystem zeigt die invertierten und nicht-invertierten Nebenbedingungen des Linearen Programms:
+\[\begin{array}{ccc|c}
+	x_0 & x_1 & x_2 \\
+	\hline
+	-1 & -1 & -1 & 1 \\
+	 1 & -1 &  0 & 1 \\
+	 1 & -1 &  1 & 1 \\
+	-1 &  1 & -1 & 1 \\
+	-1 &  1 &  0 & 1 \\
+	-1 &  1 &  1 & 1 \\
+	\hline
+	1 & 0 & 0 & 0 \\
+\end{array}\]
+Das Lineare Programm kann zeichnerisch oder rechnisch gelöst werden (siehe Klausuraufgabe 7/WS2014).
+
 
 \subsection{de Casteljau}
 \[\frac{\Delta B_0}{t} \frac{\Delta B_1}{t-1} = C(\Delta B,t)\]
