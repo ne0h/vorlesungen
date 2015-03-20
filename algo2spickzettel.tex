@@ -105,15 +105,43 @@ Unter Verwendung der Normalform können sukszessive Zeilen in der Reihenfolge \(
 \[\frac{\Delta B_0}{t} \frac{\Delta B_1}{t-1} = C(\Delta B,t)\]
 
 
-\subsection{Unterteilungsalgorithmen}
+\subsection{Unterteilungsalgorithmen: Algorithmus von Lane und Riesenfeld}
 Das Differenzschema existiert nur, wenn \(\alpha(z)\) den Faktor \(1+z\) besitzt oder
 \[\alpha(-1) = \sum_{i \in \mathbb{Z}} \alpha_{2i} - \sum_{i \in \mathbb{Z}}\alpha_{2i + 1} = 0\]
 gilt.
-	
+
+\subsubsection{Unterteilungsmatrizen}
+Die Unterteilungsmatrizen stellen den Algorithmus dar.
+
 \subsubsection{Symbol}
+Die Unterteilungsgleichung hat die Darstellung
+\[\beta(z) = \alpha(z) \cdot c(z^2).\]
+
+\begin{itemize}
+	\item \(\alpha (z) \) ist das Symbol des Unterteilungsalgorithmus und stellt den Algorithmus dar \(\rightarrow\) kann ersetzt werden, um einen beliebigen Algorithmus zu erhalten
+\end{itemize}
+
+
+\subsubsection{Differenzenschema}
+\(\beta(z)\) bezeichnet das Differenzenschema zu \(\alpha\).
 \[\beta(z) = \frac{\alpha(z)}{1+z}\]
 \\\\
-Existiert das zweite Differenzschema, so gilt \(\beta(-1)=0\).
+Das Differenzenschema zu \(\alpha(z)\) existiert nur, wenn \(\alpha(z)\) den Faktor \((1+z)\) hat, bzw. wenn
+\[\alpha(-1) = \sum_{i \in \mathbb{Z}}\alpha_{2i} - \sum_{i \in \mathbb{Z}}\alpha_{2i+1} = 0.\]
+
+\subsubsection{Konvergenz}
+Die Funktion \(c^k(x)\) konvergiert gegen eine Funktion \(c_{\infty}(x)\) so, dass
+\[sup(x \in \mathbb{R})~|~c_{\infty}(x) - c^k(x)~|~\in \mathcal{O}(4^{-k}).\]
+
+\paragraph{Folgerung 1}
+Die skalierten Differenzpolygone \(2^k d^k(x)\) (Ableitungspolygone) konvergieren gegen
+\[\frac{d}{dx} c_{\infty}(x).\]
+
+\paragraph{Folgerung 2}
+Induktiv folgt aus \textit{Folgerung 1}, dass die \(n\)-te Ableitung
+\[\frac{d^n}{dx^n} c_{\infty}(x)\]
+der Limesfunktion stückweise konstant ist.
+
 
 \subsection{Minimax Theorem}
 Sei $M=\begin{pmatrix}
