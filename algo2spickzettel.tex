@@ -88,6 +88,18 @@ Das Gleichungssystem zeigt die invertierten und nicht-invertierten Nebenbedingun
 \end{array}\]
 Das Lineare Programm kann zeichnerisch oder rechnisch gelöst werden (siehe Klausuraufgabe 7/WS2014).
 
+\subsubsection{Berechnung der Normalform}
+Unter Verwendung der Normalform können sukszessive Zeilen in der Reihenfolge \(r=1,2,...,n\) eleminiert werden. Das der Ursprung dabei im Simplex bleibt, muss gelten:
+\[a_i - \frac{a_{ir}\cdot a_r}{a_{rr}} \geq 0,~ \forall i>r\]
+
+\paragraph{Algorithmus}
+\begin{enumerate}
+	\item Prüfe ob Zeile \(i\) eleminiert werden kann
+	\item Wende \textit{AUSTAUSCH} an
+	\item Streiche Zeile \(i\) und gehe zur nächsten Zeile
+\end{enumerate}
+
+
 
 \subsection{de Casteljau}
 \[\frac{\Delta B_0}{t} \frac{\Delta B_1}{t-1} = C(\Delta B,t)\]
