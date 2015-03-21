@@ -67,6 +67,80 @@ Man kann eine maximal gewichtete Paarung finden, indem eine maimal gewichtete Ka
 	\item \(\mathbb{E}\lbrack \sum X_i \rbrack = \sum \mathbb{E} \lbrack X_i \rbrack\)
 \end{itemize}
 
+\subsubsection{Bedingte Wahrscheinlichkeit}
+\[Pr\lbrack E_1 | E_2 \rbrack = \frac{Pr \lbrack E_1 \cap E_2 \rbrack}{Pr \lbrack E_2 \rbrack}\]
+
+\subsubsection{SCHNITT}
+Solange die Gesamtkantenzahl \(\geq 3\) ist, wähle zufällig eine Kante \((x,y)\), entferne alle \((x,y)\) und verschmelze \(x\) mit \(y\).
+
+
+\subsection{Spieltheorie}
+\begin{itemize}
+	\item Jedes 2-Personen-Nullsummenspiel wird durch die Spielmatrix \(M = \lbrack m_{ij} \rbrack_{i,j=1,1}^{m,n}\) beschrieben
+	\item Optimale Strategie von \(A\): \(max_i~min_j~M_{ij}\) (maximiert den Mindestgewinn von \(A\))
+	\item Optimale Strategie von \(B\): \(min_j~max_i~M_{ij}\) (minimiert den Maximalverlust von \(B\))
+	\item Verfolgen \(A\) und \(B\) gemischte Strategien, so gilt: \(\mathbb{E} \lbrack Gewinn(A)\rbrack = p^TMq\)
+\end{itemize}
+
+\subsubsection{Minimax Theorem}
+Sei $M=\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix} $ dann ist $ min_y =  \begin{pmatrix} 
+x & 1-x 
+\end{pmatrix}
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix} = 0 $ Nullsetzen.\newline $max_x = 
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix}
+\begin{pmatrix}
+y \\
+1-y 
+\end{pmatrix} = 0 $ ebenfalls Nullsetzen.
+Die Nullstellen entsprechen dem Ergebnis. \newline Also ist $f(x,y)=(max_x,min_y)$ bzw. $(\begin{pmatrix}
+max_x \\
+1 - max_x
+\end{pmatrix}
+,
+\begin{pmatrix}
+min_y \\
+1 - min_y
+\end{pmatrix} )$ und der Wert ergibt sich durch Einsetzen in $ max_x \cdot min_y \cdot M=f(x,y) = 
+\begin{pmatrix} 
+x & 1-x 
+\end{pmatrix}
+\begin{pmatrix}
+5 & 6 \\
+7 & 4 
+\end{pmatrix}
+\begin{pmatrix}
+y \\
+1-y 
+\end{pmatrix}$ und von rechts nach links ausrechnen.
+
+\subsubsection{Von Neumanns Minimax Theorem}
+\[max_p~min_q~p^TMq = min_q~max_p~p^TMq\]
+
+\subsubsection{Yaos Technik}
+Lautzeitabschätzung eines stochastischen Algorithmus \(A\) für ein Problem \(P\).
+\begin{itemize}
+	\item Worst-Case-Laufzeit: \(max_i~M_{ij}\)
+	\item Best-Case-Laufzeit: \(min_j~M_{ij}\)
+	\item Deterministische Komplexität \(K_d\) von \(P\): \(min_j~max_i~M_{ij}\)
+	\item Stochastische Komplexität \(K_s\) von \(P\): \(max_i~min_j~M_{ij}\)
+	\item \(K_s \leq K_d\) 
+	\item Verteilungskomplexität \(K_v\): \(max_p~min_q~p^TMq\)
+\end{itemize}
+
+\subsubsection{Spielbaumauswertung}
+\[Wert(x) = Wert(y) \downarrow Wert(z)\]
+
+TODO: Algorithmus
+
 
 \subsection{Lineare Programmierung}
 
@@ -186,46 +260,6 @@ Induktiv folgt aus \textit{Folgerung 1}, dass die \(n\)-te Ableitung
 \[\frac{d^n}{dx^n} c_{\infty}(x)\]
 der Limesfunktion stückweise konstant ist.
 
-
-\subsection{Minimax Theorem}
-Sei $M=\begin{pmatrix}
-5 & 6 \\
-7 & 4 
-\end{pmatrix} $ dann ist $ min_y =  \begin{pmatrix} 
-x & 1-x 
-\end{pmatrix}
-\begin{pmatrix}
-5 & 6 \\
-7 & 4 
-\end{pmatrix} = 0 $ Nullsetzen.\newline $max_x = 
-\begin{pmatrix}
-5 & 6 \\
-7 & 4 
-\end{pmatrix}
-\begin{pmatrix}
-y \\
-1-y 
-\end{pmatrix} = 0 $ ebenfalls Nullsetzen.
-Die Nullstellen entsprechen dem Ergebnis. \newline Also ist $f(x,y)=(max_x,min_y)$ bzw. $(\begin{pmatrix}
-max_x \\
-1 - max_x
-\end{pmatrix}
-,
-\begin{pmatrix}
-min_y \\
-1 - min_y
-\end{pmatrix} )$ und der Wert ergibt sich durch Einsetzen in $ max_x \cdot min_y \cdot M=f(x,y) = 
-\begin{pmatrix} 
-x & 1-x 
-\end{pmatrix}
-\begin{pmatrix}
-5 & 6 \\
-7 & 4 
-\end{pmatrix}
-\begin{pmatrix}
-y \\
-1-y 
-\end{pmatrix}$ und von rechts nach links ausrechnen.
 
 TODO: Türsuche, Sternsuche
 
