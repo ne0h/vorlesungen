@@ -1,6 +1,21 @@
 \section{Appendix A: Spickzettel}
 
 \subsection{Flussnetzwerke}
+
+\subsubsection{Definitionen}
+\begin{itemize}
+	\item Ein Flussnetzwerk besteht aus einer Kapazitätsfunktion \(k\), einem gerichteten Graph \(G\), einer Quelle \(q\) und einer Senke \(s\)
+	\item \textbf{Eigenschaften eines Flusses \(f:V^2 \rightarrow \mathbb{R}\)}
+	\begin{enumerate}
+		\item \(f \leq k\) (der Fluss kann nicht höher sein als die Kantenkapazität)
+		\item \(\forall x,y \in V:~f(x,y) = -f(y,x)\) (keine negativen Flüsse)
+		\item \(\forall x \in V \setminus \{ q,s\}:~0 = \sum f(x,V) = \sum_{y \in V} f(x,y)\) (Flusserhalt)
+	\end{enumerate}
+	\item Wert eines Flusses: \(W_f = \sum f(q,V)\)
+	\item Residualgraph: Die Kanten \(f(e) < k(e)~|~e \in E\) bilden den Residualgraph \(G_f = G(V,E_f)\)
+\end{itemize}
+
+\subsubsection{Maximaler Fluss}
 Der maximale Fluss ist
 \begin{itemize}
 	\item die Summe der von \(q\) ausgehenden Kanten,
@@ -8,6 +23,35 @@ Der maximale Fluss ist
 	\item der minimale Schnitt durch das Netzwerk.
 \end{itemize}
 
+\subsubsection{Algorithmus von Ford und Fulkerson}
+\begin{itemize}
+	\item Terminiert Ford-Fulkerson, so ist \(f\) maximal
+	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f~|~f~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^{*} s\) kann in \(|E|\) Schritten gefunden werden
+\end{itemize}
+
+\subsubsection{Algorithmus von Edmonds und Karp}
+Erhöhe den Fluss in \textit{FORD-FULKERSON} immer längs eines kürzesten Pfads (Breitensuche). Aufwand: \(\mathcal{O} (|E|^2 \cdot |V|)\).
+
+\subsubsection{Präfluss-Pusch-Methode}
+Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluß speichern zu können. Aufwand: \(\mathcal{O} (|V|^2 \cdot |E|)\).
+
+\subsubsection{Move-to-Front-Algorithmus}
+Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusch} beschleunigt. Aufwand: \(\mathcal{O}(|V|^3)\)
+
+
+\subsection{Zuordnungsprobleme}
+
+\subsubsection{Paare in bipartiten Graphen}
+TODO
+
+\subsubsection{Paarungsvergrößerung in allgemeinen Graphen}
+\begin{itemize}
+	\item Suche \((x,y)\) mit ungepaartem \(x\)
+	\item Setze \((x,y)\) durch Breitensuche zu einem alternierenden, maximalen Weg ungerader Länge fort
+\end{itemize}
+
+\subsubsection{Maximal gewichtete Paarungen}
+Man kann eine maximal gewichtete Paarung finden, indem eine maimal gewichtete Kante iterativ durch einen vergrößernden Weg zu einer nächst größeren und maximal gewichteten Paarung vergrößert wird. Aufwand: \(\mathcal{O}(min\{|V|^3, |V| \cdot |E| \cdot log|V|\})\)
 
 \subsection{Stochastische Algorithmen}
 
