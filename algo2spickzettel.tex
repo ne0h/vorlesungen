@@ -142,6 +142,110 @@ Lautzeitabschätzung eines stochastischen Algorithmus \(A\) für ein Problem \(P
 TODO: Algorithmus
 
 
+\subsection{Algorithmen für geometrische Probleme}
+
+\subsubsection{Binärer Raumzerlegungsbaum (RZB)}
+\begin{itemize}
+	\item Gerichtete Strecken \(s_1,...,s_n\) zerlegen eine Ebene \(A\)
+	\item Ziel: Kleine RZBs mit wenigen Zerlegungen
+	\item Aufwand: \(\mathbb{E} \lbrack~|Zerlegungen|~\rbrack < 2nlogn\)
+\end{itemize}
+
+\begin{minipage}{\textwidth}
+BRZ
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+$k = 1$
+Forall $P_i$ {
+	Bestimme Schnittflaeche mit $P$
+	Falls es eine Schittflaeche gibt: $k++$
+}
+$l = 1$
+Falls es ein $j$ gibt: $Q_j$ zerlegt $P$ {
+	$l = j$
+}
+Wurzel = $Q_l$
+Falls $k \geq 3$ {
+	$Q$ = Schnittmenge von $P$ und dem li. HR von $Q_l$
+	linker Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
+	$Q$ = Schnittmenge von $P$ und dem re. HR von $Q_l$
+	rechter Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
+}
+Return Wurzel und Teilbaeume
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Beziehungen zwischen Knoten, Kanten und Facetten}
+Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
+\begin{itemize}
+	\item \(v-e+f=2\) (Eulers Formel)
+	\item \(\frac{2e}{v} \leq 6\) (mittlerer Knotengrad)
+	\item \(\frac{2e}{f} \leq 6\) (mittlere Kantenzahl)
+\end{itemize}
+
+\subsubsection{Konvexe Hülle}
+\textbf{Aufwand: } \(\mathcal{O}(nlogn)\)
+\\\\
+\begin{minipage}{\textwidth}
+KONVEXE HÜLLE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+# TODO anschaulich
+\end{lstlisting}
+\end{minipage}
+
+
+\subsection{Geometrische Algorithmen}
+Generell ist hierbei die Qualität der Ausgabe wichtiger als die Laufzeit. Es kann sein, dass keine oder keine eindeutige Lösung existiert.
+
+\subsubsection{Ausweg aus einem Labyrinth}
+Wir betrachten ein Labyrinth \(L\) und einen Roboter \(R\) mit Tastsensor und Drehwinkelmessgerät.
+\\\\
+\begin{minipage}{\textwidth}
+PLEDGE-Strategie
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $R \in L$ {
+	Gehe vorwaerts bis Wand kontaktiert wird
+	While $R \in L$ OR Drehwinkel = $0$ {
+		Gehe links der Wand
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Zum Ziel in unbekannter Umgebung}
+Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunkt \(s\) und ein Ziel \(z\).
+\\\\
+\begin{minipage}{\textwidth}
+WANZE
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While $r \ne z$ {
+	Laufe in Richtung $z$ bis $r == z$
+			OR $r$ nicht aus einem Polygon herauskommt
+	Falls $r \ne z$ {
+		Suche den kuerzesten Punkt $q$ an $P_i$ zu $z$
+		Laufe zu $q$
+	}
+}
+\end{lstlisting}
+\end{minipage}
+Wanze terminiert.
+
+\subsubsection{Türsuche}
+\paragraph{Algorithmus} Laufe abwechselnd links und rechts einer Wand und verlängere iterativ die Laufweite.
+
+\paragraph{Berechnung des Kompetivitätsfaktors}
+Ist die Tür im ungünstigsten Fall \(d = 2^{n + \delta}\) entfernt, so gilt:
+\[w \leq 2 \sum_{i=0}^{n+1} + d = 2^{n+3+\delta} + d \leq 9 \cdot 2^{n+\delta}\]
+
+\subsubsection{Sternsuche}
+\paragraph{Algorithmus} Gegeben sind \(m\) regelmäßig angeordnete Halbgerade mit einem gemeinesamen Startpunkt \(s\), wobei sich das Ziel auf einer Halbgerade mit unbekanntem Abstand von \(s\) befindet. Laufe reihum mit wachsender Suchtiefe, bis das \(z\) gefunden ist.
+
+\paragraph{Berechnung des Kompetivitätsfaktors}
+TODO
+
+\subsubsection{Suche in Polygonen}
+TODO?
+
+
 \subsection{Lineare Programmierung}
 
 \subsubsection{Simplex-Algorithmus}
