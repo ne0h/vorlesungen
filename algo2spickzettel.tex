@@ -327,8 +327,8 @@ Unter Verwendung der Normalform können sukszessive Zeilen in der Reihenfolge \(
 \[\frac{\Delta B_0}{t} \frac{\Delta B_1}{t-1} = C(\Delta B,t)\]
 
 
-\subsection{Unterteilungsalgorithmen: Algorithmus von Lane und Riesenfeld}
-Das Differenzschema existiert nur, wenn \(\alpha(z)\) den Faktor \(1+z\) besitzt oder
+\subsection{Unterteilungsalgorithmen}
+Das Differenzenschema existiert nur, wenn \(\alpha(z)\) den Faktor \(1+z\) besitzt oder
 \[\alpha(-1) = \sum_{i \in \mathbb{Z}} \alpha_{2i} - \sum_{i \in \mathbb{Z}}\alpha_{2i + 1} = 0\]
 gilt.
 
@@ -336,11 +336,10 @@ gilt.
 Die Unterteilungsmatrizen stellen den Algorithmus dar.
 
 \subsubsection{Symbol}
-Die Unterteilungsgleichung hat die Darstellung
-\[\beta(z) = \alpha(z) \cdot c(z^2).\]
-
 \begin{itemize}
 	\item \(\alpha (z) \) ist das Symbol des Unterteilungsalgorithmus und stellt den Algorithmus dar \(\rightarrow\) kann ersetzt werden, um einen beliebigen Algorithmus zu erhalten
+	\item \(c(z^2)\) ist die Ausgangsmatrix, die unterteilt wird
+	\item \(b(z) = \alpha(z) \cdot c(z^2)\) ist die Unterteilungsgleichung 
 \end{itemize}
 
 
@@ -365,7 +364,19 @@ Induktiv folgt aus \textit{Folgerung 1}, dass die \(n\)-te Ableitung
 der Limesfunktion stückweise konstant ist.
 
 
-TODO: Türsuche, Sternsuche
+\subsection{Unterteilungsalgorithmen für Flächen}
+Die Matrizen \(U\) und \(V\) sind stationäre Unterteilungsalgorithmen für Kurven und unterteilen das biinfinite Kontrollnetz wie folgt (Tensorproduktunterteilungsschema, Tepus):
+\[B = b_{\mathbb{Z}^2} = UCV^T\]
+
+\subsubsection{Symbole}
+\begin{itemize}
+	\item \(\alpha(x)\) und \(\beta(y)\) sind die Symbole von \(U\) und \(V\)
+	\item \(c_{\mathbb{Z}^2}\) ist das Symbol des Kontrollnetzes
+	\item \(b(x,y) = \alpha(x) \cdot c(x^2,y^2) \cdot \beta(y)\)
+	\item \(\gamma(x,y) = \alpha(x) \cdot \beta(y) = \sum \gamma_{ij} \cdot x^i \cdot y^j\) ist das Symbol des neuen Unterteilungsschemas
+	\item \(b(x,y) = \gamma(x,y) \cdot c(x^2,y^2)\)
+\end{itemize}
+
 
 \subsection{Optimierungsprobleme Lineare Programmierung}
 
