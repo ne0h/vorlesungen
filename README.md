@@ -4,7 +4,7 @@ Vorlesungen
 Zusammenfassung einiger Vorlesungen, die ich gehört habe. Zum Erzeugen des PDFs ist Latex 
 notwendig:
 
-`$ pdflatex main.tex`
+`$ make`
 
 Aktuell enthalten
 -----------------
