@@ -459,5 +459,21 @@ Invertierung jedes Bits des Merkmalsvektors mit sehr niederiger Wahrscheinlichke
 		\item finden öfter ein globales Optimum
 		\item aber konvergieren schlechter
 	\end{itemize}
+	
+\subsection{Partikelschwarm-Optimierung}
+Ein Schwarm besteht aus Partikeln. i-ter Parikel: \begin{itemize}
+	\item	Position $p_i(t)$ im $\mathbb{R}^n$
+	\item	Fitness $f(p_i)$
+	\item	Geschwindigkeit $v_i(t)=p_i(t)-p_i(t-1)$
+\end{itemize} Dabei wird $f(x)$ optimiert.
+\begin{itemize}
+	\item	\textbf{Initialisiere} die $p_i(0)$ und $v_i(0)$ zufällig. Zum Zeitpunkt $t$ sei $q_i$ die bisher beste Position von $p_i$ und $q$ das bisher beste $q_i$
+	\item	\textbf{Aktualisiere} damit die nächsten Positionen und Geschwindigkeiten: $v_i \leftarrow v_i + \omega + (q_i - p_i)*c_1 * r_1 + (q - p_i)*c_2 *r_2$ 
+	wobei $\omega$ ,
+	 $c_1$ , $c_2$
+	  Lernkonstanten und $r_1$, $r_2$ Zufallszahlen in $[1,2]$
+	\item	\textbf{Typische Zahlen:} 20-40 Partikel, $\omega \in [0.4,0.9]$, $c_1=c_2 \in [0,4]$
+
+\end{itemize}
 
 TODO: Wenn noch Platz komplette Altklausur auf den Spickzettel packen
