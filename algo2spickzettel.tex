@@ -473,7 +473,21 @@ Ein Schwarm besteht aus Partikeln. i-ter Parikel: \begin{itemize}
 	 $c_1$ , $c_2$
 	  Lernkonstanten und $r_1$, $r_2$ Zufallszahlen in $[1,2]$
 	\item	\textbf{Typische Zahlen:} 20-40 Partikel, $\omega \in [0.4,0.9]$, $c_1=c_2 \in [0,4]$
-
 \end{itemize}
+
+\subsection{Ameisen-System}
+Seien ${1, \dots , n}^2$ die Kantenmenge eines Graphen, $d_{ij}$ Länge Kante $ij$ und $p_{ij}$ die Intensität Pheromonmarkierung.
+Von $m$ Knoten aus wird je eine Ameise auf eine Rundreise geschickt danach $p_{ij}$ neu gesetzt.
+
+$p_{ij}= \rho p_{ij} + \sum_{k}
+ \Delta p_{ij}^k $
+, wobei $\rho$ eine Evaporationsrate in 
+$[0,1)$
+
+$\Delta p_{ij}^k =
+\left\{\begin{array}{cl} 
+1/d_{ij}, & \mbox{falls Ameise k Kante ij benutzte }\\
+0, & \mbox{sonst}
+ \end{array}\right.$
 
 TODO: Wenn noch Platz komplette Altklausur auf den Spickzettel packen
