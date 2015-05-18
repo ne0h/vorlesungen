@@ -50,7 +50,7 @@ Verbriefte, typischerweise handelbare Ansprüche gegenüber einem Schulder (Emit
 	\begin{itemize}
 		\item Kuponanleihe: Periodische, fixe Zinszahlungen (Kupons) sowie endfällige Tilgungszahlung
 		\item Floater: Periodisch variable Zinszahlung, die sich an kurzfristigen Zinsen (z.B. EURIBOR) orientiert mit endfälliger Tilgungszahlung
-		\item Nullkuponanleihe (Zerobond): Keine priodischen Zinszahlungen, Tilgungsbeitrag wird am Ende ausgezahlt
+		\item Nullkuponanleihe (Zerobond): Keine periodischen Zinszahlungen, Tilgungsbeitrag wird am Ende ausgezahlt
 		\item Verschiedene Hybride Formen
 	\end{itemize}
 	\item \textbf{Weitere Gestaltungsmöglichkeiten}
@@ -64,7 +64,7 @@ Verbriefte, typischerweise handelbare Ansprüche gegenüber einem Schulder (Emit
 
 \subsection{Ratings}
 \begin{itemize}
-	\item Bonitätsbeurteilung des Emittenten oder einer einzelnen Anleihenemision durch unabhängige Agenturen
+	\item Bonitätsbeurteilung des Emittenten oder einer einzelnen Anleihenemission durch unabhängige Agenturen
 	\item \textbf{Funktionen}
 	\begin{itemize}
 		\item Erhöhung des Informationsstands aller Marktteilnehmer
@@ -120,7 +120,7 @@ Lediglich für unabhängige Projekte geeignet.
 	\item \textbf{Nachteile}
 	\begin{itemize}
 		\item Schwierige Berechnung bei sehr langen Projekten
-		\item Bei Vorzeichenwechsel der Zahlungen ergeben sich durch die Potenzen der Zinsen mehrere, mathematisch sinnvolle, Lösungen
+		\item Bei Vorzeichenwechsel der Zahlungen ergeben sich durch die Potenzen der Zinsen mehrere, mathematisch sinnvolle, Lösungen \(\rightarrow\) bei Vorzeichenwechsel nicht sinnvoll anwendbar
 	\end{itemize}
 	\item \textbf{Sich ausschließende Projekte}
 	\begin{itemize}
@@ -504,13 +504,13 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \[BW = \frac{C}{r}\]
 
 \subsubsection{Barwert einer endlichen Rente}
-\[BW = \frac{C}{(1+r)^1}+..+\frac{C}{(1+r)^n} = \frac{C}{r}\cdot[1-\frac{1}{(1+r)^n}]\]
+\[BW = \frac{C}{(1+r)^1}+..+\frac{C}{(1+r)^T} = \frac{C}{r}\cdot[1-\frac{1}{(1+r)^n}]\]
 
 \subsubsection{Ewige Rente mit konstantem Wachstum g}
 \[BW = \frac{C}{r-g}\]
 
 \subsubsection{Endliche Rente mit konstantem Wachstum}
-\[BW = \frac{C}{r-g} \cdot [1-[\frac{1+g}{1+r}]^n]\]
+\[BW = \frac{C}{r-g} \cdot [1-[\frac{1+g}{1+r}]^T]\]
 
 \subsubsection{Yield to Maturity von Zerobonds}
 \[y = (\frac{Nennwert}{P_Z})^{\frac{1}{T}})-1\]
