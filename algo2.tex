@@ -26,8 +26,9 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 \begin{itemize}
 	\item Der maximale Fluss ist die Summe der von der Quelle ausgehenden / bei der Senke ankommenden genutzen Kapazitäten / der minimale Schnitt durch den Graphen
 	\item Der negative Fluss soll lediglich die Darstellung vereinfachen und ist ansonsten uninteressant
-	\item In alle Knoten außer in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus
-	\item Flussnetzwerke können zu einem Flussnetzwerk zusammengefasst werden (mit unendlichen Zu- und Abflüssen)
+	\item In alle Knoten außer in \(q\) und in \(s\) fließt immer so viel positiver Fluss rein wie raus (wegen (2) bedeutet (3) Flusserhalt)
+	\item Mehrere Flussnetzwerke können zu einem Flussnetzwerk zusammengefasst werden (mit unendlichen Zu- und Abflüssen)
+	\item Residualgraph: Der Graph der Restkapazität
 \end{itemize}
 
 
@@ -38,7 +39,7 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 		\item Setze die Flüsse an alle Kanten gleich Null
 		\item Solange es einen Pfad von \(q\) nach \(s\) gibt, erhöhe einen beliebigen Pfad
 	\end{enumerate}
-	\item Terminiert Ford-Fulkerson, ist \(f\) maximal
+	\item Terminiert Ford-Fulkerson, ist \(f\) maximal, da es keinen weiteren Pfad \(q \rightarrow^{*} s\) gibt
 	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f | f~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^{*} s\) kann in \(|E|\) Schritten gefunden werden
 \end{itemize}
 
@@ -47,6 +48,7 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 \begin{itemize}
 	\item Idee: Anwendung von Ford-Fulkerson immer längs eines kürzesten Pfades (Breitensuche)
 	\item Terminiert auch für beliebige reelle Kapazitäten
+	\item In jedem Schritt verliert \(E_f\) eine Kante
 	\item Aufwand: \(\mathcal{O} (|E|^2 \cdot |V|)\)
 \end{itemize}
 
@@ -61,7 +63,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\item \textbf{Bedingungen}
 	\begin{itemize}
 		\item Überschuss bei \(x\) vorhanden: \(u(x) > 0, x \in V \setminus \{q,s\}\)
-		\item \(x\) liegt höher als \(y\): \(h(x) - h(y) = 1\)
+		\item \(x\) liegt höher als \(y\): \(h(x) - h(y) \leq 1\)
 	\end{itemize}
 	\item \textbf{Algorithmus}
 	\begin{enumerate}
@@ -85,12 +87,12 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\end{enumerate}
 \end{itemize}
 
-\paragraph{PRAEFLUSS-PUSCH}
+\paragraph{Durchführung}
 \begin{enumerate}
 	\item \textbf{Initialisiere}
 	\begin{enumerate}
-		\item Alle Knoten außer \(q\) bekommen die Höhe \(0\) (\(h(q) = |V|)\)
-		\item Alle Pfade von \(q\) bekommen die Kapazität nach \(k(x,y)\) zugewiesen, alle anderen Pfade \(0\)
+		\item Alle Knoten außer \(q\) wird \(h=0\) zugewiesen (\(h(q) = |V|)\)
+		\item Alle von \(q\) ausgehenden Pfade bekommen die Kapazität nach \(k(x,y)\) zugewiesen, alle anderen Pfade \(0\)
 	\end{enumerate}
 	\item Solange es eine beliebige, erlaubte Operation gibt, führe diese aus
 \end{enumerate}
@@ -104,8 +106,10 @@ Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusc
 
 \begin{itemize}
 	\item Idee: Strukturiertes Enladen der Knoten
-	\item Die Knoten werden über eine Liste verwaltet
-	\item Geliftete Knoten werden an die Spitze der Liste gesetzt
+	\item Die Nachbarn von \(x\) werden über eine invertierte Liste verwaltet
+	\item \((x,y) \in E\) heißt \textit{PUSCHBAR}, falls \(k_f(x,y) \geq 0\) und \(h(x)-h(y)=1\)
+	\item Die Knoten werden über eine Liste verwaltet, in der \(x\) vor \(y\) auftritt, falls \((x,y)\) \textit{PUSCHBAR} ist
+	\item Geliftete Knoten werden an die Spitze der Listen gesetzt
 \end{itemize}
 
 \subsubsection{Operationen}
