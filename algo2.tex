@@ -156,7 +156,7 @@ Forall $L$ {
 \begin{itemize}
 	\item Eine Paarung beinhaltet zwei Knoten exklusiv
 	\item Eine Paarung heißt maximal, wenn es keine bessere Paarung gibt
-	\item Maximale Paarung über Flussmaximierung: Ergänzung des bipartiten Graphs um Quelle und Senke
+	\item Maximale Paarung über Flußmaximierung: Ergänzung des bipartiten Graphs um Quelle und Senke
 \end{itemize}
 
 
@@ -176,7 +176,7 @@ Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 \paragraph{Algorithmus zur Vergößerung}
 \begin{enumerate}
 	\item Suche \((x,y) \in E\), wobei \(x\) mit keinem \(z\in V\) gepaart
-	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort, wobei \((x,y)\) selbst nicht zu diesem Weg zählt
+	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort
 \end{enumerate}
 
 \subsubsection{Blüten}
@@ -203,27 +203,6 @@ Man kann eine maximal gewichtete Paarung finden, indem eine maximal gewichtete K
 
 \section{Stochastische Algorithmen}
 
-\subsection{Quicksort}
-\begin{itemize}
-	\item Sortieren durch stochastisches Teilen
-	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
-	\item Computer hat keine "`Intuition"' zur Wahl eines "`guten"' Pivotelements, daher diese Wahl stochastisch
-\end{itemize}
-
-\begin{minipage}{\textwidth}
-QUICKSORT
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-While Eingabe $\ne \varnothing$ {
-	Waehle zufaelliges Pivot y $\in S$
-	Zerlege $S \setminus \{y\}$ in $S_1$ und $_2$, so dass gilt:
-		$S_1 < y < S_2$
-	Return $QUICKSORT(S_1,y)$ und $QUICKSORT(S_2)$
-}
-\end{lstlisting}
-\end{minipage}
-
-Aufwand \(\in \mathcal{O}(nlogn)\), da \(p_{ij} := Pr\lbrack X_{ij}=1\rbrack = \frac{2}{|j-i|+1} = \sum p_{ij} \leq \sum_{i=1}^n \sum_{j=1}^n \frac{2}{|j-i|+1} = \mathcal{O}(nlogn)\)
-
 \subsubsection{Begriffe}
 \begin{itemize}
 	\item Las-Vegas-Algorithmus: Randomisierter Algorithmus, der immer ein korrektes Ergebnis liefert, wenn er terminiert.\footnote{\url{http://de.wikipedia.org/wiki/Las-Vegas-Algorithmus}}
@@ -236,14 +215,20 @@ Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsva
 \subsubsection{Sigma-Additivität}
 \[\mathbb{E}\lbrack \Sigma X_i\rbrack = \Sigma E \lbrack X_i\rbrack\]
 
-\subsubsection{Bedingte Wahrscheinlichkeit}
-\[Pr \lbrack E_1 | E_2 \rbrack := \frac{Pr\lbrack E_1 \cap E_2 \rbrack}{Pr\lbrack E_2 \rbrack}\]
+
+\subsection{Quicksort}
+\begin{itemize}
+	\item Sortieren durch stochastisches Teilen
+	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
+\end{itemize}
+
 
 \subsection{Minimaler Schnitt}
 
 \subsubsection{Definitionen}
 \begin{itemize}
 	\item Ereignisse: Die Teilmengen einer Stichprobenmenge
+	\item Bedingte Wahrscheinlichkeit: \(Pr \lbrack E_1 | E_2 \rbrack := \frac{Pr\lbrack E_1 \cap E_2 \rbrack}{Pr\lbrack E_2 \rbrack} \)
 	\item Multigraph: Kanten können mehrfach vorkommen
 \end{itemize}
 
@@ -283,8 +268,8 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 
 \subsubsection{Definitionen}
 \begin{enumerate}
-	\item \(p := \lbrack p_1,...,p_m \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(A\)
-	\item \(q := \lbrack q_1,...,q_n \rbrack \) bezeichnet die \textit{gemischte Strategie} von \(B\)
+	\item \(p := \lbrack p_1,...,p_m \rbrack^T \) bezeichnet die \textit{gemischte Strategie} von \(A\)
+	\item \(q := \lbrack q_1,...,q_n \rbrack^T \) bezeichnet die \textit{gemischte Strategie} von \(B\)
 	\item Erwartungswert des Gewinns von \(A\): \(\mathbb{E}\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
 	\item Optimale Strategie von \(A\): \(min_q~(p^T \cdot M \cdot q)\)
 	\item Optimale Strategie für beide: \\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
