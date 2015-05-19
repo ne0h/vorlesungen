@@ -156,7 +156,7 @@ Forall $L$ {
 \begin{itemize}
 	\item Eine Paarung beinhaltet zwei Knoten exklusiv
 	\item Eine Paarung heißt maximal, wenn es keine bessere Paarung gibt
-	\item Maximale Paarung über Flußmaximierung: Ergänzung des bipartiten Graphs um Quelle und Senke
+	\item Maximale Paarung über Flussmaximierung: Ergänzung des bipartiten Graphs um Quelle und Senke
 \end{itemize}
 
 
@@ -176,7 +176,7 @@ Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 \paragraph{Algorithmus zur Vergößerung}
 \begin{enumerate}
 	\item Suche \((x,y) \in E\), wobei \(x\) mit keinem \(z\in V\) gepaart
-	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort
+	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort, wobei \((x,y)\) selbst nicht zu diesem Weg zählt
 \end{enumerate}
 
 \subsubsection{Blüten}
