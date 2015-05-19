@@ -324,7 +324,7 @@ Falls \(w=1\) kann direkt \(0\) zurückgegeben werden, ohne weiter zu traversier
 
 
 
-\section{Algorithmen für Geometrische Probleme}
+\section{Algorithmen für geometrische Probleme}
 
 \subsection{Binäre Zerlegung der Ebene}
 
@@ -332,7 +332,7 @@ Falls \(w=1\) kann direkt \(0\) zurückgegeben werden, ohne weiter zu traversier
 Teile die affine Ebene \(A\) anhand einer Halbgeraden \(S_1\) in die Ebenen \(A_0\) und \(A_1\). Fahre rekursiv fort.
 
 \subsubsection{Raumzerlegungsbaum}
-Die entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus).
+Die entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus, Übermalen von Flächen, um die Tiefenberechnung zu sparen).
 Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
 
 
@@ -376,11 +376,18 @@ Return Wurzel und Teilbaeume
 \subsubsection{Laufzeit}
 \(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
 \[\mathbb{E}\lbrack Z \rbrack \in \mathcal{O}(n^2)\]
+Ein planares Polygon sei durch \(k\) Geraden zerlegt \(\rightarrow\) Anzahl der Randgebiete \(\in \mathcal{O}(k)\).
 
 
 \subsection{Konvexe Hüllen}
-Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen Elemente als Punkte und ihre Differenzen als Vektoren. Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausgangsmenge enthält\footnote{\url{http://de.wikipedia.org/wiki/Konvexe_H\%C3\%BClle}} (alle weiteren Elemente liegen in dem Raum, den die konvexe Hülle aufspannd).
 
+Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen Elemente als Punkte und ihre Differenzen als Vektoren. Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausgangsmenge enthält\footnote{\url{http://de.wikipedia.org/wiki/Konvexe_H\%C3\%BClle}} (alle weiteren Elemente liegen in dem Raum, den die konvexe Hülle aufspannt).
+
+\subsubsection{Begriffe}
+\begin{itemize}
+	\item Konvexe Menge \(M\): Die Verbinungsstrecke zweier beliebiger Punkte im Polygon liegt komplett in diesem (keine Einbuchtungen).
+	\item Konvexkombination: Linearkombination, wenn alle Koeffizienten \(\in I~\lbrack 0,1\rbrack\) (Einheitsinterval) und \(\sum Koeffizienten = 1\)
+\end{itemize}
 
 \subsection{Dualität}
 
@@ -400,6 +407,13 @@ Als \(u \in A\) wird der zu \(u*\), \(x*\) zum Punkt \(x\) duale Halbebene bezei
 Die Lösung der Ungleichung
 \[u^T \cdot x \leq 1, u \ne 0,\]
 bildet den Halbraum \(u^{\leq}\).
+
+\subsubsection{Polarmenge}
+\begin{itemize}
+	\item Der Menge eines Vektorraums wird eine Menge des Dualraums zugeordnet (und umgekehert)
+	\item Diese Polarmenge ist konvex und abgeschlossen
+	\item \(M_p = \{u~|~M \subset u^{\leq}\}\) und \(M_{pp} = \{x~|~M_p \subset x^{\leq}\}\)
+\end{itemize}
 
 
 \subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
