@@ -203,6 +203,27 @@ Man kann eine maximal gewichtete Paarung finden, indem eine maximal gewichtete K
 
 \section{Stochastische Algorithmen}
 
+\subsection{Quicksort}
+\begin{itemize}
+	\item Sortieren durch stochastisches Teilen
+	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
+	\item Computer hat keine "`Intuition"' zur Wahl eines "`guten"' Pivotelements, daher diese Wahl stochastisch
+\end{itemize}
+
+\begin{minipage}{\textwidth}
+QUICKSORT
+\begin{lstlisting}[frame=single,numbers=left,mathescape]
+While Eingabe $\ne \varnothing$ {
+	Waehle zufaelliges Pivot y $\in S$
+	Zerlege $S \setminus \{y\}$ in $S_1$ und $_2$, so dass gilt:
+		$S_1 < y < S_2$
+	Return $QUICKSORT(S_1,y)$ und $QUICKSORT(S_2)$
+}
+\end{lstlisting}
+\end{minipage}
+
+Aufwand \(\in \mathcal{O}(nlogn)\), da \(p_{ij} := Pr\lbrack X_{ij}=1\rbrack = \frac{2}{|j-i|+1} = \sum p_{ij} \leq \sum_{i=1}^n \sum_{j=1}^n \frac{2}{|j-i|+1} = \mathcal{O}(nlogn)\)
+
 \subsubsection{Begriffe}
 \begin{itemize}
 	\item Las-Vegas-Algorithmus: Randomisierter Algorithmus, der immer ein korrektes Ergebnis liefert, wenn er terminiert.\footnote{\url{http://de.wikipedia.org/wiki/Las-Vegas-Algorithmus}}
@@ -215,20 +236,14 @@ Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsva
 \subsubsection{Sigma-Additivität}
 \[\mathbb{E}\lbrack \Sigma X_i\rbrack = \Sigma E \lbrack X_i\rbrack\]
 
-
-\subsection{Quicksort}
-\begin{itemize}
-	\item Sortieren durch stochastisches Teilen
-	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
-\end{itemize}
-
+\subsubsection{Bedingte Wahrscheinlichkeit}
+\[Pr \lbrack E_1 | E_2 \rbrack := \frac{Pr\lbrack E_1 \cap E_2 \rbrack}{Pr\lbrack E_2 \rbrack}\]
 
 \subsection{Minimaler Schnitt}
 
 \subsubsection{Definitionen}
 \begin{itemize}
 	\item Ereignisse: Die Teilmengen einer Stichprobenmenge
-	\item Bedingte Wahrscheinlichkeit: \(Pr \lbrack E_1 | E_2 \rbrack := \frac{Pr\lbrack E_1 \cap E_2 \rbrack}{Pr\lbrack E_2 \rbrack} \)
 	\item Multigraph: Kanten können mehrfach vorkommen
 \end{itemize}
 
