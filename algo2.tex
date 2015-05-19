@@ -460,7 +460,7 @@ While $R \in L$ {
 Seien \(K_1,...,K_n, n \in \mathbb{N} \cup \{0,\infty\}\) die Kanten des Wegs von \(R\).
 \begin{enumerate}
 	\item Drehwinkel \(\phi\) immer \(\geq 0\)
-	\item Der Weg von \(R\) kann sich berühren oder kreuzen
+	\item Der Weg von \(R\) kann sich berühren oder aber nicht kreuzen
 	\item Immer wenn \(R\) eine Kante erneut abläuft berührt sich der Weg: \(\phi_{l+m}=\phi_l+2\pi\)
 \end{enumerate}
 
@@ -481,16 +481,19 @@ While $r \ne z$ {
 }
 \end{lstlisting}
 \end{minipage}
-Wanze terminiert.
+Wanze terminiert: Umläuft \(R\) zuerst \(P_i\) und dann \(P_j\) gilt:
+\[dist(z,P_i) > dist(z,P_j).\]
+\(R\) umläuft daher jedes Polygon höchstens einmal und findet \(z\) spätestens nach Umlaufen aller \(P_i\).
 
 \subsubsection{Universelles Steuerwort}
 Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
 \\\\
 \textbf{Satz:} Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompass genügt also zur Zielfindung.
-
+\\\\
+\(R\) kann somit alle endlichen Steuerworte erzeugen und sich nach ihnen bewegen, spätestens mit dem universellen findet er das Ziel.
 
 \subsection{Behälterproblem}
-\textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (Problem ist NP-hart).
+\textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (dieses Problem ist NP-hart).
 \\\\
 \begin{minipage}{\textwidth}
 FIRST-FIT
@@ -500,7 +503,10 @@ For $i = 1,...,m$ {
 }
 \end{lstlisting}
 \end{minipage}
-Die Laufzeit is in \(\mathcal{O}(n)\).
+Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt ist immer höchstens ein Behälter halb voll oder leer, sonst würde kein zusätzlicher Behälter gebraucht werden. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden bei einer optimalen Packung mindestens
+\[k_{opt} > \frac{k}{2}\]
+gebraucht. Somit ist
+\[m < 2k_{opt}.\]
 
 \subsubsection{Kompetivität}
 Größe der Lösung eines Problems \(P\)
@@ -527,7 +533,10 @@ While Tuer nicht gefunden {
 }
 \end{lstlisting}
 \end{minipage}
-Die Türsuche ist 9-kompetiv.
+
+\paragraph{Kompetivität}
+Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 5 durch \(i = 2i\) erweitert, ist der Kompetivitätsfaktor bei einer maximalen Entfernung \(d=2^n+\delta\) der Tür vom Startpunkt
+\[w \leq \sum_{i=0}^{n+1}+d \leq 2^{n+3}+2^n+\delta \leq 9 \cdot 2^n.\]
 
 
 \subsection{Sternsuche}
@@ -548,15 +557,24 @@ While $z$ nicht gefunden {
 \end{lstlisting}
 \end{minipage}
 
+\paragraph{Kompetivität}
+Siehe Skript Seite 101.
+
 
 \subsection{Suche in Polygonen}
 
 \subsubsection{Definitionen}
 \begin{itemize}
 	\item Ein Polygon \(P\) heißt geschlossen, wenn gilt \(p_m = p_1\).
-	\item Ein Polygone \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt.
+	\item Ein Polygone \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt mit Ausnahme der Ecken.
 \end{itemize}
 Es gibt keine kompetitive Strategie.
+
+\subsubsection{Vorgehen}
+\begin{itemize}
+	\item Es gibt nur einen kürzesten Weg von \(s\) zu \(z\)
+	\item Die kürzesten Wege von \(s\) zu den Ecken von \(P\) bildet der \textit{Baum der kürzesten Wege} von \(P\) und \(s\)
+\end{itemize}
 
 \subsubsection{Baum der kürzesten Wege}
 \begin{itemize}
