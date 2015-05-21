@@ -152,14 +152,22 @@ Lediglich für unabhängige Projekte geeignet.
 
 \subsection{Dividenden}
 \begin{itemize}
-	\item Im perfekten Kapitalmarkt sinkt der Aktienkurs um den Betrag der ausgezahlten Dividende
-	\item Dividend Smoothing: Langfristig stabile Dividenden, da Unternehmen sisch schwer tun, diese zu verändern
+	\item Im perfekten Kapitalmarkt sinkt der Aktienkurs um den Betrag der ausgezahlten Dividende (der Gesamtmarktwert sinkt um die Summe der ausgezahlten Dividenden)
+	\item Können nicht steuerlich abgesetzt werden (Ausschüttung aus Nachsteuererträgen)
+	\item Können nicht zur Insolvenz führen (keine Auszahlungsverpflichtung)
+	\item Dividend Smoothing: Langfristig stabile Dividenden, da Unternehmen sich schwer tun, diese zu verändern
 	\item \textbf{Signalwirkung}
 	\begin{itemize}
 		\item Signal des Managements bezüglich der Gewinnerwartung (Dividendenerhöhung/-senkung)
 		\item Es gibt allerdings auch Ausnahmen
 	\end{itemize}
-	\item Dividenden sind meist mit einem höheren Steuersatz belegt als Kapitalgewinne, die Investoren durch den Verkauf gestiegener Aktien verdienen können $\rightarrow$ anpassbar an die Steuerpreferenz der Aktionäre
+	\item Dividenden sind meist mit einem höheren Steuersatz belegt als Kapitalgewinne, die Investoren durch den Verkauf gestiegener Aktien verdienen können $\rightarrow$ anpassbar an die Steuerpreferenz der Aktionäre (Klienteleffekt). Trotz steuerlichen Nachteilen ein weiterhin verwendetes Mittel in der Ausschüttungspolitik
+\end{itemize}
+
+\subsubsection{Steuerarbitrage}
+\begin{itemize}
+	\item Empirische Beobachtung: Zunahme des Handelsvolumen bei Ankündigung und um den Ex-Dividenden-Termin herum
+	\item Niedrig bestuerte Investoren kaufen Aktien vor dem Ex-Dividenden-Termin und verkaufen sie anschließend wieder
 \end{itemize}
 
 
@@ -168,8 +176,8 @@ Lediglich für unabhängige Projekte geeignet.
 	\item Aktiengenerierter Zahlungsstrom unsicher $\rightarrow$ Bewertung der Aktie durch Diskontierung des erwarteten Zahlungsstrom
 	\item \textbf{Quellen für Zahlungen}
 	\begin{itemize}
-		\item Dividenden
-		\item Aktienverkäufe
+		\item Dividenden während der Haltedauer
+		\item Mittelzufluss durch Aktienverkäufe
 	\end{itemize}
 \end{itemize}
 
@@ -185,6 +193,13 @@ Lediglich für unabhängige Projekte geeignet.
 \subsection{Portefeuilles}
 Investoren betrachten keine isolierten Wertpapiere sondern Portefeuilles.
 
+\subsubsection{Erreichbare Rendite/Risiko-Kombinationen}
+\begin{itemize}
+	\item Korrelationskoeffizient hat Einfluss auf Ausmaß der Diversifikationsmöglichkeiten
+	\item \(\rho=1 \rightarrow\) Keine Risikorediktion möglich
+	\item \(\rho=-1 \rightarrow\) Risiko kann vollständig eleminiert werden
+\end{itemize}
+
 \subsubsection{Erreichbare Kombinationen effektiver Portefeuilles}
 \begin{itemize}
 	\item Berechnung des Globalen Varianzminimalen Portefeilles (GMVP)
@@ -194,7 +209,7 @@ Investoren betrachten keine isolierten Wertpapiere sondern Portefeuilles.
 
 \subsubsection{Erreichbare Kombinationen mit Tangentialportefeuille}
 \begin{itemize}
-	\item Zusätzliches, risikoles Papier; darstellbar als Gerade
+	\item Zusätzliches, risikoles Papier; effiziente Portefeuilles liegen auf einer Geraden
 	\item Berechnung des Schnittpunkts der Kurven
 	\item Durch Verschuldung mit dem risikolosen Papier sind höhere Investitonen möglich
 \end{itemize}
@@ -203,13 +218,13 @@ Investoren betrachten keine isolierten Wertpapiere sondern Portefeuilles.
 \subsection{CAPM}
 \begin{itemize}
 	\item Jeder Investor hält Kombination aus Tangentialportefeuille und risikolosem Instrument (Aufteilung investorspezifisch)
-	\item Anpassung der Kurse, so dass Markträumung stattfindet
+	\item Bei aggregierter Nachfrage und festem Angebot: Eventuell Anpassung der Kurse, so dass Markträumung stattfindet
 \end{itemize}
 
 \subsubsection{Zerlegung des Gesamtrisikos}
 \begin{enumerate}
 	\item Risikobeitrag zum Gesamtrisiko: Höhere Rendite \(cov(r_j,r_M)\)
-	\item Unternehmensbezogenes Risiko: Keine höhere Rendite \(\sigma^2_{\epsilon_j}\)
+	\item Unternehmensbezogenes Risiko: Keine höhere Rendite \(\sigma^2_{\epsilon_j}\) (höheres Risiko wird nicht durch den Markt vergütet)
 \end{enumerate}
 
 
@@ -221,8 +236,8 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \begin{itemize}
 	\item \textbf{Probleme bei der Bestimmung der Marktwerte von Vermögensgegenständen}
 	\begin{itemize}
-		\item Liquidationswert meinst irrelevant
-		\item Kombinationen von Vermögensgegenständen
+		\item Liquidationswert meinst irrelevant (Vermögengegenstände werden ohnehin nicht verkauft)
+		\item Kombinationen von Vermögensgegenständen (nur in diesKombination von Bedeutung)
 		\item Subjektivität
 		\item Bei unklaren Marktwerten unklar was gebucht werden kann
 	\end{itemize}
@@ -247,6 +262,7 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 	\item Regelmäßige Erfassung, Weiterverrechnung und systematische Bewertung
 	\item Erträge spiegeln den Wert der erbrachten Güter innerhalb einer Periode wieder
 	\item Aufwendungen entsprechen den Werten, die eingesetzt wurden, um den Ertrag zu erzielen
+	\item Grundprinzipien: Verständlichkeit, Entscheidungsrelevanz, Verlässlichkeit, Vergleichbarkeit
 \end{itemize}
 
 
@@ -258,9 +274,6 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 	\item Going Concern Principle: Es wird davon ausgegangen, dass das Unternehmen in versehbaren Zukunft weiter aktiv bleibt
 \end{itemize}
 
-
-
-\section{Methodik des externen Rechnungswesens}
 
 \subsection{Die Bilanz}
 \begin{itemize}
@@ -316,18 +329,58 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \end{itemize}
 
 
-\subsection{Rechnungsabgrenzungsposten}
+\subsection{Worksheet-Approach}
+Tabellarische Darstellung der Geschäftsvorfälle.
+
+\subsubsection{Zahlungsströme aus Finanzierungstätigkeit}
 \begin{itemize}
-	\item Antizipative: Vorwegnahme von Aufwendungen oder Erlöse, wofür die Zahlungen erst in einer späteren Periode erfolgen
-	\item Transitorische: Zahlung erfolgte bereits in dieser Periode, die Buchung wird in die nächste Periode übertragen
+	\item Kreditaufnahme: Liquide Mittel \((+)\) \(\rightarrow\) Fremdkapital \((+)\)
+	\item Kredittilgung: Liquide Mittel \((-)\) \(\rightarrow\) Fremdkapital \((-)\)
+	\item Zinszahlung: Liquide Mittel \((-)\) \(\rightarrow\) Eigenkapital \((-)\)
+	\item Kapitalerhöhung: Liquide Mittel \((+)\) \(\rightarrow\) Eigenkapital \((+)\)
+	\item Aktienrückkauf: Liquide Mittel \((-)\) \(\rightarrow\) Eigenkapital \((-)\)
+	\item Dividendenzahlung: Liquide Mittel \((-)\) \(\rightarrow\) Eigenkapital \((-)\)
 \end{itemize}
 
+\subsubsection{Rechnungsabgrenzung}
+\begin{itemize}
+	\item Antizipative Rechnungsabgrenzungsposten: Vorwegnahme von Aufwendungen oder Umsatzerlösen in dieser Periode
+	\item Transitorische Rechnungsabgrenzungsposten: Zahlungen bereits in dieser Periode, Aufwendungen oder Umsatzerlöse in der nächsten
+\end{itemize}
+
+\subsubsection{Beispiele}
+Siehe zusätzlich "`Zahlungsströme aus Finanzierungstätigkeit"'
+\begin{itemize}
+	\item Bewertung Warenbestand Autos: Einkaufswert + Reparaturkosten
+	\item Eigenkapital bei Bilanzeröffnung: Aktiva und Passiva ausgleichen
+	\item Einzahlung: Liquide Mittel \((+)\) \(\rightarrow\) Eigenkapital \((+)\)
+	\item Kauf von Waren: Liquide Mittel \((-)\) \(\rightarrow\) Warenbestand \((+)\)
+	\item \textbf{Verkauf von Waren}
+	\begin{itemize}
+		\item GuV: Umsatzerlöse \((+)\) \(\rightarrow\) Herstellungskosten \((-)\)
+		\item Die Differenz davon ergibt sich als Gewinn oder Verlust im Eigenkapital
+	\end{itemize}
+	\item Aufbereitung von Waren (z.B. Reinigung): Liquide Mittel \((-)\) \(\rightarrow\) (Reinigungs-)Kosten \((+)\)
+	\item Einkauf von Waren \textit{auf Ziel}: Zahlung erst in 30 Tagen fällig, der Warenbestand wird sofort erhöht
+	\item Lieferantenkredit bei Warenverkauf: Warenbestand wird sofort reduziert, die Zahlung wird erst in 30 Tagen fällig
+	\item \textbf{Vorauszahlung der Miete für sechs Monate}
+	\begin{itemize}
+		\item Liquide Mittel \((-)\) \(\rightarrow\) Geleistete Anzahlungen \((+)\)
+		\item Die monatliche Miete: Geleistete Anzahlungen \((-)\) \(\rightarrow\) Mietaufwand \((+)\) und somit negativ im Eigenkapital
+	\end{itemize}
+	\item Operatives Ergebnis = Erträge gesamt - Aufwendungen gesamt
+\end{itemize}
+
+
+
+\section{Methodik des externen Rechnungswesens}
 
 \subsection{Abschreibungen}
 \begin{itemize}
 	\item Verteilung des Gesamtaufwands über mehrere Perioden
 	\item Restwert soll potentiellem Verkaufswert entsprechen
 	\item Verschiedene Abschreibungsmethoden: Linear, degressiv, progressiv
+	\item Auch selbst produzierte Vermögensgegenstände können aktiviert und abgeschrieben werden
 \end{itemize}
 
 \subsubsection{Außerplanmäßige Abschreibungen}
@@ -349,10 +402,19 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \end{itemize}
 
 
+\subsection{Rückstellungen}
+\begin{itemize}
+	\item Passivierte Verpflichtungen zu zukünftigen Auszahlungen \(\rightarrow\) Schulden
+	\item Beispiele: Pensionsrückstellungen, Gewährleistungen, ungwisse Verbindlichkeiten (für Prozesse oder Steuern)
+\end{itemize}
+
+
 \section{Grundlagen des internen Rechnungswesens}
 
 \subsection{Definitionen}
 \begin{itemize}
+	\item Bruttoergebnis = Umsatzerlöse - Umsatzkosten
+	\item Operativer Gewinn = Bruttoergebnis - Periodenaufwand
 	\item Kostenobjekt: Abstraktes Bezugsobjekt, das Kosten verursacht (Bezugsobjekt)
 	\item Kostentreiber: Kosteneinflussfaktor; erklärt, wie die gesamten Kosten eines Kostenobjekts zustande kommen. Bsp: Die Anzahl der Produktvarienten erklärt die Kosten für Maschinen (wegen der Komplexität)
 	\item Variable Kosten: Veränderliche, bewegliche, mengenabhängige Kosten. Variieren mit der Ausprägung eines Kostentreibers
@@ -377,11 +439,41 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 \end{itemize}
 
 
+\subsection{Berechnungsschemata}
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{|l|X|X|}
+	\hline
+	& \textbf{Vollkostenrechnung} & \textbf{Teilkostenrechnung} \\
+	\hline\hline
+	textbf{Umsatzerlöse} & Summe verkaufter Waren & Summe verkaufter Waren \\
+	\hline
+	textbf{Umsatzkosten} & Summe variabler Herstellkosten, Summe fixer Herstellkosten anteilig an Gesamtproduktion & Summe variabler Herstellkosten \\
+	\hline
+	textbf{Periodenaufwand} & Nicht-Herstellkosten & Fixe Herstellkosten, Nicht-Herstellkosten \\
+	\hline
+\end{tabularx}
+\end{table}
+
+Die enstandene Differenz spiegelt sich in dem höheren Wert der fertigen Erzeugnisse bei der Vollkostenrechnung wider, geht aber in der Teilkostenrechnung sofort als Periodenaufwand in die Gewinnberechnung ein.
+
 \subsection{Einzel- vs. Gemeinkosten}
 \begin{itemize}
 	\item Einzelkosten: Werden von Einzelobjekt verursacht und können diesem in exakter Höhe zugeordnet werden. Bsp: Materialkosten
 	\item Gemeinkosten: Kosten können NICHT jeweils exakt einzelnen Objekten zugeordnet werden. Zuteilung erfolgt über Schlüssel. Bsp: Stromkosten, Miete
 \end{itemize}
+
+\subsubsection{Beispiel: Automobilproduktion}
+\begin{table}[h]
+\begin{tabularx}{\textwidth}{|l|X|X|}
+	\hline
+	& \textbf{Einzelkosten} & \textbf{Gemeinkosten} \\
+	\hline\hline
+	\textbf{Variable Kosten} & Materialkosten der Reifen & Stromkosten der Produktionshalle \\
+	\hline
+	\textbf{Fixe Kosten} & Gehälter der unmittelbar beteiligten Mitarbeiter & Jährliche Mietkosten der Produktionshalle \\
+	\hline
+\end{tabularx}
+\end{table}
 
 
 \subsection{Zuordnungsproblematik}
@@ -400,7 +492,7 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 
 
 
-\section{Kostenstellenrechnun}
+\section{Kostenstellenrechnung}
 \begin{itemize}
 	\item Abrechnungseinheiten, in die das Unternehmen aufgegliedert ist
 	\item \textbf{Differenzierung}
@@ -424,7 +516,23 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 		\item Aufgliederung der primären Gemeinkosten auf Kostenstellen (Primrkostenverrechnung)
 		\item Verrechnung der innerbetrieblichen Leistungen von Vorkostenstellen auf Endkostenstellen (Sekundärkostenverrechnung)
 	\end{itemize}
-	\item Sekundärkostenverrechnung: Verwendung von kostenstellenspezifischen Kalkulationssätzen (Kostenschlüssel): Bsp. Mengenschlüssel oder Wertschlüssel
+	\item Sekundärkostenverrechnung: Die Beträge der Vorkostenstellen werden anteilig den Endkostenstellen zugeordnet
+	\item Verwendung von kostenstellenspezifischen Kalkulationssätzen (Kostenschlüssel): Bsp. Mengenschlüssel oder Wertschlüssel
+\end{itemize}
+
+\subsubsection{Verrechnungsverfahren der Kostenstellen}
+\begin{itemize}
+	\item \textbf{Anbauverfahren}
+	\begin{itemize}
+		\item Verrechnungspreise der Kosten der Vorkostenstelle pro abgegebener Leistungseinheit
+		\item Beispiel Kantine: Kosten pro Essen ermitteln und danach mit der Anzahl der bezogenen Einheiten der Endkostenstelle verrechnen und summieren
+	\end{itemize}
+	\item Stufenleiterverfahren: Wie beim Anbauverfahren, allerdings werden die Beträge \textbf{allen} Folgekostenstellen zugeordnet (nicht nur den Endkostenstellen)
+	\item \textbf{Gleichungsverfahren}
+	\begin{itemize}
+		\item Verrechnung der Kosten zwischen allen (beteiligten) Kostenstellen
+		\item Kostenentlastung der leistenden Kostenstelle \(\rightarrow\) Kostenbelastung der empfangenden Kostenstellen
+	\end{itemize}
 \end{itemize}
 
 
@@ -442,18 +550,20 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 
 
 \subsection{Verfahren der Kostenträgerstückrechnung}
+Ausführliche Beispielrechnungen in Vorlesung 13.
 
 \subsubsection{Divisionskalkulation}
 \begin{itemize}
 	\item Durchschnittsbetrachtung als Grundlage: \(Selbstkosten~pro~Stueck=\frac{Gesamtkosten}{Produktionsmenge}\)
 	\item Kostenverteilung nach Verursachungsprinzip
 	\item Gesamtkosten bilden die Summe der einzelnen Stufen
+	\item Falls die fertigen Erzeugnisse gelagert werden, zusätzlich \(\frac{Verwaltungs-~und~Vertriebskosten}{Absatzmenge}\)
 \end{itemize}
 
 \subsubsection{Zuschlagskalkulation}
 \begin{itemize}
 	\item Geeignet Unternehmen mit mehreren Produkten und komplexen Prozessen (z.B. Serienfertigung oder Einzelfertigung)
-	\item Idee. Gemeinkosten werden durch Zuschlagssätze entsprechend auf Einzelkosten umgelegt
+	\item Idee: Gemeinkosten werden durch Zuschlagssätze entsprechend auf Einzelkosten umgelegt
 	\item Differenzierung nach Eintel-, Gemein- und Sondereinzelkosten unter Verwendung des BAB
 	\item \textbf{Schema}
 	\begin{enumerate}
@@ -473,7 +583,7 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 		\item Bestimmung der Äquivalenzziffern: Festlegung eines Produkts als Referenz (\(1,0)\), Schätzung der komplexität der anderen
 		\item Umrechnung der Outputmengen auf Einheitsmengen \(Einheitsmenge = Anzahl \cdot Aehnlichkeit\)
 		\item Ermittlung der Stückselbstkosten: \(\frac{Selbstkosten~Unternehmen}{Einheitsgesamtmenge}\)
-		\item Ermittlunf der Stückkosten der äquivalenten Produkte
+		\item Ermittlung der Stückkosten der äquivalenten Produkte
 	\end{enumerate}
 \end{itemize}
 
@@ -492,7 +602,41 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 
 
 
-\section{Kennzahlen des Rechnungswesens}
+\section{Kostenanalyse}
+
+\subsection{Plankostenrechnung}
+\begin{itemize}
+	\item Ergebniskontrolle: Kostenrechnerische Abweichungsanalyse
+	\item Basis: Planung von Kosten, beispielsweise einer Kostenstelle
+	\item \textbf{Abweichungsarten}
+	\begin{itemize}
+		\item Beschäftigungsabweichung (BA)
+		\begin{itemize}
+			\item Berechnung: Soll-Kosten - verrechnete Plankosten
+			\item Gründe: Nachfrageschwund führt zu falsch dimensionierten Kapazitäten; geringe Vertriebsanstrengung
+			\item Verantwortlichkeit: Geschäftsführung
+		\end{itemize}
+		\item Verbrauchsabweichung (VA)
+		\begin{itemize}
+			\item Berechnung: Ist-Kosten - Soll-Kosten (der Teil, der sich auf den Verbrauch der Inputfaktoren bezieht)
+			\item Grpünde: Ineffiziens; erhöhter Ausschuss in Produktion oder aufgrund schlechter Qualität der Inputfaktoren
+			\item Verantwortlich: Kostenstellenleiter/Kostenstellenleiter/Beschaffungsabteilung
+		\end{itemize}
+		\item Preisabweichung (PA)
+		\begin{itemize}
+			\item Berechnung: Ist-Kosten - Soll-Kosten (der Teil, der sich auf die Preise der Inputfaktoren bezieht)
+			\item Gründe: Exogene Preiserhöhung
+			\item Verantwortlich: Beschaffungsabteilung
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Break-Even-Analyse}
+\begin{itemize}
+	\item Dient der Analyse des Zusammenhangs zwischen der Beschäftigung und dem Gewinn sowie dessen Bestimmungsfaktoren Umsatz und Kosten
+	\item Ab welcher Menge (Break-Even-Menge) einer Produktart wird ein positiver Gewinn erzielt
+\end{itemize}
 
 
 
@@ -535,6 +679,16 @@ Erweiterung um ewige Rente.
 \[0 = Anfangsauszahlung - \sum_{t=1}^{T}\frac{C_t}{(1+z_intern)^t}\]
 
 
+\subsection{Aktien}
+
+\subsubsection{Aktienrendite}
+\[r = r_{Dividende}-r_{Kursveraenderung} = \frac{Div_1}{P_0}-\frac{P_1-P_0}{P_0} = \frac{Div_1+P_1}{P_0} - 1\]
+
+\subsubsection{Aktienbewertung: Dividend Discount Model}
+Der Preis der Aktie ergibt sich als Barwert alles erwarteten Dividendenzahlungen bei einem risikoadäquaten Diskontierungssatz \(r_E\).
+\[P_0 = \sum_{t=1}^T \frac{Div_t}{(1+r_E)^t}\]
+
+
 \subsection{Portfoliotheorie}
 
 \subsubsection{Dividendenrendite}
@@ -549,9 +703,9 @@ Bei verschiedenen Papieren mit linearer Gewichtung.
 \[r = \frac{Div + K_1 - K_0}{K_0}\]
 
 \subsubsection{Standardabweichungen der Rendite}
-Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
-
-\[Std = \sqrt{Var} = \sqrt{\frac{(R_1-R)^2+..+(R_N-R)^2}{N-1}}\]
+Bei verschiedenen Papieren mit linearer Gewichtung unter der Wurzel.
+\[R = \frac{R_1+...+R_T}{T}\]
+\[Std = \sqrt{Var} = \sqrt{\frac{(R_1-R)^2+..+(R_T-R)^2}{T-1}}\]
 
 \subsubsection{Erwartungswert der Portefeuillerendite}
 \[\mu_w = w_1\mu_1 + w_2\mu_2\]
@@ -575,7 +729,7 @@ Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
 \subsection{Methodik des externen Rechnungswesens}
 
 \subsubsection{Geometrisch-degressive Abschreibung}
-\[p = 1 - \sqrt[N]{\frac{Anfangswert}{Restwert}}\]
+\[p = 1 - \sqrt[T]{\frac{Restwert}{Anfangswert}}\]
 
 
 \subsection{Verfahren der Kostenträgerstückrechnung}
@@ -585,3 +739,29 @@ Bei verschiedenen Papieren auch hier mit linearer Gewichtung unter der Wurzel.
 \[Einsatzfaktor_{Stufe_i}=\frac{Inputmenge}{Outputmenge}\]
 \[Korrekturterm_{Stufe_i} = (Einsatzfaktor_{Stufe_i}-1)\cdot Herstellkosten_{Stufe_i-1}\]
 \[k_{Stufe_i} = Herstellkosten_{Stufe_i}+Korrekturterm_{Stufe_i}\]
+
+
+\subsection{Plankostenrechnung}
+\begin{itemize}
+	\item Plankosten: \(K_p\)
+	\item Fixe Plankosten: \(K_{fp}\)
+	\item Ist-Kosten: \(K_i\)
+	\item Ist-Beschäftigung: \(x_i\)
+	\item Plan-Beschäftigung: \(x_p\)
+	\item Konstanter variabler Plankostensatz pro Beschäftigungseinheit: \(KS_{vp}=2,7\)
+\end{itemize}
+
+\subsubsection{Planverrechnungssatz pro Beschäftigungseinheit}
+\[KS_{verr} = \frac{K_p}{x_p}\]
+
+\subsubsection{Verrechnete Plankosten}
+\[K_{verr} = KS_{verr} \cdot x_i\]
+
+\subsubsection{Soll-Kosten}
+\[K_s = KS_{vp} \cdot x_i + K_p\]
+
+\subsubsection{Beschäftigungsabweichung}
+\[BA = K_s - K_{verr}\]
+
+\subsubsection{Preis-/Verbrauchsabweichung}
+\[PAVA = K_i - K_s\]
