@@ -22,6 +22,39 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 	}
 \end{algorithm}
 
+\subsection{Edmonds-Karp.Algorithmus}
+	Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus
+	
+\subsection{Die Pfäfluss-Pusch-Methode}
+Push(x,y) \newline
+\begin{algorithm}[H]
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x,y$}
+	\Output{}
+	\BlankLine
+
+	$d \longleftarrow \min{ü(x), k_f(x,y)}$
+	$f(x,y) \longleftarrow f(x,y) +d$
+	$ü(x) \longleftarrow ü(x) -d $
+	$ü(y) \longleftarrow ü(y) +d$
+\end{algorithm}
+
+LIFTE(x)\newline
+\begin{algorithm}[H]
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x$}
+	\Output{}
+	\BlankLine
+
+	$h(x) := 1+ \min_{(x,y) \in E_f}{h(y}$
+\end{algorithm}
+
 
 \section{Algorithmen für geometrische Probleme}
 
