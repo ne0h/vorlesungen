@@ -1,34 +1,23 @@
-\chapter{Algorithmen II - Algorithmen und Erklärung}
+\section{Appendix A: Algorithmen und Erklärungen}
 
 Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\footnote{\url{http://geom.ivd.kit.edu/ws14_algo2.php}}
 
 \section{Flussmaximierung}
 
-\subsection{Ford-Fulkerson}
+\subsection{Algorithmus von Ford und Fulkerson}
 
+\begin{algorithm}[H]
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-\begin{algorithm}
-\caption{Euclid’s algorithm}\label{euclid}
-\begin{algorithmic}[1]
-\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
-\State $r\gets a\bmod b$
-\While{$r\not=0$}\Comment{We have the answer if r is 0}
-\State $a\gets b$
-\State $b\gets r$
-\State $r\gets a\bmod b$
-\EndWhile\label{euclidendwhile}
-\State \textbf{return} $b$\Comment{The gcd is b}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-
-
-		%Eingabe: $F(G,k,q,s)$ \newline
-		%Ausgabe: Ein maximaler Fluß $f$ \newline
-	%\begin{algorithmic}
-	%	\State $f \gets 0$
-	%	\While{Es gibt einen Pfad $q \rightarrow s$ in in $G_f$ } { Erhöhe f über diesem max }
-	%\end{algorithmic}
+	\Input{$F(G,k,q,s)$}
+	\Output{Ein maximaler Fluß $f$}
+	\BlankLine
 	
+	$f \longleftarrow 0$
 
-
+	\While{Es gibt einen Pfad $q \rightarrow s$ in $G_f$} {
+		Erhöhe f über diesem maximal
+	}
+\end{algorithm}
