@@ -447,8 +447,6 @@ $\Rightarrow$ Türsuche 2 ist 9-kompetetiv.
 
 Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 
-
-
 \begin{algorithm}[H]
 	\caption{Sternsuche}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
@@ -468,3 +466,104 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 \end{algorithm}
 
 $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
+
+
+\subsection{Naive Textsuche}
+Im Folgenden ist \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) ein Text und \(s = s_1,...,s_m \in A^m\) mit \(m<n\) ein Suchtext.
+
+Der einfachste Algorithmus besteht darin, ein so genanntes Suchfenster von der Länge der Suchmaske über den Text zu schieben. In jeder Position der Suchmaske werden die Symbole der Maske mit denen des darunterliegenden Textes verglichen. Wenn ein nicht übereinstimmendes Symbol gefunden wird, wird das Fenster um eine Position verschoben, und erneut ein Vergleich angestellt; wenn alle Symbole im Fenster übereinstimmen, ist die Suchmaske gefunden worden. Der Algorithmus endet, wenn der ganze Text vom Fenster abgesucht worden ist.\footnote{\url{http://de.wikipedia.org/wiki/String-Matching-Algorithmus\#Naiver_Algorithmus}}
+
+\begin{algorithm}[H]
+	\caption{Naive Suche}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$A,t,s$}
+	\Output{Kleinstes $t_{i+1},...,t_{i+m} = s$}
+	\BlankLine
+
+	$i \longleftarrow 0$\newline
+	\While{$i\leq n-m$}{
+		$j \longleftarrow m$\newline
+		\While{$j>0$ und $s_j=t_{i+j}$}{
+			$j \longleftarrow j-1$
+		}
+		\BlankLine
+		\eIf{$j=0$}{
+			\Return{$i$}
+		}{
+			$i \longleftarrow i+1$
+		}
+	}
+\end{algorithm}
+Laufzeit in \(\mathcal{O}(n\cdot m)\), wenn der ganze Text abgesucht werden muss.
+
+\subsection{Algorithmus von Boyer und Moore}
+Das Muster wird am Anfang linksbündig unter den Text geschrieben und dann von rechts nach links Zeichen für Zeichen mit dem Text verglichen. Sobald ein Mismatch auftritt, berechnen zwei Heuristiken, wie weit das Suchmuster nach rechts verschoben werden kann.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
+
+Es kommt vor, dass die beiden Heuristiken unterschiedliche Verschiebungen berechnen. Der Algorithmus wählt immer das Maximum der beiden Vorschläge, um das Muster nach rechts zu verschieben.
+
+\subsubsection{Bad-Character-Heuristik}
+Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Zeichen des Musters nicht mit dem Zeichen des Textes überein („Bad-Character“), wird im Muster nach dem letzten Vorkommen dieses Bad-Characters gesucht und das Muster soweit verschoben, bis beide Buchstaben übereinander liegen. Existiert dieser Bad-Character nicht im Muster, wird das Muster um seine volle Länge nach rechts verschoben. Es kann vorkommen, dass die Bad-Character-Heuristik eine Verschiebung des Musters nach links vorschlägt. In diesem Fall wird um eine Position nach rechts geschoben.
+
+Der Boyer-Moore-Algorithmus arbeitet am effizientesten, wenn er ein Zeichen vorfindet, das im Suchmuster nicht vorkommt. Die Bad-Character-Regel kommt dann zum Tragen. Dies ist sehr wahrscheinlich bei einem relativ kleinen Muster und einem großen Alphabet, was ihn für einen solchen Fall besonders geeignet macht. In diesem Fall arbeitet der Algorithmus mit einer Effizienz von \(\mathcal{O}(\frac{n}{m})\) Vergleichen.
+
+\subsubsection{Good-Suffix-Heuristik}
+Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben.
+
+\paragraph{Vorberechnung des größten, echten Präsuffixes pro Zeichen im Suchwort}
+Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir \textit{Präsuffix} von \(w\). Weiter sei \(\gamma(j) := | geps(w_j)|\).
+
+\begin{algorithm}[H]
+	\caption{$\gamma$}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$s_1,...,s_m$}
+	\Output{$\gamma(0,...,m-1$}
+	\BlankLine
+
+	$\gamma(m-1) \longleftarrow 0$\newline
+	\For{i=m-1,...,1}{
+		$j \longleftarrow m - \gamma(i)$\newline
+		\While{$s_i \ne s_j$ und $m \ne j$}{
+			$j \longleftarrow m - \gamma(i)$
+		}
+	}
+	\BlankLine
+
+	\eIf{$s_i = s_j$}{
+		$\gamma(i-1) \longleftarrow m - j+1$
+	}{
+		$\gamma(i-1) \longleftarrow 0$
+	}
+\end{algorithm}
+
+\paragraph{Berechnung der Heuristik}
+Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
+
+\begin{algorithm}[H]
+	\caption{$\gamma$}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$\gamma(0,...,m-1)$}
+	\Output{$\sigma(1,...,m)$}
+	\BlankLine
+
+	\For{$j = 1,...,m$}{
+		$\sigma(j) \longleftarrow m-\gamma(0)$
+	}
+	\BlankLine
+
+	\For{$i=0,...,m-1$}{
+		$k \longleftarrow m - \gamma(i) - i$\newline
+		$j \longleftarrow m - \gamma(i)$
+		\If{$\sigma(j) > k$}{
+			$\sigma(j) \longleftarrow k$
+		}
+	}
+\end{algorithm}
