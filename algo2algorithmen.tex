@@ -213,6 +213,25 @@ Lifte ist nur erlaubt wenn
 		}
 \end{algorithm}
 
+\subsection{Spielbaumauswertung}
+\begin{algorithm}[H]
+	\caption{Wert}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{x Knoten eines binären Spielbaums}
+	\Output{$Wert(x)$}
+	\BlankLine
+	
+	Wähle y zufällig aus S \newline
+	$(y,z) \longleftarrow $ Paare der Kinder von x in zufälliger Reihenfolge\newline
+	$W \longleftarrow Wert(y)$ \newline
+	\If{ $w=1$}{gib 0 aus}
+	\Else{
+		gib 0 XOR Wert(z) aus}
+\end{algorithm}
+
 
 \subsection{Binäre Zerlegung des Raum}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
