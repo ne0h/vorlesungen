@@ -83,9 +83,34 @@ Lifte ist nur erlaubt wenn
 	\For{alle $ x,y \in V $ }{
 	$ h(x)  \leftarrow \begin{cases}|V| & x=q \\ 0 & \text{sonst}\end{cases}$ \newline
 	$ f(x,y)  \leftarrow \begin{cases}k(x,y) & x=q \\ 0 & \text{sonst}\end{cases}$}
-	\While{Es gibt erlaubte Push oder Lifte Operationen} {Führe belibeig Push oder Lifte aus}
+	\While{Es gibt erlaubte Push oder Lifte Operationen} {Führe beliebig Push oder Lifte aus}
 \end{algorithm}
 
+\subsection{\" An die Spitze \" Präfluss-Push-Algorithmus}
+
+\begin{algorithm}[H]
+	\caption{Leere}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x$}
+	\Output{}
+	\BlankLine
+
+	\While{$ü(x)>0$}{	
+		\If{$i_x > 0$}{
+			$y \longleftarrow n_x(i_x)$ \newline
+			\If{$(x,y) \text{puschbar}$}{
+				$Pusch(x,y)$}
+			\Else{
+				$i_x \longleftarrow i_x -1$}
+			}
+		\Else{	$Lifte(x)$ \newline
+				$i_x \longleftarrow Grad(x)$}
+			
+		}	
+\end{algorithm}
 
 
 \subsection{Binäre Zerlegung des Raum}
