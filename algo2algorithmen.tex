@@ -24,7 +24,7 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 \subsection{Edmonds-Karp.Algorithmus}
 	Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus
 	
-\subsection{Die Pfäfluss-Pusch-Methode}
+\subsection{Die Präfluss-Pusch-Methode}
 \begin{algorithm}[H]
 	\caption{Push}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
@@ -86,7 +86,7 @@ Lifte ist nur erlaubt wenn
 	\While{Es gibt erlaubte Push oder Lifte Operationen} {Führe beliebig Push oder Lifte aus}
 \end{algorithm}
 
-\subsection{ An die Spitze - Präfluss-Push-Algorithmus}
+\subsection{"`An die Spitze"' Präfluss-Push-Algorithmus}
 
 \begin{algorithm}[H]
 	\caption{Leere}
@@ -151,12 +151,51 @@ Lifte ist nur erlaubt wenn
 	$V \longleftarrow V_1 \cup V_2 \cup \{ q,s \}$ \newline
 	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
 	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
-	$f \longleftarrow Ford-Fulkerson( F(V,\hat{E}),h,q,s)) $ \newline
+	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
 	$P \longleftarrow \{ e \in E | f(e) = 1 \} $
 \end{algorithm}
 
 
+\subsection{Sortieren durch stochastisches Teilen}
+\begin{algorithm}[H]
+	\caption{Quicksort}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$ S : = \{ s_1, ... , s_n \} $ 	mit paarweise verschiedenen 	$ s_i \in \mathbb{Z} $ 	}
+	\Output{$( \delta_1, ... , \delta_n)$ mit $\delta_1 < ... < \delta_n$ und $\{ \delta_1, ... , \delta_n \} = S $}
+	\BlankLine
+	
+	\While{ S $\ne \emptyset$} {
+		Wähle ein zufälliges Pivotelement $ y \in S $ \newline
+		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $ , so dass 	$ s_1 < y < s_2 $ \newline
+		Gib $ ( Quicksort(s_1 , y ),Quicksort(s_2))$ aus \newline
+		}
+\end{algorithm}
+
+\subsection{Minimaler Schnitt}
+\begin{algorithm}[H]
+	\caption{Schnitt}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$ (V,E) $ ein ungerichteter Multigraph}
+	\Output{Ein Schnitt S}
+	\BlankLine
+	
+	\While{ $|V| \ge 3$} {
+		Wähle ein zufälliges Kante $ (x,y) \ in E $ \newline
+		Entferne Alle $(x,y)$ aus $E$ \newline
+		Verschmelte x mit y \newline
+		}
+	Gib $S:=E$ aus
+\end{algorithm}
+
+
 \subsection{Binäre Zerlegung des Raum}
+Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
 
 \begin{algorithm}[H]
 	\caption{BRZ}
@@ -169,22 +208,100 @@ Lifte ist nur erlaubt wenn
 	\BlankLine
 
 	$k \longleftarrow 1$
-
-	\For{$i=1,...,n$} {
-		$Q_k \longleftarrow P_1 \cap P$\newline
-		if {$Q_k \neq \emptyset$} {
+	\BlankLine
+	\tcc{Sortiere Polygonenteile aus, die außerhalb von $P$ liegen (Clipping)}
+	\For {$i=1,...,n$}{
+		$Q_k \longleftarrow P_1 \cap P$
+		\If {$Q_k \neq \emptyset$} {
 			$k \longleftarrow k + 1$
 		}
 	}
 
 	$l \longleftarrow 1$
 
-	if {$\exists~j: Q_j zerlegt~P~vollstaendig$} {
+	\BlankLine
+	\tcc{Falls ein Polygon $P$ komplett zerteilt, nehme dieses als Trennelement. Anderenfalls nehme das erste in der Liste}
+	\If{$\exists~j: Q_j~zerlegt~P~vollstaendig$}{
 		$l \longleftarrow j$
 	}
+
+	$Wurzel \longleftarrow Q_l$
+	\BlankLine
+	\tcc{Teile $P$}
+	\If{$k \geq 3$}{
+		$Q \longleftarrow P \cap li.~HR~von~Q_l$\newline
+		$li. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$\newline
+		$Q \longleftarrow P \cap re.~HR~von~Q_l$\newline
+		$re. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$
+	}
+
+	\BlankLine
+	\Return{Wurzel mit ihren Teilbaeumen}
+
 \end{algorithm}
 
-\subsection{Geometrische Algorithmen - Pledge Startegie}
+
+\subsection{Konstruktion konvexer Hüllen}
+Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausgangsmenge enthält.\footnote{\url{http://de.wikipedia.org/wiki/Konvexe_Hülle}}
+
+\subsubsection{Annahmen}
+\begin{itemize}
+	\item Die Reiehenfolge der \(p_i\) sei gleichverteilt zufällig
+	\item Keine vier der Ebenen \(p_i^{*}\) schneiden sich in einem Punkt
+	\item Jeder Knoten hat den Grad \(3\)
+\end{itemize}
+
+\begin{algorithm}[H]
+	\caption{BRZ}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Punktmenge $P=(p_1,..,p_n) \cap A^3$}
+	\Output{$\lbrack P \rbrack$}
+	\BlankLine
+
+	\tcc{Verschiebe $P$, so dass der Ursprung innerhalb der Konvexen Hülle liegt}
+	$v \longleftarrow 0 - \sum_i \frac{p_i}{n}$\newline
+	$P \longleftarrow P + v$
+	\BlankLine
+
+	\tcc{Schritt 2}
+	$V \longleftarrow$ Knotenliste von $p_1^{\leq} \cap ... \cap p_4^{\leq}$\newline
+	\For{$j > i$} {
+		\eIf{$p_j^{\leq} \supset V$}{
+			Entferne $p_j$ aus $P$\newline
+			Aktualisiere "`gedanklich"' alle Indizes $k>j$
+		}{
+			Verknüpfe $p_j$ bidirektional mit einem $w_j \in V_4 \backslash p_j^{\leq}$
+		}
+	}
+	\BlankLine
+
+	\tcc{Schritt 3}
+	\For{i = 5,...,n}{
+		Durchlaufe $V$ von $w_i$ aus und setze dabei:\newline
+			$N_i \longleftarrow \{ Schnittpunkte~der~Kanten~mit~p_i^{*}\}$\newline
+			$W_i \longleftarrow V \cap p_i^{>}$\newline
+			$V \longleftarrow (V \cup N_i) \backslash W_i$\newline
+		\BlankLine
+		\For{$j>i$ mit $w_j \in W_i$}{
+			\eIf{$N_i \subset p_j^{\leq}$}{
+				Entferne $P_j$ aus $P$\newline
+				Aktualisiere "`gedanklich"' alle Indizes
+			}{
+				Verknüpfe $p_j$ neu mit einem $w_j \in N_i \cap p_j^{>}$
+			}
+		}
+	}
+	\BlankLine
+
+	\Return{Verschobene Polarmenge $Q_P$}
+
+\end{algorithm}
+
+
+\subsection{Pledge Startegie}
 
 Findet einen Weg aus einem Labyrinth.\\
 Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.\\
@@ -209,7 +326,7 @@ Bei jeder Drehung wird die Änderung zum Startwinkel $ \varphi $ aktualisiert.\\
 \end{algorithm}
 
 
-\subsection{Geometrische Algorithmen - Wanze}
+\subsection{Wanze}
 
 Findet einen Ziel in einer Umgebung mit Hindernissen.\\
 
@@ -232,7 +349,7 @@ Findet einen Ziel in einer Umgebung mit Hindernissen.\\
                     (die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $Z$.)\\
                     gehe zu $q$
 		}
-            }
+    }
 \end{algorithm}
 
 \subsection{Geometrische Algorithmen - Türsuche 1}
