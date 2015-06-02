@@ -27,8 +27,8 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 	Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus
 	
 \subsection{Die Pfäfluss-Pusch-Methode}
-Push(x,y) \newline
 \begin{algorithm}[H]
+	\caption{Push}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -37,14 +37,22 @@ Push(x,y) \newline
 	\Output{}
 	\BlankLine
 
-	$d \longleftarrow \min{ü(x), k_f(x,y)}$
-	$f(x,y) \longleftarrow f(x,y) +d$
-	$ü(x) \longleftarrow ü(x) -d $
-	$ü(y) \longleftarrow ü(y) +d$
+	$d \longleftarrow \min{ü(x), k_f(x,y)}$ \newline
+	$f(x,y) \longleftarrow f(x,y) +d$ \newline
+	$ü(x) \longleftarrow ü(x) -d $ \newline
+	$ü(y) \longleftarrow ü(y) +d$ \newline
 \end{algorithm}
 
-LIFTE(x)\newline
+Push ist nur erlaubt wenn 
+	\begin{itemize}
+		\item $ü(x) > 0, x \in V \setminus {q,s}$
+		\item $(x,y) \in E_f$
+		\item $h(x) - h(y) = 1$
+	\end{itemize} 
+
+
 \begin{algorithm}[H]
+	\caption{Lifte}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -55,6 +63,15 @@ LIFTE(x)\newline
 
 	$h(x) := 1+ \min_{(x,y) \in E_f}{h(y}$
 \end{algorithm}
+
+Lifte ist nur erlaubt wenn 
+	\begin{itemize}
+		\item $x \in V \setminus {q,s}$
+		\item $ü(x) > 0$
+		\item $h(x) \leqslant \min_{(x,y) \in E_f}{h(y)}$
+	\end{itemize} 
+
+
 
 
 \section{Algorithmen für geometrische Probleme}
