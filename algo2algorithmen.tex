@@ -286,3 +286,29 @@ Weglänge: Ist die Tür $2^{n+\delta}$ Meter vom Ausgangspunkt entfernt, gilt:\\
 Weglänge $\le 2 \sum\limits_{i=0}^{n+1} 2^i + 2^{n+\delta} \le 2 ^{n+3+\delta} + 2^{n+\delta} \le 9 \cdot 2^{n+\delta}$.\\
 $\Rightarrow$ Türsuche 2 ist 9-kompetetiv.
 
+
+\subsection{Geometrische Algorithmen - Sternsuche}
+
+Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
+
+
+
+\begin{algorithm}[H]
+	\caption{Sternsuche}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+        \Input{$S$ Startpunkt, $Z$ Ziel, $m$ Halbgeraden, startend in S}
+        $\forall i \in \mathbb{N}_0 : f_i \leftarrow \left(\frac{m}{m-1}\right)^i$
+
+	$i \leftarrow 0$
+	
+	\While{Z noch nicht gefunden}{	
+		gehe $f_i$ Meter auf $H_{i \text{ mod } m}$ entlang.\\
+		gehe zurück zu $S$\\
+		$ i \leftarrow i+1$\\
+		}
+\end{algorithm}
+
+$\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
