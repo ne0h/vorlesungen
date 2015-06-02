@@ -468,6 +468,29 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
 
 
+\subsection{Algorithmus von de Casteljau}
+Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
+
+Der de Casteljau-Algorithmus angewendet auf ein Polygon \(B_0^0\) ist die Konkatenation von \(B_0^1\) und \(B_1^1\): \(C(B_0^0,t) := B_0^1 B_1^1\).
+
+\begin{algorithm}[H]
+	\caption{de Casteljau}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$b_0^0,...,b_n^0 \subset \mathbb{R}^d; t \in \mathbb{R}$}
+	\Output{$b_0^0,...,b_0^n; b_0^n,...b_n^0 \subset \mathbb{R}^d$}
+	\BlankLine
+
+	\For{$k=1,...,n$}{
+		\For{$i=0,...,n-k$}{
+			$b_i^k \longleftarrow b_i^{k-1} \cdot (1-t) + b_{i+1}^{k-1} \cdot t$
+		}
+	}
+\end{algorithm}
+
+
 \subsection{Naive Textsuche}
 Im Folgenden ist \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) ein Text und \(s = s_1,...,s_m \in A^m\) mit \(m<n\) ein Suchtext.
 
