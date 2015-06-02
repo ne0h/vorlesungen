@@ -173,6 +173,25 @@ Lifte ist nur erlaubt wenn
 		}
 \end{algorithm}
 
+\subsection{Minimaler Schnitt}
+\begin{algorithm}[H]
+	\caption{Schnitt}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$ (V,E) $ ein ungerichteter Multigraph}
+	\Output{Ein Schnitt S}
+	\BlankLine
+	
+	\While{ $|V| \ge 3$} {
+		Wähle ein zufälliges Kante $ (x,y) \ in E $ \newline
+		Entferne Alle $(x,y)$ aus $E$ \newline
+		Verschmelte x mit y \newline
+		}
+	Gib $S:=E$ aus
+\end{algorithm}
+
 
 \subsection{Binäre Zerlegung des Raum}
 
