@@ -235,3 +235,54 @@ Findet einen Ziel in einer Umgebung mit Hindernissen.\\
             }
 \end{algorithm}
 
+\subsection{Geometrische Algorithmen - Türsuche 1}
+
+Roboter steht vor einer langen Wand und sucht die Tür.\\
+
+
+\begin{algorithm}[H]
+	\caption{Türsuche 1}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+
+	$i \leftarrow 1$
+	
+	\While{Tür noch nicht gefunden}{	
+		gehe $i$ Meter der Wand entlang.\\
+		gehe i Meter zurück (ändert die Laufrichtung)\\
+		$ i \leftarrow i+1$\\
+		}
+\end{algorithm}
+
+Weglänge: Ist die Tür n + (0,1) Meter vom Ausgangspunkt entfernt, gilt:\\
+Weglänge $\ge 2 \cdot 1 + 2 \cdot 2 + ... + 2n +n = O(n^2)$.\\
+$\Rightarrow$ Türsuche 1 ist nicht kompetetiv.
+
+
+\subsection{Geometrische Algorithmen - Türsuche 2}
+
+Roboter steht vor einer langen Wand und sucht die Tür.\\
+
+
+\begin{algorithm}[H]
+	\caption{Türsuche 2}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+
+	$i \leftarrow 1$
+	
+	\While{Tür noch nicht gefunden}{	
+		gehe $i$ Meter der Wand entlang.\\
+		gehe i Meter zurück (ändert die Laufrichtung)\\
+		$ i \leftarrow 2i$\\
+		}
+\end{algorithm}
+
+Weglänge: Ist die Tür $2^{n+\delta}$ Meter vom Ausgangspunkt entfernt, gilt:\\
+Weglänge $\le 2 \sum\limits_{i=0}^{n+1} 2^i + 2^{n+\delta} \le 2 ^{n+3+\delta} + 2^{n+\delta} \le 9 \cdot 2^{n+\delta}$.\\
+$\Rightarrow$ Türsuche 2 ist 9-kompetetiv.
+
