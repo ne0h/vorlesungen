@@ -158,4 +158,27 @@ Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone
 
 \end{algorithm}
 
-\subsection{Geometrische Algorithmen}
+\subsection{Geometrische Algorithmen - Pledge Startegie}
+
+Findet einen Weg aus einem Labyrinth.\\
+Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.\\
+Bei jeder Drehung wird die Änderung zum Startwinkel $ \varphi $ aktualisiert.\\
+
+\begin{algorithm}[H]
+	\caption{Pledge Strategie}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Labyrinth $L$ und Roboter $R$}
+	\Output{Weg aus dem Labyrinth}
+	\BlankLine
+
+	$\varphi \leftarrow 0$
+	
+	\While{$ R \in L $}{	
+		gehe vorwärts bis zu einer Wand.\\
+		gehe links der Wand entlang bis $ R \not\in L \text{ oder } \varphi = 0 $	
+		}
+\end{algorithm}
+
