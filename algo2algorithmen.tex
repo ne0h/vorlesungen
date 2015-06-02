@@ -2,8 +2,6 @@
 
 Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\footnote{\url{http://geom.ivd.kit.edu/ws14_algo2.php}}
 
-\section{Flussmaximierung}
-
 \subsection{Algorithmus von Ford und Fulkerson}
 
 \begin{algorithm}[H]
@@ -74,6 +72,30 @@ Lifte ist nur erlaubt wenn
 
 
 
-\section{Algorithmen für geometrische Probleme}
-
 \subsection{Binäre Zerlegung des Raum}
+
+\begin{algorithm}[H]
+	\caption{BRZ}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Ein Polyeder $P \subset \mathbb{R}^3$; orientierte, planare, disjunkte Polygone $P_1,...,P_n \subset \mathbb{R}^3$}
+	\Output{Ein $RBZ$ für $P_1,...,P_n$}
+	\BlankLine
+
+	$k \longleftarrow 1$
+
+	\For{$i=1,...,n$} {
+		$Q_k \longleftarrow P_1 \cap P$\newline
+		if {$Q_k \neq \emptyset$} {
+			$k \longleftarrow k + 1$
+		}
+	}
+
+	$l \longleftarrow 1$
+
+	if {$\exists~j: Q_j zerlegt~P~vollstaendig$} {
+		$l \longleftarrow j$
+	}
+\end{algorithm}
