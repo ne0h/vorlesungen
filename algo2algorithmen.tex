@@ -151,8 +151,26 @@ Lifte ist nur erlaubt wenn
 	$V \longleftarrow V_1 \cup V_2 \cup \{ q,s \}$ \newline
 	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
 	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
-	$f \longleftarrow Ford-Fulkerson( F(V,\hat{E}),h,q,s)) $ \newline
+	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
 	$P \longleftarrow \{ e \in E | f(e) = 1 \} $
+\end{algorithm}
+
+\subsection{Sortieren durch stochastisches Teilen}
+\begin{algorithm}[H]
+	\caption{Quicksort}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$ S : = \{ s_1, ... , s_n \} $ 	mit paarweise verschiedenen 	$ s_i \in \mathbb{Z} $ 	}
+	\Output{$( \delta_1, ... , \delta_n)$ mit $\delta_1 < ... < \delta_n$ und $\{ \delta_1, ... , \delta_n \} = S $}
+	\BlankLine
+	
+	\While{ S $\ne \emptyset$} {
+		Wähle ein zufälliges Pivotelement $ y \in S $ \newline
+		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $ , so dass 	$ s_1 < y < s_2 $ \newline
+		Gib $ ( Quicksort(s_1 , y ),Quicksort(s_2))$ aus \newline
+		}
 \end{algorithm}
 
 
