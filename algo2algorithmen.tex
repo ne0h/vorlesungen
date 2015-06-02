@@ -208,3 +208,30 @@ Bei jeder Drehung wird die Änderung zum Startwinkel $ \varphi $ aktualisiert.\\
 		}
 \end{algorithm}
 
+
+\subsection{Geometrische Algorithmen - Wanze}
+
+Findet einen Ziel in einer Umgebung mit Hindernissen.\\
+
+\begin{algorithm}[H]
+	\caption{Wanze}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone.\\
+	$ S, Z $ Start und Ziel $\in A^2 \setminus P$.\\
+	Roboter $R$ der seine eigene Position $r$ kennt.}
+	\Output{Weg von $S$ nach $Z$.}
+	\BlankLine
+	
+	\While{$r \ne Z$}{	
+		gehe Richtung $Z$ bis $r = Z$ oder $r \in P$\\	
+		\If{$r \ne Z$} {
+                    umlaufe $P_i$, suche dabei $q \in argmin || x - z ||_2 , x \in P_i$ \\
+                    (die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $Z$.)\\
+                    gehe zu $q$
+		}
+            }
+\end{algorithm}
+
