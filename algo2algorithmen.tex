@@ -30,7 +30,7 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 
 \subsubsection{Laufzeit}
 \begin{itemize}
-	\item \(\mathcal{O}(|E|~max\{W_f~|~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^* s\) in \(|E|\) gefunden werden kann.
+	\item \(\mathcal{O}(|E| \cdot max\{W_f~|~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^* s\) in \(|E|\) gefunden werden kann.
 	\item Die Laufzeit hängt stark von der Anzahl der Schleifendurchläufe ab, da flussvergrößernde Pfade sehr ungünstig gewählt werden können.
 \end{itemize}
 
@@ -187,6 +187,8 @@ Faktoren, welche die Laufzeit beeinflussen:
 \end{itemize}
 Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 
+
+
 \subsection{Paaren in allgemeinen Graphen}
 \begin{algorithm}[H]
 	\caption{Paare}
@@ -201,12 +203,17 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 	$V \longleftarrow V_1 \cup V_2 \cup \{ q,s \}$ \newline
 	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
 	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
+	\BlankLine
+
 	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
 	$P \longleftarrow \{ e \in E | f(e) = 1 \} $
 \end{algorithm}
 
+\subsubsection{Laufzeit}
+Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot |V_1|)\), da ein Pfad \(q \rightarrow^* s\) in \(|E|\) Schritten gefunden werden kann (siehe Laufzeit von \textit{Ford-Fulkerson}).
 
-\subsection{Sortieren durch stochastisches Teilen}
+
+\subsection{Sortieren durch stochastisches Teilen (Quicksort)}
 \begin{algorithm}[H]
 	\caption{Quicksort}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
@@ -219,10 +226,19 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 	
 	\While{ S $\ne \emptyset$} {
 		Wähle ein zufälliges Pivotelement $ y \in S $ \newline
-		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $ , so dass 	$ s_1 < y < s_2 $ \newline
-		Gib $ ( Quicksort(s_1 , y ),Quicksort(s_2))$ aus \newline
-		}
+		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $, so dass 	$ s_1 < y < s_2 $
+		\BlankLine
+		\Return{Quicksort($s_1$, $y$), Quicksort($s_2$)}
+	}
 \end{algorithm}
+
+\subsubsection{Laufzeit}
+\begin{itemize}
+	\item Aufwandsabschätzung anhand der in Schritt 3 durchgeführten Vergleiche
+	\item Wahrscheinlichkeit, dass \(s_i\) und \(s_j\) verglichen werden steigt mit der Anzahl an Zwischenelementen (\(p_{ij}=\frac{2}{|j-i|+1}\))
+	\item Daraus ergibt sich ein Aufwand \(\in \mathcal{O}(nlogn)\) (Summe der Erwartungswerte der Einzelwahrscheinlichkeiten)
+\end{itemize}
+
 
 \subsection{Minimaler Schnitt}
 \begin{algorithm}[H]
@@ -242,6 +258,9 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 		}
 	Gib $S:=E$ aus
 \end{algorithm}
+
+
+\subsection{Finde}
 
 \begin{algorithm}[H]
 	\caption{Finde}
@@ -570,13 +589,12 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
 
 
-
 \subsection{Zufallsgesteuerte Optimierung}
 Optimierungsaufgaben bestehen aus 
 \begin{enumerate}
-\item Suchraum $Q$, Teil des Zustandsraumes $Z$
-\item Bewertungsfunktion $c: Z \rightarrow \mathbb{R}$, die jedem Zustand $q$ seine Kosten $c(q)$ zuweist.
-\item eine FUnktion $l: Z \rightarrow \mathbb{R}$, die für alle $q \in Q$ die Nebenbedingungen charakterisiert.
+	\item Suchraum $Q$, Teil des Zustandsraumes $Z$
+	\item Bewertungsfunktion $c: Z \rightarrow \mathbb{R}$, die jedem Zustand $q$ seine Kosten $c(q)$ zuweist.
+	\item eine Funktion $l: Z \rightarrow \mathbb{R}$, die für alle $q \in Q$ die Nebenbedingungen charakterisiert.
 \end{enumerate}
 Gesucht wird ein $q \in Q$ mit minimalen / maximalen Kosten.\\
 Eine Optimierungsaufgabe heißt kombinatorischen, wenn $Q$ diskret ist.\\
@@ -601,7 +619,7 @@ Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachb
 Alle nachfolgenden algorithmen sind Suchverfahren.\\
 
 \paragraph{Simuliertes Tempern}
-Nicht so toll, trotzdem lernen.
+\text{} % to force a new line
 
 \begin{algorithm}[H]
 	\caption{Simuliertes Tempern}
@@ -660,32 +678,32 @@ Es wird nicht gekreuzt, sondern nur geklont und mutiert.Zumindest steht nichts d
 
 \paragraph{Allgemeine Strategie $((\mu, k, \lambda, p) - ES)$}
 \begin{description}
-\item[$\mu$] Populationsgröße - Für jede Generation konstant.
-\item[$\lambda$] Anzahl der Nachkommen pro Generation
-\item[$k$] Maximale Lebenszeit - $k = 1$ bei Komma-Strategie, $k=\infty$ bei Plus
-\item[p] Anzahl der Eltern eines Individuums
+	\item[$\mu$] Populationsgröße - Für jede Generation konstant.
+	\item[$\lambda$] Anzahl der Nachkommen pro Generation
+	\item[$k$] Maximale Lebenszeit - $k = 1$ bei Komma-Strategie, $k=\infty$ bei Plus
+	\item[p] Anzahl der Eltern eines Individuums
 \end{description}
 
 \subsubsection{Genetische Algorithmen}
 Merkmale in binärem Merkmalsvektor gespeichert.\\
 Starke Eltern pflanzen sich häufiger fort als schwache.\\
 \begin{description}
-\item[fortpflanzung] Jedes Individuum wird mit der Wahscheinlichkeit $W(q) = \frac{c(q)}{\sum\limits_{p \in Q}c(p)}$ Elter. die $\mu$ Individuen erzeugen $\mu$ Nachkommen, nur diese überleben.
-
-\item[Kreuzung] Von den $\mu$ Nachkommen werden p\% einer Kreuzung unterzogen. Die Kreuzungspaare sind zufällig.
-
-\item[Mutation] Jedes Bit des Merkmalsvektors wird mit einer sehr kleinen Wahscheinlichkeit $p_m$ invertiert.
+	\item[Fortpflanzung] Jedes Individuum wird mit der Wahscheinlichkeit $W(q) = \frac{c(q)}{\sum\limits_{p \in Q}c(p)}$ Elter. die $\mu$ Individuen erzeugen $\mu$ Nachkommen, nur diese überleben.
+	\item[Kreuzung] Von den $\mu$ Nachkommen werden p\% einer Kreuzung unterzogen. Die Kreuzungspaare sind zufällig.
+	\item[Mutation] Jedes Bit des Merkmalsvektors wird mit einer sehr kleinen Wahscheinlichkeit $p_m$ invertiert.
 \end{description}
 
-Schema-Theorem: Merkamle werden häufiger reproduziert, wenn sie 
+Schema-Theorem: Merkmale werden häufiger reproduziert, wenn sie 
 \begin{enumerate}
-\item durch weniger Bits dargestellt werden.
-\item diese Bits eng zusammenstehen (im Vektor)
-\item sie eine hohe Fitness bedeuten.
+	\item durch weniger Bits dargestellt werden,
+	\item diese Bits eng zusammenstehen (im Vektor),
+	\item sie eine hohe Fitness bedeuten.
 \end{enumerate}
 
-Evolutionsstrategien $\Rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
-Genetische Algorithmen $\Rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
+\begin{itemize}
+	\item Evolutionsstrategien $\Rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
+	\item Genetische Algorithmen $\Rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
+\end{itemize}
 
 \subsubsection{Partikelschwarmoptimierung (P-S-O)}
 \begin{algorithm}[H]
@@ -731,9 +749,8 @@ Der de Casteljau-Algorithmus angewendet auf ein Polygon \(B_0^0\) ist die Konkat
 	}
 \end{algorithm}
 
-\paragraph{Der Lane-Riesenfeld-Algorithmus (LR-Algorithmus}
+\subsection{Der Algorithmus von Lane und Riesenfeld (LR-Algorithmus)}
 Dient dazu stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt er wie der de Casteljau-Algorithmus eine Folge von Polygonen(Kontrollpolygone), welche den Grenzwert der Folge(Limeskurve) definieren. Im Gegensatz zum de Casteljau-Algorithmus wird der LR-Algorithmus meist für biinfinite Kontrollpolygone $c_\mathbb{Z} := (c_i)_{i \in \mathbb{Z}} = ( ... c_{-1}c_0c_1 ...)$ beschrieben. Hierbei können endliche Polygone als biinfinite aufgefasst werden, bei denen nur endlich viele Kontrollpunkte $c_i$ von $\mathbb{D}$ verschieden sind.
-
 
 \begin{algorithm}[H]
 	\caption{Lane-Riesenfeld}
