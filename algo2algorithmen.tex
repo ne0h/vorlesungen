@@ -615,7 +615,26 @@ Es wird nicht gekreuzt, sondern nur geklont und mutiert.Zumindest steht nichts d
 \item[p] Anzahl der Eltern eines Individuums
 \end{description}
 
+\subsubsection{Genetische Algorithmen}
+Merkmale in binärem Merkmalsvektor gespeichert.\\
+Starke Eltern pflanzen sich häufiger fort als schwache.\\
+\begin{description}
+\item[fortpflanzung] Jedes Individuum wird mit der Wahscheinlichkeit $W(q) = \frac{c(q)}{\sum\limits_{p \in Q}c(p)}$ Elter. die $\mu$ Individuen erzeugen $\mu$ Nachkommen, nur diese überleben.
 
+\item[Kreuzung] Von den $\mu$ Nachkommen werden p\% einer Kreuzung unterzogen. Die Kreuzungspaare sind zufällig.
+
+\item[Mutation] Jedes Bit des Merkmalsvektors wird mit einer sehr kleinen Wahscheinlichkeit $p_m$ invertiert.
+\end{description}
+
+Schema-Theorem: Merkamle werden häufiger reproduziert, wenn sie 
+\begin{enumerate}
+\item durch weniger Bits dargestellt werden.
+\item diese Bits eng zusammenstehen (im Vektor)
+\item sie eine hohe Fitness bedeuten.
+\end{enumerate}
+
+Evolutionsstrategien $\Rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
+Genetische Algorithmen $\Rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
 
