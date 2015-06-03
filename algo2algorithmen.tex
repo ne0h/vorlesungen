@@ -535,7 +535,7 @@ $c'(q) = c(q) + \gamma \cdot l^2(q)$.\\
 $q$ ist globales Optimum: $\forall p \in Q | p \ne q: c(q) \le c(p)$\\
 $q$ ist lokales Optimum: $\forall p \in Nachbarn(q): c(q) \le c(p)$\\
 
-\paragraph{Gradientenverfahren}
+\subsubsection{Gradientenverfahren}
 \text{ }\\Zustandsraum $Z \in \mathbb{R}^n$. Jeder Zustand ist ein Punkt $x = [x_1, ... , X_n]^t$.
 Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet. 
 $\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]$\\
@@ -545,7 +545,7 @@ Gradientenverfahren sind deterministisch.\\
 Es kann passieren, dass nur ein lokales Optimum gefunden wird.\\
 $\Rightarrow$ Nur anwenden, wenn es keine lokalen Optima/Minima gibt, Ableitung und Straftherme einfach zu berechnen sind.\\
 
-\paragraph{Suchverfahren}
+\subsubsection{Suchverfahren}
 \text{ }\\Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachbarn $N(q) \subset Q$ . $\Rightarrow$ man kann $Q$ von einem Anfangszustand aus durchsuchen.\\
 Alle nachfolgenden algorithmen sind Suchverfahren.\\
 
@@ -573,6 +573,47 @@ Alle nachfolgenden algorithmen sind Suchverfahren.\\
         \Return q\\
 \end{algorithm}
 
+
+\paragraph{Schwellwert Algorithmus}
+\text{ }\\Wähle zufälligen Nachbarn, gilt $c(p) \ge c(q) - \sigma$, fahre fort mit $q = p$.\\
+Schwellwert $\sigma$ wird mit der Zeit kleiner.\\
+$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
+
+
+\paragraph{Sintflut Algorithmus}
+\text{ }\\Starte mit $\sigma = 0$. Wähle zufälligen Nachbarn. Gilt $c(p) > \sigma$, fahre fort mit $q = p$.\\
+$\sigma$ wird mit der Zeit größer.\\
+$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
+
+\paragraph{Rekordjagt Algorithmus}
+\text{ }\\Bisher höchster Wert (Rekord) wird gespeichert.\\
+Akzeptanzbedingung: $c(p) \ge Rekord - \sigma$.\\
+$\sigma$ wird mit der Zeit abgesenkt.\\
+$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
+
+\subsubsection{Evolutionäre Algorithmen}
+Eine Population ebsteht aus Individuen.\\
+Individuen haben einen Genotyp / Merkamlsvektor $q \in \mathbb{R}^n$ und einen Phänotyp/Bewertungsfunktion $c(q)$.\\
+Individuen können sich fortpflanzen. Haben sie 2 oder mehr Eltern $\Rightarrow$ Kreuzung, haben sie einen Elter $\Rightarrow$ Klone.\\
+Die Größe der Population wird konstant gehalten.\\
+
+\paragraph{Plus oder $(\mu + \lambda)$ Strategie}
+\text{ }\\Die Population $Q$ ändert sich mit der zeit, ihre Größe $\mu = |Q|$ bleibt konstant.\\
+Die $\mu$ Individuen mit der besten Fitness ($c(q$) und $\lambda$ Nachkommen bilden die nächste Generation, $\lambda$ Eltern sterben.\\
+Eltern werden gleichverteilt aus $Q$ gewählt.\\
+Es wird nicht gekreuzt, sondern nur geklont und mutiert.Zumindest steht nichts davon im Skript, sollte aber möglich sein...\\
+
+\paragraph{Mehere Eltern}
+\text{ }\\Es kann auch mehrere Eltern geben, die Merkamlsvektoren werden entweder Gemischt oder Gemittelt.\\
+
+
+\paragraph{Allgemeine Strategie $((\mu, k, \lambda, p) - ES)$}
+\begin{description}
+\item[$\mu$] Populationsgröße - Für jede Generation konstant.
+\item[$\lambda$] Anzahl der Nachkommen pro Generation
+\item[$k$] Maximale Lebenszeit - $k = 1$ bei Komma-Strategie, $k=\infty$ bei Plus
+\item[p] Anzahl der Eltern eines Individuums
+\end{description}
 
 
 \subsection{Algorithmus von de Casteljau}
@@ -642,7 +683,7 @@ Der Boyer-Moore-Algorithmus arbeitet am effizientesten, wenn er ein Zeichen vorf
 \subsubsection{Good-Suffix-Heuristik}
 Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben.
 
-\paragraph{Vorberechnung des größten, echten Präsuffixes pro Zeichen im Suchwort}
+\subsubsection{Vorberechnung des größten, echten Präsuffixes pro Zeichen im Suchwort}
 Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir \textit{Präsuffix} von \(w\). Weiter sei \(\gamma(j) := | geps(w_j)|\).
 
 \begin{algorithm}[H]
@@ -671,7 +712,7 @@ Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wi
 	}
 \end{algorithm}
 
-\paragraph{Berechnung der Heuristik}
+\subsubsection{Berechnung der Heuristik}
 Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 
 \begin{algorithm}[H]
