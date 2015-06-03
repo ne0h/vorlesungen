@@ -638,6 +638,39 @@ Der de Casteljau-Algorithmus angewendet auf ein Polygon \(B_0^0\) ist die Konkat
 	}
 \end{algorithm}
 
+\paragraph{Der Lane-Riesenfeld-Algorithmus (LR-Algorithmus}
+Dient dazu stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt er wie der de Casteljau-Algorithmus eine Folge von Polygonen(Kontrollpolygone), welche den Grenzwert der Folge(Limeskurve) definieren. Im Gegensatz zum de Casteljau-Algorithmus wird der LR-Algorithmus meist für biinfinite Kontrollpolygone $c_\mathbb{Z} := (c_i)_{i \in \mathbb{Z}} = ( ... c_{-1}c_0c_1 ...)$ beschrieben. Hierbei können endliche Polygone als biinfinite aufgefasst werden, bei denen nur endlich viele Kontrollpunkte $c_i$ von $\mathbb{D}$ verschieden sind.
+
+
+\begin{algorithm}[H]
+	\caption{Lane-Riesenfeld}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$c_{\mathbb{Z}}^0$ ein Polygon $ \subset \mathbb{R}^d$, $n \in \mathbb{N}_0$ der Grad, $m\in \mathbb{N}$ die Unterteilungstiefe}
+	\Output{$c_{\mathbb{Z}}^m \subset \mathbb{R}^d$}
+	\BlankLine
+
+	\For{$k=1,...,m$}{
+		\tcc{verdopple}
+		\For{$i \in \mathbb{Z}$}{
+			$d_{2i}^0 \longleftarrow d_{2i+1}^0 \longleftarrow c_{i}^{k-1}$
+		}
+		\For{$j=1, ... ,n$}{
+			\tcc{mittele}
+			\For{$i \in \mathbb{Z}$}{
+				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1})*\frac{1}{2}$
+				}
+			}
+		\tcc{bennene um}
+		\For{$ i \in \mathbb{Z}$}{
+			$c_i^k \longleftarrow d_i^n$
+			}
+	}
+\end{algorithm}
+
+
 
 \subsection{Naive Textsuche}
 Im Folgenden ist \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) ein Text und \(s = s_1,...,s_m \in A^m\) mit \(m<n\) ein Suchtext.
