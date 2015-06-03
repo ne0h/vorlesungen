@@ -513,6 +513,15 @@ $c'(q) = c(q) + \gamma \cdot l^2(q)$.\\
 $q$ ist globales Optimum: $\forall p \in Q | p \ne q: c(q) \le c(p)$\\
 $q$ ist lokales Optimum: $\forall p \in Nachbarn(q): c(q) \le c(p)$\\
 
+\paragraph{Gradientenverfahren}
+\text{ }\\Zustandsraum $Z \in \mathbb{R}^n$. Jeder Zustand ist ein Punkt $x = [x_1, ... , X_n]^t$.
+Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet. 
+$\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]$\\
+Die Nachfolger werden definiert durch $x_{i+1} = x_i + h \cdot \delta c(x_i)$, wobei $h > 0$ wenn c maximiert wird, $h < 0$ wenn c minimiert wird.\\
+Der Gradient ist die Richtung des steilsten auf/abstiegs $Rightarrow$ Methode des steilsten Auf/Abstiegs.\\
+Gradientenverfahren sind deterministisch.\\
+Es kann passieren, dass nur ein lokales Optimum gefunden wird.\\
+
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
 
