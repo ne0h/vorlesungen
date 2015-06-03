@@ -549,6 +549,32 @@ $\Rightarrow$ Nur anwenden, wenn es keine lokalen Optima/Minima gibt, Ableitung 
 \text{ }\\Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachbarn $N(q) \subset Q$ . $\Rightarrow$ man kann $Q$ von einem Anfangszustand aus durchsuchen.\\
 Alle nachfolgenden algorithmen sind Suchverfahren.\\
 
+\paragraph{Simuliertes Tempern}
+\text{ }\\Nicht so toll, trozdem lernen.
+
+\begin{algorithm}[H]
+	\caption{Simuliertes Tempern}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+        \Input{$t_1, ..., t_i$ Temperaturen, absteigend sortiert\\
+        $K$ Anzahl der zu berücksichtigenden Nachbarn\\
+        $q$ aktueller Startpunkt\\
+        $i$ aktueller Temperaturindex}
+        
+        
+        \For{k = 1, k++}{
+        wähle zufällig Nachbarn $p \in N(q)$\\
+        \If{$ c(p) > c(q) \text{ oder } exp(\frac{c(p) - c(q)}{t_i}) > Zufallszahl \in [0,1]$}{
+            Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
+            }
+        }
+        Gib q aus\\
+\end{algorithm}
+
+
+
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
 
