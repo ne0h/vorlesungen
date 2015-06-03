@@ -562,15 +562,15 @@ Alle nachfolgenden algorithmen sind Suchverfahren.\\
         $K$ Anzahl der zu berücksichtigenden Nachbarn\\
         $q$ aktueller Startpunkt\\
         $i$ aktueller Temperaturindex}
+        \Output{$q$ - die gefundene Lösung}
         
-        
-        \For{k = 1, k++}{
+        \For{k = 1, k $\leq$ K, k++}{
         wähle zufällig Nachbarn $p \in N(q)$\\
         \If{$ c(p) > c(q) \text{ oder } exp(\frac{c(p) - c(q)}{t_i}) > Zufallszahl \in [0,1]$}{
-            Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
+            \Return Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
             }
         }
-        Gib q aus\\
+        \Return q\\
 \end{algorithm}
 
 
