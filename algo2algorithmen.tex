@@ -263,6 +263,27 @@ Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so d
 		}
 \end{algorithm}
 
+\begin{algorithm}[H]
+	\caption{Simplex}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Normalform eines linearen Programms}
+	\Output{Geänderte Normalform so dass $z(0) =  c = max$}
+	\BlankLine
+	
+	\While{$\exists c_s > 0$}{
+		\If{$\forall b_{is} \geq 0 $}{
+			keine Lösung - Ende
+			}
+		\Else{
+			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} 0} \frac{b_i}{b_{is}}$
+			}
+	$B \longleftarrow Austausch(B,r,s)$
+	}
+\end{algorithm}
+
 \subsection{Binäre Zerlegung des Raum}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
 
@@ -498,6 +519,7 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
 
 
+
 \subsection{Zufallsgesteuerte Optimierung}
 Optimierungsaufgaben bestehen aus 
 \begin{enumerate}
@@ -649,4 +671,3 @@ Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verscho
 		}
 	}
 \end{algorithm}
-
