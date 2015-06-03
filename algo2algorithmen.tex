@@ -469,6 +469,19 @@ $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\r
 
 
 \subsection{Zufallsgesteuerte Optimierung}
+Optimierungsaufgaben bestehen aus 
+\begin{enumerate}
+\item Suchraum $Q$, Teil des Zustandsraumes $Z$
+\item Bewertungsfunktion $c: Z \rightarrow \mathbb{R}$, die jedem Zustand $q$ seine Kosten $c(q)$ zuweist.
+\item eine FUnktion $l: Z \rightarrow \mathbb{R}$, die für alle $q \in Q$ die Nebenbedingungen charakterisiert.
+\end{enumerate}
+Gesucht wird ein $q \in Q$ mit minimalen / maximalen Kosten.\\
+Eine Optimierungsaufgabe heißt kombinatorischen, wenn $Q$ diskret ist.\\
+Nebenbedingungen können vermieden werden, indem man $c$ so umformuliert, dass
+$q \not\in Q$ so schlecht bewertet werden, dass sie nicht als Lösung in Frage kommen:
+$c'(q) = c(q) + \gamma \cdot l^2(q)$.\\
+$q$ ist globales Optimum: $\forall p \in Q | p \ne q: c(q) \le c(p)$\\
+$q$ ist lokales Optimum: $\forall p \in Nachbarn(q): c(q) \le c(p)$\\
 
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
