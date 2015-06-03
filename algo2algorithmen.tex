@@ -232,6 +232,36 @@ Lifte ist nur erlaubt wenn
 		gib 0 XOR Wert(z) aus}
 \end{algorithm}
 
+\subsection{Eckentausch - Lineares Programm}
+Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so das der Ursprung von Ecke zu Ece von S wandert und der Wert von z im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von $\bar{y}$ mit einer von $\overline{\bar{y}}$ .
+
+\begin{algorithm}[H]
+	\caption{Austausch}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Matrix A, r, s}
+	\Output{Matrix A'}
+	\BlankLine
+	
+	\For{$i \neq r AND j \neq s$}{
+		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
+		}
+		
+	\tcc{Pivotzeile}
+	\For{$i=r AND j \neq s$ }{
+		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
+		}
+	\tcc{Pivotspalte}
+	\For{$i \neq r AND j=s$}{
+		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
+		}
+	\tcc{Pivot}
+	\For{$i=r AND j=s$}{
+		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
+		}
+\end{algorithm}
 
 \subsection{Binäre Zerlegung des Raum}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
