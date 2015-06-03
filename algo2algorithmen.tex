@@ -68,10 +68,10 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\Output{}
 	\BlankLine
 
-	$d \longleftarrow \min{ü(x), k_f(x,y)}$ \newline
-	$f(x,y) \longleftarrow f(x,y) +d$ \newline
-	$ü(x) \longleftarrow ü(x) -d $ \newline
-	$ü(y) \longleftarrow ü(y) +d$ \newline
+	$d \longleftarrow \min\{u(x), k_f(x,y)\}$ \newline
+	$f(x,y) \longleftarrow f(x,y) + d$ \newline
+	$u(x) \longleftarrow u(x) - d $ \newline
+	$u(y) \longleftarrow u(y) + d$ \newline
 \end{algorithm}
 
 \subsubsection{Lifte}
@@ -103,7 +103,9 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\For{alle $ x,y \in V $ }{
 	$ h(x)  \leftarrow \begin{cases}|V| & x=q \\ 0 & \text{sonst}\end{cases}$ \newline
 	$ f(x,y)  \leftarrow \begin{cases}k(x,y) & x=q \\ 0 & \text{sonst}\end{cases}$}
-	\While{Es gibt erlaubte Push oder Lifte Operationen} {Führe beliebig Push oder Lifte aus}
+	\While{Es gibt erlaubte Push oder Lifte Operationen}{
+		Führe diese Push oder Lifte aus
+	}
 \end{algorithm}
 
 \subsubsection{Korrektheit}
@@ -206,7 +208,7 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 	\BlankLine
 
 	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
-	$P \longleftarrow \{ e \in E | f(e) = 1 \} $
+	$P \longleftarrow \{ e \in E~|~f(e) = 1 \} $
 \end{algorithm}
 
 \subsubsection{Laufzeit}
@@ -221,7 +223,7 @@ Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
 	\Input{$ S : = \{ s_1, ... , s_n \} $ 	mit paarweise verschiedenen 	$ s_i \in \mathbb{Z} $ 	}
-	\Output{$( \delta_1, ... , \delta_n)$ mit $\delta_1 < ... < \delta_n$ und $\{ \delta_1, ... , \delta_n \} = S $}
+	\Output{$(\sigma_1,...,\sigma_n)$ mit $\sigma_1 < ... < \sigma_n$ und $\{\sigma_1, ... , \sigma_n \} = S $}
 	\BlankLine
 	
 	\While{ S $\ne \emptyset$} {
@@ -241,22 +243,26 @@ Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot
 
 
 \subsection{Minimaler Schnitt}
+Ist \(E\) eine Folge in \(V^2\) heißt \((V,E)\) Multigraph, weil Kanten mehrfach vorkommen können. \(S \subset E\) heißt \textit{Schnitt} von \((V,E)\), wenn \((V, E \backslash S)\) unzusammenhängend ist, also mindestens zwei Komponenten hat.
+
 \begin{algorithm}[H]
 	\caption{Schnitt}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{$ (V,E) $ ein ungerichteter Multigraph}
-	\Output{Ein Schnitt S}
+	\Input{$(V,E)$ ein ungerichteter Multigraph}
+	\Output{Ein Schnitt $S$}
 	\BlankLine
 	
-	\While{ $|V| \ge 3$} {
-		Wähle ein zufälliges Kante $ (x,y) \ in E $ \newline
-		Entferne Alle $(x,y)$ aus $E$ \newline
-		Verschmelte x mit y \newline
-		}
-	Gib $S:=E$ aus
+	\While{$|V| \geq 3$} {
+		Wähle eine zufällige Kante $(x,y) \in E$\newline
+		Entferne alle $(x,y)$ aus $E$\newline
+		Verschmelze $x$ mit $y$
+	}
+	\BlankLine
+
+	\Return{S:=E}
 \end{algorithm}
 
 
@@ -269,89 +275,65 @@ Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
 	\Input{$S:= \{ s_1 , ... , s_n \} \subset \mathbb{M}$}
-	\Output{$ \delta_k$, wobei $\delta_1, ... , \delta_n \in S$ und $\delta_1 < ... < \delta_n$}
+	\Output{$\sigma_k$, wobei $\sigma_1,...,\sigma_n \in S$ und $\sigma_1 < ... < \sigma_n$}
 	\BlankLine
 	
-	Wähle y zufällig aus $S$\newline
-	$S_1 \longleftarrow \{ x \in S | x < y \} $\newline
-	$S_2 \longleftarrow \{ x \in S | x > y \} $ \newline
-	\If{ $|S_1| = k-1$}{ gib y aus}
-	\Else{
-		\If{$|S_1| > k-1$}{$Finde(S_1,k)$}
-		\Else{$Finde(S_2, k-|S_1|-1)$}
+	Wähle $y$ zufällig aus $S$\newline
+	$S_1 \longleftarrow \{x \in S~|~x < y \} $\newline
+	$S_2 \longleftarrow \{x \in S~|~x > y \} $
+	\BlankLine
+
+	\eIf{ $|S_1| = k-1$}{
+		\Return{y}
+	}{
+		\eIf{$|S_1| > k-1$}{
+			$Finde(S_1,k)$
+		}{
+			$Finde(S_2, k-|S_1|-1)$
 		}
+	}
 \end{algorithm}
 
+\subsubsection{Laufzeit}
+\(\mathcal{O}(n)\)
+
 \subsection{Spielbaumauswertung}
+Binärer Spielbaum: Balancierter Binärbaum gerader Höhe \(2k\), mit Knotenwerten \(\in \{0,1\}\). Dies entspricht einem Spiel, bei dem zwei Spieler abwechselnd ihren Gewinn maximieren.
+
+Es gilt außerdem:
+\begin{itemize}
+	\item \(Wert(x) = Wert(y) \downarrow Wert(z)\)
+	\item \(a \downarrow b := a~NOR~b := \overline{a \vee b}\)
+	\item \((a \downarrow b) \downarrow (c \downarrow d) = \overline{\overline{a \vee b} \vee \overline{c \vee d}} = (a \vee b) \wedge (c \vee d)\)
+\end{itemize}
+
+\subsubsection{Extrema}
+\begin{itemize}
+	\item Minima: Werte der Nicht-Blatt-Knoten auf gerader Höhe
+	\item Maxima: Werte der Nicht-Blatt-Knoten auf ungerader Höhe
+\end{itemize}
+
 \begin{algorithm}[H]
 	\caption{Wert}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{x Knoten eines binären Spielbaums}
+	\Input{$x$ Knoten eines binären Spielbaums}
 	\Output{$Wert(x)$}
 	\BlankLine
 	
-	Wähle y zufällig aus S \newline
-	$(y,z) \longleftarrow $ Paare der Kinder von x in zufälliger Reihenfolge\newline
-	$W \longleftarrow Wert(y)$ \newline
-	\If{ $w=1$}{gib 0 aus}
-	\Else{
-		gib 0 XOR Wert(z) aus}
-\end{algorithm}
-
-\subsection{Eckentausch - Lineares Programm}
-Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so das der Ursprung von Ecke zu Ece von S wandert und der Wert von z im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von $\bar{y}$ mit einer von $\overline{\bar{y}}$ .
-
-\begin{algorithm}[H]
-	\caption{Austausch}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Matrix A, r, s}
-	\Output{Matrix A'}
+	$(y,z) \longleftarrow $ Paar der Kinder von $x$ in zufälliger Reihenfolge\newline
+	$w \longleftarrow Wert(y)$
 	\BlankLine
-	
-	\For{$i \neq r AND j \neq s$}{
-		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
-		}
-		
-	\tcc{Pivotzeile}
-	\For{$i=r AND j \neq s$ }{
-		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
-		}
-	\tcc{Pivotspalte}
-	\For{$i \neq r AND j=s$}{
-		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
-		}
-	\tcc{Pivot}
-	\For{$i=r AND j=s$}{
-		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
-		}
-\end{algorithm}
 
-\begin{algorithm}[H]
-	\caption{Simplex}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Normalform eines linearen Programms}
-	\Output{Geänderte Normalform so dass $z(0) =  c = max$}
-	\BlankLine
-	
-	\While{$\exists c_s > 0$}{
-		\If{$\forall b_{is} \geq 0 $}{
-			keine Lösung - Ende
-			}
-		\Else{
-			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} 0} \frac{b_i}{b_{is}}$
-			}
-	$B \longleftarrow Austausch(B,r,s)$
+	\eIf{$w = 1$}{
+		\Return{0}
+	}{
+		\Return{0 XOR Wert(z)}
 	}
 \end{algorithm}
+
 
 \subsection{Binäre Zerlegung des Raum}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
@@ -396,7 +378,6 @@ Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone
 
 	\BlankLine
 	\Return{Wurzel mit ihren Teilbaeumen}
-
 \end{algorithm}
 
 
@@ -462,7 +443,7 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 
 \subsection{Pledge Startegie}
 \begin{itemize}
-	\item Findet einen Weg aus einem Labyrinth.
+	\item Ziel: Finde einen Weg aus einem Labyrinth.
 	\item Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.
 	\item Bei jeder Drehung wird die Änderung zum Startwinkel \(\phi\) aktualisiert.
 \end{itemize}
@@ -473,22 +454,19 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{Labyrinth $L$ und Roboter $R$}
-	\Output{Weg aus dem Labyrinth}
-	\BlankLine
-
-	$\varphi \leftarrow 0$
+	$\phi \longleftarrow 0$
 	
 	\While{$ R \in L $}{	
-		gehe vorwärts bis zu einer Wand.\\
-		gehe links der Wand entlang bis $ R \not\in L \text{ oder } \varphi = 0 $	
+		gehe vorwärts bis Wand kontaktiert wird\newline
+		\While{$R \not \in L$ oder $\phi = 0$}{
+			gehe links der Wand
 		}
+	}
 \end{algorithm}
 
 
 \subsection{Wanze}
-
-Findet einen Ziel in einer Umgebung mit Hindernissen.\\
+Findet ein Ziel in einer Umgebung mit Hindernissen.
 
 \begin{algorithm}[H]
 	\caption{Wanze}
@@ -496,26 +474,30 @@ Findet einen Ziel in einer Umgebung mit Hindernissen.\\
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone.\\
-	$ S, Z $ Start und Ziel $\in A^2 \setminus P$.\\
-	Roboter $R$ der seine eigene Position $r$ kennt.}
-	\Output{Weg von $S$ nach $Z$.}
+	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone $\subset A^2$, die sich nicht gegenseitig enthalten;\\
+		$s,z$ Start und Ziel $\in A^2 \setminus P$.\\
+		Roboter $R$ der seine eigene Position $r$ kennt}
+	\Output{Weg von $s$ nach $z$}
 	\BlankLine
 	
-	\While{$r \ne Z$}{	
-		gehe Richtung $Z$ bis $r = Z$ oder $r \in P$\\	
-		\If{$r \ne Z$} {
-                    umlaufe $P_i$, suche dabei $q \in argmin || x - z ||_2 , x \in P_i$ \\
-                    (die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $Z$.)\\
-                    gehe zu $q$
+	\While{$r \ne z$}{
+		gehe Richtung $z$ bis $r = z$ oder $\exists i:r \in P_i$
+		\BlankLine
+
+		\If{$r \ne z$} {
+			\tcc{die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $z$}
+            umlaufe $P_i$ und suche $q \in argmin || x - z ||_2,~x \in P_i$
+            \BlankLine
+
+            gehe zu $q$
 		}
     }
 \end{algorithm}
+\textit{Wanze} terminiert, da \(R\) das Ziel spätestens dann findet, wenn er alle \(P_i\) maximal einmal umlaufen hat.
 
-\subsection{Geometrische Algorithmen - Türsuche 1}
 
-Roboter steht vor einer langen Wand und sucht die Tür.\\
-
+\subsection{Türsuche 1}
+Roboter steht vor einer langen Wand und sucht die Tür.
 
 \begin{algorithm}[H]
 	\caption{Türsuche 1}
@@ -538,10 +520,8 @@ Weglänge $\ge 2 \cdot 1 + 2 \cdot 2 + ... + 2n +n = O(n^2)$.\\
 $\Rightarrow$ Türsuche 1 ist nicht kompetetiv.
 
 
-\subsection{Geometrische Algorithmen - Türsuche 2}
-
-Roboter steht vor einer langen Wand und sucht die Tür.\\
-
+\subsection{Türsuche 2}
+Roboter steht vor einer langen Wand und sucht die Tür.
 
 \begin{algorithm}[H]
 	\caption{Türsuche 2}
@@ -564,9 +544,8 @@ Weglänge $\le 2 \sum\limits_{i=0}^{n+1} 2^i + 2^{n+\delta} \le 2 ^{n+3+\delta} 
 $\Rightarrow$ Türsuche 2 ist 9-kompetetiv.
 
 
-\subsection{Geometrische Algorithmen - Sternsuche}
-
-Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
+\subsection{Sternsuche}
+Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).
 
 \begin{algorithm}[H]
 	\caption{Sternsuche}
@@ -587,6 +566,59 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).\\
 \end{algorithm}
 
 $\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
+
+
+\subsection{Eckentausch - Lineares Programm}
+Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so das der Ursprung von Ecke zu Ece von S wandert und der Wert von z im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von $\bar{y}$ mit einer von $\overline{\bar{y}}$ .
+
+\begin{algorithm}[H]
+	\caption{Austausch}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Matrix A, r, s}
+	\Output{Matrix A'}
+	\BlankLine
+	
+	\For{$i \neq r AND j \neq s$}{
+		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
+		}
+		
+	\tcc{Pivotzeile}
+	\For{$i=r AND j \neq s$ }{
+		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
+		}
+	\tcc{Pivotspalte}
+	\For{$i \neq r AND j=s$}{
+		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
+		}
+	\tcc{Pivot}
+	\For{$i=r AND j=s$}{
+		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
+		}
+\end{algorithm}
+
+\begin{algorithm}[H]
+	\caption{Simplex}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Normalform eines linearen Programms}
+	\Output{Geänderte Normalform so dass $z(0) =  c = max$}
+	\BlankLine
+	
+	\While{$\exists c_s > 0$}{
+		\If{$\forall b_{is} \geq 0 $}{
+			keine Lösung - Ende
+			}
+		\Else{
+			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} 0} \frac{b_i}{b_{is}}$
+			}
+	$B \longleftarrow Austausch(B,r,s)$
+	}
+\end{algorithm}
 
 
 \subsection{Zufallsgesteuerte Optimierung}
