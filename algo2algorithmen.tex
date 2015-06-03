@@ -16,15 +16,48 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 
 	$f \longleftarrow 0$
 
-	\While{Es gibt einen Pfad $q \rightarrow s$ in $G_f$} {
+	\While{Es gibt einen Pfad $q \rightarrow^* s$ in $G_f$} {
 		Erhöhe $f$ über diesem maximal
 	}
 \end{algorithm}
 
-\subsection{Edmonds-Karp.Algorithmus}
-	Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus
-	
+\subsubsection{Korrektheit}
+\begin{itemize}
+	\item Terminiert sicher für alle rationalen Eingaben\footnote{\url{http://de.wikipedia.org/wiki/Algorithmus_von_Ford_und_Fulkerson\#Zur_Korrektheit_des_Algorithmus}}
+	\item Terminiert, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\)
+	\item Irrationale Kapazitäten: Terminiert nicht, da der Algorithmus unendliche lange laufen kann oder ein falsches Ergebnis liefert
+\end{itemize}
+
+\subsubsection{Laufzeit}
+\begin{itemize}
+	\item \(\mathcal{O}(|E|~max\{W_f~|~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^* s\) in \(|E|\) gefunden werden kann.
+	\item Die Laufzeit hängt stark von der Anzahl der Schleifendurchläufe ab, da flussvergrößernde Pfade sehr ungünstig gewählt werden können.
+\end{itemize}
+
+
+\subsection{Algorithmus von Edmonds und Karp}
+Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus.
+
+\begin{itemize}
+	\item Die Länge \(l_f x\) der kürzesten Pfade \(q \rightarrow^* s\) in \(G_f\) wächst monoton
+	\item Terminiert für reelle Eingaben
+\end{itemize}
+
+\subsubsection{Laufzeit}
+\begin{itemize}
+	\item Anzahl der Iterationen \(\in \mathcal{O}(|E| \cdot |V|)\), da \(E_f\) in jedem Schritt eine Kante verliert, die später eventuell als Gegenkante genutzt wird.
+	\item Dadurch wächst der Fluss um mindestens \(2\)
+	\item Da \(l_f y < |V|-1\) verliert \(E_f\) eine Kante maximal \(\frac{|V|}{2}\) Mal (\(\rightarrow\) Anzahl der Iterationen)
+	\item Durch die Breitensuche ergibt sich eine Gesamtlaufzeit von \(\mathcal{O}(|E|^2 \cdot |V|)\)
+\end{itemize}
+
+
 \subsection{Die Präfluss-Pusch-Methode}
+Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluss speichern zu können. Diese könnten nur bergab entleert werdern.
+
+\subsubsection{Push}
+\(Push(x,y)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x)-h(y) \geq 1\) ist.
+
 \begin{algorithm}[H]
 	\caption{Push}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
@@ -41,13 +74,8 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 	$ü(y) \longleftarrow ü(y) +d$ \newline
 \end{algorithm}
 
-Push ist nur erlaubt wenn 
-	\begin{itemize}
-		\item $ü(x) > 0, x \in V \setminus {q,s}$
-		\item $(x,y) \in E_f$
-		\item $h(x) - h(y) = 1$
-	\end{itemize} 
-
+\subsubsection{Lifte}
+\(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{(x,y) \in E_f}{h(y)}\) ist.
 
 \begin{algorithm}[H]
 	\caption{Lifte}
@@ -56,18 +84,10 @@ Push ist nur erlaubt wenn
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
 	\Input{$x$}
-	\Output{}
 	\BlankLine
 
 	$h(x) := 1+ \min_{(x,y) \in E_f}{h(y}$
-\end{algorithm}
-
-Lifte ist nur erlaubt wenn 
-	\begin{itemize}
-		\item $x \in V \setminus {q,s}$
-		\item $ü(x) > 0$
-		\item $h(x) \leqslant \min_{(x,y) \in E_f}{h(y)}$
-	\end{itemize} 
+\end{algorithm} 
 
 
 \begin{algorithm}[H]
@@ -86,7 +106,25 @@ Lifte ist nur erlaubt wenn
 	\While{Es gibt erlaubte Push oder Lifte Operationen} {Führe beliebig Push oder Lifte aus}
 \end{algorithm}
 
-\subsection{"`An die Spitze"' Präfluss-Push-Algorithmus}
+\subsubsection{Korrektheit}
+\begin{itemize}
+	\item Im Verlauf des Algorithmus bleibt \(h\) immer eine gültige Höhenfunktion, da alle erlaubten Operationen die Grundbedingungen des Flussnetzwerks nicht verletzen.
+	\item Terminiert der Algorithmus, ist \(f\) maximal, da es keinen weiteren Pfad \(q \rightarrow^* s\) gibt (da ansonten gelten müsste: \(h(s) \geq h(q)-|V|+1=1\))
+\end{itemize}
+
+\subsubsection{Laufzeit}
+\begin{itemize}
+	\item Anzahl durchgeführter Lifte- und Pusch-Operationen \(\in \mathcal{O}(|V|^2 \cdot |E|)\)
+	\item Daher kann der Algorithmus auch mit dieser Laufzeit implementiert werden
+\end{itemize}
+
+
+\subsection{"`An die Spitze"' Präfluss-Pusch-Algorithmus}
+Formalisierung bzw. Erweiterung des \textit{Präfluss-Pusch-Algorithmus}.
+\begin{itemize}
+	\item Verwaltung einer Knotenliste \(L\) in der \(x\) vor \(y\) auftritt, falls \((x,y)\) puschbar ist
+	\item Verwaltung einer Nachbarknotenliste pro Knoten
+\end{itemize}
 
 \begin{algorithm}[H]
 	\caption{Leere}
@@ -95,13 +133,12 @@ Lifte ist nur erlaubt wenn
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
 	\Input{$x$}
-	\Output{}
 	\BlankLine
 
-	\While{$ü(x)>0$}{	
+	\While{$u(x)>0$}{	
 		\If{$i_x > 0$}{
 			$y \longleftarrow n_x(i_x)$ \newline
-			\If{$(x,y) \text{puschbar}$}{
+			\If{$(x,y)~puschbar$}{
 				$Pusch(x,y)$}
 			\Else{
 				$i_x \longleftarrow i_x -1$}
@@ -119,23 +156,36 @@ Lifte ist nur erlaubt wenn
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
 	\Input{$F(G,k,q,s)$}
-	\Output{Einen maximalen Fluss f}
+	\Output{Ein maximaler Fluss $f$}
 	\BlankLine
 	
-	Initialisiere f und h wie in Präfluss-Pusch \newline
-	Generie L \newline
-	$x \longleftarrow Kopf(L)$ \newline
-	\For{$\forall x \in V$}{
+	Initialisiere $f$ und $h$ wie in Präfluss-Pusch \newline
+	Generiere $L$ \newline
+	$x \longleftarrow Kopf(L)$
+	\BlankLine
+
+	\For{$x \in V$}{
 		$i_x \longleftarrow Grad(x)$}
+	\BlankLine
+
 	\While{$x \ne Nil$ }{	
 		$h_{alt} \longleftarrow h(x)$ \newline
 		$Leere(x)$ \newline
 		\If{$h_{alt} < h(x)$}{
-			Setze x an die Spitze von L
-		}	
-		$x \longleftarrow \text{Nachfolger von x in L}$
+			Setze $x$ an die Spitze von $L$
 		}
+		\BlankLine
+		$x \longleftarrow \text{Nachfolger von x in L}$
+	}
 \end{algorithm}
+
+\subsubsection{Laufzeit}
+Faktoren, welche die Laufzeit beeinflussen:
+\begin{itemize}
+	\item Anzahl Aufrufe von \(Leere(x)\) mit \(u(x) = 0\)
+	\item Anzahl der Aufrufe der Hauptschleife
+\end{itemize}
+Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 
 \subsection{Paaren in allgemeinen Graphen}
 \begin{algorithm}[H]
@@ -203,7 +253,7 @@ Lifte ist nur erlaubt wenn
 	\Output{$ \delta_k$, wobei $\delta_1, ... , \delta_n \in S$ und $\delta_1 < ... < \delta_n$}
 	\BlankLine
 	
-	Wähle y zufällig aus S \newline
+	Wähle y zufällig aus $S$\newline
 	$S_1 \longleftarrow \{ x \in S | x < y \} $\newline
 	$S_2 \longleftarrow \{ x \in S | x > y \} $ \newline
 	\If{ $|S_1| = k-1$}{ gib y aus}
@@ -311,7 +361,7 @@ Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone
 
 	\BlankLine
 	\tcc{Falls ein Polygon $P$ komplett zerteilt, nehme dieses als Trennelement. Anderenfalls nehme das erste in der Liste}
-	\If{$\exists~j: Q_j~zerlegt~P~vollstaendig$}{
+	\If{Exists $j$: $Q_j$ zerlegt P vollständig}{
 		$l \longleftarrow j$
 	}
 
@@ -392,10 +442,11 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 
 
 \subsection{Pledge Startegie}
-
-Findet einen Weg aus einem Labyrinth.\\
-Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.\\
-Bei jeder Drehung wird die Änderung zum Startwinkel $ \varphi $ aktualisiert.\\
+\begin{itemize}
+	\item Findet einen Weg aus einem Labyrinth.
+	\item Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.
+	\item Bei jeder Drehung wird die Änderung zum Startwinkel \(\phi\) aktualisiert.
+\end{itemize}
 
 \begin{algorithm}[H]
 	\caption{Pledge Strategie}
@@ -536,7 +587,7 @@ $q$ ist globales Optimum: $\forall p \in Q | p \ne q: c(q) \le c(p)$\\
 $q$ ist lokales Optimum: $\forall p \in Nachbarn(q): c(q) \le c(p)$\\
 
 \subsubsection{Gradientenverfahren}
-\text{ }\\Zustandsraum $Z \in \mathbb{R}^n$. Jeder Zustand ist ein Punkt $x = [x_1, ... , X_n]^t$.
+Zustandsraum $Z \in \mathbb{R}^n$. Jeder Zustand ist ein Punkt $x = [x_1, ... , X_n]^t$.
 Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet. 
 $\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]$\\
 Die Nachfolger werden definiert durch $x_{i+1} = x_i + h \cdot \delta c(x_i)$, wobei $h > 0$ wenn c maximiert wird, $h < 0$ wenn c minimiert wird.\\
@@ -546,11 +597,11 @@ Es kann passieren, dass nur ein lokales Optimum gefunden wird.\\
 $\Rightarrow$ Nur anwenden, wenn es keine lokalen Optima/Minima gibt, Ableitung und Straftherme einfach zu berechnen sind.\\
 
 \subsubsection{Suchverfahren}
-\text{ }\\Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachbarn $N(q) \subset Q$ . $\Rightarrow$ man kann $Q$ von einem Anfangszustand aus durchsuchen.\\
+Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachbarn $N(q) \subset Q$ . $\Rightarrow$ man kann $Q$ von einem Anfangszustand aus durchsuchen.\\
 Alle nachfolgenden algorithmen sind Suchverfahren.\\
 
 \paragraph{Simuliertes Tempern}
-\text{ }\\Nicht so toll, trozdem lernen.
+Nicht so toll, trotzdem lernen.
 
 \begin{algorithm}[H]
 	\caption{Simuliertes Tempern}
@@ -575,18 +626,18 @@ Alle nachfolgenden algorithmen sind Suchverfahren.\\
 
 
 \paragraph{Schwellwert Algorithmus}
-\text{ }\\Wähle zufälligen Nachbarn, gilt $c(p) \ge c(q) - \sigma$, fahre fort mit $q = p$.\\
+Wähle zufälligen Nachbarn, gilt $c(p) \ge c(q) - \sigma$, fahre fort mit $q = p$.\\
 Schwellwert $\sigma$ wird mit der Zeit kleiner.\\
 $\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
 
 
 \paragraph{Sintflut Algorithmus}
-\text{ }\\Starte mit $\sigma = 0$. Wähle zufälligen Nachbarn. Gilt $c(p) > \sigma$, fahre fort mit $q = p$.\\
+Starte mit $\sigma = 0$. Wähle zufälligen Nachbarn. Gilt $c(p) > \sigma$, fahre fort mit $q = p$.\\
 $\sigma$ wird mit der Zeit größer.\\
 $\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
 
 \paragraph{Rekordjagt Algorithmus}
-\text{ }\\Bisher höchster Wert (Rekord) wird gespeichert.\\
+Bisher höchster Wert (Rekord) wird gespeichert.\\
 Akzeptanzbedingung: $c(p) \ge Rekord - \sigma$.\\
 $\sigma$ wird mit der Zeit abgesenkt.\\
 $\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
