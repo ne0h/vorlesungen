@@ -635,6 +635,29 @@ Schema-Theorem: Merkamle werden häufiger reproduziert, wenn sie
 
 Evolutionsstrategien $\Rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
 Genetische Algorithmen $\Rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
+
+\subsubsection{Partikelschwarmoptimierung (P-S-O)}
+\begin{algorithm}[H]
+	\caption{PSO}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+        \Input{$n$ - Menge an Partikeln}
+        \Output{$q$ - die beste gefundene Lösung}
+        
+        $\forall$ i : wähle $p_i(0), v_i(0)$ zufällig (Startposition und Geschwindigkeit der einzelnen Partikel)\\
+        
+        es gilt immer: $q_i$ bisher beste Position von $p_i$, $q = max(q_i)$\\
+        \While{Abbruchgenauigkeit noch nicht erreicht}{
+        \For{i = 0 , i < n; i++} {
+                $v_i \leftarrow v_i \omega + (q_i - p_i) c_1 \cdot r_1 + (q - p_i) c_2 \cdot r_2$\\
+                $p_i \leftarrow p_i + v_i$\\
+            }
+        }
+        \Return q\\
+\end{algorithm}
+
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
 
