@@ -477,8 +477,8 @@ Findet ein Ziel in einer Umgebung mit Hindernissen.
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone $\subset A^2$, die sich nicht gegenseitig enthalten;\\
-		$s,z$ Start und Ziel $\in A^2 \setminus P$.\\
+	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone $\subset A^2$, die sich nicht gegenseitig enthalten;\newline
+		$s,z$: Start und Ziel $\in A^2 \setminus P$;\newline
 		Roboter $R$ der seine eigene Position $r$ kennt}
 	\Output{Weg von $s$ nach $z$}
 	\BlankLine
@@ -496,7 +496,7 @@ Findet ein Ziel in einer Umgebung mit Hindernissen.
 		}
     }
 \end{algorithm}
-\textit{Wanze} terminiert, da \(R\) das Ziel spätestens dann findet, wenn er alle \(P_i\) maximal einmal umlaufen hat.
+\textit{Wanze} terminiert, da \(R\) das Ziel spätestens dann findet, wenn er alle \(P_i\) maximal einmal umlaufen hat (bei jedem Umlaufen verkleinert sich die Distanz zum Ziel).
 
 
 \subsection{Türsuche 1}
@@ -508,19 +508,20 @@ Roboter steht vor einer langen Wand und sucht die Tür.
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-
-	$i \leftarrow 1$
+	$i \longleftarrow 1$
+	\BlankLine
 	
 	\While{Tür noch nicht gefunden}{	
-		gehe $i$ Meter der Wand entlang.\\
-		gehe i Meter zurück (ändert die Laufrichtung)\\
-		$ i \leftarrow i+1$\\
-		}
+		gehe $i$ Meter der Wand entlang\newline
+		\tcc{ändert die Laufrichtung}
+		gehe i Meter zurück\newline
+		$i \longleftarrow i+1$
+	}
 \end{algorithm}
 
-Weglänge: Ist die Tür n + (0,1) Meter vom Ausgangspunkt entfernt, gilt:\\
-Weglänge $\ge 2 \cdot 1 + 2 \cdot 2 + ... + 2n +n = O(n^2)$.\\
-$\Rightarrow$ Türsuche 1 ist nicht kompetetiv.
+\subsubsection{Kompetitivität}
+Weglänge: Ist die Tür \(d = n + (0,1)\) Meter vom Ausgangspunkt entfernt, gilt:\newline
+\(w \geq 2 \cdot 1 + 2 \cdot 2 + ... + 2n +n = O(n^2) \rightarrow\) \textit{Türsuche 1} ist nicht kompetitiv.
 
 
 \subsection{Türsuche 2}
@@ -532,23 +533,24 @@ Roboter steht vor einer langen Wand und sucht die Tür.
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-
-	$i \leftarrow 1$
+	$i \longleftarrow 1$
+	\BlankLine
 	
 	\While{Tür noch nicht gefunden}{	
-		gehe $i$ Meter der Wand entlang.\\
-		gehe i Meter zurück (ändert die Laufrichtung)\\
-		$ i \leftarrow 2i$\\
-		}
+		gehe $i$ Meter der Wand entlang\newline
+		\tcc{ändert die Laufrichtung}
+		gehe i Meter zurück\newline
+		$i \longleftarrow 2i$\\
+	}
 \end{algorithm}
 
-Weglänge: Ist die Tür $2^{n+\delta}$ Meter vom Ausgangspunkt entfernt, gilt:\\
-Weglänge $\le 2 \sum\limits_{i=0}^{n+1} 2^i + 2^{n+\delta} \le 2 ^{n+3+\delta} + 2^{n+\delta} \le 9 \cdot 2^{n+\delta}$.\\
-$\Rightarrow$ Türsuche 2 ist 9-kompetetiv.
+\subsubsection{Kompetitivität}
+Weglänge: Ist die Tür \(d = 2^{n+\delta}\) Meter vom Ausgangspunkt entfernt, gilt:\newline
+\(w \leq 2 \sum\limits_{i=0}^{n+1} 2^i + d \leq 2 ^{n+3+\delta} + d \le 9 \cdot d \rightarrow\) \textit{Türsuche 2} ist 9-kompetitiv.
 
 
 \subsection{Sternsuche}
-Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).
+Verallgemeinerung der \textit{Türsuche}: Roboter steht in der Mitte eines Kreuzes aus \(m\) Halbgeraden.
 
 \begin{algorithm}[H]
 	\caption{Sternsuche}
@@ -556,23 +558,27 @@ Roboter steht in der Mitte eines Kreuzes aus Halbgeraden (beginnen in S).
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
         
-        \Input{$S$ Startpunkt, $Z$ Ziel, $m$ Halbgeraden, startend in S}
-        $\forall i \in \mathbb{N}_0 : f_i \leftarrow \left(\frac{m}{m-1}\right)^i$
+    \Input{$s$: Startpunkt;\newline
+    	$z$: Ziel;\newline
+    	$m$ Halbgeraden, startend in s}
+    \BlankLine
 
-	$i \leftarrow 0$
+    $\forall i \in \mathbb{N}_0 : f_i \leftarrow \left(\frac{m}{m-1}\right)^i$
+	$i \longleftarrow 0$
 	
-	\While{Z noch nicht gefunden}{	
-		gehe $f_i$ Meter auf $H_{i \text{ mod } m}$ entlang.\\
-		gehe zurück zu $S$\\
-		$ i \leftarrow i+1$\\
-		}
+	\While{z noch nicht gefunden}{	
+		gehe $f_i$ Meter auf $H_{i~mod~m}$ entlang\newline
+		gehe zurück zu $s$\newline
+		$i \longleftarrow i+1$
+	}
 \end{algorithm}
 
-$\Rightarrow$ Sternsuche ist kompetetiv mit factor $c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1$
+\subsubsection{Kompetitivität}
+Sternsuche ist kompetetiv mit dem Faktor \(c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1\).
 
 
-\subsection{Eckentausch - Lineares Programm}
-Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so das der Ursprung von Ecke zu Ece von S wandert und der Wert von z im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von $\bar{y}$ mit einer von $\overline{\bar{y}}$ .
+\subsection{Simplex}
+Um \(z\) zu maximieren, machen wir sukzessiv neue \(y_i\) zu neuen Koordinaten, so dass der Ursprung von Ecke zu Ecke von \(s\) wandert und der Wert von \(z\) im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von \(\overline{y}\) mit einer von \(\overline{\overline{y}}\).
 
 \begin{algorithm}[H]
 	\caption{Austausch}
@@ -580,26 +586,32 @@ Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so d
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{Matrix A, r, s}
+	\Input{Matrix A; r; s}
 	\Output{Matrix A'}
 	\BlankLine
 	
-	\For{$i \neq r AND j \neq s$}{
+	\tcc{Weder Pivotspalte, noch -zeile}
+	\For{$i \neq r$ und $j \neq s$}{
 		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
-		}
-		
+	}
+	\BlankLine
+
 	\tcc{Pivotzeile}
-	\For{$i=r AND j \neq s$ }{
+	\For{$i=r$ und $j \neq s$}{
 		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
-		}
+	}
+	\BlankLine
+
 	\tcc{Pivotspalte}
-	\For{$i \neq r AND j=s$}{
+	\For{$i \neq r$ und $j=s$}{
 		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
-		}
+	}
+	\BlankLine
+
 	\tcc{Pivot}
-	\For{$i=r AND j=s$}{
+	\For{$i=r$ und $j=s$}{
 		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
-		}
+	}
 \end{algorithm}
 
 \begin{algorithm}[H]
@@ -613,13 +625,14 @@ Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so d
 	\BlankLine
 	
 	\While{$\exists c_s > 0$}{
-		\If{$\forall b_{is} \geq 0 $}{
-			keine Lösung - Ende
-			}
-		\Else{
-			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} 0} \frac{b_i}{b_{is}}$
-			}
-	$B \longleftarrow Austausch(B,r,s)$
+		\eIf{$\forall b_{is} \geq 0 $}{
+			\Return{keine Lösung}
+		}{
+			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} < 0} \frac{b_i}{b_{is}}$
+		}
+		\BlankLine
+
+		$B \longleftarrow Austausch(B,r,s)$
 	}
 \end{algorithm}
 
@@ -627,31 +640,36 @@ Um $z$ zu maximieren, machen wir sukzessiv neue $y_i$ zu neuen Koordinaten, so d
 \subsection{Zufallsgesteuerte Optimierung}
 Optimierungsaufgaben bestehen aus 
 \begin{enumerate}
-	\item Suchraum $Q$, Teil des Zustandsraumes $Z$
-	\item Bewertungsfunktion $c: Z \rightarrow \mathbb{R}$, die jedem Zustand $q$ seine Kosten $c(q)$ zuweist.
-	\item eine Funktion $l: Z \rightarrow \mathbb{R}$, die für alle $q \in Q$ die Nebenbedingungen charakterisiert.
+	\item Suchraum $Q$, Teil des Zustandsraumes $Z$,
+	\item Bewertungsfunktion $c: Z \rightarrow \mathbb{R}$, die jedem Zustand $q$ seine Kosten $c(q)$ zuweist,
+	\item Eine Funktion $l: Z \rightarrow \mathbb{R}$, die für alle $q \in Q$ die Nebenbedingungen charakterisiert.
 \end{enumerate}
-Gesucht wird ein $q \in Q$ mit minimalen / maximalen Kosten.\\
-Eine Optimierungsaufgabe heißt kombinatorischen, wenn $Q$ diskret ist.\\
-Nebenbedingungen können vermieden werden, indem man $c$ so umformuliert, dass
-$q \not\in Q$ so schlecht bewertet werden, dass sie nicht als Lösung in Frage kommen:
-$c'(q) = c(q) + \gamma \cdot l^2(q)$.\\
-$q$ ist globales Optimum: $\forall p \in Q | p \ne q: c(q) \le c(p)$\\
-$q$ ist lokales Optimum: $\forall p \in Nachbarn(q): c(q) \le c(p)$\\
+
+\subsubsection{Definitionen}
+\begin{itemize}
+	\item Gesucht wird ein \(q \in Q\) mit minimalen oder maximalen Kosten
+	\item Eine Optimierungsaufgabe heißt kombinatorischen, wenn \(Q\) diskret ist
+	\item Nebenbedingungen können vermieden werden, indem man \(c\) so umformuliert, dass \(q \not\in Q\) so schlecht bewertet werden, dass sie nicht als Lösung in Frage kommen: \(c'(q) = c(q) + \gamma \cdot l^2(q)\)
+	\item \(q\) ist globales Optimum: \(\forall p \in Q~|~p \ne q: c(q) \le c(p)\)
+	\item \(q\) ist lokales Optimum: \(\forall p \in Nachbarn(q): c(q) \le c(p)\)
+\end{itemize}
 
 \subsubsection{Gradientenverfahren}
-Zustandsraum $Z \in \mathbb{R}^n$. Jeder Zustand ist ein Punkt $x = [x_1, ... , X_n]^t$.
-Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet. 
-$\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]$\\
-Die Nachfolger werden definiert durch $x_{i+1} = x_i + h \cdot \delta c(x_i)$, wobei $h > 0$ wenn c maximiert wird, $h < 0$ wenn c minimiert wird.\\
-Der Gradient ist die Richtung des steilsten auf/abstiegs $Rightarrow$ Methode des steilsten Auf/Abstiegs.\\
-Gradientenverfahren sind deterministisch.\\
-Es kann passieren, dass nur ein lokales Optimum gefunden wird.\\
-$\Rightarrow$ Nur anwenden, wenn es keine lokalen Optima/Minima gibt, Ableitung und Straftherme einfach zu berechnen sind.\\
+Zustandsraum \(Z \in \mathbb{R}^n\), jeder Zustand ist ein Punkt \(x = [x_1, ... , X_n]^t\).
+Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet:
+\[\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]\]
+
+\begin{itemize}
+	\item Die Nachfolger werden definiert durch \(x_{i+1} = x_i + h \cdot \delta c(x_i)\), wobei \(h > 0\) wenn \(c\) maximiert wird, bzw. \(h < 0\) wenn \(c\) minimiert wird
+	\item Der Gradient ist die Richtung des steilsten Auf-/Abstiegs $\rightarrow$ Methode des steilsten Auf-/Abstiegs
+	\item Gradientenverfahren sind deterministisch
+	\item Es kann passieren, dass nur ein lokales Optimum gefunden wird \(\rightarrow\) nur anwenden, wenn es keine lokalen Optima/Minima gibt; Ableitung und Straftherme einfach zu berechnen sind
+\end{itemize}
 
 \subsubsection{Suchverfahren}
-Ist der Suchraum diskret, definiert man für alle q die Menge der direkten Nachbarn $N(q) \subset Q$ . $\Rightarrow$ man kann $Q$ von einem Anfangszustand aus durchsuchen.\\
-Alle nachfolgenden algorithmen sind Suchverfahren.\\
+Ist der Suchraum diskret, definiert man für alle \(q\) die Menge der direkten Nachbarn \(N(q) \subset Q \rightarrow\) man kann \(Q\) von einem Anfangszustand aus durchsuchen.
+
+Alle folgenden Algorithmen sind Suchverfahren.
 
 \paragraph{Simuliertes Tempern}
 \text{} % to force a new line
@@ -662,82 +680,95 @@ Alle nachfolgenden algorithmen sind Suchverfahren.\\
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
         
-        \Input{$t_1, ..., t_i$ Temperaturen, absteigend sortiert\\
-        $K$ Anzahl der zu berücksichtigenden Nachbarn\\
-        $q$ aktueller Startpunkt\\
-        $i$ aktueller Temperaturindex}
-        \Output{$q$ - die gefundene Lösung}
-        
-        \For{k = 1, k $\leq$ K, k++}{
-        wähle zufällig Nachbarn $p \in N(q)$\\
+    \Input{$t_1, ..., t_i$: Temperaturen, absteigend sortiert;\newline
+    	$K$: Anzahl der zu berücksichtigenden Nachbarn;\newline
+    	$q$: aktueller Startpunkt;\newline
+        $i$: aktueller Temperaturindex}
+	\Output{$q$: die gefundene Lösung}
+    \BlankLine
+
+    \For{k = 1, k $\leq$ K, k++}{
+     	wähle zufällig Nachbarn $p \in N(q)$
+     	\BlankLine
+
         \If{$ c(p) > c(q) \text{ oder } exp(\frac{c(p) - c(q)}{t_i}) > Zufallszahl \in [0,1]$}{
             \Return Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
-            }
         }
-        \Return q\\
+    }
+    \Return q
 \end{algorithm}
 
 
 \paragraph{Schwellwert Algorithmus}
-Wähle zufälligen Nachbarn, gilt $c(p) \ge c(q) - \sigma$, fahre fort mit $q = p$.\\
-Schwellwert $\sigma$ wird mit der Zeit kleiner.\\
-$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
-
+\begin{itemize}
+	\item Wähle zufälligen Nachbarn, gilt \(c(p) \geq c(q) - \sigma\), fahre fort mit \(q = p\)
+	\item Schwellwert \(\sigma\) wird mit der Zeit kleiner
+	\item Besser als Simuliertes Tempern, kann trotzdem in lokalem Maxima hängen bleiben
+\end{itemize}
 
 \paragraph{Sintflut Algorithmus}
-Starte mit $\sigma = 0$. Wähle zufälligen Nachbarn. Gilt $c(p) > \sigma$, fahre fort mit $q = p$.\\
-$\sigma$ wird mit der Zeit größer.\\
-$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
+\begin{itemize}
+	\item Starte mit $\sigma = 0$. Wähle zufälligen Nachbarn. Gilt $c(p) > \sigma$, fahre fort mit $q = p$
+	\item $\sigma$ wird mit der Zeit größer
+	\item Besser als Simuliertes Tempern, kann trotzdem in lokalem Maxima hängen bleiben
+\end{itemize}
 
 \paragraph{Rekordjagt Algorithmus}
-Bisher höchster Wert (Rekord) wird gespeichert.\\
-Akzeptanzbedingung: $c(p) \ge Rekord - \sigma$.\\
-$\sigma$ wird mit der Zeit abgesenkt.\\
-$\Rightarrow$ Besser als Simuliertes Tempern, kann trozdem in lokalem Maxima hängen bleiben.\\
+\begin{itemize}
+	\item Bisher höchster Wert (Rekord) wird gespeichert
+	\item Akzeptanzbedingung: \(c(p) \geq Rekord - \sigma\)
+	\item \(\sigma\) wird mit der Zeit abgesenkt
+	\item Besser als Simuliertes Tempern, kann trotzdem in lokalem Maxima hängen bleiben
+\end{itemize}
 
 \subsubsection{Evolutionäre Algorithmen}
-Eine Population ebsteht aus Individuen.\\
-Individuen haben einen Genotyp / Merkamlsvektor $q \in \mathbb{R}^n$ und einen Phänotyp/Bewertungsfunktion $c(q)$.\\
-Individuen können sich fortpflanzen. Haben sie 2 oder mehr Eltern $\Rightarrow$ Kreuzung, haben sie einen Elter $\Rightarrow$ Klone.\\
-Die Größe der Population wird konstant gehalten.\\
+\begin{itemize}
+	\item Eine Population besteht aus Individuen
+	\item Individuen haben einen Genotyp / Merkmalsvektor \(q \in \mathbb{R}^n\) und einen Phänotyp/Bewertungsfunktion \(c(q)\)
+	\item Individuen können sich fortpflanzen. Haben sie zwei oder mehr Eltern $\rightarrow$ Kreuzung, haben sie einen Elter $\rightarrow$ Klon
+	\item Die Größe der Population wird konstant gehalten
+\end{itemize}
 
 \paragraph{Plus oder $(\mu + \lambda)$ Strategie}
-\text{ }\\Die Population $Q$ ändert sich mit der zeit, ihre Größe $\mu = |Q|$ bleibt konstant.\\
-Die $\mu$ Individuen mit der besten Fitness ($c(q$) und $\lambda$ Nachkommen bilden die nächste Generation, $\lambda$ Eltern sterben.\\
-Eltern werden gleichverteilt aus $Q$ gewählt.\\
-Es wird nicht gekreuzt, sondern nur geklont und mutiert.Zumindest steht nichts davon im Skript, sollte aber möglich sein...\\
+\begin{itemize}
+	\item Die Population \(Q\) ändert sich mit der Zeit, ihre Größe \(\mu = |Q|\) bleibt konstant
+	\item Die \(\mu\) Individuen mit der besten Fitness \(c(q)\) und \(\lambda\) Nachkommen bilden die nächste Generation, \(\lambda\) Eltern sterben
+	\item Eltern werden gleichverteilt aus \(Q\) gewählt
+	\item Es wird nicht gekreuzt, sondern nur geklont und mutiert. Zumindest steht nichts davon im Skript, sollte aber möglich sein...
+\end{itemize}
 
 \paragraph{Mehere Eltern}
-\text{ }\\Es kann auch mehrere Eltern geben, die Merkamlsvektoren werden entweder Gemischt oder Gemittelt.\\
+\text{ }\\Es kann auch mehrere Eltern geben, die Merkmalsvektoren werden entweder gemischt oder gemittelt.
 
 
 \paragraph{Allgemeine Strategie $((\mu, k, \lambda, p) - ES)$}
-\begin{description}
-	\item[$\mu$] Populationsgröße - Für jede Generation konstant.
-	\item[$\lambda$] Anzahl der Nachkommen pro Generation
-	\item[$k$] Maximale Lebenszeit - $k = 1$ bei Komma-Strategie, $k=\infty$ bei Plus
-	\item[p] Anzahl der Eltern eines Individuums
-\end{description}
+\begin{itemize}
+	\item \(\mu\): Populationsgröße - Für jede Generation konstant.
+	\item \(\lambda\): Anzahl der Nachkommen pro Generation
+	\item \(k\): Maximale Lebenszeit - \((k = 1)\) bei Komma-, \((k=\infty)\) bei Plus-Strategie
+	\item \(p\): Anzahl der Eltern eines Individuums
+\end{itemize}
 
 \subsubsection{Genetische Algorithmen}
-Merkmale in binärem Merkmalsvektor gespeichert.\\
-Starke Eltern pflanzen sich häufiger fort als schwache.\\
-\begin{description}
-	\item[Fortpflanzung] Jedes Individuum wird mit der Wahscheinlichkeit $W(q) = \frac{c(q)}{\sum\limits_{p \in Q}c(p)}$ Elter. die $\mu$ Individuen erzeugen $\mu$ Nachkommen, nur diese überleben.
-	\item[Kreuzung] Von den $\mu$ Nachkommen werden p\% einer Kreuzung unterzogen. Die Kreuzungspaare sind zufällig.
-	\item[Mutation] Jedes Bit des Merkmalsvektors wird mit einer sehr kleinen Wahscheinlichkeit $p_m$ invertiert.
-\end{description}
+Merkmale in binärem Merkmalsvektor gespeichert, starke Eltern pflanzen sich häufiger fort als schwache.
 
-Schema-Theorem: Merkmale werden häufiger reproduziert, wenn sie 
+\begin{itemize}
+	\item Fortpflanzung: Jedes Individuum wird mit der Wahscheinlichkeit \(W(q) = \frac{c(q)}{\sum\limits_{p \in Q}c(p)}\) Elter. die \(\mu\) Individuen erzeugen \(\mu\) Nachkommen, nur diese überleben.
+	\item Kreuzung: Von den \(\mu\) Nachkommen werden \(p\%\) einer Kreuzung unterzogen. Die Kreuzungspaare sind zufällig.
+	\item Mutation: Jedes Bit des Merkmalsvektors wird mit einer sehr kleinen Wahscheinlichkeit \(p_m\) invertiert.
+\end{itemize}
+
+\paragraph{Schema-Theorem:} Merkmale werden häufiger reproduziert, wenn sie 
 \begin{enumerate}
 	\item durch weniger Bits dargestellt werden,
 	\item diese Bits eng zusammenstehen (im Vektor),
 	\item sie eine hohe Fitness bedeuten.
 \end{enumerate}
 
+\subsubsection{Vergleich: Evolutionsstrategien vs. Genetische Algorithmen}
 \begin{itemize}
-	\item Evolutionsstrategien $\Rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
-	\item Genetische Algorithmen $\Rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
+	\item Evolutionsstrategien $\rightarrow$ konvergieren schneller, enden aber öfter in lokalem Max/Min.\\
+	\item Genetische Algorithmen $\rightarrow$ bevorzugen Kreuzung statt Mutation, größere Sprünge im Suchraum, finden öfter globales Optimum, konvergieren schlechter.
 \end{itemize}
 
 \subsubsection{Partikelschwarmoptimierung (P-S-O)}
@@ -747,17 +778,22 @@ Schema-Theorem: Merkmale werden häufiger reproduziert, wenn sie
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
         
-        \Input{$n$ - Menge an Partikeln}
-        \Output{$q$ - die beste gefundene Lösung}
+        \Input{$n$: Menge an Partikeln}
+        \Output{$q$: die beste gefundene Lösung}
+        \BlankLine
+
+        \tcc{Setze Startposition und Geschwindigkeit der einzelnen Partikel}
+        \For{i}{
+        	wähle $p_i(0), v_i(0)$ zufällig
+        }
+        \BlankLine
         
-        $\forall$ i : wähle $p_i(0), v_i(0)$ zufällig (Startposition und Geschwindigkeit der einzelnen Partikel)\\
-        
-        es gilt immer: $q_i$ bisher beste Position von $p_i$, $q = max(q_i)$\\
+        \tcc{es gilt immer: $q_i$ bisher beste Position von $p_i$, $q = max(q_i)$}
         \While{Abbruchgenauigkeit noch nicht erreicht}{
-        \For{i = 0 , i < n; i++} {
-                $v_i \leftarrow v_i \omega + (q_i - p_i) c_1 \cdot r_1 + (q - p_i) c_2 \cdot r_2$\\
-                $p_i \leftarrow p_i + v_i$\\
-            }
+	        \For{i = 0,...,n} {
+	                $v_i \leftarrow v_i \omega + (q_i - p_i) c_1 \cdot r_1 + (q - p_i) c_2 \cdot r_2$\newline
+	                $p_i \leftarrow p_i + v_i$
+	        }
         }
         \Return q\\
 \end{algorithm}
@@ -785,7 +821,9 @@ Der de Casteljau-Algorithmus angewendet auf ein Polygon \(B_0^0\) ist die Konkat
 \end{algorithm}
 
 \subsection{Der Algorithmus von Lane und Riesenfeld (LR-Algorithmus)}
-Dient dazu stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt er wie der de Casteljau-Algorithmus eine Folge von Polygonen(Kontrollpolygone), welche den Grenzwert der Folge(Limeskurve) definieren. Im Gegensatz zum de Casteljau-Algorithmus wird der LR-Algorithmus meist für biinfinite Kontrollpolygone $c_\mathbb{Z} := (c_i)_{i \in \mathbb{Z}} = ( ... c_{-1}c_0c_1 ...)$ beschrieben. Hierbei können endliche Polygone als biinfinite aufgefasst werden, bei denen nur endlich viele Kontrollpunkte $c_i$ von $\mathbb{D}$ verschieden sind.
+Dient dazu, stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt er wie der \textit{de Casteljau-Algorithmus} eine Folge von Polygonen(Kontrollpolygone), welche den Grenzwert der Folge(Limeskurve) definieren.
+
+Im Gegensatz zum \textit{de Casteljau-Algorithmus} wird der \textit{LR-Algorithmus} meist für biinfinite Kontrollpolygone \(c_\mathbb{Z} := (c_i)_{i \in \mathbb{Z}} = (...,c_{-1},c_0,c_1,...)\) beschrieben. Hierbei können endliche Polygone als biinfinite aufgefasst werden, bei denen nur endlich viele Kontrollpunkte \(c_i\) von \(\mathbb{D}\) verschieden sind.
 
 \begin{algorithm}[H]
 	\caption{Lane-Riesenfeld}
@@ -793,25 +831,33 @@ Dient dazu stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt e
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{$c_{\mathbb{Z}}^0$ ein Polygon $ \subset \mathbb{R}^d$, $n \in \mathbb{N}_0$ der Grad, $m\in \mathbb{N}$ die Unterteilungstiefe}
+	\Input{$c_{\mathbb{Z}}^0$: ein Polygon $ \subset \mathbb{R}^d$;\newline
+		$n \in \mathbb{N}_0$: der Grad;
+		$m \in \mathbb{N}$: die Unterteilungstiefe}
 	\Output{$c_{\mathbb{Z}}^m \subset \mathbb{R}^d$}
 	\BlankLine
 
 	\For{$k=1,...,m$}{
+		\BlankLine
+
 		\tcc{verdopple}
 		\For{$i \in \mathbb{Z}$}{
 			$d_{2i}^0 \longleftarrow d_{2i+1}^0 \longleftarrow c_{i}^{k-1}$
 		}
+		\BlankLine
+
 		\For{$j=1, ... ,n$}{
 			\tcc{mittele}
 			\For{$i \in \mathbb{Z}$}{
-				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1})*\frac{1}{2}$
-				}
+				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1}) \cdot \frac{1}{2}$
 			}
+		}
+		\BlankLine
+
 		\tcc{bennene um}
 		\For{$ i \in \mathbb{Z}$}{
 			$c_i^k \longleftarrow d_i^n$
-			}
+		}
 	}
 \end{algorithm}
 
