@@ -1,0 +1,18 @@
+\begin{algorithm}[H]
+	\caption{Paare}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{bipartiter Graph $(V_1 \stackrel{\cdot}{\cup} V_2, E)$}
+	\Output{Maximale Paarung P}
+	\BlankLine
+	
+	$V \longleftarrow V_1 \cup V_2 \cup \{ q,s \}$ \newline
+	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
+	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
+	\BlankLine
+
+	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
+	$P \longleftarrow \{ e \in E~|~f(e) = 1 \} $
+\end{algorithm}

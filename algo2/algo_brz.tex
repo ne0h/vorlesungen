@@ -1,0 +1,41 @@
+\begin{algorithm}[H]
+	\caption{BRZ}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Ein Polyeder $P \subset \mathbb{R}^3$; orientierte, planare, disjunkte Polygone $P_1,...,P_n \subset \mathbb{R}^3$}
+	\Output{Ein $RBZ$ für $P_1,...,P_n$}
+	\BlankLine
+
+	$k \longleftarrow 1$
+	\BlankLine
+	\tcc{Sortiere Polygonenteile aus, die außerhalb von $P$ liegen (Clipping)}
+	\For {$i=1,...,n$}{
+		$Q_k \longleftarrow P_i \cap P$\\
+		\If {$Q_k \neq \emptyset$} {
+			$k \longleftarrow k + 1$
+		}
+	}
+
+	$l \longleftarrow 1$
+
+	\BlankLine
+	\tcc{Falls ein Polygon $P$ komplett zerteilt, nehme dieses als Trennelement. Anderenfalls nehme das erste in der Liste}
+	\If{Exists $j$: $Q_j$ zerlegt P vollständig}{
+		$l \longleftarrow j$
+	}
+
+	$Wurzel \longleftarrow Q_l$
+	\BlankLine
+	\tcc{Teile $P$}
+	\If{$k \geq 3$}{
+		$Q \longleftarrow P \cap li.~HR~von~Q_l$\newline
+		$li. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$\newline
+		$Q \longleftarrow P \cap re.~HR~von~Q_l$\newline
+		$re. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$
+	}
+
+	\BlankLine
+	\Return{Wurzel mit ihren Teilbaeumen}
+\end{algorithm}

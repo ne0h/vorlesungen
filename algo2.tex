@@ -36,12 +36,13 @@ Ein Fluss in F ist eine Funktion \(f:V^2\rightarrow\mathbb{R}\) mit den Eigensch
 \begin{itemize}
 	\item \textbf{Algorithmus}
 	\begin{enumerate}
-		\item Setze die Flüsse an alle Kanten gleich Null
-		\item Solange es einen Pfad von \(q\) nach \(s\) gibt, erhöhe einen beliebigen Pfad
+		\item Setze die Flüsse an allen Kanten gleich Null
+		\item Solange es einen Pfad von \(q\) nach \(s\) gibt, erhöhe diesen maximal
 	\end{enumerate}
 	\item Terminiert Ford-Fulkerson, ist \(f\) maximal, da es keinen weiteren Pfad \(q \rightarrow^{*} s\) gibt
 	\item Aufwand: \(\mathcal{O}(|E| \cdot max\{W_f | f~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^{*} s\) kann in \(|E|\) Schritten gefunden werden
 \end{itemize}
+\input{algo2/algo_ford-fulkerson}
 
 
 \subsection{Algorithmus von Edmonds und Karp}
@@ -72,6 +73,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 		\item Aktualisiere die Überschusswerte an \(x\) und \(y\)
 	\end{enumerate}
 \end{itemize}
+\input{algo2/algo_praeflusspusch_pusch}
 
 \paragraph{\(LIFTE(x)\)}
 \begin{itemize}
@@ -86,6 +88,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 		\item Erhöhe \(x\): \(h(x) = 1 + min\{h(y)\}\)
 	\end{enumerate}
 \end{itemize}
+\input{algo2/algo_praeflusspusch_lifte}
 
 \paragraph{Durchführung}
 \begin{enumerate}
@@ -96,6 +99,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\end{enumerate}
 	\item Solange es eine beliebige, erlaubte Operation gibt, führe diese aus
 \end{enumerate}
+\input{algo2/algo_praeflusspusch}
 
 \subsubsection{Laufzeit}
 \[\mathcal{O} (|V|^2 \cdot |E|)\]
@@ -113,36 +117,9 @@ Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusc
 \end{itemize}
 
 \subsubsection{Operationen}
-
-\begin{minipage}{\textwidth}
-LEERE
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-While $u(x) > 0$ {
-	// Beginne mit dem hintersten Nachbarknoten
-	Falls es einen puschbaren Nachbarknoten gibt {
-		$PUSCH(x,y)$
-	} sonst {
-		$LIFTE(x)$
-	}
-}
-\end{lstlisting}
-\end{minipage}
-\\\\
-\begin{minipage}{\textwidth}
-AN-DIE-SPITZE
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-Initialisiere wie in $PRAEFLUSS-PUSCH$
-Generiere Knotenliste $L$
-Forall Knoten {
-	Bestimme Anzahl der Nachbarknoten
-}
-Forall $L$ {
-	$LEERE(x)$
-	Setze aktuellen Knoten an die Spitze von $L$,
-				falls erhoeht wurde
-}
-\end{lstlisting}
-\end{minipage}
+\input{algo2/algo_an-die-spitze_leere}
+\text{}\\
+\input{algo2/algo_an-die-spitze}
 
 \subsubsection{Laufzeit}
 \[\mathcal{O}(|V|^3)\]
@@ -178,6 +155,7 @@ Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 	\item Suche \((x,y) \in E\), wobei \(x\) mit keinem \(z\in V\) gepaart
 	\item Setze \((x,y)\) durch Breitensuche zu einem alternierden Weg \(W\) ungerade Länge fort
 \end{enumerate}
+\input{algo2/algo_paare}
 
 \subsubsection{Blüten}
 \begin{itemize}
@@ -221,6 +199,7 @@ Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsva
 	\item Sortieren durch stochastisches Teilen
 	\item Aufwandsabschätzung anhand der durchgeführten Vergleiche
 \end{itemize}
+\input{algo2/algo_quicksort}
 
 
 \subsection{Minimaler Schnitt}
@@ -233,16 +212,7 @@ Der Erwartungswert einer Zufallsvariablen beschreibt die Zahl, die die Zufallsva
 \end{itemize}
 
 \subsubsection{Algorithmus zur Berechnung des Schnitts}
-\begin{minipage}{\textwidth}
-SCHNITT
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-While $|V| \geq 3$ {
-	Waehle zufaellig eine Kante $(x,y)$
-	Entferne alle $(x,y)$ aus $E$
-	Verschmelze $x$ mit $y$
-}
-\end{lstlisting}
-\end{minipage}
+\input{algo2/algo_schnitt}
 
 
 
@@ -311,15 +281,8 @@ Ein binärer Spielbaum ist ein balancierter Binärbaum gerader Höhe \(2k\) mit 
 Da \((a \downarrow b) \downarrow (c \downarrow d) = (a \vee b) \wedge (c \vee d)\) entsprechen die Nicht-Blattknoten auf gerader Höhe den Minima und bei ungerader Höhe den Maxima der Werte ihrer Kindknoten. Das entspricht einem Spiel, bei dem zwei Spieler abwechselnd ihren Gewinn maximieren.
 
 \subsubsection{Bestimme den Wurzelwert aus den Blattwerten}
-\begin{minipage}{\textwidth}
-WERT(x)
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-Ermittle die Kindknoten $(y,z)$ von $x$ in stochastischer Reihenfolge
-Ermittle $w = WERT(y)$
-Falls $w==1$ gib $0$ aus, ansonsten gib $(0 \downarrow WERT(z))$ aus
-\end{lstlisting}
-\end{minipage}
-\\\\
+\input{algo2/algo_wert}
+
 Falls \(w=1\) kann direkt \(0\) zurückgegeben werden, ohne weiter zu traversieren.
 
 
@@ -349,28 +312,7 @@ Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Po
 	\item Teile den Polyeder und fahre rekursiv fort. Alle aktuellen Polygone werden mitübergeben und im nächsten Iterationsschritt aussortiert
 \end{enumerate}
 
-\begin{minipage}{\textwidth}
-BRZ
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-$k = 1$
-Forall $P_i$ {
-	Bestimme Schnittflaeche mit $P$
-	Falls es eine Schittflaeche gibt: $k++$
-}
-$l = 1$
-Falls es ein $j$ gibt: $Q_j$ zerlegt $P$ {
-	$l = j$
-}
-Wurzel = $Q_l$
-Falls $k \geq 3$ {
-	$Q$ = Schnittmenge von $P$ und dem li. HR von $Q_l$
-	linker Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
-	$Q$ = Schnittmenge von $P$ und dem re. HR von $Q_l$
-	rechter Wurzelteilbaum = $BRZ(Q,Q_1,...,Q_{k-1})$
-}
-Return Wurzel und Teilbaeume
-\end{lstlisting}
-\end{minipage}
+\input{algo2/algo_brz}
 
 
 \subsubsection{Laufzeit}
@@ -432,6 +374,10 @@ und dazu die mittlere Kantenzahl pro Seite
 \[\frac{2e}{f} \leq 6\]
 
 
+\subsection{Konstruktion der Konvexen Hülle}
+\input{algo2/algo_konvexe-huelle}
+
+
 
 \section{Bewegungsplanung bei unvollständiger Information}
 \begin{itemize}
@@ -443,18 +389,8 @@ und dazu die mittlere Kantenzahl pro Seite
 
 \subsection{Ausweg aus einem Labyrinth}
 Wir betrachten ein Labyrinth \(L\) und einen Roboter \(R\) mit Tastsensor und Drehwinkelmessgerät.
-\\\\
-\begin{minipage}{\textwidth}
-PLEDGE-Strategie
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-While $R \in L$ {
-	Gehe vorwaerts bis Wand kontaktiert wird
-	While $R \in L$ OR Drehwinkel = $0$ {
-		Gehe links der Wand
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_pledge}
 
 \subsubsection{Satz}
 Seien \(K_1,...,K_n, n \in \mathbb{N} \cup \{0,\infty\}\) die Kanten des Wegs von \(R\).
@@ -467,20 +403,8 @@ Seien \(K_1,...,K_n, n \in \mathbb{N} \cup \{0,\infty\}\) die Kanten des Wegs vo
 
 \subsection{Zum Ziel in unbekannter Umgebung}
 Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunkt \(s\) und ein Ziel \(z\).
-\\\\
-\begin{minipage}{\textwidth}
-WANZE
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-While $r \ne z$ {
-	Laufe in Richtung $z$ bis $r == z$
-			OR $r$ nicht aus einem Polygon herauskommt
-	Falls $r \ne z$ {
-		Suche den kuerzesten Punkt $q$ an $P_i$ zu $z$
-		Laufe zu $q$
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_wanze}
 Wanze terminiert: Umläuft \(R\) zuerst \(P_i\) und dann \(P_j\) gilt:
 \[dist(z,P_i) > dist(z,P_j).\]
 \(R\) umläuft daher jedes Polygon höchstens einmal und findet \(z\) spätestens nach Umlaufen aller \(P_i\).
@@ -521,18 +445,8 @@ Es gilt:
 
 \subsection{Türsuche}
 \textbf{Ziel:} Finde die Tür an einer langen, unüberschaubaren Wand.
-\\\\
-\begin{minipage}{\textwidth}
-Türsuche
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-$i = 1$
-While Tuer nicht gefunden {
-	gehe $i$ Meter in eine Richtung
-	aendere Laufrichtung und gehe zurueck
-	$i++$
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_tuersuche-1}
 
 \paragraph{Kompetivität}
 Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 5 durch \(i = 2i\) erweitert, ist der Kompetivitätsfaktor bei einer maximalen Entfernung \(d=2^n+\delta\) der Tür vom Startpunkt
@@ -541,21 +455,8 @@ Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 5 durch \(i = 2i\) erweitert
 
 \subsection{Sternsuche}
 Verallgemeinerung der Türsuche. Ziel: Finden des Ziels \(z\) vom Startpunkt \(s\) aus mit Hilfe von \(m\) wachsenden Halbgeraden.
-\\\\
-\begin{minipage}{\textwidth}
-Sternsuche
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-# berechne Halbgeraden
-Forall $i \in \mathcal{N}_0$ {
-	$f_i = (\frac{m}{m-1})^i$
-}
-$i = 0$
-While $z$ nicht gefunden {
-	gehe $f_i$ Einheiten auf $H_i$ entlang und zurueck
-	$i++$
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_sternsuche}
 
 \paragraph{Kompetivität}
 Siehe Skript Seite 101.
@@ -632,27 +533,10 @@ bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Si
 	a_{m1}v_1 & . & a_{mn}v_n & u_m
 \end{pmatrix}\]
 Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebiges \(a_{rs}\) fungiert als Pivotelement. 
-\\\\\\
-\begin{minipage}{\textwidth}
-AUSTAUSCH(A, r, s)
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-Forall $i \ne r$, $j \ne s$ {
-	$a_{ij}' = a_{ij} - \frac{a_{is} \cdot a_{rj}}{a_{rs}}$
-}
-# Pivotzeile
-Forall $i == r$, $j \ne s$ {
-	$a_{ij}' = -\frac{a_{ij}}{a_{rs}}$
-}
-# Pivotspalte
-Forall $i \ne r$, $j == s$ {
-	$a_{ij}' = \frac{a_{ij}}{a_{rs}}$
-}
-# Pivot
-Forall $i == r$, $j == s$ {
-	$a_{ij}' = \frac{1}{a_{rs}}$
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_simplex_austausch}
+\text{}\\
+\input{algo2/algo_simplex}
 
 
 \subsection{Der Simplexalgorithmus}
@@ -915,24 +799,8 @@ Gebe $q$ aus
 Verschlechterungen werden akzeptiert, wenn die \textit{Aktzeptanzbedingung}
 \[exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack\]
 gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei kleinen (beispielsweise bei lokalen Maxima).
-\\\\
-\begin{minipage}{\textwidth}
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-#MARKER
-k = 1
-Repeate {
-	Bestimme zufaelligen Nachfolger $p \in N(q)$
-	$k++$
-} until $k>K$ OR $c(p)>c(q)$ OR $exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack$
-
-if $k>K$ {
-	stop
-} else {
-	senke Temperatur: $i++$
-	Spring zu #MARKER
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_simuliertes-tempern}
 
 \subsubsection{Schwellwert-Algorithmus}
 \begin{itemize}
@@ -1078,6 +946,7 @@ Dabei ist \(f(x)\) zu optimieren.
 	\item Aktualisiere die nächsten Positionen, Geschwindigkeiten und Lernkonstanten
 	\item Typische Werte: ca 20-40 Partikel
 \end{itemize}
+\input{algo2/algo_pso}
 
 \subsubsection{Superschwarm-Optimierung}
 \begin{itemize}
@@ -1119,23 +988,8 @@ Der Algorithmus besteht daher mit der Eingabe
 \[b_0^0...b_n^0 \subset \mathbb{R}^d\]
 aus einfachen Interpolationsschritten. Den Algorithmus angewendet auf \(B_0^0\) ergibt
 \[C(B_0^0,t) = B_0^1B_1^1 = b_0^0...b_n^0~b_0^n...b_n^0\]
-\\\\
-\begin{algorithm}[H]
-	\caption{de Casteljau}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$b_0^0...b_n^0 \subset \mathbb{R}^d; t \in \mathbb{R}$}
-	\Output{$b_0^0...b_0^n; b_0^n...b_n^0 \subset \mathbb{R}^d$}
-	\BlankLine
-
-	\For{$k=1,...,n$}{
-		\For{$i=0,...,n-k$}{
-			$b_i^k \longleftarrow b_i^{k-1} \cdot (1-t) + b_{i+1}^{k-1} \cdot t$
-		}
-	}
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_de-casteljau}
 Rekursiv über \(k\) Stufen fortgesetzt ergibt das
 \[C^*(B_0^0,k):=B_0^k...B_{2^k-1}^k.\]
 
@@ -1184,42 +1038,8 @@ Im Gegensatz zum \textit{de-Casteljau-Algorithmus} wird der \textit{LR-Algorithm
 beschrieben.
 
 Endliche Polygone können als biinfinite aufgefasst werden, bei denen nur endlich viele der Kontrollpunkte \(c_i\) von \(0\) verschieden sind.
-
-\begin{algorithm}[H]
-	\caption{Lane-Riesenfeld}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$c_{\mathbb{Z}}^0$: ein Polygon $ \subset \mathbb{R}^d$;\newline
-		$n \in \mathbb{N}_0$: der Grad;
-		$m \in \mathbb{N}$: die Unterteilungstiefe}
-	\Output{$c_{\mathbb{Z}}^m \subset \mathbb{R}^d$}
-	\BlankLine
-
-	\For{$k=1,...,m$}{
-		\BlankLine
-
-		\tcc{verdopple}
-		\For{$i \in \mathbb{Z}$}{
-			$d_{2i}^0 \longleftarrow d_{2i+1}^0 \longleftarrow c_{i}^{k-1}$
-		}
-		\BlankLine
-
-		\For{$j=1, ... ,n$}{
-			\tcc{mittele}
-			\For{$i \in \mathbb{Z}$}{
-				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1}) \cdot \frac{1}{2}$
-			}
-		}
-		\BlankLine
-
-		\tcc{bennene um}
-		\For{$ i \in \mathbb{Z}$}{
-			$c_i^k \longleftarrow d_i^n$
-		}
-	}
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_lr}
 
 
 \subsection{Unterteilungsmatrizen}
@@ -1475,25 +1295,8 @@ Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilu
 
 \section{Textsuche}
 Im Folgenden bezeichnet \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) einen Text und \(s = s_1,...s_m \in A^m\) einen Suchtext, für den bestimmt werden soll, ob er in \(t\) und gegebenenfalls an welcher Stelle er auftritt. Es wird vorausgesetzt, dass \(m < n\).
-
-\subsection{Naive Suche}
-\begin{minipage}{\textwidth}
-NAIVE-SUCHE
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-i = 0
-While $i \leq n-m$ {
-	j = m
-	While $j > 0$ and $s_j = t_{i+j}$ {
-		j--
-	}
-	Falls $j == 0$ {
-		Return i
-	} sonst {
-		i++
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_naive-textsuche}
 Der Aufwand für diesen Algorithmus liegt im schlechtesten Fall in \(\Theta(m\cdot n)\).
 
 
@@ -1574,22 +1377,8 @@ folgt mit \(i := j-k\)
 	\item Ausgabe: \(\sigma(1,...,m)\)
 \end{itemize}
 
-\begin{minipage}{\textwidth}
-\(\sigma\)
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-For $j=1,...,m$ {
-	$\sigma = m-\gamma(0)$
-}
-For $i = 0,...,m-1$ {
-	$k = m-\gamma(i)-1$
-	$j = m-\gamma(i)$
-
-	Falls $\sigma(j) > k$ {
-		$\sigma(j) = k$
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_boyer-moore_sigma}
 It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
 
 \subsubsection{Berechnung von \(\gamma\)}
@@ -1601,24 +1390,8 @@ Falls \(j := m-\gamma(i)\) und \(s_i \ne s_j\), ist \(geps(w_{i-1})\) verkürzt 
 	\item Ausgabe: \(\gamma(0,...,m-1)\)
 \end{itemize}
 
-\begin{minipage}{\textwidth}
-\(\gamma\)
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-$\gamma(m-1) = 0$
-For $i=m-1,...,1$ {
-	$j = m-\gamma(i)$
-	While $s_i \ne s_j$ und $\gamma(j) > 0$ {
-		$j = m-\gamma(j)$
-	}
-
-	Falls $s_i == s_j$ {
-		$\gamma(j-1) = \gamma(j) + 1$
-	} sonst {
-		$\gamma(i-1) = 0$
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\text{}\\
+\input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Aufwand von \(\gamma\)}
 Der Aufwand für \(\gamma\) liegt in \(\mathcal{O}(m)\), denn

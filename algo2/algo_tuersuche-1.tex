@@ -1,0 +1,16 @@
+\begin{algorithm}[H]
+	\caption{Türsuche 1}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	$i \longleftarrow 1$
+	\BlankLine
+	
+	\While{Tür noch nicht gefunden}{	
+		gehe $i$ Meter der Wand entlang\newline
+		\tcc{ändert die Laufrichtung}
+		gehe i Meter zurück\newline
+		$i \longleftarrow i+1$
+	}
+\end{algorithm}

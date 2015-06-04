@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+	\caption{Wanze}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone $\subset A^2$, die sich nicht gegenseitig enthalten;\newline
+		$s,z$: Start und Ziel $\in A^2 \setminus P$;\newline
+		Roboter $R$ der seine eigene Position $r$ kennt}
+	\Output{Weg von $s$ nach $z$}
+	\BlankLine
+	
+	\While{$r \ne z$}{
+		gehe Richtung $z$ bis $r = z$ oder $\exists i:r \in P_i$
+		\BlankLine
+
+		\If{$r \ne z$} {
+			\tcc{die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $z$}
+            umlaufe $P_i$ und suche $q \in argmin || x - z ||_2,~x \in P_i$
+            \BlankLine
+
+            gehe zu $q$
+		}
+    }
+\end{algorithm}

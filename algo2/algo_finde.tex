@@ -1,0 +1,26 @@
+\begin{algorithm}[H]
+	\caption{Finde}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$S:= \{ s_1 , ... , s_n \} \subset \mathbb{M}$\\
+	$k \in \mathbb{N}$}
+	\Output{$\sigma_k$, wobei $\sigma_1,...,\sigma_n \in S$ und $\sigma_1 < ... < \sigma_n$}
+	\BlankLine
+	
+	Wähle $y$ zufällig aus $S$\newline
+	$S_1 \longleftarrow \{x \in S~|~x < y \} $\newline
+	$S_2 \longleftarrow \{x \in S~|~x > y \} $
+	\BlankLine
+
+	\eIf{ $|S_1| = k-1$}{
+		\Return{y}
+	}{
+		\eIf{$|S_1| > k-1$}{
+			$Finde(S_1,k)$
+		}{
+			$Finde(S_2, k-|S_1|-1)$
+		}
+	}
+\end{algorithm}

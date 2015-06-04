@@ -1,0 +1,16 @@
+\begin{algorithm}[H]
+	\caption{Ford-Fulkerson}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$F(G,k,q,s)$}
+	\Output{Ein maximaler Fluß $f$}
+	\BlankLine
+
+	$f \longleftarrow 0$
+
+	\While{Es gibt einen Pfad $q \rightarrow^* s$ in $G_f$} {
+		Erhöhe $f$ über diesem maximal
+	}
+\end{algorithm}

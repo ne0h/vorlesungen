@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+	\caption{PSO}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+        \Input{$n$: Menge an Partikeln}
+        \Output{$q$: die beste gefundene Lösung}
+        \BlankLine
+
+        \tcc{Setze Startposition und Geschwindigkeit der einzelnen Partikel}
+        \For{i}{
+        	wähle $p_i(0), v_i(0)$ zufällig
+        }
+        \BlankLine
+        
+        \tcc{es gilt immer: $q_i$ bisher beste Position von $p_i$, $q = max(q_i)$}
+        \While{Abbruchgenauigkeit noch nicht erreicht}{
+	        \For{i = 0,...,n} {
+	                $v_i \leftarrow v_i \omega + (q_i - p_i) c_1 \cdot r_1 + (q - p_i) c_2 \cdot r_2$\newline
+	                $p_i \leftarrow p_i + v_i$
+	        }
+        }
+        \Return q\\
+\end{algorithm}

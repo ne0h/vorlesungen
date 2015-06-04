@@ -1,0 +1,48 @@
+\begin{algorithm}[H]
+	\caption{Konvexe Hülle}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Punktmenge $P=(p_1,..,p_n) \cap A^3$}
+	\Output{$\lbrack P \rbrack$}
+	\BlankLine
+
+	\tcc{Verschiebe $P$, so dass der Ursprung innerhalb der Konvexen Hülle liegt}
+	$v \longleftarrow 0 - \sum_i \frac{p_i}{n}$\newline
+	$P \longleftarrow P + v$
+	\BlankLine
+
+	\tcc{Schritt 2}
+	$V \longleftarrow$ Knotenliste von $p_1^{\leq} \cap ... \cap p_4^{\leq}$\newline
+	\For{$j > i$} {
+		\eIf{$p_j^{\leq} \supset V$}{
+			Entferne $p_j$ aus $P$\newline
+			Aktualisiere "`gedanklich"' alle Indizes $k>j$
+		}{
+			Verknüpfe $p_j$ bidirektional mit einem $w_j \in V_4 \backslash p_j^{\leq}$
+		}
+	}
+	\BlankLine
+
+	\tcc{Schritt 3}
+	\For{i = 5,...,n}{
+		Durchlaufe $V$ von $w_i$ aus und setze dabei:\newline
+			$N_i \longleftarrow \{ Schnittpunkte~der~Kanten~mit~p_i^{*}\}$\newline
+			$W_i \longleftarrow V \cap p_i^{>}$\newline
+			$V \longleftarrow (V \cup N_i) \backslash W_i$\newline
+		\BlankLine
+		\For{$j>i$ mit $w_j \in W_i$}{
+			\eIf{$N_i \subset p_j^{\leq}$}{
+				Entferne $P_j$ aus $P$\newline
+				Aktualisiere "`gedanklich"' alle Indizes
+			}{
+				Verknüpfe $p_j$ neu mit einem $w_j \in N_i \cap p_j^{>}$
+			}
+		}
+	}
+	\BlankLine
+
+	\Return{Verschobene Polarmenge $Q_P$}
+
+\end{algorithm}

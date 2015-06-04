@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+	\caption{$\gamma$}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$s_1,...,s_m$}
+	\Output{$\gamma(0,...,m-1$}
+	\BlankLine
+
+	$\gamma(m-1) \longleftarrow 0$\newline
+	\For{i=m-1,...,1}{
+		$j \longleftarrow m - \gamma(i)$\newline
+		\While{$s_i \ne s_j$ und $m \ne j$}{
+			$j \longleftarrow m - \gamma(i)$
+		}
+	}
+	\BlankLine
+
+	\eIf{$s_i = s_j$}{
+		$\gamma(i-1) \longleftarrow m - j+1$
+	}{
+		$\gamma(i-1) \longleftarrow 0$
+	}
+\end{algorithm}

@@ -1,0 +1,20 @@
+\begin{algorithm}[H]
+	\caption{Sternsuche}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+    \Input{$s$: Startpunkt;\newline
+    	$z$: Ziel;\newline
+    	$m$ Halbgeraden, startend in s}
+    \BlankLine
+
+    $\forall i \in \mathbb{N}_0 : f_i \leftarrow \left(\frac{m}{m-1}\right)^i$
+	$i \longleftarrow 0$
+	
+	\While{z noch nicht gefunden}{	
+		gehe $f_i$ Meter auf $H_{i~mod~m}$ entlang\newline
+		gehe zurück zu $s$\newline
+		$i \longleftarrow i+1$
+	}
+\end{algorithm}

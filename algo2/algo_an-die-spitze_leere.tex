@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+	\caption{Leere}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x$}
+	\BlankLine
+
+	\While{$u(x)>0$}{	
+		\eIf{$i_x > 0$}{
+			$y \longleftarrow n_x(i_x)$ \newline
+			\eIf{$(x,y)~puschbar$}{
+				$Pusch(x,y)$
+			}{
+				$i_x \longleftarrow i_x -1$}
+		}{	$Lifte(x)$ \newline
+				$i_x \longleftarrow Grad(x)$}
+			
+		}	
+\end{algorithm}

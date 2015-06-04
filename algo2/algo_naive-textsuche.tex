@@ -1,0 +1,24 @@
+\begin{algorithm}[H]
+	\caption{Naive Suche}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$A,t,s$}
+	\Output{Kleinstes $t_{i+1},...,t_{i+m} = s$}
+	\BlankLine
+
+	$i \longleftarrow 0$\newline
+	\While{$i\leq n-m$}{
+		$j \longleftarrow m$\newline
+		\While{$j>0$ und $s_j=t_{i+j}$}{
+			$j \longleftarrow j-1$
+		}
+		\BlankLine
+		\eIf{$j=0$}{
+			\Return{$i$}
+		}{
+			$i \longleftarrow i+1$
+		}
+	}
+\end{algorithm}

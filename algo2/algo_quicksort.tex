@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+	\caption{Quicksort}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$ S : = \{ s_1, ... , s_n \} $ 	mit paarweise verschiedenen 	$ s_i \in \mathbb{Z} $ 	}
+	\Output{$(\sigma_1,...,\sigma_n)$ mit $\sigma_1 < ... < \sigma_n$ und $\{\sigma_1, ... , \sigma_n \} = S $}
+	\BlankLine
+	
+	\While{ S $\ne \emptyset$} {
+		Wähle ein zufälliges Pivotelement $ y \in S $ \newline
+		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $, so dass 	$ s_1 < y < s_2 $
+		\BlankLine
+		\Return{Quicksort($s_1$, $y$), Quicksort($s_2$)}
+	}
+\end{algorithm}

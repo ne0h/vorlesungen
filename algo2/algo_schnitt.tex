@@ -1,0 +1,19 @@
+\begin{algorithm}[H]
+	\caption{Schnitt}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$(V,E)$ ein ungerichteter Multigraph}
+	\Output{Ein Schnitt $S$}
+	\BlankLine
+	
+	\While{$|V| \geq 3$} {
+		Wähle eine zufällige Kante $(x,y) \in E$\newline
+		Entferne alle $(x,y)$ aus $E$\newline
+		Verschmelze $x$ mit $y$
+	}
+	\BlankLine
+
+	\Return{S:=E}
+\end{algorithm}

@@ -1,0 +1,16 @@
+\begin{algorithm}[H]
+	\caption{de Casteljau}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$b_0^0...b_n^0 \subset \mathbb{R}^d; t \in \mathbb{R}$}
+	\Output{$b_0^0...b_0^n; b_0^n...b_n^0 \subset \mathbb{R}^d$}
+	\BlankLine
+
+	\For{$k=1,...,n$}{
+		\For{$i=0,...,n-k$}{
+			$b_i^k \longleftarrow b_i^{k-1} \cdot (1-t) + b_{i+1}^{k-1} \cdot t$
+		}
+	}
+\end{algorithm}

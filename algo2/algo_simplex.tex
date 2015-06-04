@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+	\caption{Simplex}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Normalform eines linearen Programms}
+	\Output{Geänderte Normalform so dass $z(0) =  c = max$}
+	\BlankLine
+	
+	\While{$\exists c_s > 0$}{
+		\eIf{$\forall b_{is} \geq 0 $}{
+			\Return{keine Lösung}
+		}{
+			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} < 0} \frac{b_i}{b_{is}}$
+		}
+		\BlankLine
+
+		$B \longleftarrow Austausch(B,r,s)$
+	}
+\end{algorithm}

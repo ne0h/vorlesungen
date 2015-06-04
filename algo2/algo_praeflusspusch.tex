@@ -1,0 +1,17 @@
+\begin{algorithm}[H]
+	\caption{Präfluss-Pusch}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$F(G,k,q,s$}
+	\Output{Maximaler Fluss $f$}
+	\BlankLine
+
+	\For{alle $ x,y \in V $ }{
+	$ h(x)  \leftarrow \begin{cases}|V| & x=q \\ 0 & \text{sonst}\end{cases}$ \newline
+	$ f(x,y)  \leftarrow \begin{cases}k(x,y) & x=q \\ 0 & \text{sonst}\end{cases}$}
+	\While{Es gibt erlaubte Push oder Lifte Operationen}{
+		Führe diese Push oder Lifte aus
+	}
+\end{algorithm}

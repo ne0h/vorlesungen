@@ -1,0 +1,23 @@
+\begin{algorithm}[H]
+	\caption{Simuliertes Tempern}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+        
+    \Input{$t_1, ..., t_i$: Temperaturen, absteigend sortiert;\newline
+    	$K$: Anzahl der zu berücksichtigenden Nachbarn;\newline
+    	$q$: aktueller Startpunkt;\newline
+        $i$: aktueller Temperaturindex}
+	\Output{$q$: die gefundene Lösung}
+    \BlankLine
+
+    \For{k = 1, k $\leq$ K, k++}{
+     	wähle zufällig Nachbarn $p \in N(q)$
+     	\BlankLine
+
+        \If{$ c(p) > c(q) \text{ oder } exp(\frac{c(p) - c(q)}{t_i}) > Zufallszahl \in [0,1]$}{
+            \Return Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
+        }
+    }
+    \Return q
+\end{algorithm}

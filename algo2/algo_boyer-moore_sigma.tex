@@ -1,0 +1,23 @@
+\begin{algorithm}[H]
+	\caption{$\sigma$}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$\gamma(0,...,m-1)$}
+	\Output{$\sigma(1,...,m)$}
+	\BlankLine
+
+	\For{$j = 1,...,m$}{
+		$\sigma(j) \longleftarrow m-\gamma(0)$
+	}
+	\BlankLine
+
+	\For{$i=0,...,m-1$}{
+		$k \longleftarrow m - \gamma(i) - i$\newline
+		$j \longleftarrow m - \gamma(i)$
+		\If{$\sigma(j) > k$}{
+			$\sigma(j) \longleftarrow k$
+		}
+	}
+\end{algorithm}

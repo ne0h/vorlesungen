@@ -1,0 +1,33 @@
+\begin{algorithm}[H]
+	\caption{Austausch}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{Matrix A; r; s}
+	\Output{Matrix A'}
+	\BlankLine
+	
+	\tcc{Weder Pivotspalte, noch -zeile}
+	\For{$i \neq r$ und $j \neq s$}{
+		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
+	}
+	\BlankLine
+
+	\tcc{Pivotzeile}
+	\For{$i=r$ und $j \neq s$}{
+		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
+	}
+	\BlankLine
+
+	\tcc{Pivotspalte}
+	\For{$i \neq r$ und $j=s$}{
+		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
+	}
+	\BlankLine
+
+	\tcc{Pivot}
+	\For{$i=r$ und $j=s$}{
+		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
+	}
+\end{algorithm}

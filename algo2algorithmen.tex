@@ -3,23 +3,7 @@
 Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\footnote{\url{http://geom.ivd.kit.edu/ws14_algo2.php}}
 
 \subsection{Algorithmus von Ford und Fulkerson}
-
-\begin{algorithm}[H]
-	\caption{Ford-Fulkerson}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$F(G,k,q,s)$}
-	\Output{Ein maximaler Fluß $f$}
-	\BlankLine
-
-	$f \longleftarrow 0$
-
-	\While{Es gibt einen Pfad $q \rightarrow^* s$ in $G_f$} {
-		Erhöhe $f$ über diesem maximal
-	}
-\end{algorithm}
+\input{algo2/algo_ford-fulkerson}
 
 \subsubsection{Korrektheit}
 \begin{itemize}
@@ -58,58 +42,16 @@ Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Brei
 \subsection{Die Präfluss-Pusch-Methode}
 Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluss speichern zu können. Diese könnten nur bergab entleert werdern.
 
-\subsubsection{Push}
+\subsubsection{Pusch}
 \(Push(x,y)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x)-h(y) \geq 1\) ist.
-
-\begin{algorithm}[H]
-	\caption{Push}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$x,y$}
-	\Output{}
-	\BlankLine
-
-	$d \longleftarrow \min\{u(x), k_f(x,y)\}$ \newline
-	$f(x,y) \longleftarrow f(x,y) + d$ \newline
-	$u(x) \longleftarrow u(x) - d $ \newline
-	$u(y) \longleftarrow u(y) + d$ \newline
-\end{algorithm}
+\input{algo2/algo_praeflusspusch_pusch}
 
 \subsubsection{Lifte}
 \(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{(x,y) \in E_f : k(x,y) > 0}{h(y)}\) ist.
+\input{algo2/algo_praeflusspusch_lifte}
 
-\begin{algorithm}[H]
-	\caption{Lifte}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$x$}
-	\BlankLine
-
-	$h(x) := 1+ \min_{(x,y) \in E_f : k(x,y) > 0}{h(y)}$
-\end{algorithm} 
-
-
-\begin{algorithm}[H]
-	\caption{Präfluss-Pusch}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$F(G,k,q,s$}
-	\Output{Maximaler Fluss $f$}
-	\BlankLine
-
-	\For{alle $ x,y \in V $ }{
-	$ h(x)  \leftarrow \begin{cases}|V| & x=q \\ 0 & \text{sonst}\end{cases}$ \newline
-	$ f(x,y)  \leftarrow \begin{cases}k(x,y) & x=q \\ 0 & \text{sonst}\end{cases}$}
-	\While{Es gibt erlaubte Push oder Lifte Operationen}{
-		Führe diese Push oder Lifte aus
-	}
-\end{algorithm}
+\subsubsection{Durchführung}
+\input{algo2/algo_praeflusspusch}
 
 \subsubsection{Korrektheit}
 \begin{itemize}
@@ -130,59 +72,9 @@ Formalisierung bzw. Erweiterung des \textit{Präfluss-Pusch-Algorithmus}.
 	\item Verwaltung einer Knotenliste \(L\) in der \(x\) vor \(y\) auftritt, falls \((x,y)\) puschbar ist
 	\item Verwaltung einer Nachbarknotenliste pro Knoten
 \end{itemize}
-
-\begin{algorithm}[H]
-	\caption{Leere}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$x$}
-	\BlankLine
-
-	\While{$u(x)>0$}{	
-		\If{$i_x > 0$}{
-			$y \longleftarrow n_x(i_x)$ \newline
-			\If{$(x,y)~puschbar$}{
-				$Pusch(x,y)$}
-			\Else{
-				$i_x \longleftarrow i_x -1$}
-			}
-		\Else{	$Lifte(x)$ \newline
-				$i_x \longleftarrow Grad(x)$}
-			
-		}	
-\end{algorithm}
-
-\begin{algorithm}[H]
-	\caption{An die Spitze}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$F(G,k,q,s)$}
-	\Output{Ein maximaler Fluss $f$}
-	\BlankLine
-	
-	Initialisiere $f$ und $h$ wie in Präfluss-Pusch \newline
-	Generiere $L$ \newline
-	$x \longleftarrow Kopf(L)$
-	\BlankLine
-
-	\For{$x \in V$}{
-		$i_x \longleftarrow Grad(x)$}
-	\BlankLine
-
-	\While{$x \ne Nil$ }{	
-		$h_{alt} \longleftarrow h(x)$ \newline
-		$Leere(x)$ \newline
-		\If{$h_{alt} < h(x)$}{
-			Setze $x$ an die Spitze von $L$
-		}
-		\BlankLine
-		$x \longleftarrow \text{Nachfolger von x in L}$
-	}
-\end{algorithm}
+\input{algo2/algo_an-die-spitze_leere}
+\text{}\\
+\input{algo2/algo_an-die-spitze}
 
 \subsubsection{Laufzeit}
 Faktoren, welche die Laufzeit beeinflussen:
@@ -195,47 +87,14 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 
 
 \subsection{Paaren in allgemeinen Graphen}
-\begin{algorithm}[H]
-	\caption{Paare}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{bipartiter Graph $(V_1 \stackrel{\cdot}{\cup} V_2, E)$}
-	\Output{Maximale Paarung P}
-	\BlankLine
-	
-	$V \longleftarrow V_1 \cup V_2 \cup \{ q,s \}$ \newline
-	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
-	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
-	\BlankLine
-
-	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
-	$P \longleftarrow \{ e \in E~|~f(e) = 1 \} $
-\end{algorithm}
+\input{algo2/algo_paare}
 
 \subsubsection{Laufzeit}
 Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot |V_1|)\), da ein Pfad \(q \rightarrow^* s\) in \(|E|\) Schritten gefunden werden kann (siehe Laufzeit von \textit{Ford-Fulkerson}).
 
 
 \subsection{Sortieren durch stochastisches Teilen (Quicksort)}
-\begin{algorithm}[H]
-	\caption{Quicksort}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$ S : = \{ s_1, ... , s_n \} $ 	mit paarweise verschiedenen 	$ s_i \in \mathbb{Z} $ 	}
-	\Output{$(\sigma_1,...,\sigma_n)$ mit $\sigma_1 < ... < \sigma_n$ und $\{\sigma_1, ... , \sigma_n \} = S $}
-	\BlankLine
-	
-	\While{ S $\ne \emptyset$} {
-		Wähle ein zufälliges Pivotelement $ y \in S $ \newline
-		Zerlege $S \setminus \{ y \} $ 	in 	$  s_1 $ und $ s_2 $, so dass 	$ s_1 < y < s_2 $
-		\BlankLine
-		\Return{Quicksort($s_1$, $y$), Quicksort($s_2$)}
-	}
-\end{algorithm}
+\input{algo2/algo_quicksort}
 
 \subsubsection{Laufzeit}
 \begin{itemize}
@@ -247,56 +106,12 @@ Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot
 
 \subsection{Minimaler Schnitt}
 Ist \(E\) eine Folge in \(V^2\) heißt \((V,E)\) Multigraph, weil Kanten mehrfach vorkommen können. \(S \subset E\) heißt \textit{Schnitt} von \((V,E)\), wenn \((V, E \backslash S)\) unzusammenhängend ist, also mindestens zwei Komponenten hat.
-
-\begin{algorithm}[H]
-	\caption{Schnitt}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$(V,E)$ ein ungerichteter Multigraph}
-	\Output{Ein Schnitt $S$}
-	\BlankLine
-	
-	\While{$|V| \geq 3$} {
-		Wähle eine zufällige Kante $(x,y) \in E$\newline
-		Entferne alle $(x,y)$ aus $E$\newline
-		Verschmelze $x$ mit $y$
-	}
-	\BlankLine
-
-	\Return{S:=E}
-\end{algorithm}
+\input{algo2/algo_schnitt}
 
 
 \subsection{Finde}
 Findet das k - kleinste Element in einer unsortierten Liste.\\
-\begin{algorithm}[H]
-	\caption{Finde}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$S:= \{ s_1 , ... , s_n \} \subset \mathbb{M}$\\
-	$k \in \mathbb{N}$}
-	\Output{$\sigma_k$, wobei $\sigma_1,...,\sigma_n \in S$ und $\sigma_1 < ... < \sigma_n$}
-	\BlankLine
-	
-	Wähle $y$ zufällig aus $S$\newline
-	$S_1 \longleftarrow \{x \in S~|~x < y \} $\newline
-	$S_2 \longleftarrow \{x \in S~|~x > y \} $
-	\BlankLine
-
-	\eIf{ $|S_1| = k-1$}{
-		\Return{y}
-	}{
-		\eIf{$|S_1| > k-1$}{
-			$Finde(S_1,k)$
-		}{
-			$Finde(S_2, k-|S_1|-1)$
-		}
-	}
-\end{algorithm}
+\input{algo2/algo_finde}
 
 \subsubsection{Laufzeit}
 \(\mathcal{O}(n)\)
@@ -317,72 +132,12 @@ Es gilt außerdem:
 	\item Maxima: Werte der Nicht-Blatt-Knoten auf ungerader Höhe
 \end{itemize}
 
-\begin{algorithm}[H]
-	\caption{Wert}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$x$ Knoten eines binären Spielbaums}
-	\Output{$Wert(x)$}
-	\BlankLine
-	
-	$(y,z) \longleftarrow $ Paar der Kinder von $x$ in zufälliger Reihenfolge\newline
-	$w \longleftarrow Wert(y)$
-	\BlankLine
-
-	\eIf{$w = 1$}{
-		\Return{0}
-	}{
-		\Return{0 XOR Wert(z)}
-	}
-\end{algorithm}
+\input{algo2/algo_wert}
 
 
 \subsection{Binäre Zerlegung des Raum}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
-
-\begin{algorithm}[H]
-	\caption{BRZ}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Ein Polyeder $P \subset \mathbb{R}^3$; orientierte, planare, disjunkte Polygone $P_1,...,P_n \subset \mathbb{R}^3$}
-	\Output{Ein $RBZ$ für $P_1,...,P_n$}
-	\BlankLine
-
-	$k \longleftarrow 1$
-	\BlankLine
-	\tcc{Sortiere Polygonenteile aus, die außerhalb von $P$ liegen (Clipping)}
-	\For {$i=1,...,n$}{
-		$Q_k \longleftarrow P_i \cap P$\\
-		\If {$Q_k \neq \emptyset$} {
-			$k \longleftarrow k + 1$
-		}
-	}
-
-	$l \longleftarrow 1$
-
-	\BlankLine
-	\tcc{Falls ein Polygon $P$ komplett zerteilt, nehme dieses als Trennelement. Anderenfalls nehme das erste in der Liste}
-	\If{Exists $j$: $Q_j$ zerlegt P vollständig}{
-		$l \longleftarrow j$
-	}
-
-	$Wurzel \longleftarrow Q_l$
-	\BlankLine
-	\tcc{Teile $P$}
-	\If{$k \geq 3$}{
-		$Q \longleftarrow P \cap li.~HR~von~Q_l$\newline
-		$li. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$\newline
-		$Q \longleftarrow P \cap re.~HR~von~Q_l$\newline
-		$re. Wurzelteilbaum \longleftarrow BRZ(Q,Q_1,...,Q_{k-1})$
-	}
-
-	\BlankLine
-	\Return{Wurzel mit ihren Teilbaeumen}
-\end{algorithm}
+\input{algo2/algo_brz}
 
 
 \subsection{Konstruktion konvexer Hüllen}
@@ -394,55 +149,7 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 	\item Keine vier der Ebenen \(p_i^{*}\) schneiden sich in einem Punkt
 	\item Jeder Knoten hat den Grad \(3\)
 \end{itemize}
-
-\begin{algorithm}[H]
-	\caption{Konvexe Hülle}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Punktmenge $P=(p_1,..,p_n) \cap A^3$}
-	\Output{$\lbrack P \rbrack$}
-	\BlankLine
-
-	\tcc{Verschiebe $P$, so dass der Ursprung innerhalb der Konvexen Hülle liegt}
-	$v \longleftarrow 0 - \sum_i \frac{p_i}{n}$\newline
-	$P \longleftarrow P + v$
-	\BlankLine
-
-	\tcc{Schritt 2}
-	$V \longleftarrow$ Knotenliste von $p_1^{\leq} \cap ... \cap p_4^{\leq}$\newline
-	\For{$j > i$} {
-		\eIf{$p_j^{\leq} \supset V$}{
-			Entferne $p_j$ aus $P$\newline
-			Aktualisiere "`gedanklich"' alle Indizes $k>j$
-		}{
-			Verknüpfe $p_j$ bidirektional mit einem $w_j \in V_4 \backslash p_j^{\leq}$
-		}
-	}
-	\BlankLine
-
-	\tcc{Schritt 3}
-	\For{i = 5,...,n}{
-		Durchlaufe $V$ von $w_i$ aus und setze dabei:\newline
-			$N_i \longleftarrow \{ Schnittpunkte~der~Kanten~mit~p_i^{*}\}$\newline
-			$W_i \longleftarrow V \cap p_i^{>}$\newline
-			$V \longleftarrow (V \cup N_i) \backslash W_i$\newline
-		\BlankLine
-		\For{$j>i$ mit $w_j \in W_i$}{
-			\eIf{$N_i \subset p_j^{\leq}$}{
-				Entferne $P_j$ aus $P$\newline
-				Aktualisiere "`gedanklich"' alle Indizes
-			}{
-				Verknüpfe $p_j$ neu mit einem $w_j \in N_i \cap p_j^{>}$
-			}
-		}
-	}
-	\BlankLine
-
-	\Return{Verschobene Polarmenge $Q_P$}
-
-\end{algorithm}
+\input{algo2/algo_konvexe-huelle}
 
 
 \subsection{Pledge Startegie}
@@ -451,74 +158,21 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 	\item Der Roboter kann erkennen, wenn er das Labyrinth verlassen hat.
 	\item Bei jeder Drehung wird die Änderung zum Startwinkel \(\phi\) aktualisiert.
 \end{itemize}
-
-\begin{algorithm}[H]
-	\caption{Pledge Strategie}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	$\phi \longleftarrow 0$
-	
-	\While{$ R \in L $}{	
-		gehe vorwärts bis Wand kontaktiert wird\newline
-		\While{$R \not \in L$ oder $\phi = 0$}{
-			gehe links der Wand
-		}
-	}
-\end{algorithm}
+\input{algo2/algo_pledge}
 
 
 \subsection{Wanze}
 Findet ein Ziel in einer Umgebung mit Hindernissen.
+\input{algo2/algo_wanze}
 
-\begin{algorithm}[H]
-	\caption{Wanze}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$P_1 , ... , P_n$ disjunkte, einfache geschlossene Polygone $\subset A^2$, die sich nicht gegenseitig enthalten;\newline
-		$s,z$: Start und Ziel $\in A^2 \setminus P$;\newline
-		Roboter $R$ der seine eigene Position $r$ kennt}
-	\Output{Weg von $s$ nach $z$}
-	\BlankLine
-	
-	\While{$r \ne z$}{
-		gehe Richtung $z$ bis $r = z$ oder $\exists i:r \in P_i$
-		\BlankLine
-
-		\If{$r \ne z$} {
-			\tcc{die Stelle auf dem umlaufenen Polygon mit minimalem Abstand zu $z$}
-            umlaufe $P_i$ und suche $q \in argmin || x - z ||_2,~x \in P_i$
-            \BlankLine
-
-            gehe zu $q$
-		}
-    }
-\end{algorithm}
 \textit{Wanze} terminiert, da \(R\) das Ziel spätestens dann findet, wenn er alle \(P_i\) maximal einmal umlaufen hat (bei jedem Umlaufen verkleinert sich die Distanz zum Ziel).
 
 
 \subsection{Türsuche 1}
 Roboter steht vor einer langen Wand und sucht die Tür.
+\text{}\\
+\input{algo2/algo_tuersuche-1}
 
-\begin{algorithm}[H]
-	\caption{Türsuche 1}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	$i \longleftarrow 1$
-	\BlankLine
-	
-	\While{Tür noch nicht gefunden}{	
-		gehe $i$ Meter der Wand entlang\newline
-		\tcc{ändert die Laufrichtung}
-		gehe i Meter zurück\newline
-		$i \longleftarrow i+1$
-	}
-\end{algorithm}
 
 \subsubsection{Kompetitivität}
 Weglänge: Ist die Tür \(d = n + (0,1)\) Meter vom Ausgangspunkt entfernt, gilt:\newline
@@ -552,27 +206,8 @@ Weglänge: Ist die Tür \(d = 2^{n+\delta}\) Meter vom Ausgangspunkt entfernt, g
 
 \subsection{Sternsuche}
 Verallgemeinerung der \textit{Türsuche}: Roboter steht in der Mitte eines Kreuzes aus \(m\) Halbgeraden.
-
-\begin{algorithm}[H]
-	\caption{Sternsuche}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-        
-    \Input{$s$: Startpunkt;\newline
-    	$z$: Ziel;\newline
-    	$m$ Halbgeraden, startend in s}
-    \BlankLine
-
-    $\forall i \in \mathbb{N}_0 : f_i \leftarrow \left(\frac{m}{m-1}\right)^i$
-	$i \longleftarrow 0$
-	
-	\While{z noch nicht gefunden}{	
-		gehe $f_i$ Meter auf $H_{i~mod~m}$ entlang\newline
-		gehe zurück zu $s$\newline
-		$i \longleftarrow i+1$
-	}
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_sternsuche}
 
 \subsubsection{Kompetitivität}
 Sternsuche ist kompetetiv mit dem Faktor \(c = 2m \left(\frac{m}{m-1}\right)^{m-1}+1\).
@@ -580,62 +215,10 @@ Sternsuche ist kompetetiv mit dem Faktor \(c = 2m \left(\frac{m}{m-1}\right)^{m-
 
 \subsection{Simplex}
 Um \(z\) zu maximieren, machen wir sukzessiv neue \(y_i\) zu neuen Koordinaten, so dass der Ursprung von Ecke zu Ecke von \(s\) wandert und der Wert von \(z\) im Ursprung wächst. Dazu tauschen wir immer eine Koordinate von \(\overline{y}\) mit einer von \(\overline{\overline{y}}\).
-
-\begin{algorithm}[H]
-	\caption{Austausch}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Matrix A; r; s}
-	\Output{Matrix A'}
-	\BlankLine
-	
-	\tcc{Weder Pivotspalte, noch -zeile}
-	\For{$i \neq r$ und $j \neq s$}{
-		$a'_{ij} \longleftarrow a_{ij} - \frac{a_{is}a_{rj}}{a_{rs}}$
-	}
-	\BlankLine
-
-	\tcc{Pivotzeile}
-	\For{$i=r$ und $j \neq s$}{
-		$a'_{ij} \longleftarrow - \frac{a_{ij}}{a_{rs}}$
-	}
-	\BlankLine
-
-	\tcc{Pivotspalte}
-	\For{$i \neq r$ und $j=s$}{
-		$a'_{ij} \longleftarrow \frac{a_{ij}}{a_{rs}} $
-	}
-	\BlankLine
-
-	\tcc{Pivot}
-	\For{$i=r$ und $j=s$}{
-		$a'_{ij} \longleftarrow \frac{1}{a_{rs}} $
-	}
-\end{algorithm}
-
-\begin{algorithm}[H]
-	\caption{Simplex}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{Normalform eines linearen Programms}
-	\Output{Geänderte Normalform so dass $z(0) =  c = max$}
-	\BlankLine
-	
-	\While{$\exists c_s > 0$}{
-		\eIf{$\forall b_{is} \geq 0 $}{
-			\Return{keine Lösung}
-		}{
-			bestimme r, so dass $\frac{b_r}{b_{rs}} = \max_{b_{is} < 0} \frac{b_i}{b_{is}}$
-		}
-		\BlankLine
-
-		$B \longleftarrow Austausch(B,r,s)$
-	}
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_simplex_austausch}
+\text{}\\
+\input{algo2/algo_simplex}
 
 
 \subsection{Zufallsgesteuerte Optimierung}
@@ -673,31 +256,8 @@ Ist der Suchraum diskret, definiert man für alle \(q\) die Menge der direkten N
 Alle folgenden Algorithmen sind Suchverfahren.
 
 \paragraph{Simuliertes Tempern}
-\text{} % to force a new line
-
-\begin{algorithm}[H]
-	\caption{Simuliertes Tempern}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-        
-    \Input{$t_1, ..., t_i$: Temperaturen, absteigend sortiert;\newline
-    	$K$: Anzahl der zu berücksichtigenden Nachbarn;\newline
-    	$q$: aktueller Startpunkt;\newline
-        $i$: aktueller Temperaturindex}
-	\Output{$q$: die gefundene Lösung}
-    \BlankLine
-
-    \For{k = 1, k $\leq$ K, k++}{
-     	wähle zufällig Nachbarn $p \in N(q)$
-     	\BlankLine
-
-        \If{$ c(p) > c(q) \text{ oder } exp(\frac{c(p) - c(q)}{t_i}) > Zufallszahl \in [0,1]$}{
-            \Return Simuliertes Tempern($[t_1,..,t_n], K, p, i+1$)
-        }
-    }
-    \Return q
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_simuliertes-tempern}
 
 
 \paragraph{Schwellwert Algorithmus}
@@ -773,126 +333,32 @@ Merkmale in binärem Merkmalsvektor gespeichert, starke Eltern pflanzen sich hä
 \end{itemize}
 
 \subsubsection{Partikelschwarmoptimierung (P-S-O)}
-\begin{algorithm}[H]
-	\caption{PSO}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-        
-        \Input{$n$: Menge an Partikeln}
-        \Output{$q$: die beste gefundene Lösung}
-        \BlankLine
+\input{algo2/algo_pso}
 
-        \tcc{Setze Startposition und Geschwindigkeit der einzelnen Partikel}
-        \For{i}{
-        	wähle $p_i(0), v_i(0)$ zufällig
-        }
-        \BlankLine
-        
-        \tcc{es gilt immer: $q_i$ bisher beste Position von $p_i$, $q = max(q_i)$}
-        \While{Abbruchgenauigkeit noch nicht erreicht}{
-	        \For{i = 0,...,n} {
-	                $v_i \leftarrow v_i \omega + (q_i - p_i) c_1 \cdot r_1 + (q - p_i) c_2 \cdot r_2$\newline
-	                $p_i \leftarrow p_i + v_i$
-	        }
-        }
-        \Return q\\
-\end{algorithm}
 
 \subsection{Algorithmus von de Casteljau}
 Der Algorithmus von de Casteljau ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}
 
 Der de Casteljau-Algorithmus angewendet auf ein Polygon \(B_0^0\) ist die Konkatenation von \(B_0^1\) und \(B_1^1\): \(C(B_0^0,t) := B_0^1 B_1^1\).
+\text{}\\
+\input{algo2/algo_de-casteljau}
 
-\begin{algorithm}[H]
-	\caption{de Casteljau}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$b_0^0...b_n^0 \subset \mathbb{R}^d; t \in \mathbb{R}$}
-	\Output{$b_0^0...b_0^n; b_0^n...b_n^0 \subset \mathbb{R}^d$}
-	\BlankLine
-
-	\For{$k=1,...,n$}{
-		\For{$i=0,...,n-k$}{
-			$b_i^k \longleftarrow b_i^{k-1} \cdot (1-t) + b_{i+1}^{k-1} \cdot t$
-		}
-	}
-\end{algorithm}
 
 \subsection{Der Algorithmus von Lane und Riesenfeld (LR-Algorithmus)}
 Dient dazu, stückweise polynomielle Kurven (Splines) zu erzeugen. Dazu erzeugt er wie der \textit{de Casteljau-Algorithmus} eine Folge von Polygonen(Kontrollpolygone), welche den Grenzwert der Folge(Limeskurve) definieren.
 
 Im Gegensatz zum \textit{de Casteljau-Algorithmus} wird der \textit{LR-Algorithmus} meist für biinfinite Kontrollpolygone \(c_\mathbb{Z} := (c_i)_{i \in \mathbb{Z}} = (...,c_{-1},c_0,c_1,...)\) beschrieben. Hierbei können endliche Polygone als biinfinite aufgefasst werden, bei denen nur endlich viele Kontrollpunkte \(c_i\) von \(\mathbb{D}\) verschieden sind.
-
-\begin{algorithm}[H]
-	\caption{Lane-Riesenfeld}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$c_{\mathbb{Z}}^0$: ein Polygon $ \subset \mathbb{R}^d$;\newline
-		$n \in \mathbb{N}_0$: der Grad;
-		$m \in \mathbb{N}$: die Unterteilungstiefe}
-	\Output{$c_{\mathbb{Z}}^m \subset \mathbb{R}^d$}
-	\BlankLine
-
-	\For{$k=1,...,m$}{
-		\BlankLine
-
-		\tcc{verdopple}
-		\For{$i \in \mathbb{Z}$}{
-			$d_{2i}^0 \longleftarrow d_{2i+1}^0 \longleftarrow c_{i}^{k-1}$
-		}
-		\BlankLine
-
-		\For{$j=1, ... ,n$}{
-			\tcc{mittele}
-			\For{$i \in \mathbb{Z}$}{
-				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1}) \cdot \frac{1}{2}$
-			}
-		}
-		\BlankLine
-
-		\tcc{bennene um}
-		\For{$ i \in \mathbb{Z}$}{
-			$c_i^k \longleftarrow d_i^n$
-		}
-	}
-\end{algorithm}
-
+\text{}\\
+\input{algo2/algo_lr}
 
 
 \subsection{Naive Textsuche}
 Im Folgenden ist \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) ein Text und \(s = s_1,...,s_m \in A^m\) mit \(m<n\) ein Suchtext.
 
 Der einfachste Algorithmus besteht darin, ein so genanntes Suchfenster von der Länge der Suchmaske über den Text zu schieben. In jeder Position der Suchmaske werden die Symbole der Maske mit denen des darunterliegenden Textes verglichen. Wenn ein nicht übereinstimmendes Symbol gefunden wird, wird das Fenster um eine Position verschoben, und erneut ein Vergleich angestellt; wenn alle Symbole im Fenster übereinstimmen, ist die Suchmaske gefunden worden. Der Algorithmus endet, wenn der ganze Text vom Fenster abgesucht worden ist.\footnote{\url{http://de.wikipedia.org/wiki/String-Matching-Algorithmus\#Naiver_Algorithmus}}
+\text{}\\
+\input{algo2/algo_naive-textsuche}
 
-\begin{algorithm}[H]
-	\caption{Naive Suche}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$A,t,s$}
-	\Output{Kleinstes $t_{i+1},...,t_{i+m} = s$}
-	\BlankLine
-
-	$i \longleftarrow 0$\newline
-	\While{$i\leq n-m$}{
-		$j \longleftarrow m$\newline
-		\While{$j>0$ und $s_j=t_{i+j}$}{
-			$j \longleftarrow j-1$
-		}
-		\BlankLine
-		\eIf{$j=0$}{
-			\Return{$i$}
-		}{
-			$i \longleftarrow i+1$
-		}
-	}
-\end{algorithm}
 Laufzeit in \(\mathcal{O}(n\cdot m)\), wenn der ganze Text abgesucht werden muss.
 
 \subsection{Algorithmus von Boyer und Moore}
@@ -911,55 +377,7 @@ Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix 
 \subsubsection{Vorberechnung des größten, echten Präsuffixes pro Zeichen im Suchwort}
 Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir \textit{Präsuffix} von \(w\). Weiter sei \(\gamma(j) := | geps(w_j)|\).
 
-\begin{algorithm}[H]
-	\caption{$\gamma$}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$s_1,...,s_m$}
-	\Output{$\gamma(0,...,m-1$}
-	\BlankLine
-
-	$\gamma(m-1) \longleftarrow 0$\newline
-	\For{i=m-1,...,1}{
-		$j \longleftarrow m - \gamma(i)$\newline
-		\While{$s_i \ne s_j$ und $m \ne j$}{
-			$j \longleftarrow m - \gamma(i)$
-		}
-	}
-	\BlankLine
-
-	\eIf{$s_i = s_j$}{
-		$\gamma(i-1) \longleftarrow m - j+1$
-	}{
-		$\gamma(i-1) \longleftarrow 0$
-	}
-\end{algorithm}
-
 \subsubsection{Berechnung der Heuristik}
 Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
-
-\begin{algorithm}[H]
-	\caption{$\gamma$}
-	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-
-	\Input{$\gamma(0,...,m-1)$}
-	\Output{$\sigma(1,...,m)$}
-	\BlankLine
-
-	\For{$j = 1,...,m$}{
-		$\sigma(j) \longleftarrow m-\gamma(0)$
-	}
-	\BlankLine
-
-	\For{$i=0,...,m-1$}{
-		$k \longleftarrow m - \gamma(i) - i$\newline
-		$j \longleftarrow m - \gamma(i)$
-		\If{$\sigma(j) > k$}{
-			$\sigma(j) \longleftarrow k$
-		}
-	}
-\end{algorithm}
+\text{}\\
+\input{algo2/algo_boyer-moore_sigma}

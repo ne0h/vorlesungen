@@ -1,0 +1,15 @@
+\begin{algorithm}[H]
+	\caption{Push}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x,y$}
+	\Output{}
+	\BlankLine
+
+	$d \longleftarrow \min\{u(x), k_f(x,y)\}$ \newline
+	$f(x,y) \longleftarrow f(x,y) + d$ \newline
+	$u(x) \longleftarrow u(x) - d $ \newline
+	$u(y) \longleftarrow u(y) + d$ \newline
+\end{algorithm}

@@ -1,0 +1,29 @@
+\begin{algorithm}[H]
+	\caption{An die Spitze}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$F(G,k,q,s)$}
+	\Output{Ein maximaler Fluss $f$}
+	\BlankLine
+	
+	Initialisiere $f$ und $h$ wie in Präfluss-Pusch \newline
+	Generiere $L$ \newline
+	$x \longleftarrow Kopf(L)$
+	\BlankLine
+
+	\For{$x \in V$}{
+		$i_x \longleftarrow Grad(x)$}
+	\BlankLine
+
+	\While{$x \ne Nil$ }{	
+		$h_{alt} \longleftarrow h(x)$ \newline
+		$Leere(x)$ \newline
+		\If{$h_{alt} < h(x)$}{
+			Setze $x$ an die Spitze von $L$
+		}
+		\BlankLine
+		$x \longleftarrow \text{Nachfolger von x in L}$
+	}
+\end{algorithm}

@@ -1,0 +1,20 @@
+\begin{algorithm}[H]
+	\caption{Wert}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\Input{$x$ Knoten eines binären Spielbaums}
+	\Output{$Wert(x)$}
+	\BlankLine
+	
+	$(y,z) \longleftarrow $ Paar der Kinder von $x$ in zufälliger Reihenfolge\newline
+	$w \longleftarrow Wert(y)$
+	\BlankLine
+
+	\eIf{$w = 1$}{
+		\Return{0}
+	}{
+		\Return{0 XOR Wert(z)}
+	}
+\end{algorithm}
