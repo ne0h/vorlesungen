@@ -78,7 +78,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 \end{algorithm}
 
 \subsubsection{Lifte}
-\(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{(x,y) \in E_f}{h(y)}\) ist.
+\(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{(x,y) \in E_f : k(x,y) > 0}{h(y)}\) ist.
 
 \begin{algorithm}[H]
 	\caption{Lifte}
@@ -89,7 +89,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 	\Input{$x$}
 	\BlankLine
 
-	$h(x) := 1+ \min_{(x,y) \in E_f}{h(y}$
+	$h(x) := 1+ \min_{(x,y) \in E_f : k(x,y) > 0}{h(y)}$
 \end{algorithm} 
 
 
