@@ -270,14 +270,15 @@ Ist \(E\) eine Folge in \(V^2\) heißt \((V,E)\) Multigraph, weil Kanten mehrfac
 
 
 \subsection{Finde}
-
+Findet das k - kleinste Element in einer unsortierten Liste
 \begin{algorithm}[H]
 	\caption{Finde}
 	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
 	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
 	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 
-	\Input{$S:= \{ s_1 , ... , s_n \} \subset \mathbb{M}$}
+	\Input{$S:= \{ s_1 , ... , s_n \} \subset \mathbb{M}$\\
+	$k \in \mathbb{N}$}
 	\Output{$\sigma_k$, wobei $\sigma_1,...,\sigma_n \in S$ und $\sigma_1 < ... < \sigma_n$}
 	\BlankLine
 	
