@@ -356,7 +356,7 @@ Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone
 	\BlankLine
 	\tcc{Sortiere Polygonenteile aus, die außerhalb von $P$ liegen (Clipping)}
 	\For {$i=1,...,n$}{
-		$Q_k \longleftarrow P_1 \cap P$
+		$Q_k \longleftarrow P_i \cap P$\\
 		\If {$Q_k \neq \emptyset$} {
 			$k \longleftarrow k + 1$
 		}
