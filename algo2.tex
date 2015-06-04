@@ -10,7 +10,7 @@ Zusammenfassung der Vorlesung "`Algorithmen II"' aus dem Wintersemester 2014.\fo
 
 \subsubsection{Bestandteile}
 \begin{itemize}
-	\item Graph mit Quelle q und Senke s: \(G(V,E)\) mit \(E \subset V^2\)
+	\item Graph mit Quelle \(q\) und Senke \(s\): \(G(V,E)\) mit \(E \subset V^2\)
 	\item Kapazitätsfunktion \(k : V^2 \rightarrow \mathbb{R}_{+0}\), wobei \(\forall e \in V^2 \setminus E: k(e) = 0\)
 \end{itemize}
 
@@ -109,9 +109,9 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 Durch eine strukturierte Abarbeitung der Operationen wird \textit{Präfluss-Pusch} beschleunigt.
 
 \begin{itemize}
-	\item Idee: Strukturiertes Enladen der Knoten
+	\item Idee: Strukturiertes Entladen der Knoten
 	\item Die Nachbarn von \(x\) werden über eine invertierte Liste verwaltet
-	\item \((x,y) \in E\) heißt \textit{PUSCHBAR}, falls \(k_f(x,y) \geq 0\) und \(h(x)-h(y)=1\)
+	\item \((x,y) \in E\) heißt \textit{puschbar}, falls \(k_f(x,y) \geq 0\) und \(h(x)-h(y)\geq 1\)
 	\item Die Knoten werden über eine Liste verwaltet, in der \(x\) vor \(y\) auftritt, falls \((x,y)\) \textit{PUSCHBAR} ist
 	\item Geliftete Knoten werden an die Spitze der Listen gesetzt
 \end{itemize}
