@@ -46,7 +46,10 @@ Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Brei
 \subsubsection{Laufzeit}
 \begin{itemize}
 	\item Anzahl der Iterationen \(\in \mathcal{O}(|E| \cdot |V|)\), da \(E_f\) in jedem Schritt eine Kante verliert, die später eventuell als Gegenkante genutzt wird.
-	\item Dadurch wächst der Fluss um mindestens \(2\)
+    \item Wird eine Kante rückwaärts benutzt, wächst die Länge des Flusses um mindestens \(2\).\\ Weil:\\
+    Es muss gelten: $l(s \rightarrow^{\ast} x) \le l(s \rightarrow^{\ast} y)$.\\
+    Wird $x \rightarrow y \rightarrow^{\ast} s$ hinzugefügt, gilt $\forall \text{ Wege } x \rightarrow^{\ast} s : l(x \rightarrow^{\ast} s) > l(y \rightarrow^{\ast} s)$.\\
+    Wird $y \rightarrow x$ eingefügt, gilt die Abschätzung $l(s \rightarrow^{\ast} x) = l(s \rightarrow^{\ast} y)$ und es folgt $l(s \rightarrow^{\ast} y \rightarrow x \rightarrow^{\ast} s) \ge l(s \rightarrow^{\ast} x \rightarrow y \rightarrow^{\ast} s)+2$
 	\item Da \(l_f y < |V|-1\) verliert \(E_f\) eine Kante maximal \(\frac{|V|}{2}\) Mal (\(\rightarrow\) Anzahl der Iterationen)
 	\item Durch die Breitensuche ergibt sich eine Gesamtlaufzeit von \(\mathcal{O}(|E|^2 \cdot |V|)\)
 \end{itemize}
