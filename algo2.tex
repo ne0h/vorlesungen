@@ -1404,7 +1404,7 @@ der Limesfunktion stückweise konstant ist.
 \section{Unterteilungsalgorithmen für Flächen}
 
 \subsection{Tensorprodukt}
-Ein regelmäßiges biinfinites Kontrollnetz kann durch eine biinfinite Matrix
+Ein regelmäßiges, biinfinites Kontrollnetz kann durch eine biinfinite Matrix
 \[C = c_{\mathbb{Z}^2}\]
 beschrieben werden. Die Matrizen \(U\) und \(V\) zweier stationärer Unterteilungsalgorithmen für Kurven (z.B. der Lane-Riesenfeld-Algorithmus) bilden das Kontrollnetz
 \[B := b_{\mathbb{Z}^2} := UCV^T,\]
@@ -1416,7 +1416,7 @@ Die Netze \(U^kC(V^T)^k\) konvergieren gegen eine Fläche, wenn \(U\) und \(V\) 
 \subsection{Symbole}
 Die Matrix \(C=c_{\mathbb{Z}^2}\) hat das Symbol
 \[c(x) = \sum_{i \in \mathbb{Z}^2} c_i x^i.\]
-Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen für Kurven mit den Symbolen \(\alpha(x)\) und \(\beta(x)\), hat das unterteilte Netz
+Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen für Kurven mit den Symbolen \(\alpha(x)\) und \(\beta(x)\) hat das unterteilte Netz
 \[B := b_{\mathbb{Z}^2} := UCV^T\]
 das Symbol
 \[b(x,y) := \alpha(x) \cdot c(x^2,y^2) \cdot \beta(y).\]
@@ -1427,10 +1427,33 @@ ist das \textit{Symbol des Tepus} \((U,V)\) und die Unterteilungsgleichung ist
 Multipliziert man die Unterteilungsgleichung aus, erhält sie die Form
 \[b_i = \sum_{j \in \mathbb{Z}^2} \gamma_{i-2j} \cdot c_j.\]
 
+\subsubsection{Beispiel: Das Symbol des Verfeinerungsschemas \((U_0,U_0)\)}
+\[\gamma(x,y) = \frac{1}{2} (1+x)(1+y) = \frac{1}{2}
+	\begin{bmatrix} 1 & x\end{bmatrix}
+	\begin{bmatrix} 1 \\ 1 \end{bmatrix}
+	\cdot \begin{bmatrix} 1 & 1 \end{bmatrix}
+	\begin{bmatrix} 1 \\ y \end{bmatrix}
+\]
+\[	= \frac{1}{2}
+	\begin{bmatrix} 1 & x \end{bmatrix}
+	\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}
+	\begin{bmatrix} 1 \\ y \end{bmatrix}\]
+
+\subsubsection{Beispiel: Das Symbol des Verfeinerungsschemas \((U_1,U_1)\)}
+\[\gamma(x,y) = \frac{1}{4} (1+x)^2(1+y)^2 = \frac{1}{4}
+	\begin{bmatrix} 1 & x & x^2 \end{bmatrix}
+	\begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}
+	\cdot \begin{bmatrix} 1 & 2 & 1 \end{bmatrix}
+	\begin{bmatrix} 1 \\ y \\ y^2 \end{bmatrix}
+\]
+\[	= \frac{1}{4}
+	\begin{bmatrix} 1 & x & x^2 \end{bmatrix}
+	\begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}
+	\begin{bmatrix} 1 \\ y \\ y^2 \end{bmatrix}\]
 
 \subsection{Masken}
 Sei \(\Gamma := \gamma_{\mathbb{Z}^2}\) eine biinfinite Matrix und sei
-\[\gamma(x,y) := \lbrack ...,x^{-1},x^0,x^1,...\rbrack \cdot \Gamma \cdot \begin{bmatrix} \vdots \\ y^{-1} \\ y^0 \\ y^1 \\ \vdots \end{bmatrix}\]
+\[\gamma(x,y) := \lbrack ...~x^{-1}~x^0~x^1~...\rbrack \cdot \Gamma \cdot \begin{bmatrix} \vdots \\ y^{-1} \\ y^0 \\ y^1 \\ \vdots \end{bmatrix}\]
 das Symbol eines Unterteilungsalgorithmus. Die Teilmatrizen
 \[\Gamma_i := \lbrack \gamma_{i-2j} \rbrack_{j \in \mathbb{Z}^2}\]
 für \(i=(0,0),~(1,0),~(0,1),~(1,1)\) heißen \textit{Masken}. Sie werden graphisch dargestellt, indem die \(\gamma_{i-2j} \ne 0\) an die Punkte eines Teilnetzes geschrieben werden, mt denen sie multipliziert werden. Der resultierende, gewichtete Punkt wird durch einem ausgefüllten, schwarzen Punkt gekennzeichnet.
