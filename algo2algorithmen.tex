@@ -108,19 +108,24 @@ Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 \subsubsection{Laufzeit}
 Aufwand \(\in \mathcal{O}(|E|\cdot \sum f(q, V_1)) \subset \mathcal{O}(|E| \cdot |V_1|)\), da ein Pfad \(q \rightarrow^* s\) in \(|E|\) Schritten gefunden werden kann (siehe Laufzeit von \textit{Ford-Fulkerson}).
 
-\subsection{Sortieren durch stochastisches Teilen (Quicksort)}
+\subsection{Quicksort (Sortieren durch stochastisches Teilen)}
+Zunächst wird die zu sortierende Liste in zwei Teillisten („linke“ und „rechte“ Teilliste) getrennt. Dazu wählt Quicksort ein sogenanntes Pivotelement aus der Liste aus. Alle Elemente, die kleiner als das Pivotelement sind, kommen in die linke Teilliste, und alle, die größer sind, in die rechte Teilliste. Die Elemente, die gleich dem Pivotelement sind, können sich beliebig auf die Teillisten verteilen. Nach der Aufteilung sind die Elemente der linken Liste kleiner oder gleich den Elementen der rechten Liste.
+
+Anschließend muss man also nur noch jede Teilliste in sich sortieren, um die Sortierung zu vollenden. Dazu wird der Quicksort-Algorithmus jeweils auf der linken und auf der rechten Teilliste ausgeführt. Jede Teilliste wird dann wieder in zwei Teillisten aufgeteilt und auf diese jeweils wieder der Quicksort-Algorithmus angewandt, und so fort. Diese Selbstaufrufe werden als Rekursion bezeichnet. Wenn eine Teilliste der Länge eins oder null auftritt, so ist diese bereits sortiert und es erfolgt der Abbruch der Rekursion.\footnote{\url{http://de.wikipedia.org/wiki/Quicksort\#Prinzip}}
+\text{}\\\\
 \input{algo2/algo_quicksort}
 
 \subsubsection{Laufzeit}
 \begin{itemize}
 	\item Aufwandsabschätzung anhand der in Schritt 3 durchgeführten Vergleiche
-	\item Wahrscheinlichkeit, dass \(s_i\) und \(s_j\) verglichen werden steigt mit der Anzahl an Zwischenelementen (\(p_{ij}=\frac{2}{|j-i|+1}\))
+	\item Wahrscheinlichkeit, dass \(s_i\) und \(s_j\) verglichen werden steigt mit der Anzahl der Zwischenelemente (\(p_{ij}=\frac{2}{|j-i|+1}\))
 	\item Daraus ergibt sich ein Aufwand \(\in \mathcal{O}(nlogn)\) (Summe der Erwartungswerte der Einzelwahrscheinlichkeiten)
 \end{itemize}
 
 
 \subsection{Minimaler Schnitt}
 Ist \(E\) eine Folge in \(V^2\) heißt \((V,E)\) Multigraph, weil Kanten mehrfach vorkommen können. \(S \subset E\) heißt \textit{Schnitt} von \((V,E)\), wenn \((V, E \backslash S)\) unzusammenhängend ist, also mindestens zwei Komponenten hat.
+\text{}\\
 \input{algo2/algo_schnitt}
 
 
