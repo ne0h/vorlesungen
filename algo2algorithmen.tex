@@ -5,22 +5,29 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 \subsection{Algorithmus von Ford und Fulkerson}
 \input{algo2/algo_ford-fulkerson}
 
+\subsubsection{Eingaben}
+\begin{itemize}
+	\item Rationale Eingaben: Terminiert sicher für alle rationalen Eingaben\footnote{\url{http://de.wikipedia.org/wiki/Algorithmus_von_Ford_und_Fulkerson\#Zur_Korrektheit_des_Algorithmus}}
+	\item Irrationale Kapazitäten: Terminiert nicht, da der Algorithmus unendliche lange laufen kann (und auch nicht gegen den maximalen Fluss konvergieren muss) oder ein falsches Ergebnis liefert\footnote{\url{http://www.cs.huji.ac.il/~nati/PAPERS/ALGORITHMS/zwick.pdf}}
+\end{itemize}
+
 \subsubsection{Korrektheit}
 \begin{itemize}
-	\item Terminiert sicher für alle rationalen Eingaben\footnote{\url{http://de.wikipedia.org/wiki/Algorithmus_von_Ford_und_Fulkerson\#Zur_Korrektheit_des_Algorithmus}}
-	\item Terminiert, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\)
-	\item Irrationale Kapazitäten: Terminiert nicht, da der Algorithmus unendliche lange laufen kann oder ein falsches Ergebnis liefert
+	\item Beweis von Ford und Fulkerson: Ein \(q-s\) - Fluss ist dann maximal, wenn es keinen augmentierenden (erhöhenden) Pfad gibt
+	\item Während der Durchführung erhöht sich der Fluss in jedem Schritt
+	\item Terminiert, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\) (ganzzahlige Kapazitäten)
 \end{itemize}
 
 \subsubsection{Laufzeit}
 \begin{itemize}
-	\item \(\mathcal{O}(|E| \cdot max\{W_f~|~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^* s\) in \(|E|\) gefunden werden kann.
+	\item Pro Schleifendurchlauf benötigt der Algorithmus \(\mathcal{O}(|V|~+~|E|)\) Zeit
+	\item Insgesamt: \(\mathcal{O}(|E| \cdot max\{W_f~|~Fluss~in~F\})\), denn ein Pfad \(q \rightarrow^* s\) in \(|E|\) gefunden werden kann.
 	\item Die Laufzeit hängt stark von der Anzahl der Schleifendurchläufe ab, da flussvergrößernde Pfade sehr ungünstig gewählt werden können.
 \end{itemize}
 
 
 \subsection{Algorithmus von Edmonds und Karp}
-Erhöht man den Fluß in Ford-Fulkerson imer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus.
+Erhöht man den Fluß in Ford-Fulkerson immer längs eines kürzesten Pfads (Breitensuche), erhält man den Edmonds-Karp-Algorithmus.
 
 \begin{itemize}
 	\item Die Länge \(l_f x\) der kürzesten Pfade \(q \rightarrow^* s\) in \(G_f\) wächst monoton
