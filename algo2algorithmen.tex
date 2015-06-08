@@ -69,6 +69,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 
 \subsubsection{Laufzeit}
 \begin{itemize}
+	\item \textit{Lifte} wird höchstens \(2 \cdot |V|^2\) aufgerufen
 	\item Saturierendes \textit{Pusch}: Die Kante ist überlegt, d.h. \(u(x) \geq k_f(x,y)\)
 	\item Anzahl durchgeführte, saturierende \textit{Präfluss-Pusch-Operationen} \(< 2 \cdot |V| \cdot |E|\), da um ein saturierendes \textit{Pusch} erneut ausführen zu können, \(h(y)\) um mindestens \(2\) erhöht und ein \(Pusch(y,x)\) ausgeführt werden muss.
 	\item Anzahl durchgeführte \textit{Pusch-} und \textit{Lifte}-Operationen \(\in \mathcal{O}(|V|^2\cdot |E|)\)
@@ -79,7 +80,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 Formalisierung bzw. Erweiterung des \textit{Präfluss-Pusch-Algorithmus}.
 \begin{itemize}
 	\item Verwaltung einer Knotenliste \(L\) in der \(x\) vor \(y\) auftritt, falls \((x,y)\) puschbar ist
-	\item Verwaltung einer List \(i_x\) von Knoten \(n_x\) pro Knoten
+	\item Verwaltung einer Liste \(i_x\) von Nachbarknoten \(n_x\) pro Knoten
 \end{itemize}
 \input{algo2/algo_an-die-spitze_leere}
 \text{}\\
@@ -89,7 +90,13 @@ Formalisierung bzw. Erweiterung des \textit{Präfluss-Pusch-Algorithmus}.
 Faktoren, welche die Laufzeit beeinflussen:
 \begin{itemize}
 	\item Anzahl Aufrufe von \(Leere(x)\) mit \(u(x) = 0\)
+	\begin{itemize}
+		\item Da \textit{Lifte} höchstens \(3\)-mal aufgerufen wird, folgt \(|Aufrufe(Leere)| < 2\cdot |V|^3\)
+	\end{itemize}
 	\item Anzahl der Aufrufe der Hauptschleife
+	\begin{itemize}
+		\item Höchstens \(\mathcal{O}(|V| \cdot |E||)\) Aufrufe von \textit{Lifte} und saturierendem \textit{Pusch} \(\rightarrow\) Gesamtaufwand \(\mathcal{O}(|V|^3)\)
+	\end{itemize}
 \end{itemize}
 Laufzeit damit \(\in \mathcal{O}(|V|^3)\).
 
