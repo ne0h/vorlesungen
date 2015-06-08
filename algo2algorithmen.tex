@@ -47,14 +47,15 @@ Erhöht man den Fluß in Ford-Fulkerson immer längs eines kürzesten Pfads (Bre
 
 
 \subsection{Die Präfluss-Pusch-Methode}
-Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluss speichern zu können. Diese könnten nur bergab entleert werdern.
+Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend beliebig viel Fluss speichern zu können. Letztere könnten nur bergab entleert werdern.\footnote{\url{http://de.wikipedia.org/wiki/Goldberg-Tarjan-Algorithmus}}
 
 \subsubsection{Pusch}
 \(Push(x,y)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x)-h(y) \geq 1\) ist.
 \input{algo2/algo_praeflusspusch_pusch}
 
 \subsubsection{Lifte}
-\(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{(x,y) \in E_f : k(x,y) > 0}{h(y)}\) ist.
+\(Lifte(x)\) ist nur erlaubt, wenn Überschuss bei \(x\) vorhanden und \(h(x) \leq \min_{((x,y) \in E_f}{h(y)}\) ist.
+\text{}\\
 \input{algo2/algo_praeflusspusch_lifte}
 
 \subsubsection{Durchführung}
@@ -68,8 +69,9 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 
 \subsubsection{Laufzeit}
 \begin{itemize}
-	\item Anzahl durchgeführter Lifte- und Pusch-Operationen \(\in \mathcal{O}(|V|^2 \cdot |E|)\)
-	\item Daher kann der Algorithmus auch mit dieser Laufzeit implementiert werden
+	\item Saturierendes \textit{Pusch}: Die Kante ist überlegt, d.h. \(u(x) \geq k_f(x,y)\)
+	\item Anzahl durchgeführte, saturierende \textit{Präfluss-Pusch-Operationen} \(< 2 \cdot |V| \cdot |E|\), da um ein saturierendes \textit{Pusch} erneut ausführen zu können, \(h(y)\) um mindestens \(2\) erhöht und ein \(Pusch(y,x)\) ausgeführt werden muss.
+	\item Anzahl durchgeführte \textit{Pusch-} und \textit{Lifte}-Operationen \(\in \mathcal{O}(|V|^2\cdot |E|)\)
 \end{itemize}
 
 
@@ -77,7 +79,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 Formalisierung bzw. Erweiterung des \textit{Präfluss-Pusch-Algorithmus}.
 \begin{itemize}
 	\item Verwaltung einer Knotenliste \(L\) in der \(x\) vor \(y\) auftritt, falls \((x,y)\) puschbar ist
-	\item Verwaltung einer Nachbarknotenliste pro Knoten
+	\item Verwaltung einer List \(i_x\) von Knoten \(n_x\) pro Knoten
 \end{itemize}
 \input{algo2/algo_an-die-spitze_leere}
 \text{}\\
