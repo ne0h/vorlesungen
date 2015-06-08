@@ -12,13 +12,13 @@
 	$\hat{E} \longleftarrow \{ q \} \times V_1 \cup E \cup V_2 \times \{ s \} $ \newline
 	\BlankLine
 
-	\tcc{Initialisiere alle Kanten mit Kapazität $1$}
+	\tcc{Initialisiere alle Kanten mit $Kapazitaet=1$}
 	$k \longleftarrow \begin{cases}1 & e \in \hat{E} \\ 0 & \text{sonst}\end{cases}$ \newline
 	\BlankLine
 
 	$f \longleftarrow Ford-Fulkerson( F(V, \hat{E} ),h,q,s)) $ \newline
 	\BlankLine
 
-	\tcc{Die Kanten mit Fluss $1$ im Ursprungsgraphen bilden die maximale Paarung}
+	\tcc{Die Kanten mit $Fluss=1$ im Ursprungsgraphen bilden die maximale Paarung}
 	$P \longleftarrow \{ e \in E~|~f(e) = 1 \} $
 \end{algorithm}
