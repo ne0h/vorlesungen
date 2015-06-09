@@ -221,6 +221,7 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 
 \subsection{Nullsummenspiele}
 \begin{itemize}
+	\item Eine Tabelle gibt die Gewinne für \(A\) und die Verlust für \(B\) an
 	\item Bedingung: \(Gewinn(A) + Gewinn(B) = 0\)
 	\item Definiert durch eine \(n \times m\) Matrix \(M\)
 \end{itemize}
@@ -235,6 +236,7 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 
 
 \subsection{MiniMax-Theorem}
+Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. Die Minimierung der gegnerischen Maximal-Auszahlung beider Spieler steht im Vordergrund und ist Ursache für die Entstehung der \textit{Bezeichnung Min-Max-Theorem}.\footnote{\url{http://de.wikipedia.org/wiki/Min-Max-Theorem}}
 
 \subsubsection{Definitionen}
 \begin{enumerate}
@@ -242,11 +244,14 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 	\item \(q := \lbrack q_1,...,q_n \rbrack^T \) bezeichnet die \textit{gemischte Strategie} von \(B\)
 	\item Erwartungswert des Gewinns von \(A\): \(\mathbb{E}\lbrack Gewinn(A) \rbrack = p^T \cdot M \cdot q\)
 	\item Optimale Strategie von \(A\): \(min_q~(p^T \cdot M \cdot q)\)
-	\item Bei optimaler Strategiewahl von beiden: \\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
+	\item Wählen \(A\) und \(B\) optimale Strategien, gilt:\\ \(max_p~min_q~(p^T \cdot M \cdot q) \leq E \lbrack Gewinn(A) \rbrack \leq min_q~max_p~(p^T \cdot M \cdot q)\)
 \end{enumerate}
 
 \subsubsection{Von-Neumanns-MiniMax-Theorem}
-\(W := max_p~min_q~p^TMq\) heißt \textit{Wert} und ein Paar \((p,q)\) optimaler Strategien \textit{Lösungen} des Spiels \(M\) mit gemischten Stratgien.
+\[max_p~min_q~(p^T \cdot M \cdot q) = min_q~max_p~(p^T \cdot M \cdot q)\]
+
+\paragraph{Definition}
+\text{}\\ \(W := max_p~min_q~(p^TMq)\) heißt \textit{Wert} und ein Paar \((p,q)\) optimaler Strategien \textit{Lösungen} des Spiels \(M\) mit gemischten Stratgien.
 
 \subsubsection{Loomis Satz}
 \[max_p~min_j~(p^T \cdot M \cdot e_j) = min_q~max_i~(e_i^T \cdot M \cdot q)\]
@@ -256,12 +261,15 @@ Für ein festes \(p\) wird \(p^T \cdot M \cdot q\) minimiert, wenn die j-te Koor
 
 \subsection{Yoas Technik}
 Verwendung des MiniMax-Theorems zur Laufzeitabschätzung von stochastischen Algorithmen für ein Problem \(P\) (\textit{B} kann als stochastischer Algorithmus aufgefasst werden):
-\(B\) wählt einen Algorithmus \(A \in \{A_1,...,A_m\}\) und \(A\) wählt eine Eingabe \(E \in \{E_1,...,E_n\}\)
+\(B\) wählt einen Algorithmus \(A \in \{A_1,...,A_m\}\) und \(A\) wählt eine Eingabe \(E \in \{E_1,...,E_n\}\).
+
+Sei \(M_{ij}\) die Laufzeit \(A_j(E_i)\), dann gilt:
+
 \begin{itemize}
 	\item Worst-case-Laufzeit von \(A\): \(max_i~M_{ij}\)
 	\item Deterministische Laufzeit von \(A\): \(min_j~max_i~M_{ij}\)
 	\item Best-case-Laufzeit von \(A\): \(min_j~M_{ij}\)
-	\item Stochastische Komplexität (Laufzeit) von \(A\) bzgl. \(P\): \(max_i~min_j~M_{ij} =: K_s\)
+	\item Stochastische Komplexität (Laufzeit) von \(A\) bzgl. \(P\): \(max_i~min_j~M_{ij} =: K_s\). Würde \(B\) immer ein schnellstes \(A_j\) für die Eingabe wählen, entspräche diese Wahl einem stochastischen Algorithmus it optimaler Laufzeit \(K_s\).
 	\item Erwartungswert der Laufzeit: \(\mathbb{E}\lbrack Laufzeit \rbrack: \sum_{ij} p_i \cdot M_{ij} \cdot q =: p^T \cdot M \cdot q\)
 	\item Verteilungskomplexität: \(K_v := max_p~min_q~(p^T \cdot M \cdot q)\)
 \end{itemize}
@@ -278,7 +286,7 @@ Hiermit kann die worst-case-Laufzeit aller stochastischer Algorithmen durch die 
 Ein binärer Spielbaum ist ein balancierter Binärbaum gerader Höhe \(2k\) mit Knotenwert \(x \in \{0,1\}\) und den Kindknoten \(y \in \{0,1\}\) und \(z \in \{0,1\}\). Es gilt:
 \[Wert(x) = Wert(y) \downarrow Wert(z)\]
 
-Da \((a \downarrow b) \downarrow (c \downarrow d) = (a \vee b) \wedge (c \vee d)\) entsprechen die Nicht-Blattknoten auf gerader Höhe den Minima und bei ungerader Höhe den Maxima der Werte ihrer Kindknoten. Das entspricht einem Spiel, bei dem zwei Spieler abwechselnd ihren Gewinn maximieren.
+Aus \((a \downarrow b) \downarrow (c \downarrow d) = (a \vee b) \wedge (c \vee d)\) folgt, dass die Nicht-Blattknoten auf gerader Höhe den Minima und bei ungerader Höhe den Maxima der Werte ihrer Kindknoten entsprechen. Das entspricht einem Spiel, bei dem zwei Spieler abwechselnd ihren Gewinn maximieren.
 
 \subsubsection{Bestimme den Wurzelwert aus den Blattwerten}
 \input{algo2/algo_wert}
