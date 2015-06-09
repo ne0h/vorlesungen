@@ -467,7 +467,7 @@ Daher ist beispielsweise für \(m=2\) der Kompetitivitätsfaktor \(c=9\).
 \subsubsection{Definitionen}
 \begin{itemize}
 	\item Ein Polygon \(P\) heißt geschlossen, wenn gilt \(p_m = p_1\).
-	\item Ein Polygon \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt mit Ausnahme der Ecken.
+	\item Ein Polygon \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt, mit Ausnahme der Ecken.
 \end{itemize}
 Es gibt keine kompetitive Strategie.
 
@@ -492,18 +492,13 @@ Es gibt keine kompetitive Strategie.
 \subsection{Lineares Programm}
 Die lineare Ungleichung
 \[y := \upsilon^T \cdot x + u \geq 0\]
-beschreibt den Halbraum mit Normalenvektor \(\upsilon\).
-
-\subsubsection{Konvexer Polyeder}
-Die Nebenbedingungen
+beschreibt den Halbraum mit Normalenvektor \(\upsilon\). Die Nebenbedingungen
 \[y_i := a_i^T \cdot x + a_i \geq 0,~i = 1,...,l\]
-bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Simplex} genannt wird. Das gesuchte Maximum, das durch die Nebenbedingungen begrenzt wird, befindet sich innerhalb des Simplex.
-\\\\
-\textbf{Ziel:} Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
-\[z := z^T \cdot x = max!\]
-\[y := A\cdot x + a \geq 0\]
+bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Simplex} genannt wird. Das gesuchte Maximum, das durch die Nebenbedingungen begrenzt wird, befindet sich innerhalb dieses Simplex.
 
 \subsubsection{Normalform des linearen Programms}
+\textbf{Ziel:} Maximierung einer linearen Zielfunktion über dem Simplex \(s\):
+
 \[z = c^T\cdot \bar{y} + c \stackrel{!}{=} max\]
 \[y' \geq 0\]
 \[y'' = B \cdot y' + b \geq 0\]
@@ -535,16 +530,10 @@ bilden ein konvexes Polygon \(s\), das in der linearen Programmierung \textit{Si
 Ist \(a_{rs} \ne 0\) können \(u_r\) und \(v_s\) getauscht werden. Ein beliebiges \(a_{rs}\) fungiert als Pivotelement. 
 \text{}\\
 \input{algo2/algo_simplex_austausch}
-\text{}\\
-\input{algo2/algo_simplex}
 
 
 \subsection{Der Simplexalgorithmus}
 \textbf{Ausgangspunkt:} Ein lineares Programm in Normalform
-\[z = c^T \cdot x + c = max!,\]
-\[x \geq 0,\]
-\[B \cdot x + b \geq 0,\]
-ausführlich:
 \[\begin{array}{c|ccc|c|}
 	& x_1 & ... & x_n & 1 \\
 	\hline
@@ -555,42 +544,20 @@ ausführlich:
 	z= & c_1 & ... & c_n & c \\
 	\hline
 \end{array}\]
-\\\\
-\textbf{Vorgehen:} Iteratives Tauschen von \(y_r\) mit \(x_s\).
-\\\\\\
-\begin{minipage}{\textwidth}
-SIMPLEX
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-# Bringe Problem in Normalform
-Forall Bedingungen {
-	Formuliere Bedingung als Ungleichung in Matrixzeile
-	Falls Bedingung obere Schranke hat {
-		invertiere Ungleichung
-	}
-}
-
-# Tausche
-While moeglich {
-	Waehle kleinsten Matrixwert als Pivotelement
-	Forall Zeilen {
-		Ermittle $\frac{b_i}{b_is}$
-		x = davon groesster, noch negativen Wert
-	}
-	Tausche Spalte(Pivotelement) mit Zeile(x)
-}
-\end{lstlisting}
-\end{minipage}
+\paragraph{Vorgehen} Iteratives Tauschen von \(y_r\) mit \(x_s\).
+\text{}\\\\
+\input{algo2/algo_simplex}
 
 
 \subsection{Berechnung der Normalform}
 \begin{itemize}
 	\item Für die Überführung eines linearen Programms in die Normalform muss eine Ecke des Simplex zum Ursprung gemacht werden
-	\item Problem: Im Allgemeinen sind die Ecken des Simplex nicht bekannt
-	\item Es sind allerdings einer oder mehrere Punkte bekannt, die zum Ursprung gemacht werden können
-	\item \textbf{Vorgehen}
+	\item Da es nur endlich viele Ecken gibt, wird eine Lösung nach endlich vielen Schritten gefunden
+	\item Problem: Im Allgemeinen sind die Ecken des Simplex nicht bekannt, aber einen oder mehrere zulässige Punkte, die durch Translation zum Ursprung gemacht werden können
+	\item \textbf{Iteratives Vorgehen}
 	\begin{enumerate}
 		\item Tauschen von \(y_r\) mit \(x_s\) auf der Hauptdiagonalen. Der Ursprung wandert auf einer Koordinatenachse
-		\item Streichen der getauschten Zeile
+		\item Gedankliches Streichen der getauschten Zeile
 	\end{enumerate}
 \end{itemize}
 
@@ -598,8 +565,7 @@ While moeglich {
 \subsection{Flussmaximierung}
 Die Suche nach einem maximalen Fluss in einem Flussnetzwerk kann als lineares Programm angesehen werden.
 
-\textbf{Gegeben:} Gerichteter Graph mit Kapazitätsbeschriftung.
-\\\\
+\paragraph{Gegeben} Gerichteter Graph mit Kapazitätsbeschriftung.
 Daraus ergibt sich das lineare Programm:
 \[z = x_1 + x_2 = max!\]
 Nebenbedingungen:
@@ -628,24 +594,22 @@ wird durch die Matrix \(\mathbb{B} := \begin{pmatrix} B & b \\ c^T & c\end{pmatr
 Das lineare Programm
 \[y \geq 0\]
 \[B^T \cdot y + c \leq 0\]
-\[b^t \cdot y + c = min!\]
+\[b^T \cdot y + c = min!\]
 hat die Normalform \(\overline{\mathbb{B}}^T\), die Lösung \(\overline{y}=0\) und den Minimalwert \(\overline{c}\).
-\\\\
-\textbf{Definition:} Die beiden linearen Programme heißen dual zueinander.
-\\\\
-\textbf{Bemerkung:} Das zweite Programm kann umgeschrieben und mit \textit{SIMPLEX} gelöst werden. Gleichzeitig löst man damit das erste Programm. Es ist das Lösen des \textit{primalen Programms} in dualer Form.
+\paragraph{Definition} Die beiden linearen Programme heißen dual zueinander.
+\paragraph{Bemerkung} Das zweite Programm kann umgeschrieben und mit \textit{SIMPLEX} gelöst werden. Gleichzeitig löst man damit das erste Programm. Es ist das Lösen des \textit{primalen Programms} in dualer Form.
 
 
 \subsection{Beweis des MiniMax-Theorems}
 Mit Hilfe des Dualitätssatzes für lineare Programme kann das MiniMax-Theorem
-\[max(x \in W_M)~min(y \in W_n)~x^T\cdot A\cdot y = min(y \in W_n)~max(x \in W_m)~x^T\cdot A \cdot y\]
+\[max_{x \in W_M}~min_{y \in W_n}~x^TAy = min_{y \in W_n}~max_{x \in W_m}~x^T A y\]
 bewiesen werden. Auf Grund des SIMPLEX-Algorithmus ist es äquivalent zu
-\[max(x)~min(i)~x^T\cdot A \cdot e_j = min(y)~max(i)~e_i^T\cdot A \cdot y\]
+\[max_x~min_i~x^T A e_j = min_y~max_i~e_i^T A y\]
 
 \subsubsection{Linke Seite}
 Auf der linken Seite wird
-\[x_0 := min(i)~x^T\cdot A \cdot e_j\]
-maximiert. Da \(x_0\) mit \(x\) wächst erhält man das lineare Programm
+\[x_0 := min_i~x^T A e_j\]
+maximiert. Da \(x_0\) mit \(x\) wächst, erhält man das lineare Programm
 \\\\
 \[\begin{array}{|cc|c|}
 x & x_1 & 1 \\
@@ -659,7 +623,7 @@ A^T & -b & 0 \\
 
 \subsubsection{Rechte Seite}
 Analog wird die rechte Seite
-\[max(i)~e_i^T\cdot A \cdot y\]
+\[max_i~e_i^T A y\]
 minimiert. Man erhält das lineare Programm
 \\\\
 \[\begin{array}{|cc|c|}
@@ -681,8 +645,8 @@ Sei
 \[Ax = a\]
 ein überbestimmtes Gleichungssystem, d.h. für alle \(x\) ist das Residuum
 \[r := \begin{bmatrix} r_1 \\ \vdots \\ r_n \end{bmatrix} := Ax - a \ne 0.\]
-\textbf{Ziel:} Minimieren von
-\[r := \parallel r \parallel_{\infty} := max(i)~|r_i|\]
+\paragraph{Ziel} Minimieren von
+\[r := \parallel r \parallel_{\infty} := max_i~|r_i|\]
 mit Hilfe eines linearen Programms
 \[-A\overline{x} + ax_0 + e \geq 0\]
 \[A\overline{x} - ax_0 + e \geq 0\]
@@ -696,8 +660,7 @@ mit Hilfe eines linearen Programms
 		\item Formulieren der Nebenbedingungen und der negierten Nebenbedingungen
 		\item Nebenbedingungen im linearen Programm gleich \(1\) setzen
 	\end{enumerate}
-	\item Berechnen des Maximums nach dem SIMPLEX-Algorithmus
-	\item Berechnung der Normalform
+	\item Berechnen des Maximums nach dem \textit{SIMPLEX}-Algorithmus
 	\item Berechnung von \(x_1\) aus \(r\) (\(z = x_0\))
 \end{enumerate}
 
