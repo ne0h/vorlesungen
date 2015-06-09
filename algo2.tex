@@ -402,16 +402,19 @@ Seien \(K_1,...,K_n, n \in \mathbb{N} \cup \{0,\infty\}\) die Kanten des Wegs vo
 Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunkt \(s\) und ein Ziel \(z\).
 \text{}\\
 \input{algo2/algo_wanze}
-Wanze terminiert: Umläuft \(R\) zuerst \(P_i\) und dann \(P_j\) gilt:
+\text{}\\
+\textbf{Wanze terminiert:} Umläuft \(R\) zuerst \(P_i\) und dann \(P_j\) gilt:
 \[dist(z,P_i) > dist(z,P_j).\]
 \(R\) umläuft daher jedes Polygon höchstens einmal und findet \(z\) spätestens nach Umlaufen aller \(P_i\).
 
 \subsubsection{Universelles Steuerwort}
 Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
-\\\\
-\textbf{Satz:} Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte zum gegebenen Ziel \(z\) führt. \(\rightarrow \) Da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompass genügt also zur Zielfindung.
+
+\paragraph{Satz}
+Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte innerhalb einer spezifischen Szene zum gegebenen Ziel \(z\) führt \(\rightarrow \) da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompass genügt also zur Zielfindung.
 \\\\
 \(R\) kann somit alle endlichen Steuerworte erzeugen und sich nach ihnen bewegen, spätestens mit dem universellen findet er das Ziel.
+
 
 \subsection{Behälterproblem}
 \textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (dieses Problem ist NP-hart).
