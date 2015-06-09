@@ -81,7 +81,7 @@ Der Entscheidungsprozess über die Durchführung von Investitionen.
 
 \subsubsection{Kapitalwert (Net Present Value) einer Investition}
 
-\[Kapitalwert = -Anfangsauszahlung + \frac{Barwert}{1+r}\]
+\[Kapitalwert = -Anfangsauszahlung + \frac{Barwert}{1+r}+...+\frac{Barwert}{(1+r)^T}\]
 
 \begin{itemize}
 	\item Entscheidungsregel: Führe die Investition durch, wenn Kapitalwert positiv.
@@ -91,7 +91,7 @@ Der Entscheidungsprozess über die Durchführung von Investitionen.
 \subsubsection{Methode der Kapitalwertrate}
 Lediglich für unabhängige Projekte geeignet.
 
-\[KWR = \frac{Barwert}{Anfangsauszahlung}\]
+\[KWR = \frac{Barwert}{Anfangsauszahlung} = \frac{Alle~diskontierten~Auszahlungen}{Anfangszahlung}\]
 
 \subsubsection{Amortisierungsrechnung}
 \begin{itemize}
@@ -271,7 +271,7 @@ Erfolg resultiert aus der Wertveränderung der Vermögensgegenständen und der S
 	\item Realisationsprinzip: Umsätze gelten als realisiert, wenn die geschäftliche Transaktion komplett abgeschlossen ist
 	\item Matching Principle: Die Umsätze einer Periode werden vor den Aufwendungen einer Periode verbucht (z.B. erst wenn ein Produkt verkauft wurde)
 	\item Prudence Principle: Potentielle Verluste werden so früh wie möglich ausgewiesen, Gewinne erst, wenn sie realisiert worden sind
-	\item Going Concern Principle: Es wird davon ausgegangen, dass das Unternehmen in versehbaren Zukunft weiter aktiv bleibt
+	\item Going Concern Principle: Es wird davon ausgegangen, dass das Unternehmen in unabsehbarer Zukunft weiter aktiv bleibt
 \end{itemize}
 
 
@@ -445,11 +445,11 @@ Siehe zusätzlich "`Zahlungsströme aus Finanzierungstätigkeit"'
 	\hline
 	& \textbf{Vollkostenrechnung} & \textbf{Teilkostenrechnung} \\
 	\hline\hline
-	textbf{Umsatzerlöse} & Summe verkaufter Waren & Summe verkaufter Waren \\
+	\textbf{Umsatzerlöse} & Summe verkaufter Waren & Summe verkaufter Waren \\
 	\hline
-	textbf{Umsatzkosten} & Summe variabler Herstellkosten, Summe fixer Herstellkosten anteilig an Gesamtproduktion & Summe variabler Herstellkosten \\
+	\textbf{Umsatzkosten} & Summe variabler Herstellkosten, Summe fixer Herstellkosten anteilig an Gesamtproduktion & Summe variabler Herstellkosten \\
 	\hline
-	textbf{Periodenaufwand} & Nicht-Herstellkosten & Fixe Herstellkosten, Nicht-Herstellkosten \\
+	\textbf{Periodenaufwand} & Nicht-Herstellkosten & Fixe Herstellkosten, Nicht-Herstellkosten \\
 	\hline
 \end{tabularx}
 \end{table}
@@ -526,6 +526,7 @@ Die enstandene Differenz spiegelt sich in dem höheren Wert der fertigen Erzeugn
 	\begin{itemize}
 		\item Verrechnungspreise der Kosten der Vorkostenstelle pro abgegebener Leistungseinheit
 		\item Beispiel Kantine: Kosten pro Essen ermitteln und danach mit der Anzahl der bezogenen Einheiten der Endkostenstelle verrechnen und summieren
+		\item Keine Berücksichtigung der Anteile der anderen VOrkostenstellen
 	\end{itemize}
 	\item Stufenleiterverfahren: Wie beim Anbauverfahren, allerdings werden die Beträge \textbf{allen} Folgekostenstellen zugeordnet (nicht nur den Endkostenstellen)
 	\item \textbf{Gleichungsverfahren}
@@ -555,6 +556,7 @@ Ausführliche Beispielrechnungen in Vorlesung 13.
 \subsubsection{Divisionskalkulation}
 \begin{itemize}
 	\item Durchschnittsbetrachtung als Grundlage: \(Selbstkosten~pro~Stueck=\frac{Gesamtkosten}{Produktionsmenge}\)
+	\item Stufenweise: Neue Stufe hat Ergebnis der Vorstufe als Eingabe
 	\item Kostenverteilung nach Verursachungsprinzip
 	\item Gesamtkosten bilden die Summe der einzelnen Stufen
 	\item Falls die fertigen Erzeugnisse gelagert werden, zusätzlich \(\frac{Verwaltungs-~und~Vertriebskosten}{Absatzmenge}\)
@@ -668,13 +670,6 @@ Ausführliche Beispielrechnungen in Vorlesung 13.
 \subsubsection{Investor mit Einjahreshorizont}
 \[r = \frac{Div_1+P_1}{P_2}-1\]
 
-\subsubsection{Divided Discount Model}
-\[P_0 = \sum_{t=1}^{N} \frac{Div_t}{(1+r_E)^t}\]
-
-\subsubsection{Divided Discount Model mit unterschiedlichen Wachstumsraten}
-Erweiterung um ewige Rente.
-\[P_0 = \sum_{t=1}^{T} \frac{Div_t}{(1+r_E)^t} + \frac{1}{(1+r_E)^T}\cdot\frac{Div_{T+1}}{r_E-g}\]
-
 \subsubsection{Methoden der Investitionsentscheidung: Interne Zinssatzmethode}
 \[0 = Anfangsauszahlung - \sum_{t=1}^{T}\frac{C_t}{(1+z_intern)^t}\]
 
@@ -687,6 +682,10 @@ Erweiterung um ewige Rente.
 \subsubsection{Aktienbewertung: Dividend Discount Model}
 Der Preis der Aktie ergibt sich als Barwert alles erwarteten Dividendenzahlungen bei einem risikoadäquaten Diskontierungssatz \(r_E\).
 \[P_0 = \sum_{t=1}^T \frac{Div_t}{(1+r_E)^t}\]
+
+\subsubsection{Divided Discount Model mit unterschiedlichen Wachstumsraten}
+Erweiterung um ewige Rente.
+\[P_0 = \sum_{t=1}^{T} \frac{Div_t}{(1+r_E)^t} + \frac{1}{(1+r_E)^T}\cdot\frac{Div_{T+1}}{r_E-g}\]
 
 
 \subsection{Portfoliotheorie}
@@ -724,6 +723,12 @@ Bei verschiedenen Papieren mit linearer Gewichtung unter der Wurzel.
 
 \subsubsection{Marktrisikoprämie}
 \[\mu_M - r\]
+
+\subsubsection{Ausschüttungsquote}
+\[\frac{Div~pro~Aktie}{Gewinn~pro~Aktie}\]
+
+\subsubsection{Marktkapitalisierung}
+\[Preis~pro~Aktie \cdot n_{Aktie}\]
 
 
 \subsection{Methodik des externen Rechnungswesens}
