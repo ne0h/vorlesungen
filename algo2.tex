@@ -300,30 +300,19 @@ Falls \(w=1\) kann direkt \(0\) zurückgegeben werden, ohne weiter zu traversier
 \subsection{Binäre Zerlegung der Ebene}
 
 \subsubsection{Vorgehen}
-Teile die affine Ebene \(A\) anhand einer Halbgeraden \(S_1\) in die Ebenen \(A_0\) und \(A_1\). Fahre rekursiv fort.
+Teile die affine Ebene \(A\) anhand einer Halbgeraden \(S_1\) in die Ebenen \(A_0\) und \(A_1\), wobei die Halbgeraden in beide Richtungen unbegrenzt verlängert werden, bis sie auf eine bereits zur Zerlegung verwendete Halbgerade treffen. Fahre rekursiv fort.
 
 \subsubsection{Raumzerlegungsbaum}
-Die entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus, Übermalen von Flächen, um die Tiefenberechnung zu sparen).
+Die entstandenen Aufteilungen lassen sich über einen binären Raumzerlegungsbaum darstellen. Anwendung beispielsweise in der Computergrafik (Maleralgorithmus: Übermalen von Flächen, um die Tiefenberechnung zu sparen).
 Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
 
 
 \subsection{Binäre Zerlegung des Raums}
 Folgender Algorithmus erzeugt binäre RZBs für den Raum:
+\text{}\\
+\input{algo2/algo_bzr}
 
-\subsubsection{Eingabe}
-Ein Polyeder \(P \subset \mathbb{R}^3\) sowie orientierte, planare, disjunkte Polygone \(P_1,...,P_n \subset \mathbb{R}^3\).
-
-\subsubsection{Vorgehen anschaulich}
-\begin{enumerate}
-	\item Sortiere Polygone aus, die keine Schnittfläche mit dem Polyeder gemeinsam haben
-	\item Falls es ein Polygon gibt, das den Polyeder komplett teilt, nehme dieses zum Trennen. Gibt es keines nehme das erste aus \(Q\)
-	\item Teile den Polyeder und fahre rekursiv fort. Alle aktuellen Polygone werden mitübergeben und im nächsten Iterationsschritt aussortiert
-\end{enumerate}
-
-\input{algo2/algo_brz}
-
-
-\subsubsection{Laufzeit}
+\subsubsection{Satz}
 \(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
 \[\mathbb{E}\lbrack Z \rbrack \in \mathcal{O}(n^2)\]
 Ein planares Polygon sei durch \(k\) Geraden zerlegt \(\rightarrow\) Anzahl der Randgebiete \(\in \mathcal{O}(k)\).
@@ -336,7 +325,7 @@ Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen
 \subsubsection{Begriffe}
 \begin{itemize}
 	\item Konvexe Menge \(M\): Die Verbinungsstrecke zweier beliebiger Punkte im Polygon liegt komplett in diesem (keine Einbuchtungen).
-	\item Konvexkombination: Linearkombination, wenn alle Koeffizienten \(\in I~\lbrack 0,1\rbrack\) (Einheitsinterval) und \(\sum Koeffizienten = 1\)
+	\item Konvexkombination: Linearkombination, wenn alle Koeffizienten \(\in I\lbrack 0,1\rbrack\) (Einheitsinterval) und \(\sum Koeffizienten = 1\)
 \end{itemize}
 
 \subsection{Dualität}
