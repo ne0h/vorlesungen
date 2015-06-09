@@ -8,7 +8,7 @@ notwendig:
 
 Um lediglich den Teil zu Algorithmen 2 zu bauen:
 
-`$ make algo2`
+`$ make algo2only`
 
 Aktuell enthalten
 -----------------
