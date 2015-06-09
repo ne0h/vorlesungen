@@ -13,8 +13,11 @@
 	$P \longleftarrow P + v$
 	\BlankLine
 
-	\tcc{Schritt 2}
-	$V \longleftarrow$ Knotenliste von $p_1^{\leq} \cap ... \cap p_4^{\leq}$\newline
+	\tcc{Bestimme die Schnittmenge der ersten 4 HRe. Dadurch wird ein initialer Tetraeder aufgespannd}
+	$V \longleftarrow$ Knotenliste von $p_1^{\leq} \cap ... \cap p_4^{\leq}$
+	\BlankLine
+
+	\tcc{Prüfe für alle weiteren HRe, ob diese in $V$ liegen}
 	\For{$j > i$} {
 		\eIf{$p_j^{\leq} \supset V$}{
 			Entferne $p_j$ aus $P$\newline

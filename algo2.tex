@@ -331,15 +331,12 @@ Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen
 \subsection{Dualität}
 
 \subsubsection{Hyperebene}
-Die Lösungsmenge einer linearen Gleichung
-\[u^T \cdot x = 1, u \in \mathbb{R}^n\]
-heißt Hyperebene von \(A\), d.h.
-\[u* := \{x \in A~|u^T \cdot x = 1\}\]
-
-\subsubsection{Halbebene}
-Als \(u \in A\) wird der zu \(u*\), \(x*\) zum Punkt \(x\) duale Halbebene bezeichnet.
+Die Lösungsmenge einer linearen Gleichung \(u^T \cdot x = 1\) mit \(u \in \mathbb{R}^n\) heißt Hyperebene von \(A\), d.h.
+\[u^* := \{x \in A~|u^T \cdot x = 1\}.\]
+\(u \in A\) wird der zu \(u^*\) duale Punkt und \(x^*\) die zum Punkt \(x\) \textit{duale Hyperebene} genannt.
 
 \subsubsection{Dualraum}
+Der Dualraum beinhaltet alle, zu Hyperebenen dualisierten, Punkte aus \(A\).
 \[A* = \{x*~|~x \in A\}\]
 
 \subsubsection{Halbraum}
@@ -353,6 +350,13 @@ bildet den Halbraum \(u^{\leq}\).
 	\item Diese Polarmenge ist konvex und abgeschlossen
 	\item \(M_p = \{u~|~M \subset u^{\leq}\}\) und \(M_{pp} = \{x~|~M_p \subset x^{\leq}\}\)
 \end{itemize}
+
+\subsubsection{Berechnung der Konvexen Hülle mit Hilfe von Polarmengen}
+Die Konvexe Hülle von \(M := \{p_1,...,p_i\) kann daher so berechnet werden:
+\[M_p \longleftarrow Schnitt~der~HRe~p_i^{\leq}.\]
+Dabei bestimmen die Ecken
+\[u_i := p_{i_1}^* \cap ... \cap p_{i_d}^*\]
+von \(M_p\), die Schnitte von je \(d\) Ebenen der Dualmenge \(M^*\) sind. Die Punkte \(p_{i_1},...,p_{i_d}\) spannen die Facetten von \(\lbrack M \rbrack\) auf.
 
 
 \subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
@@ -371,7 +375,18 @@ und dazu die mittlere Kantenzahl pro Seite
 \[\frac{2e}{f} \leq 6\]
 
 
-\subsection{Konstruktion der Konvexen Hülle}
+\subsection{Konstruktion Konvexer Hüllen}
+Konvexe Hüllen können als Schnitt dualer Halbräume bestimmt werden.
+
+\paragraph{Datenstruktur zur Speicherung der Polyeder}
+Darstellung durch eine Liste der Ecken des Polyeders, wobei die Listenelemente (die Ecken) jeweils folgendes enthalten:
+\begin{itemize}
+	\item Eine Liste von Zeigerpaaren auf die Nachbarecken im Uhrzeigersinn
+	\item Die vorderen Elemente der Zeigerpaare verweisen auf die Nachbarecken
+	\item Die hinteren Elemente verweisen auf das Zeigerpaar der Nachbarecke, die auf die Ecke zurückverweisen
+\end{itemize}
+Mithilfe dieser Polyederdarstellung lassen sich alle Kanten und Facetten mit einem Aufwand \(\in \mathcal{O}(|Ecken|)\) ausgeben.
+\text{}\\\\
 \input{algo2/algo_konvexe-huelle}
 
 
