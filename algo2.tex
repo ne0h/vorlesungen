@@ -418,21 +418,15 @@ Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte innerhalb e
 
 \subsection{Behälterproblem}
 \textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (dieses Problem ist NP-hart).
-\\\\
-\begin{minipage}{\textwidth}
-FIRST-FIT
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-For $i = 1,...,m$ {
-	Fuege $a_1$ dem ersten Behaelter hinzu | $a_i + A_j \leq h$
-}
-\end{lstlisting}
-\end{minipage}
-Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt ist immer höchstens ein Behälter halb voll oder leer, sonst würde kein zusätzlicher Behälter gebraucht werden. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden bei einer optimalen Packung mindestens
+\text{}\\\\
+\input{algo2/algo_firstfit}
+\text{}\\\\
+Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst kein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
 \[k_{opt} > \frac{k}{2}\]
 gebraucht. Somit ist
 \[m < 2k_{opt}.\]
 
-\subsubsection{Kompetivität}
+\subsubsection{Kompetitivität}
 Größe der Lösung eines Problems \(P\)
 \begin{itemize}
 	\item Optimaler Algorithmus: \(k_{opt}: \epsilon \rightarrow \mathbb{N}\)
@@ -440,7 +434,7 @@ Größe der Lösung eines Problems \(P\)
 \end{itemize}
 Es gilt:
 \[k_A \leq a+c\cdot k_{opt}~(a,c \in \mathbb{R})\]
-\(c\) bezeichnet den Kompetivitätsfaktor der Lösung.
+\(c\) bezeichnet den Kompetivitätsfaktor des Algorithmus.
 
 
 \subsection{Türsuche}
@@ -449,17 +443,23 @@ Es gilt:
 \input{algo2/algo_tuersuche-1}
 
 \paragraph{Kompetivität}
-Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 5 durch \(i = 2i\) erweitert, ist der Kompetivitätsfaktor bei einer maximalen Entfernung \(d=2^n+\delta\) der Tür vom Startpunkt
-\[w \leq \sum_{i=0}^{n+1}+d \leq 2^{n+3}+2^n+\delta \leq 9 \cdot 2^n.\]
+Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 6 durch \(i = 2i\) erweitert, ist der Kompetivitätsfaktor bei einer maximalen Entfernung \(d=2^{n+\delta}\) der Tür vom Startpunkt
+\[w \leq \sum_{i=0}^{n+1} 2^i+d \leq 2^{n+3+\delta}+d \leq 9 \cdot 2^{n+\delta}\]
+entfernt.
 
 
 \subsection{Sternsuche}
-Verallgemeinerung der Türsuche. Ziel: Finden des Ziels \(z\) vom Startpunkt \(s\) aus mit Hilfe von \(m\) wachsenden Halbgeraden.
-\text{}\\
+Verallgemeinerung der Türsuche.
+
+\paragraph{Ziel} Finden des Ziels \(z\) vom Startpunkt \(s\) aus mit Hilfe von \(m\) wachsenden Halbgeraden.
+\text{}\\\\
 \input{algo2/algo_sternsuche}
 
 \paragraph{Kompetivität}
-Siehe Skript Seite 101.
+Im schlechtesten Fall liegt \(z\) auf \(H_{k~mod~m}\rightarrow d = f_k+\delta\). Damit gilt:
+\[w = 2\sum_{i=0}^{k+m-1} f_i + d = 2 \sum\left(\frac{m}{m-1}\right)^i+d < 2(m-1)\left(\frac{m}{m-1}\right)^{k+m}+d,\]
+\[\frac{w}{d} \leq \frac{2(m-1)}{f_k}\left(\frac{m}{m-1}\right)^{k+m}+1=2(m-1)\left(\frac{m}{m-1}\right)^m+1=2m\left(\frac{m}{m-1}\right)^{m-1}+1.\]
+Daher ist beispielsweise für \(m=2\) der Kompetitivitätsfaktor \(c=9\).
 
 
 \subsection{Suche in Polygonen}
