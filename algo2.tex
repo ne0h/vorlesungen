@@ -1204,8 +1204,8 @@ der Limesfunktion stückweise konstant ist.
 
 \subsection{Tensorprodukt}
 Ein regelmäßiges, biinfinites Kontrollnetz kann durch eine biinfinite Matrix
-\[C = c_{\mathbb{Z}^2}\]
-beschrieben werden. Die Matrizen \(U\) und \(V\) zweier stationärer Unterteilungsalgorithmen für Kurven (z.B. der Lane-Riesenfeld-Algorithmus) bilden das Kontrollnetz
+\[C = \lbrack c_{i,j} \rbrack_{i,j \in c_{\mathbb{Z}}} = \lbrack c_i \rbrack_{i \in c_{\mathbb{Z}^2}} =: c_{\mathbb{Z}^2}\]
+beschrieben werden. Die Matrizen \(U\) und \(V\) zweier stationärer Unterteilungsalgorithmen für Kurven (z.B. der \textit{Lane-Riesenfeld-Algorithmus}) bilden das Kontrollnetz
 \[B := b_{\mathbb{Z}^2} := UCV^T,\]
 in dem alle Spalten von \(C\) mit \(U\) und dann alle Zeilen von \(UC\) mit \(V\) unterteilt werden. Das Paar \((U,V)\) heißt \textit{Tensorproduktunterteilungsschema} oder kurz \textit{Tepus}.
 
@@ -1215,8 +1215,7 @@ Die Netze \(U^kC(V^T)^k\) konvergieren gegen eine Fläche, wenn \(U\) und \(V\) 
 \subsection{Symbole}
 Die Matrix \(C=c_{\mathbb{Z}^2}\) hat das Symbol
 \[c(x) = \sum_{i \in \mathbb{Z}^2} c_i x^i.\]
-Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen für Kurven mit den Symbolen \(\alpha(x)\) und \(\beta(x)\) hat das unterteilte Netz
-\[B := b_{\mathbb{Z}^2} := UCV^T\]
+Sind \(U\) und \(V\) stationäre Unterteilungsalgorithmen für Kurven mit den Symbolen \(\alpha(x)\) und \(\beta(x)\) hat das unterteilte Netz \(B := b_{\mathbb{Z}^2} := UCV^T\)
 das Symbol
 \[b(x,y) := \alpha(x) \cdot c(x^2,y^2) \cdot \beta(y).\]
 Das Produkt
