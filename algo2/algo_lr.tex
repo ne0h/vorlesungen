@@ -13,21 +13,21 @@
 	\For{$k=1,...,m$}{
 		\BlankLine
 
-		\tcc{verdopple}
+		\tcc{verdopple alle Kontrollpunkte}
 		\For{$i \in \mathbb{Z}$}{
 			$d_{2i}^0 \longleftarrow d_{2i+1}^0 \longleftarrow c_{i}^{k-1}$
 		}
 		\BlankLine
 
 		\For{$j=1, ... ,n$}{
-			\tcc{mittele}
+			\tcc{mittele zwischen jeweils zwei Kontrollpunkten}
 			\For{$i \in \mathbb{Z}$}{
 				$d_i^j \longleftarrow (d_{i-1}^{j-1} + d_i^{j-1}) \cdot \frac{1}{2}$
 			}
 		}
 		\BlankLine
 
-		\tcc{bennene um}
+		\tcc{Aktualisiere die Benennung der Kontrollpunkte}
 		\For{$ i \in \mathbb{Z}$}{
 			$c_i^k \longleftarrow d_i^n$
 		}

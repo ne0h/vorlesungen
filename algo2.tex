@@ -1012,21 +1012,21 @@ Damit gilt
 Lane und Riesenfeld veröffentlichten 1980 einen Unterteilungsalgorithmus um stückweise polynomielle Kurven (Splines) zu erzeugen. Dabei handelt es sich um einen stationären Unterteilungsalgorithmus, der durch eine einzige, wiederholt anzuwendende lineare Operation beschreibar ist.
 
 Im Gegensatz zum \textit{de-Casteljau-Algorithmus} wird der \textit{LR-Algorithmus} meist für biinfinite Kontrollpolygone
-\[c_{\mathbb{Z}} := (c_i)_{i \in \mathbb{Z}} = (...,c_{-1},c_0,c_1,...)\]
-beschrieben.
+\[c_{\mathbb{Z}} := (c_i)_{i \in \mathbb{Z}} = (...~c_{-1}~c_0~c_1~...)\]
+beschrieben, weil es die Darstellung vereinfacht.
 
 Endliche Polygone können als biinfinite aufgefasst werden, bei denen nur endlich viele der Kontrollpunkte \(c_i\) von \(0\) verschieden sind.
-\text{}\\
+\text{}\\\\
 \input{algo2/algo_lr}
 
 
 \subsection{Unterteilungsmatrizen}
-Zur Analyse des LR-Algorithmus können die Koordinaten der Kontrollpolygone betrachtet werden. Es reicht somit ein skalarwertiges Polygon
-\[c := (\cdots,c_{-1}, c_0, c_1, \cdots) \in \mathbb{R}^{\mathbb{Z}}\]
+Zur Analyse des LR-Algorithmus können die Koordinaten der Kontrollpolygone betrachtet werden. Es reicht somit aus, ein skalarwertiges Polygon
+\[c := (...~c_{-1}~c_0~c_1~...) \in \mathbb{R}^{\mathbb{Z}}\]
 zu unterteilen.
 
 \subsubsection{Verdopplungsmatrix}
-Jede Spalte wird jweils 2x auf die selbe Zeile abgebildet \(\rightarrow\) Verdoppelung.
+Jede Spalte wird jeweils \(2x\) auf die selbe Zeile abgebildet \(\rightarrow\) Verdopplung der Kontrollpunkte.
 \[d := D c :=
 	\begin{bmatrix}
 		\ddots 	& 		& 				& \\
@@ -1054,7 +1054,7 @@ Durch Addition der Nachbarn und anschließender Skalierung wird jeweils der Mitt
 Das einmal unterteilte Polygon ist \(U_nc := M^nDc\), das \(m\)-mal unterteilte \(U_n^mc\) .
 
 Die Unterteilungsmatrizen \(U_n, n \in \mathbb{N}_0\) stellen den LR-Algorithmus dar und können durch \(n\)-fache Mittelung der Spalten einer biinfiniten Matrix \(D\) berechnet werden. Man erhält so
-\[U_1 = \frac{1}{2}
+\[U_1 = \frac{1}{2} M^1 \cdot D = \frac{1}{2}
 \begin{bmatrix}
 	\ddots 	& 1 			& 				& 			\\
 			& 2 			& 				& 			\\
@@ -1063,7 +1063,7 @@ Die Unterteilungsmatrizen \(U_n, n \in \mathbb{N}_0\) stellen den LR-Algorithmus
 			& 				& 1 			& \ddots 	\\
 \end{bmatrix},
 \]
-\[U_2 = \frac{1}{4}
+\[U_2 = \frac{1}{4}M^2\cdot D = \frac{1}{4}
 \begin{bmatrix}
 	\ddots 	& 1 			& 				&			\\
 			& 3 			& 				&			\\
@@ -1074,7 +1074,7 @@ Die Unterteilungsmatrizen \(U_n, n \in \mathbb{N}_0\) stellen den LR-Algorithmus
 \end{bmatrix},
 \]
 und allgemein
-\[U_n :=
+\[U_n := \frac{1}{2^n}M^n\cdot D = \frac{1}{2^n}
 \begin{bmatrix}
 	\ddots 	& \vdots 		&				&			\\
 			& \alpha_0		&				&			\\
@@ -1085,13 +1085,8 @@ und allgemein
 			& \vdots		& \alpha_n		&			\\
 			&				& \alpha_{n+1}	&			\\
 			&				& \vdots		& \ddots 	\\
-\end{bmatrix},
-\]
-wobei
-\[\alpha_i = \begin{cases} \frac{1}{2^n}, & falls~i=0,...,n \\ 0, & sonst \end{cases}\]
-die mit \(2^{-n}\) skalierten Binomialkoeffizienten sind.
-
-Die Zeilen der Matrix \(u_n\) enthalten alternierend die \(\alpha_i\) mit geraden und ungeraden Indexen.
+\end{bmatrix}.\]
+Die Zeilen der Matrix \(U_n\) enthalten alternierend die \(\alpha_i\) mit geraden und ungeraden Indexen.
 
 Die Unterteilung
 \[b:= \begin{bmatrix} \vdots \\ b_i \\ \vdots \end{bmatrix} := U_n \begin{bmatrix} \vdots \\ c_k \\ \vdots \end{bmatrix}\]
@@ -1111,7 +1106,9 @@ Die Unterteilungsgleichung kann als Polynommultiplikation aufgefasst werde. Dazu
 \[c(z) := \sum_{i \in \mathbb{Z}} c_i \cdot z^i,\]
 dargestellt. Multipliziert man \(\alpha(z)\) und \(c(z^2)\) symbolisch, so erhält man
 \[\alpha(z) \cdot c(z^2) = \sum_j \alpha_j\cdot z^j \cdot \sum_k c_k\cdot z^{2k} = b(z),\]
-die Laurent-Polynome des unterteilten Polynoms. Daher hat die Unterteilungsgleichung die Form
+die Laurent-Polynome des unterteilten Polygons.
+
+\paragraph{Folgerung} Die Unterteilungsgleichung hat die Form
 \[\beta(z) = \alpha(z)\cdot c(z^2).\]
 Das Polynom \(\alpha(z)\) stellt den LR-Algorithmus dar und kann durch ein beliebiges anderes ersetzt werden, um einen anderen Unterteilungsalgorithmus zu erhalten. Es heißt das \textit{Symbol} des Unterteilungsalgorithmus.
 
@@ -1122,13 +1119,13 @@ Das Polynom \(\alpha(z)\) stellt den LR-Algorithmus dar und kann durch ein belie
 \end{itemize}
 
 \subsubsection{Symbol des LR-Algorithmus}
-Umformung mit Hilfe des Binomischen Lehrsatzes.\footnote{\url{http://de.wikipedia.org/wiki/Binomischer_Lehrsatz\#Binomischer_Lehrsatz_f.C3.BCr_nat.C3.BCrliche_Exponenten}}
+Das Symbol des \textit{LR-Algorithmus} lässt sich explizit angeben. Mit Hilfe des Binomischen Lehrsatzes\footnote{\url{http://de.wikipedia.org/wiki/Binomischer_Lehrsatz\#Binomischer_Lehrsatz_f.C3.BCr_nat.C3.BCrliche_Exponenten}} erhält man:
 
-\[\alpha_n(z) = \frac{1}{2^n} \sum_{i=0}^{n+1} \binom{n+1}{i} \cdot z^i = \frac{1}{2^n}\cdot (1+z)^{n+1}\]
+\[\alpha_n(z) = \frac{1}{2^n} \sum_{i=0}^{n+1} \binom{n+1}{i} \cdot z^i = \frac{1}{2^n}\cdot (1+z)^{n+1}.\]
 
 
 \subsection{Das Differenzenschema}
-Neben dem Vorwärtsdifferenzenoperator \(\Delta\) gibt es den Rückwärtsdifferenzenoperator \(\nabla\), der eim Polygon \(c:=(c_i)_{i \in \mathbb{Z}}\) auf das Differenzenpolygon
+Neben dem Vorwärtsdifferenzenoperator \(\Delta\) gibt es den Rückwärtsdifferenzenoperator \(\nabla\), der ein Polygon \(c:=(c_i)_{i \in \mathbb{Z}}\) auf das Differenzenpolygon
 \[\nabla c := (\nabla c_i)_{i \in \mathbb{Z}}\]
 der Rückwärtsdifferenzen
 \[\nabla c_i := c_i - c_{i-1}\]
@@ -1148,16 +1145,20 @@ Die Matrix hat das Symbol \(\nu(z) = 1-z\).
 
 \subsubsection{Folgerung und Definition}
 Unterteilt man ein Polygon \(c\) gemäß der Unterteilungsgleichung
-\[b(z) = \alpha(z) \cdot c(z^2)\]
+\[b(z) = \alpha(z) \cdot c(z^2),\]
 genügen die Differenzenpolygone \(b_{\nabla}(z) = \frac{\alpha(z)}{1+z} \cdot c_{\nabla}(z^2)\) und \(c_{\nabla}(z) = (1-z)\cdot c(z)\) der Unterteilungsgleichung
 \[b_{\nabla}(z) = \beta(z) \cdot c_{\nabla}(z^2),\]
-wobei \(\beta(z) = \frac{\alpha(z)}{1+z}\). \(\beta(z)\) das Differenzenschema zu \(\alpha(z)\) bezeichnet.
+wobei \(\beta(z) = \frac{\alpha(z)}{1+z}\). Das Symbol \(\beta(z)\) bezeichnet das Differenzenschema zu \(\alpha(z)\).
+
+\paragraph{Bemerkung}
+Das Differenzenschema zu \(\alpha(z)\) existiert nur, wenn \(\alpha(z)\) den Faktor \((1+z)\) enhält, bzw. wenn
+\[\alpha(-1) = \sum_{i \in \mathbb{Z}} \alpha_{2i} - \sum_{i \in \mathbb{Z}} \alpha_{2i-1} = 0.\]
 
 
 \subsection{Uniforme Parametrisierung}
 Um zu zeigen, dass eine Polygonfolge gegen eine Kurve oder Funktion konvergiert, parametrisiert man die durch den \textit{LR-Algorithmus} erzeugten Polygone.
 
-Sei \(c := \lbrack ...,c_{-1},c_0,c_1,...\rbrack^T\) ein skalierwertiges Polygon und sei \(d := \lbrack ...,d_{-1},d_0,d_1,...\rbrack^T\) dessen Differenzenpolygon.
+Sei \(c := \lbrack ...~c_{-1}~c_0~c_1~...\rbrack^T\) ein skalierwertiges Polygon und sei \(d := \lbrack ...~d_{-1}~d_0~d_1~...\rbrack^T\) dessen Differenzenpolygon.
 
 Nach \(k\)-maliger Unterteilung mit dem LR-Algorithmus ergeben sich die Polygone
 \[c^k := \begin{bmatrix} u_i^k \\ c_i^k \end{bmatrix}, i \in \mathbb{Z}\]
@@ -1174,7 +1175,7 @@ Die Ableitung \(\frac{d}{dx}c^k(x)\) ist eine stückweise konstante Funktion. Na
 Diese skalierten Differenzen werden durch Unterteilung des Differenzenpolygons \(d=\nabla c\) mit \(U_{n-1}\) erzeugt. Dadurch ergibt sich:
 
 \begin{itemize}
-	\item \(\frac{1}{2}U_{n-1}\) ist das Differenzenschema
+	\item \(\frac{1}{2} \cdot U_{n-1}\) ist das Differenzenschema
 	\item \(U_{n-1}\) stellt das Ableitungsschema dar
 \end{itemize}
 
