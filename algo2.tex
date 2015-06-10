@@ -372,7 +372,12 @@ Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
 \[v-e+f=2\]
 
 \subsubsection{Triangulation von Polyedern}
-Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden. Werden \(k\) Kanten hinzugefügt, gilt:
+Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden.
+\begin{itemize}
+	\item Hinzufügen eines Knoten, der über eine Kante mit dem Rest des Graphen verbunden ist: Die Anzahl der Ecken und Kanten steigt jeweils um eins, während die Anzahl der Flächen gleichbleibt.
+	\item Hinzufügen einer Kante, die zwei existierende Knoten verbindet: Während die Anzahl der Ecken gleichbleibt, steigt die Anzahl der Flächen und Kanten jeweils um eins. 
+\end{itemize}
+Dadurch verändert sich der Wert der Formel nicht. Werden \(k\) Kanten hinzugefügt, gilt:
 \[3(f+k) = 2(e+k)\]
 Daraus folgt der mittlere Knotengrad
 \[\frac{2e}{v} \leq 6\]
@@ -380,6 +385,7 @@ und dazu die mittlere Kantenzahl pro Seite
 \[\frac{2e}{f} \leq 6.\]
 Darüber hinaus bedeutet es, dass Konvexe Hüllen als Schnitt dualer Halbräume bestimmt werden können.
 
+\paragraph{Beweis}
 
 \subsection{Konstruktion Konvexer Hüllen}
 
