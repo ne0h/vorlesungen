@@ -947,35 +947,47 @@ Danach suchen die Ameisen wiederholt erneut eine Rundreise, bis eine Abbruchbedi
 \section{Der De-Casteljau-Algorithmus}
 Mit Unterteilungsalgorithmen lassen sich Kurven und Flächen beliebiger Gestalt erzeugen. In der Regel wird ein initiales Polygon wiederholt verfeinert und geglättet, so dass eine konvergente Polgonenfolge entsteht.
 
-\subsection{Der Algorithmus}
-\textbf{Idee:} Eine Bézierkurve kann geteilt und durch zwei aneinandergesetzte Bézierkurven dargestellt werden (Endpunktinterpolation). Dies wird rekursiv fortgesetzt.\footnote{\url{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}}
+Der \textit{Algorithmus von de Casteljau} ermöglicht die effiziente Berechnung einer beliebig genauen Näherungsdarstellung von Bézierkurven durch einen Polygonzug.\footnote{\url{http://de.wikipedia.org/wiki/De-Casteljau-Algorithmus}}
 
-Der Algorithmus besteht daher mit der Eingabe
-\[b_0^0...b_n^0 \subset \mathbb{R}^d\]
-aus einfachen Interpolationsschritten. Den Algorithmus angewendet auf \(B_0^0\) ergibt
-\[C(B_0^0,t) = B_0^1B_1^1 = b_0^0...b_n^0~b_0^n...b_n^0\]
+
+\subsubsection{Bezeichnungskonvention}
+\begin{itemize}
+	\item \(k\): Unterteilungstiefe
+	\item \(j\): Kurvenindex innerhalb der Stufe
+	\item \(i\): Kontrollpunktindex innerhalb einer Teilkurve innerhalb einer Stufe 
+\end{itemize}
+\[p_i^{k,j}\]
+
+
+\subsection{Der Algorithmus}
+\textbf{Idee:} Eine Bézierkurve kann geteilt und durch zwei aneinandergesetzte Bézierkurven dargestellt werden (Endpunktinterpolation).
+
+Der Algorithmus besteht daher aus einfachen Interpolationsschritten. Angewendet auf \(B_0^0\) ergibt das
+\[C(B_0^0,t) = B_0^1B_1^1 = b_0^0...b_n^0~b_0^n...b_n^0,\]
+beziehungsweise rekursiv über \(k\) Stufen fortgesetzt
+\[C^*(B_0^0,k):=B_0^k...B_{2^k-1}^k.\]
 \text{}\\
 \input{algo2/algo_de-casteljau}
-Rekursiv über \(k\) Stufen fortgesetzt ergibt das
-\[C^*(B_0^0,k):=B_0^k...B_{2^k-1}^k.\]
 
 
 \subsection{Kanonische Parametrisierung}
-Die durch den Unterteilungsoperator \(C*\) erzeugten Polygone
+Die durch den Unterteilungsoperator \(C^*\) erzeugten Polygone
 \[B^k := B_0^k...B_{2^k-1}^k\]
-konvergieren gegen eine polynomielle Kurve. Um dies zu zeigen, parametrisiert man die Polygone \(P:=p_0...p_n\) und betrachtet ihre Ableitungen. Dazu fasst man diese als stückweise lineare Funktionen über \(\lbrack 0,1 \rbrack\) auf und bestimmt sie über ihre Knoten und deren Werte.
+konvergieren gegen eine polynomielle Kurve. Um dies zu zeigen, parametrisiert man die Polygone \(P:=p_0...p_n\) und betrachtet ihre Ableitungen.
+
+Dazu fasst man diese als stückweise lineare Funktionen auf, die über ihren Intervallen \(\lbrack \beta_i^{k,j},\beta_{i+1}^{k,j}\rbrack\) jeweils linear sind und bestimmt sie über ihre Knoten und deren Werte.
 
 
 \subsection{Differenzenpolygone}
-Sei \(B\) das Polygon \(b_0...b_n\). Sein \textit{Differenzenpolygon} ist das Polygon
-\[\Delta B := (b_1-b_0)...(b_n-b_{n-1})\]
+Ein Polygon \(C^*(B,k)\) setzt sich aus \(2^k\) Polygonen zusammen. Sei \(B\) das Polygon \(b_0...b_n\), dann ist sein \textit{Differenzenpolygon} das Polygon
+\[\Delta B := (b_1-b_0)...(b_n-b_{n-1}).\]
 
-Für \(B_0B_1 := C^*(B,1)\) gilt
+Für \(B_0B_1 := C^*(B,1)\) gilt:
 \[\Delta B_0\Delta B_1 = \frac{1}{2}\cdot C^*(\Delta B,1).\]
 Die Differenzen eines unterteilten Polygons lassen sich also aus den halbierten Differenzen des ursprünglichen Polygons mit Hilfe des \textit{de-Casteljau-Algorithmus} berechnen.
 
 \subsubsection{Folgerung}
-Somit gilt für \(B_1...B_{2^k} := C^*(B,k)\) ebenfalls:
+Somit gilt für \(B_1...B_{2^k} = C^*(B,k)\) ebenfalls:
 \[\Delta B_1...\Delta B_{2^k} = \frac{1}{2^k}C^*(\Delta B,k)\]
 
 
@@ -985,12 +997,12 @@ Ableitungen und Konvergenz vektorvertiger Funktionen können koordinatenweise be
 Unterteilt man ein Polygon \(B\) mit \(n\) Kanten \(k\)-mal mit dem \textit{de-Casteljau-Algorithmus}, erhält man die stückweise lineare Funktion
 \[b(t) := L_k(B).\]
 Die Ableitung \(b(t) := \frac{d}{dt}b(t)\) ist stückweise konstant, somit ist \(b^*\) eine stückweise konstante Parametrisierung des Differenzenpolygons \(n \cdot C^*(\Delta B,k)\) und kann abgeschätzt werden:
-\[sup(\lbrack0,1\rbrack)~|~\dot{b}^k(t)-n\cdot L_k(\Delta B)~|~\in \mathcal{O}(\frac{1}{2^k})\]
+\[sup(\lbrack0,1\rbrack)~|~\dot{b}^k(t)-n\cdot L_k(\Delta B)|\in \mathcal{O}(\frac{1}{2^k})\]
 
 
 \subsection{Konvergenz}
 Zu jedem Polygon \(B=b_0...b_n\) gibt es ein Polygon \(L_{\infty}(B)\) vom \(Grad \leq n\), so dass
-\[sup(\lbrack0,1\rbrack)~|~\dot{b}^k(t)-L_{\infty}(\Delta B)~|~\in \mathcal{O}(\frac{1}{2^k})\]
+\[sup(\lbrack0,1\rbrack)~|~\dot{b}^k(t)-L_{\infty}(\Delta B)|\in \mathcal{O}(\frac{1}{2^k})\]
 Damit gilt
 \[\frac{d}{dt}L_{\infty}(B) = n \cdot L_{\infty}(\Delta B).\]
 
