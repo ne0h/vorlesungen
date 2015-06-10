@@ -324,7 +324,7 @@ Wir fassen den \(\mathbb{R}^3\) als affinen Raum \(A\) auf und bezeichnen dessen
 
 \subsubsection{Begriffe}
 \begin{itemize}
-	\item Konvexe Menge \(M\): Die Verbinungsstrecke zweier beliebiger Punkte im Polygon liegt komplett in diesem (keine Einbuchtungen).
+	\item Konvexe Menge \(M\): Die Verbinungsstrecke zweier beliebiger Punkte im Polygon liegt komplett in diesem (keine Einbuchtungen)
 	\item Konvexkombination: Linearkombination, wenn alle Koeffizienten \(\in I\lbrack 0,1\rbrack\) (Einheitsinterval) und \(\sum Koeffizienten = 1\)
 \end{itemize}
 
@@ -337,17 +337,21 @@ Die Lösungsmenge einer linearen Gleichung \(u^T \cdot x = 1\) mit \(u \in \math
 
 \subsubsection{Dualraum}
 Der Dualraum beinhaltet alle, zu Hyperebenen dualisierten, Punkte aus \(A\).
-\[A* = \{x*~|~x \in A\}\]
+\[A^* = \{x^*~|~x \in A\}\]
 
 \subsubsection{Halbraum}
 Die Lösung der Ungleichung
 \[u^T \cdot x \leq 1, u \ne 0,\]
 bildet den Halbraum \(u^{\leq}\).
 
+\subsubsection{Folgerung}
+\[x \in u^* \Leftrightarrow u \in x^*\]
+\[x \in u^{\leq} \Leftrightarrow u \in x^{\leq}\]
+
 \subsubsection{Polarmenge}
 \begin{itemize}
-	\item Der Menge eines Vektorraums wird eine Menge des Dualraums zugeordnet (und umgekehert)
-	\item Diese Polarmenge ist konvex und abgeschlossen
+	\item Der Menge eines Vektorraums wird eine Menge des Dualraums zugeordnet (und umgekehrt)
+	\item Diese \textit{Polarmenge} ist konvex und abgeschlossen
 	\item \(M_p = \{u~|~M \subset u^{\leq}\}\) und \(M_{pp} = \{x~|~M_p \subset x^{\leq}\}\)
 \end{itemize}
 
