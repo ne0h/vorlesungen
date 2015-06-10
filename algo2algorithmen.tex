@@ -388,6 +388,13 @@ Laufzeit in \(\mathcal{O}(n\cdot m)\), wenn der ganze Text abgesucht werden muss
 Das Muster wird am Anfang linksbündig unter den Text geschrieben und dann von rechts nach links Zeichen für Zeichen mit dem Text verglichen. Sobald ein Mismatch auftritt, berechnen zwei Heuristiken, wie weit das Suchmuster nach rechts verschoben werden kann.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
 
 Es kommt vor, dass die beiden Heuristiken unterschiedliche Verschiebungen berechnen. Der Algorithmus wählt immer das Maximum der beiden Vorschläge, um das Muster nach rechts zu verschieben.
+\text{}\\
+\input{algo2/algo_boyer-moore}
+
+\subsubsection{Vorkommensfunktion}
+Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s vorkommt. Dabei ist \(\nu(a)\) die erste Position an der ein Zeichen a vorkommt (Oder falls es gar nicht vorkommt eben 0).
+
+\(\nu(a) = min\{k|s_{k+1},...,s_m\}\) und \(a = s_k \lor k = 0\)
 
 \subsubsection{Bad-Character-Heuristik}
 Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Zeichen des Musters nicht mit dem Zeichen des Textes überein („Bad-Character“), wird im Muster nach dem letzten Vorkommen dieses Bad-Characters gesucht und das Muster soweit verschoben, bis beide Buchstaben übereinander liegen. Existiert dieser Bad-Character nicht im Muster, wird das Muster um seine volle Länge nach rechts verschoben. Es kann vorkommen, dass die Bad-Character-Heuristik eine Verschiebung des Musters nach links vorschlägt. In diesem Fall wird um eine Position nach rechts geschoben.
@@ -399,6 +406,8 @@ Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix 
 
 \subsubsection{Vorberechnung des größten, echten Präsuffixes pro Zeichen im Suchwort}
 Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir \textit{Präsuffix} von \(w\). Weiter sei \(\gamma(j) := | geps(w_j)|\).
+\text{}\\
+\input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Berechnung der Heuristik}
 Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
