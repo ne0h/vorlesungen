@@ -762,9 +762,7 @@ Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht w
 \end{itemize}
 
 \paragraph{Maximumsalgorithmus}
-\textbf{Gegeben:} Temperaturen \(t_1,t_2,t_3,...\) und \(K\) als obere Schranke für die maximal zu berücksichtigenden Nachbarn
-\\\\
-Verschlechterungen werden akzeptiert, wenn die \textit{Aktzeptanzbedingung}
+Gegeben sind Temperaturen \(t_1,t_2,t_3,...\) und \(K\) als obere Schranke für die maximal zu berücksichtigenden Nachbarn. Verschlechterungen werden akzeptiert, wenn die \textit{Aktzeptanzbedingung}
 \[exp(\frac{c(p)-c(q)}{t_i}) > Zufallszahl \in \lbrack 0,1 \rbrack\]
 gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei kleinen (beispielsweise bei lokalen Maxima).
 \text{}\\
@@ -772,8 +770,8 @@ gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei
 
 \subsubsection{Schwellwert-Algorithmus}
 \begin{itemize}
-	\item Verwendung der Akzeptanzbedingung \(c(p) > c(q) - \sigma\)
 	\item Der Schwellwert \(\sigma \geq 0\) wird regelmäßig abgesenkt
+	\item Verwendung der Akzeptanzbedingung \(c(p) > c(q) - \sigma\)
 	\item Anschaulich: \(\sigma\) erlaubt das kurzzeitige Abwärtsgehen nach einem lokalen Maximum. Mit fortschreitendem Aufstieg wird die Toleranz abwärts zu gehen geringer
 	\item Keine Garantie, dass das globale Optimum erreicht wird
 \end{itemize}
@@ -797,14 +795,14 @@ gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei
 
 \subsubsection{Vergleich der Verfahren}
 \begin{itemize}
-	\item Beispiel Gröschels-Handlungsreisender: Bohre 442 Löcher in möglichst kurzer Zeit in eine Platine. Der Sintflut-Algorithmus bietet die beste Lösung (kommt der mathematisch besten Lösung am nächsten)
+	\item Beispiel Gröschels-Handlungsreisender: Bohre 442 Löcher in möglichst kurzer Zeit in eine Platine. \textbf{Der Sintflut-Algorithmus bietet die beste Lösung} (kommt der mathematisch besten Lösung am nächsten)
 	\item \textbf{Feststellungen von Dueck, Scheuer und Wallmeister}
 	\begin{itemize}
 		\item Nur Schwellwert-Verfahren und simuliertes Tempern können aus kleinen, aber tiefen lokalen Minima entkommen
 		\item Allerdings sind bei hoch-nicht-lineare Optimierungsaufgaben die Extremwerte im Allgemeinen weder markant noch tief
 		\item Sintflut- und Schwellwert-Verfahren sind dem simulierten Tempern überlegen
 		\item Der Sintflut-Algorithmus ist fast genauso gut wie das Schwellwert-Verfahren, nicht ganz so stabil in der Qualität der Lösungen, dafür jedoch ewas schneller
-		\item Das Schwellwert-Verfahren ist die Methode der Wahl
+		\item \textbf{Das Schwellwert-Verfahren ist die Methode der Wahl}
 		\item Bei einem reichhaltigen Sortiment von Veränderungsschritten wird besser optimiert
 	\end{itemize}
 \end{itemize}
