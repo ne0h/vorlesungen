@@ -392,9 +392,9 @@ Es kommt vor, dass die beiden Heuristiken unterschiedliche Verschiebungen berech
 \input{algo2/algo_boyer-moore}
 
 \subsubsection{Vorkommensfunktion}
-Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s vorkommt. Dabei ist \(\nu(a)\) die erste Position an der ein Zeichen a vorkommt (Oder falls es gar nicht vorkommt eben 0).
+Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s vorkommt. Dabei ist \(\nu(a)\) die letzte Position an der ein Zeichen a vorkommt (Oder falls es gar nicht vorkommt eben 0).
 
-\(\nu(a) = min\{k|s_{k+1},...,s_m\}\) und \(a = s_k \lor k = 0\)
+\(\nu(a) = min\{k|a \notin s_{k+1},...,s_m\}\) und \(a = s_k \lor k = 0\)
 
 \subsubsection{Bad-Character-Heuristik}
 Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Zeichen des Musters nicht mit dem Zeichen des Textes überein („Bad-Character“), wird im Muster nach dem letzten Vorkommen dieses Bad-Characters gesucht und das Muster soweit verschoben, bis beide Buchstaben übereinander liegen. Existiert dieser Bad-Character nicht im Muster, wird das Muster um seine volle Länge nach rechts verschoben. Es kann vorkommen, dass die Bad-Character-Heuristik eine Verschiebung des Musters nach links vorschlägt. In diesem Fall wird um eine Position nach rechts geschoben.
