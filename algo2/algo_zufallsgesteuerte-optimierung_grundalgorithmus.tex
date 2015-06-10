@@ -1,0 +1,26 @@
+\begin{algorithm}[H]
+	\caption{Grundalgorithmus}
+	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+	\tcc{$q$ bezeichnet immer den aktuellen Zusatand}
+	initialisiere $q$
+	\BlankLine
+
+	\While{Ende nicht erreicht}{
+		erzeuge $p$ aus $q$
+		\BlankLine
+
+		\eIf{$(p,q)$ aktzeptabel}{
+			\tcc{Aktualisiere $q$}
+			$q \longleftarrow p$
+		}{
+			continue
+		}
+	}
+	\BlankLine
+
+	\tcc{Gib den aktuellen Zustand aus}
+	\Return{q}
+\end{algorithm}

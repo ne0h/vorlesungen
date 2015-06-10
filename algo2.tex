@@ -720,10 +720,10 @@ Eine Optimierungsaufgabe heißt kombinatorisch, wenn der Suchraum \(Q\) diskret 
 \begin{itemize}
 	\item Verfahren anschaulich: Der Algorithmus nähert sich schrittweise, nur mit Kenntnis der nächsten Nachbarn dem Maximum (Minimum). Ist kein Aufstieg (Abstieg) mehr möglich, so terminiert er
 	\item Problem: Eventuell ist nur ein lokales Maximum (Minimum) erreicht
-	\item \textbf{Nicht anwendbar:}
+	\item \textbf{Nicht anwendbar, wenn}
 	\begin{itemize}
-		\item Berechnung unangemessen aufwendig
-		\item Lokale Optima auf dem Weg zum globalen Optimum
+		\item die Berechnung der Nebenbedingung unangemessen aufwendig ist,
+		\item lokale Optima auf dem Weg zum globalen Optimum liegen.
 	\end{itemize}
 \end{itemize}
 
@@ -752,27 +752,13 @@ Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht w
 \end{itemize}
 
 \subsubsection{Grundalgorithmus}
-\begin{minipage}{\textwidth}
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-Initialisiere $q$
-#MARKER
-Erzeuge $p$ aus $q$
-Falls $(p,q)$ nicht akzeptabel {
-	Springe zu #MARKER
-}
-Aktualisierungen $q \leftarrow p,...$
-Falls Ende nicht erreicht {
-	Springe zu #MARKER
-}
-Gebe $q$ aus
-\end{lstlisting}
-\end{minipage}
+\input{algo2/algo_zufallsgesteuerte-optimierung_grundalgorithmus}
 
 \subsubsection{Simuliertes Tempern}
 \begin{itemize}
 	\item Technik zur Züchtung von Kristallen (beim Härten von Stahl)
 	\item Temperatur wird kontrolliert abgesenkt
-	\item Dabei sinkt die Energie des Systems nicht monoton
+	\item Dabei sinkt die Energie des Systems nicht monoton \(\rightarrow\) kann lokalen Extreme entkommen
 \end{itemize}
 
 \paragraph{Maximumsalgorithmus}
