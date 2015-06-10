@@ -1306,29 +1306,8 @@ Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix 
 Der Algorithmus von Boyer und Moore erweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
 \\\\
 Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters. Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
-
-\begin{minipage}{\textwidth}
-BOYER-MOORE
-\begin{lstlisting}[frame=single,numbers=left,mathescape]
-i = 0
-While $i \leq n-m$ {
-	j = m
-	While $j > 0$ and $s_j = t_{i+j}$ {
-		j--
-	}
-	Falls $j == 0$ {
-		Return i
-	} sonst {
-		$\nu = \nu(t_{i+j})$
-		Falls $\nu < j$ {
-			$i = i+max \{j-v,\sigma(j)\}$
-		} sonst {
-			$i = i + max\{m-\nu+1,\sigma(j)\}$
-		}
-	}
-}
-\end{lstlisting}
-\end{minipage}
+\\\\
+\input{algo2/algo_boyer-moore}
 In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
 
 
@@ -1338,7 +1317,7 @@ In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhind
 Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und das größte echte Präsuffix \(geps(w)\).
 \\\\
 Sei \(w_j := s_{j+1},...,s_m\) und
-\[\gamma(j) := |gpes(w_j|.\]
+\[\gamma(j) := |gpes(w_j)|.\]
 Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert. Insbesondere ist \(\gamma(m-1)=0\).
 
 Mit Hilfe von \(\gamma\) lässt sich die Funktion \(\sigma\) so darstellen:
