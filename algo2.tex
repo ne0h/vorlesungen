@@ -1297,7 +1297,7 @@ Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vor
 Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
 
 \subsubsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
-Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
+Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) zuletzt vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
 \[\nu \rightarrow \{0,...,m\}\]
 \[a \mapsto \nu(a),\]
 wobei
@@ -1307,7 +1307,7 @@ wobei
 Die Beschreibung entstammt der deutschen Wikipedia\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
 \begin{itemize}
 	\item Muster wird linksbündig unter den Text geschrieben und von rechts nach links mit dem Text verglichen
-	\item Sobald ein Mismatch auftritt, wird berechnet wie weit das Suchmuster nach rechts verschoben werden kann
+	\item Sobald ein Mismatch auftritt, wird berechnet wie weit das Suchmuster nach rechts verschoben werden kann, wobei das Zeichen des Texts gilt
 	\item Existiert der entsprechende Buchstabe nicht im Muster, kann um die ganze Länge des Musters verschoben werden
 \end{itemize}
 Die Funktion \(\nu\) kann mit einem Aufwand in \(\mathcal{O}(|A|+m)\) vorberechnet werden.
@@ -1320,43 +1320,20 @@ Mit einer zweiten Heuristik lässt sich die Laufzeit der \textit{Naiven Suche} n
 Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus\#Algorithmus}}.
 
 \subsubsection{Berechnung der Suffixvorkommensfunktion}
-Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit von diesem aus verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
+Die Heuristik berechnet für jedes Zeichen des Suchworts, wie weit von diesem aus verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 
 \paragraph{Definition Präsuffix}
-Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und das größte echte Präsuffix \(geps(w)\).
-\\\\
-Sei \(w_j := s_{j+1},...,s_m\) und
-\[\gamma(j) := |gpes(w_j)|.\]
-Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert. Insbesondere ist \(\gamma(m-1)=0\).
+Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und bezeichnen das größte echte Präsuffix mit \(geps(w)\).
 
-Mit Hilfe von \(\gamma\) lässt sich die Funktion \(\sigma\) so darstellen:
-\[\sigma(j) = min\Big( \{k\in \{1,...,j\} ~|~\gamma(j-k) = m-j\} \cup \{m-\gamma(0)\}\Big).\]
-Aus
-\[\gamma(j-k) = m-j\]
-folgt mit \(i := j-k\)
-\[j = m-\gamma(i)~und\]
-\[k = m-\gamma(i)-1.\]
-
-\paragraph{Berechnung von \(\sigma\)}
-\begin{itemize}
-	\item Eingabe: \(\gamma(0,...,m)\)
-	\item Ausgabe: \(\sigma(1,...,m)\)
-\end{itemize}
-
-\text{}\\
-\input{algo2/algo_boyer-moore_sigma}
-It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
+Sei \(w_j := s_{j+1},...,s_m\) und \(\gamma(j) := |gpes(w_j)|\). Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert, insbesondere ist \(\gamma(m-1)=0\).
 
 \subsubsection{Berechnung von \(\gamma\)}
+Die Funktion berechnet für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes.
+
 \(gpes(w_{i-1})\) verkürzt um \(s_i\) ist ebenfalls Präsuffix von \(w_i\), daher gilt
 \[\gamma(i-1) -1 \leq \gamma(i).\]
 Falls \(j := m-\gamma(i)\) und \(s_i \ne s_j\), ist \(geps(w_{i-1})\) verkürzt um \(s_i\) auch Präsuffix von \(w_j\). Daraus folgt der Algorithmus:
-\begin{itemize}
-	\item Eingabe: \(s_1,...,s_m\)
-	\item Ausgabe: \(\gamma(0,...,m-1)\)
-\end{itemize}
-
-\text{}\\
+\\\\
 \input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Aufwand von \(\gamma\)}
@@ -1365,7 +1342,13 @@ Der Aufwand für \(\gamma\) liegt in \(\mathcal{O}(m)\), denn
 	\item \(j\) wird in Zeile \(5\) erhöht
 	\item und in Zeile \(3\) wegen Zeile \(9\) jeweils um \(1\) größer.
 \end{itemize}
-Da \(j\) anfangs \(m\) ist und immer \(\leq m\) ist, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
+Da \(j\) anfangs \(m\) ist und immer \(\leq m\) bleibt, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
+
+\paragraph{Berechnung von \(\sigma\)}
+Die \(\sigma\)-Funktion gibt unmittelbar an, wie weit verschoben werden kann.
+\text{}\\
+\input{algo2/algo_boyer-moore_sigma}
+It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
 
 \subsubsection{Bemerkung}
 In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).

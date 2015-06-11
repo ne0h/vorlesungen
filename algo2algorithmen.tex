@@ -393,7 +393,7 @@ Es kommt vor, dass die beiden Heuristiken unterschiedliche Verschiebungen berech
 \input{algo2/algo_boyer-moore}
 
 \subsubsection{Vorkommensfunktion}
-Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s vorkommt. Dabei ist \(\nu(a)\) die letzte Position an der ein Zeichen a vorkommt (Oder falls es gar nicht vorkommt eben 0).
+Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s zuletzt vorkommt vorkommt (oder falls es gar nicht vorkommt gilt \(nu(a) = 0)\).
 
 \(\nu(a) = min\{k|a \notin s_{k+1},...,s_m\}\) und \(a = s_k \lor k = 0\)
 
@@ -411,6 +411,6 @@ Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wi
 \input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Berechnung der Heuristik}
-Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
+Die Heuristik berechnet für jedes Zeichen des Suchworts, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 \text{}\\
 \input{algo2/algo_boyer-moore_sigma}
