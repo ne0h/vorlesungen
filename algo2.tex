@@ -1283,19 +1283,27 @@ Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilu
 
 \section{Textsuche}
 Im Folgenden bezeichnet \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) einen Text und \(s = s_1,...s_m \in A^m\) einen Suchtext, für den bestimmt werden soll, ob er in \(t\) und gegebenenfalls an welcher Stelle er auftritt. Es wird vorausgesetzt, dass \(m < n\).
-\text{}\\
+
+\subsection{Naive Textsuche}
 \input{algo2/algo_naive-textsuche}
 Der Aufwand für diesen Algorithmus liegt im schlechtesten Fall in \(\Theta(m\cdot n)\).
 
 
-\subsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
+\subsection{Der Algorithmus von Boyer und Moore}
+Der Algorithmus von Boyer und Moore erweitert die \textit{Naive Suche} um die \textit{Vorkommens- und Suffixheuristiken}.
+
+Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters.
+
+Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
+
+\subsubsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
 Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
 \[\nu \rightarrow \{0,...,m\}\]
 \[a \mapsto \nu(a),\]
 wobei
 \[\nu(a) := min\{k~|~a \notin s_{k+1},...,s_m~und~(a=s_k \lor k=0)\}\]
 
-\subsubsection{Vorgehen anschaulich}
+\paragraph{Vorgehen anschaulich}
 Die Beschreibung entstammt der deutschen Wikipedia\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
 \begin{itemize}
 	\item Muster wird linksbündig unter den Text geschrieben und von rechts nach links mit dem Text verglichen
@@ -1305,27 +1313,16 @@ Die Beschreibung entstammt der deutschen Wikipedia\footnote{\url{http://de.wikip
 Die Funktion \(\nu\) kann mit einem Aufwand in \(\mathcal{O}(|A|+m)\) vorberechnet werden.
 
 
-\subsection{Die Suffix-Heuristik (Good-Suffix-Heuristik)}
-Mit einer zweiten Heuristik lässt sich die Laufzeit der Naiven Suche noch weiter reduzieren, so dass sie in \(\mathcal{O}(n+m)\) liegt.
+\subsubsection{Die Suffix-Heuristik (Good-Suffix-Heuristik)}
+Mit einer zweiten Heuristik lässt sich die Laufzeit der \textit{Naiven Suche} noch weiter reduzieren, so dass sie in \(\mathcal{O}(n+m)\) liegt.
 
 \subsubsection{Vorgehen anschaulich}
-Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
+Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus\#Algorithmus}}.
 
+\subsubsection{Berechnung der Suffixvorkommensfunktion}
+Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit von diesem aus verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 
-\subsection{Der Algorithmus von Boyer und Moore}
-Der Algorithmus von Boyer und Moore erweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
-\\\\
-Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters.
-
-Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
-\\\\
-\input{algo2/algo_boyer-moore}
-In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
-
-
-\subsection{Berechnung der Suffixvorkommensfunktion}
-
-\subsubsection{Definition Präsuffix}
+\paragraph{Definition Präsuffix}
 Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und das größte echte Präsuffix \(geps(w)\).
 \\\\
 Sei \(w_j := s_{j+1},...,s_m\) und
@@ -1340,7 +1337,7 @@ folgt mit \(i := j-k\)
 \[j = m-\gamma(i)~und\]
 \[k = m-\gamma(i)-1.\]
 
-\subsubsection{Berechnung von \(\sigma\)}
+\paragraph{Berechnung von \(\sigma\)}
 \begin{itemize}
 	\item Eingabe: \(\gamma(0,...,m)\)
 	\item Ausgabe: \(\sigma(1,...,m)\)
@@ -1370,3 +1367,8 @@ Der Aufwand für \(\gamma\) liegt in \(\mathcal{O}(m)\), denn
 \end{itemize}
 Da \(j\) anfangs \(m\) ist und immer \(\leq m\) ist, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
 
+\subsubsection{Bemerkung}
+In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
+
+\subsubsection{Der Algorithmus}
+\input{algo2/algo_boyer-moore}
