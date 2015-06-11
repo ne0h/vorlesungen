@@ -1312,7 +1312,9 @@ Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix 
 \subsection{Der Algorithmus von Boyer und Moore}
 Der Algorithmus von Boyer und Moore erweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
 \\\\
-Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters. Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
+Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters.
+
+Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
 \\\\
 \input{algo2/algo_boyer-moore}
 In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
