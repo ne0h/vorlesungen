@@ -15,7 +15,8 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 \begin{itemize}
 	\item Beweis von Ford und Fulkerson: Ein \(q-s\) - Fluss ist dann maximal, wenn es keinen augmentierenden (erhöhenden) Pfad gibt
 	\item Während der Durchführung erhöht sich der Fluss in jedem Schritt
-	\item Terminiert, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\) (ganzzahlige Kapazitäten)
+	\item Terminiert bei ganzzaligen Eingaben, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\)
+	\item Terminiert bei rationalen Eingaben, da der Fluss stets mindestens um \(\frac{1}{Hauptnenner}\) erhöht wird
 \end{itemize}
 
 \subsubsection{Laufzeit}
