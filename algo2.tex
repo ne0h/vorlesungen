@@ -232,12 +232,12 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 	\item Die Zeilen von \(M\) heißen Strategien von \(A\), die Spalten von \(M\) heißen Strategien von \(B\)
 	\item Zeile \(i\) ist eine optimale Strategie für \(A\), falls sie den Mindestgewinn: \(min_j~M_{ij}\) von \(A\) maximiert
 	\item Spalte \(j\) ist eine optimale Strategie für \(B\), falls sie den Maximalverlust: \(max_i~M_{ij}\) von \(B\) minimiert
-	\item Wählen beide optimale Strategien: \(max_i~min_j~M_{ij} \leq Gewinn(A) \leq min_j~max_i~M_{ij}\)
+	\item Wählen beide optimale Strategien: \(max_i~min_j~M_{ij} \leq \mathbb{E} \lbrack Gewinn(A) \rbrack \leq min_j~max_i~M_{ij}\)
 \end{itemize}
 
 
 \subsection{MiniMax-Theorem}
-Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. Die Minimierung der gegnerischen Maximal-Auszahlung beider Spieler steht im Vordergrund und ist Ursache für die Entstehung der \textit{Bezeichnung Min-Max-Theorem}.\footnote{\url{http://de.wikipedia.org/wiki/Min-Max-Theorem}}
+Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. Die Minimierung der gegnerischen Maximal-Auszahlung beider Spieler steht im Vordergrund und ist Ursache für die Entstehung der Bezeichnung \textit{Min-Max-Theorem}.\footnote{\url{http://de.wikipedia.org/wiki/Min-Max-Theorem}}
 
 \subsubsection{Definitionen}
 \begin{enumerate}
@@ -257,7 +257,7 @@ Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. D
 \subsubsection{Loomis Satz}
 \[max_p~min_j~(p^T \cdot M \cdot e_j) = min_q~max_i~(e_i^T \cdot M \cdot q)\]
 
-Für ein festes \(p\) wird \(p^T \cdot M \cdot q\) minimiert, wenn die j-te Koordinate von \(p^T \cdot M\) minimal ist (siehe Satz von Loomi).
+Für ein festes \(p\) wird \(p^T \cdot M \cdot q\) minimiert, wenn die j-te Koordinate von \(p^T \cdot M\) minimal ist.
 
 
 \subsection{Yoas Technik}
@@ -309,9 +309,9 @@ Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
 
 
 \subsection{Binäre Zerlegung des Raums}
-Folgender Algorithmus erzeugt binäre RZBs für den Raum:
+Folgender Algorithmus erzeugt binäre RZBs für den \(\mathbb{R}^3\):
 \text{}\\
-\input{algo2/algo_bzr}
+\input{algo2/algo_brz}
 
 \subsubsection{Satz}
 \(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
@@ -352,16 +352,17 @@ bildet den Halbraum \(u^{\leq}\).
 \subsubsection{Polarmenge}
 \begin{itemize}
 	\item Der Menge eines Vektorraums wird eine Menge des Dualraums zugeordnet (und umgekehrt)
-	\item Diese \textit{Polarmenge} ist konvex und abgeschlossen
+	\item Beinhaltet die dualen Punkte zu den Hyperebenen
 	\item \(M_p = \{u~|~M \subset u^{\leq}\}\) und \(M_{pp} = \{x~|~M_p \subset x^{\leq}\}\)
+	\item Konvex und abgeschlossen
 \end{itemize}
 
 \subsubsection{Berechnung der Konvexen Hülle mit Hilfe von Polarmengen}
-Die Konvexe Hülle von \(M := \{p_1,...,p_i\) kann daher so berechnet werden:
+Die Konvexe Hülle von \(M := \{p_1,...,p_i\}\) kann daher als Schnitt der Halbräume, die aus den Punkten dualisiert wurden, berechnet werden:
 \[M_p \longleftarrow Schnitt~der~HRe~p_i^{\leq}.\]
 Dabei bestimmen die Ecken
 \[u_i := p_{i_1}^* \cap ... \cap p_{i_d}^*\]
-von \(M_p\), die Schnitte von je \(d\) Ebenen der Dualmenge \(M^*\) sind. Die Punkte \(p_{i_1},...,p_{i_d}\) spannen die Facetten von \(\lbrack M \rbrack\) auf.
+von \(M_p\), die Schnitte von je \(d\) Ebenen der Dualmenge \(M^*\). Die Punkte \(p_{i_1},...,p_{i_d}\) spannen die Facetten von \(\lbrack M \rbrack\) auf.
 
 
 \subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
@@ -388,6 +389,7 @@ Darüber hinaus bedeutet es, dass Konvexe Hüllen als Schnitt dualer Halbräume 
 \paragraph{Beweis}
 
 \subsection{Konstruktion Konvexer Hüllen}
+Die Berechnung der Konvexen Hülle über die Punktmenge ist vergleichsweise aufwendig. Da die Berechnung von Ebenenschnitten deutlich günstiger ist, bietet es sich an, alle Punkte der Ausgangsmenge zu dualisieren und die Ebenenschnitte zu berechnen. Danach können die Ebenen, welche die Konvexe Hülle aufspannen, wieder zu Punkten dualisiert werden.
 
 \paragraph{Datenstruktur zur Speicherung der Polyeder}
 Darstellung durch eine Liste der Ecken des Polyeders, wobei die Listenelemente (die Ecken) jeweils folgendes enthalten:
@@ -399,6 +401,8 @@ Darstellung durch eine Liste der Ecken des Polyeders, wobei die Listenelemente (
 Mithilfe dieser Polyederdarstellung lassen sich alle Kanten und Facetten mit einem Aufwand \(\in \mathcal{O}(|Ecken|)\) ausgeben.
 \text{}\\\\
 \input{algo2/algo_konvexe-huelle}
+\text{}\\
+Gesamtlaufzeit \(\in \mathcal{O}(nlogn)\).
 
 
 
@@ -441,13 +445,21 @@ Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte innerhalb e
 \\\\
 \(R\) kann somit alle endlichen Steuerworte erzeugen und sich nach ihnen bewegen, spätestens mit dem universellen findet er das Ziel.
 
+\paragraph{Finden des universellen Steuerwortes}
+Operationen, die nicht durchführbar sind, werden ignoriert.
+\begin{enumerate}
+	\item Berechne das Steuerwort für einen beliebigen Polygoneckpunkt
+	\item Für alle weiteren Eckpunkte: Erweitere das bestehende Steuerwort sukszessive durch Konkatenation weiterer Schritte
+	\item Ergänze \(lz\) für Startpunkte, die keine Polygoneckpunkte sind
+\end{enumerate}
+
 
 \subsection{Behälterproblem}
 \textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (dieses Problem ist NP-hart).
 \text{}\\\\
 \input{algo2/algo_firstfit}
 \text{}\\\\
-Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst kein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
+Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst ein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
 \[k_{opt} > \frac{k}{2}\]
 gebraucht. Somit ist
 \[m < 2k_{opt}.\]
