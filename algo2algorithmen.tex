@@ -8,7 +8,7 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 \subsubsection{Eingaben}
 \begin{itemize}
 	\item Rationale Eingaben: Terminiert sicher für alle rationalen Eingaben
-	\item Irrationale Kapazitäten: Terminiert nicht, da der Algorithmus unendliche lange laufen kann (und auch nicht gegen den maximalen Fluss konvergieren muss) oder ein falsches Ergebnis liefert\footnote{\url{http://www.cs.huji.ac.il/~nati/PAPERS/ALGORITHMS/zwick.pdf}}
+	\item Irrationale Kapazitäten: Muss nicht terminieren, da der Algorithmus unendliche lange laufen kann (und auch nicht gegen den maximalen Fluss konvergieren muss) oder ein falsches Ergebnis liefert\footnote{\url{http://www.cs.huji.ac.il/~nati/PAPERS/ALGORITHMS/zwick.pdf}}
 \end{itemize}
 
 \subsubsection{Korrektheit}
@@ -71,7 +71,7 @@ Jeder Knoten erhält zusätzlich eine Höhe und ein Reservoir, um vorübergehend
 \subsubsection{Laufzeit}
 \begin{itemize}
 	\item \textit{Lifte} wird höchstens \(2 \cdot |V|^2\) aufgerufen
-	\item Saturierendes \textit{Pusch}: Die Kante ist überlegt, d.h. \(u(x) \geq k_f(x,y)\)
+	\item Saturierendes \textit{Pusch}: Die Kante ist überbelegt, d.h. \(u(x) \geq k_f(x,y)\)
 	\item Anzahl durchgeführte, saturierende \textit{Präfluss-Pusch-Operationen} \(< 2 \cdot |V| \cdot |E|\), da um ein saturierendes \textit{Pusch} erneut ausführen zu können, \(h(y)\) um mindestens \(2\) erhöht und ein \(Pusch(y,x)\) ausgeführt werden muss.
 	\item Anzahl durchgeführte \textit{Pusch-} und \textit{Lifte}-Operationen \(\in \mathcal{O}(|V|^2\cdot |E|)\)
 \end{itemize}
@@ -261,11 +261,11 @@ Optimierungsaufgaben bestehen aus
 	\item Eine Optimierungsaufgabe heißt kombinatorischen, wenn \(Q\) diskret ist
 	\item Nebenbedingungen können vermieden werden, indem man \(c\) so umformuliert, dass \(q \not\in Q\) so schlecht bewertet werden, dass sie nicht als Lösung in Frage kommen: \(c'(q) = c(q) + \gamma \cdot l^2(q)\)
 	\item \(q\) ist globales Optimum: \(\forall p \in Q~|~p \ne q: c(q) \le c(p)\)
-	\item \(q\) ist lokales Optimum: \(\forall p \in Nachbarn(q): c(q) \le c(p)\)
+	\item \(q\) ist lokales Optimum: \(\forall p \in Nachbar(q): c(q) \le c(p)\)
 \end{itemize}
 
 \subsubsection{Gradientenverfahren}
-Zustandsraum \(Z \in \mathbb{R}^n\), jeder Zustand ist ein Punkt \(x = [x_1, ... , X_n]^t\).
+Zustandsraum \(Z \in \mathbb{R}^n\), jeder Zustand ist ein Punkt \(x = [x_1, ... , X_n]^T\).
 Ausgehend vom Startpunk $x_0$ wird der Gradient der Kostenfunktion an der aktuellen Stelle berechnet:
 \[\Delta c(x_0) = \left[ \diffp{c}{{x_{1}}}, ... , \diffp{c}{{x_{n}}} \right]\]
 

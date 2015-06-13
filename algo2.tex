@@ -169,7 +169,7 @@ Man kann eine maximale Paarung durch sukzessive Vergrößerungen finden.
 
 
 \subsection{Maximal gewichtete Paarung}
-\textbf{Gesucht:} Maximal gewichtete Paarung eines ungerichteten Graph:
+\textbf{Gesucht:} Maximal gewichtete Paarung eines ungerichteten Graphen:
 \[\Gamma(P) := \Sigma \gamma (P)\]
 
 \subsubsection{Annahme}
@@ -373,13 +373,14 @@ Die Formeln gelten nicht nur für Polyeder, sondern für beliebige geschlossene 
 Für einen Polyeder mit \(v\) Knoten, \(e\) Kanten und \(f\) Seiten gilt:
 \[v-e+f=2\]
 
-\subsubsection{Triangulation von Polyedern}
-Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden.
+\paragraph{Erweiterung des Netzes}
 \begin{itemize}
 	\item Hinzufügen eines Knoten, der über eine Kante mit dem Rest des Graphen verbunden ist: Die Anzahl der Ecken und Kanten steigt jeweils um eins, während die Anzahl der Flächen gleichbleibt.
 	\item Hinzufügen einer Kante, die zwei existierende Knoten verbindet: Während die Anzahl der Ecken gleichbleibt, steigt die Anzahl der Flächen und Kanten jeweils um eins. 
 \end{itemize}
-Dadurch verändert sich der Wert der Formel nicht. Werden \(k\) Kanten hinzugefügt, gilt:
+
+\subsubsection{Triangulation von Polyedern}
+Durch die Hinzunahme von Kanten kann ein Polyeder trianguliert werden, wodurch sich der Wert der Formel nicht ändert. Werden \(k\) Kanten hinzugefügt, gilt:
 \[3(f+k) = 2(e+k)\]
 Daraus folgt der mittlere Knotengrad
 \[\frac{2e}{v} \leq 6\]
@@ -387,7 +388,6 @@ und dazu die mittlere Kantenzahl pro Seite
 \[\frac{2e}{f} \leq 6.\]
 Darüber hinaus bedeutet es, dass Konvexe Hüllen als Schnitt dualer Halbräume bestimmt werden können.
 
-\paragraph{Beweis}
 
 \subsection{Konstruktion Konvexer Hüllen}
 Die Berechnung der Konvexen Hülle über die Punktmenge ist vergleichsweise aufwendig. Da die Berechnung von Ebenenschnitten deutlich günstiger ist, bietet es sich an, alle Punkte der Ausgangsmenge zu dualisieren und die Ebenenschnitte zu berechnen. Danach können die Ebenen, welche die Konvexe Hülle aufspannen, wieder zu Punkten dualisiert werden.
@@ -439,12 +439,10 @@ Gegeben sind \(P_1,...P_n\) disjunkte Polygone, ein Roboter \(r\), ein Startpunk
 \(R\) umläuft daher jedes Polygon höchstens einmal und findet \(z\) spätestens nach Umlaufen aller \(P_i\).
 
 \subsubsection{Universelles Steuerwort}
-Jedes Steuerwort \(w \in \{z,l,r\}*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
+Jedes Steuerwort \(w \in \{z,l,r\}^*\) entspricht einer Bewegung, die auf \(s\) angewendet den Endpunkt \(w(s)\) ergibt, der dieser Bewegung entspricht. Beispiel: \(w = zr^3zl^3z\)
 
 \paragraph{Satz}
 Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte innerhalb einer spezifischen Szene zum gegebenen Ziel \(z\) führt \(\rightarrow \) da \(r\) alle endlichen Steuerworte erzeugen kann, erreicht er spätestens mit dem universellen sein Ziel. Ein Zielkompass genügt also zur Zielfindung.
-\\\\
-\(R\) kann somit alle endlichen Steuerworte erzeugen und sich nach ihnen bewegen, spätestens mit dem universellen findet er das Ziel.
 
 \paragraph{Finden des universellen Steuerwortes}
 Operationen, die nicht durchführbar sind, werden ignoriert.
@@ -460,7 +458,7 @@ Operationen, die nicht durchführbar sind, werden ignoriert.
 \text{}\\\\
 \input{algo2/algo_firstfit}
 \text{}\\\\
-Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst ein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
+Die Laufzeit ist in \(\mathcal{O}(nlogn)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst ein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
 \[k_{opt} > \frac{k}{2}\]
 gebraucht. Somit ist
 \[m < 2k_{opt}.\]
@@ -482,9 +480,9 @@ Es gilt:
 \input{algo2/algo_tuersuche-1}
 
 \paragraph{Kompetivität}
-Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 6 durch \(i = 2i\) erweitert, ist der Kompetivitätsfaktor bei einer maximalen Entfernung \(d=2^{n+\delta}\) der Tür vom Startpunkt
+Obiger Algorithmus ist nicht kompetitiv. Wird Zeile 6 durch \(i = 2i\) erweitert, ist der insgesamt zurückgelegte Weg bei einer maximalen Entfernung \(d=2^{n+\delta}\) der Tür vom Startpunkt
 \[w \leq \sum_{i=0}^{n+1} 2^i+d \leq 2^{n+3+\delta}+d \leq 9 \cdot 2^{n+\delta}\]
-entfernt.
+entfernt \(\rightarrow Kompetitivitaetsfaktor=9\).
 
 
 \subsection{Sternsuche}
@@ -502,13 +500,13 @@ Daher ist beispielsweise für \(m=2\) der Kompetitivitätsfaktor \(c=9\).
 
 
 \subsection{Suche in Polygonen}
+Es gibt keine kompetitive Strategie.
 
 \subsubsection{Definitionen}
 \begin{itemize}
 	\item Ein Polygon \(P\) heißt geschlossen, wenn gilt \(p_m = p_1\).
 	\item Ein Polygon \(P\) heißt einfach, wenn kein Punkt von \(P\) in zwei Kanten liegt, mit Ausnahme der Ecken.
 \end{itemize}
-Es gibt keine kompetitive Strategie.
 
 \subsubsection{Vorgehen}
 \begin{itemize}
@@ -526,7 +524,7 @@ Es gibt keine kompetitive Strategie.
 
 
 \section{Lineare Programmierung}
-\textbf{Ziel:} Maximierung linearer Funktionen mit linearen Nebenbedingungen; beispielsweise zur Bestimmung des maximalen FLusses in einem Netzwerk oder um das MiniMax-Theorem zu beweisen.
+\textbf{Ziel:} Maximierung linearer Funktionen mit linearen Nebenbedingungen; beispielsweise zur Bestimmung des maximalen Flusses in einem Netzwerk oder um das MiniMax-Theorem zu beweisen.
 
 \subsection{Lineares Programm}
 Die lineare Ungleichung
@@ -676,7 +674,7 @@ A & -a & 0 \\
 \end{array}\]
 
 \subsubsection{Folgerung}
-Da die rechte Seite dual zur linken Seite, folgt das MinMix-Theorem.
+Da die rechte Seite dual zur linken Seite, folgt das MiniMax-Theorem.
 
 
 \subsection{Ausgleichen mit der Maximumsnorm}
@@ -739,7 +737,7 @@ Eine Optimierungsaufgabe heißt kombinatorisch, wenn der Suchraum \(Q\) diskret 
 \subsection{Gradientenverfahren}
 \begin{itemize}
 	\item Verfahren anschaulich: Der Algorithmus nähert sich schrittweise, nur mit Kenntnis der nächsten Nachbarn dem Maximum (Minimum). Ist kein Aufstieg (Abstieg) mehr möglich, so terminiert er
-	\item Problem: Eventuell ist nur ein lokales Maximum (Minimum) erreicht
+	\item Problem: Eventuell ist nur ein lokales Extremum erreicht
 	\item \textbf{Nicht anwendbar, wenn}
 	\begin{itemize}
 		\item die Berechnung der Nebenbedingung unangemessen aufwendig ist,
@@ -778,7 +776,7 @@ Definition eines Suchbaums, der beginnend bei seinem Anfangszustand durchsucht w
 \begin{itemize}
 	\item Technik zur Züchtung von Kristallen (beim Härten von Stahl)
 	\item Temperatur wird kontrolliert abgesenkt
-	\item Dabei sinkt die Energie des Systems nicht monoton \(\rightarrow\) kann lokalen Extreme entkommen
+	\item Dabei sinkt die Energie des Systems nicht monoton \(\rightarrow\) kann lokalen Extrema entkommen
 \end{itemize}
 
 \paragraph{Maximumsalgorithmus}
@@ -889,7 +887,7 @@ gilt. Bei großen Temperaturen werden Verschlechterungen eher akzeptiert als bei
 	\end{itemize}
 	\item \textbf{Kreuzung}
 	\begin{itemize}
-		\item Dann werden unter den \(\mu\) Nachkommen \(p\%\) Individuen ausgesucht, die der Kreuzung interzogen werden
+		\item Dann werden unter den \(\mu\) Nachkommen \(p\%\) Individuen ausgesucht, die der Kreuzung unterzogen werden
 		\item Die Kreuzungspartner werden zufällig festgelegt
 		\item Kreuzung per Kreuzprodukt
 	\end{itemize}
@@ -982,9 +980,9 @@ Der \textit{Algorithmus von de Casteljau} ermöglicht die effiziente Berechnung 
 \subsection{Der Algorithmus}
 \textbf{Idee:} Eine Bézierkurve kann geteilt und durch zwei aneinandergesetzte Bézierkurven dargestellt werden (Endpunktinterpolation).
 
-Der Algorithmus besteht daher aus einfachen Interpolationsschritten. Angewendet auf \(B_0^0\) ergibt das
+Der Algorithmus besteht daher aus einfachen Interpolationsschritten. Angewendet auf \(B_0^0\) ergibt das:
 \[C(B_0^0,t) = B_0^1B_1^1 = b_0^0...b_n^0~b_0^n...b_n^0,\]
-beziehungsweise rekursiv über \(k\) Stufen fortgesetzt
+beziehungsweise rekursiv über \(k\) Stufen fortgesetzt:
 \[C^*(B_0^0,k):=B_0^k...B_{2^k-1}^k.\]
 \text{}\\
 \input{algo2/algo_de-casteljau}
@@ -1125,7 +1123,7 @@ Die Unterteilungsgleichung kann als Polynommultiplikation aufgefasst werde. Dazu
 \[\alpha(z) := \sum_{i \in \mathbb{Z}} \alpha_i \cdot z^i,\]
 \[c(z) := \sum_{i \in \mathbb{Z}} c_i \cdot z^i,\]
 dargestellt. Multipliziert man \(\alpha(z)\) und \(c(z^2)\) symbolisch, so erhält man
-\[\alpha(z) \cdot c(z^2) = \sum_j \alpha_j\cdot z^j \cdot \sum_k c_k\cdot z^{2k} = b(z),\]
+\[\alpha(z) \cdot c(z^2) = \left(\sum_j \alpha_j\cdot z^j\right) \cdot \left(\sum_k c_k\cdot z^{2k}\right) = b(z),\]
 die Laurent-Polynome des unterteilten Polygons.
 
 \paragraph{Folgerung} Die Unterteilungsgleichung hat die Form
