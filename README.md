@@ -12,7 +12,7 @@ Um lediglich den Teil zu Algorithmen 2 zu bauen:
 
 Um lediglich den Teil zu Programmierparadigmen zu bauen:
 
-`make propaonly`
+`$ make propaonly`
 
 Aktuell enthalten
 -----------------
