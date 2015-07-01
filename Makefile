@@ -9,3 +9,7 @@ clean:
 algo2only:
 	pdflatex algo2only.tex
 	pdflatex algo2only.tex
+
+propaonly:
+	pdflatex propaonly.tex
+	pdflatex propaonly.tex

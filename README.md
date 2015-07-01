@@ -10,6 +10,10 @@ Um lediglich den Teil zu Algorithmen 2 zu bauen:
 
 `$ make algo2only`
 
+Um lediglich den Teil zu Programmierparadigmen zu bauen:
+
+`make propaonly`
+
 Aktuell enthalten
 -----------------
 
@@ -20,3 +24,4 @@ Aktuell enthalten
 * Financial Management
 * Investments
 * IT-Sicherheitsmanagement für vernetzte Systeme
+* Programmierparadigmen
