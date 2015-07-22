@@ -4,6 +4,21 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 
 \section{Funktionale Programmierung}
 
+\subsection{Lazy Evaluation}
+
+\subsubsection{Auswertung}
+\begin{itemize}
+	\item Struturierte Daten: Nur auswerten, falls wirklich benötigt wird
+	\item Duplizierte Argumente: Auswertung maximal einmal (\textit{sharing})
+	\item Pattern-Matching: So weit wie nötig, bis passendes Muster gematched
+	\item Boolsche Operatoren: Auswertung bis zum ersten \textit{false} (\textit{short-circuit-Auswertung})
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Erschwerte Fehlersuche
+		\item Fehler, die beim Testen nicht beachten wurden, tauchen eventuell später im Betrieb auf
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{Theoretische Grundlagen}
@@ -12,6 +27,60 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 \section{Logische Programmierung}
 
 \subsection{Einführung in Prolog}
+\begin{itemize}
+	\item Situationsbeschreibung
+	\item Definition von Objekten und Beziehungen zwischen Objekten
+	\item Darstellbar als Terme eine freien Termalgebra
+\end{itemize}
+
+\subsubsection{Termsyntax}
+\begin{itemize}
+	\item Atome: z.B. \texttt{hans, inge, fritz, fisch}
+	\item Zahlen: z.B. \texttt{3, 4.5}
+	\item Variablen: z.B. \texttt{X, Y, \_X, X1, Fisch}
+	\item Termlisten: z.B. \texttt{3, 4.5, X, fritz}
+	\item Zusammengesetzt: z.B. \texttt{liebt(fritz,fisch), liebt(fritz,X)}
+\end{itemize}
+
+\subsubsection{Variablen}
+Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, beispielsweise \texttt{liebt(X, fussball)} \(\rightarrow\) "`Alle lieben Fußball"'.
+
+\subsubsection{Abfragen}
+\begin{itemize}
+	\item Alle Fakten werden zur Laufzeit in einer Datenbank gehalten
+	\item Einleitung per \texttt{?}: z.B. \texttt{?liebt(fritz,fisch)}
+	\item \textbf{Mehrfachlösungen}
+	\begin{itemize}
+		\item Durchsuche Datenbank von vorne nach hinten
+		\item Versuche jeweils, Abfrageparameter mit Datenbankfaktor zu unifizieren
+	\end{itemize}
+	\item \textbf{Konjunktion von Abfragen}
+	\begin{itemize}
+		\item Konjunktion von Teilzielen getrennt durch Komma, entspricht logischem \(\wedge\)
+		\item Erfülle Teilziele von links nach rechts und nehme jeweils erstes Ergebnis
+		\item Mehrere Ergebnisse: Fahre mit dem ersten Ergebnis bis zum Ende fort, prüfe danach weitere Ergebnisse
+		\item Nach Erfüllung eines Teilziels: Nächstes Teilziel erbt Instanziierung
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Regeln}
+\begin{itemize}
+	\item Aufbau: Regelkopf (1 Term) und Regelrumpf (1+ Terme): \texttt{term :- termlist .}
+	\item \texttt{:-} liest sich als \textit{wenn}, Kammata als \textit{und}
+	\item \textbf{Beispiele}
+	\begin{itemize}
+		\item "`Wenn Inge X liebt und wenn X Fisch liebt, dann liebt Hugo X"':\newline\texttt{liebt(hugo,X) :- liebt(inge,X),liebt(X,fisch)}
+		\item "`Wenn es jemanden gibt, der Fisch mag, dann liebt Emil Erna"':\newline\texttt{liebt(emil,erna) :- liebt(X,fisch)}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Logische Programmierung ist anders}
+\begin{itemize}
+	\item Keine herkömmlichen Variablen
+	\item Prädikate liefern außer ihrer Erfüllbarkeit keinen Ergebniswert
+	\item Aber Unifikation und Backtracking eingebaut
+	\item Sehr gut geeignet für Such- und Constraintprobleme, weniger für Berechnungen
+\end{itemize}
 
 
 \subsection{Backtracking}
@@ -137,6 +206,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} zurück \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
+	\textbf{\textit{map}} & \((a rightarrow b) rightarrow [a] rightarrow [b]\) & \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
 	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente einer Eingabeliste zurück \\
