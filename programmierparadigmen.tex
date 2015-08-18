@@ -179,6 +179,12 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 \section{Compiler}
 
 \subsection{Einführung}
+\begin{itemize}
+	\item Reiner Übersetzer
+	\item Vorübersetzer
+	\item Laufzeitübersetzer
+	\item Vollständige Übersetzung
+\end{itemize}
 
 
 \subsection{Lexikalische Analyse}
@@ -206,7 +212,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} zurück \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
-	\textbf{\textit{map}} & \((a rightarrow b) rightarrow [a] rightarrow [b]\) & \\
+	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
 	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente einer Eingabeliste zurück \\
