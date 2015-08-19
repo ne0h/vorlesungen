@@ -4,6 +4,37 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 
 \section{Funktionale Programmierung}
 
+\subsection{Rekursion}
+\begin{itemize}
+	\item Auswertung: Zwischenausdrücke können mit Eingabegröße wachsen
+	\item Speicherverbrauch in \(\mathcal{O}(n)\) bei \(\mathcal{O}(n)\) Aufrufen
+	\item \textbf{Akkumulation}
+	\begin{itemize}
+		\item Übergebe Zwischenergebnisse in Hilfsparameter \texttt{acc}
+		\item Speicherverbrauch in \(\mathcal{O}(1)\) bei \(\mathcal{O}(n)\) Aufrufen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Endrekursion}
+\begin{itemize}
+	\item Linearität: Eine Funktion heißt \textit{linear rekursiv}, wenn in jedem Defitionszweig nur ein rekursiver Aufruf vorkommt.
+	\item Endrekursion: Eine linear rekursive Funktion heißt \textit{endrekursiv}, wenn in jedem Zweig der rekursive Aufruf nicht in andere Aufrufe eingebettet ist.
+\end{itemize}
+
+
+\subsection{Listen}
+\begin{itemize}
+	\item Eine Liste \texttt{(x:xs)} besteht immer aus Listenkopf \texttt{x} und Listenrest \texttt{xs}
+\end{itemize}
+
+\subsubsection{Pattern Matching}
+\begin{itemize}
+	\item Mehrere Gleichungen zur Definition einer Funktion
+	\item Jede Gleichung gilt für Argumente mit speziellem Strukturmuster
+	\item Überlappende Muster: Erste Gleichung wird angewandt
+\end{itemize}
+
+
 \subsection{Lazy Evaluation}
 
 \subsubsection{Auswertung}
@@ -18,6 +49,11 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 		\item Fehler, die beim Testen nicht beachten wurden, tauchen eventuell später im Betrieb auf
 	\end{itemize}
 \end{itemize}
+
+
+\subsection{Funktionen höherer Ordnung}
+
+\subsubsection{Lambda-Notation}
 
 
 
@@ -180,10 +216,10 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Reiner Übersetzer
-	\item Vorübersetzer
-	\item Laufzeitübersetzer
-	\item Vollständige Übersetzung
+	\item Reiner Übersetzer: Liest den Quelltext Anweisung für Anweisung; billig; sinnvoll bei Kommandasprachen (Unix-Shell)
+	\item Interpretation nach Vorübersetzer: Transformation in eine günstigere Form; nicht unbedingt maschinennah; beispielsweise Java-Bytecode oder Python
+	\item Vollständige Übersetzung: Übersetzung in Maschinencode,; Zielsprache beschreibt eine abstrakte Laufzeitmaschine, definiert durch Hardware, Betriebssystem, etc; beispielsweise C/C++ oder Fortran
+	\item Just-in-time-Compiler: Übersetzung bedarfsgerecht während der Ausführung; beispielsweise die moderne JVM oder .NET
 \end{itemize}
 
 
@@ -213,6 +249,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & \\
+	\textnf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
 	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente einer Eingabeliste zurück \\
