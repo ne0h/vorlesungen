@@ -35,6 +35,87 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 \end{itemize}
 
 
+\subsection{Funktionen höherer Ordnung}
+
+\subsubsection{Lambda-Notation}
+\begin{itemize}
+	\item Anonyme Funktionen und Funktionen höherer Ordnung möglich
+	\item Beispiel: \(g(x,y)=x-\frac{y}{2} \longrightarrow\) \texttt{g = \textbackslash x y -> x - 2/y}
+\end{itemize}
+
+\subsubsection{Definition: Funktion höherer Ordnung}
+Funktionen, die andere Funktionen als Parameter erhalten oder Funktionen als Rückgabewerte liefern, heißen Funktionen höherer Ordnung.
+
+\subsubsection{Currying}
+\begin{itemize}
+	\item Ersetzung einer mehrstelligen Funktion durch Schachtelung einstelliger Funktionen.
+	\item Jede Funktion erhält, wie oben erwähnt, nur ein Argument. Werden scheinbar mehrere Argumente definiert, so steckt immer Currying dahinter.
+	\item Unterversorgung: Anwendung mehrstelliger Funktionen auf zu wenig Parameter
+\end{itemize}
+
+\textbf{Beispiel\footnote{\url{https://de.wikipedia.org/wiki/Currying\#Haskell}}}
+
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+addiere x y = x + y
+addiere 1 3                -- ist aequivalent zu (addiere 1) 3
+addiereZu2  = addiere 2
+addiereZu2 1               -- 3
+\end{lstlisting}
+
+\subsubsection{Namensbindung}
+\begin{itemize}
+	\item Bindungsstrukte legen Bedeutung und Geltungsbereiche von Variablen fest
+	\item Verdeckung: Innere Bindungen verdecken äußere
+	\item \textbf{Bindung}
+	\begin{itemize}
+		\item \texttt{f x = x*x}: Bindung von \texttt{x} im Rumpf von \texttt{f}, globale Bindung von \texttt{f}
+		\item \texttt{\textbackslash x -> x*x}: Bindung von \texttt{x} innerhalb des \(\lambda\)-Ausdrucks
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Lokale Bindung}
+\begin{itemize}
+	\item Anwendung: Lokale Hilfsfunktionen
+	\item \texttt{let} bindet stärker als \texttt{where}
+\end{itemize}
+
+\textbf{Beispielse}
+
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+energy m = let c = 299792458
+           in m * c * c
+
+energy m = m * c * c
+  where c = 299792458
+\end{lstlisting}
+
+\subsection{Kombinatoren}
+
+\subsubsection{Folds}
+\begin{itemize}
+	\item Anwendung einer Operation und eines Initialwertes auf eine Liste
+	\item \textbf{Beispiel Summenberechnung}
+	\begin{itemize}
+		\item \texttt{sum = (+) 0}
+		\item Berechnung mittels \texttt{foldr}: \texttt{(1 + (2 + (3 + (4 + 0))))} (rechts-geklammert)
+		\item Berechnung mittels \texttt{foldl}: \texttt{((((1 + 0) + 2) + 3) + 4)} (links-geklammert)
+	\end{itemize}
+	\item Anwendung: Koplexe Funktionen als Kombination einfacher Funktionen
+\end{itemize}
+
+\subsubsection{Kombination von Listen}
+\begin{itemize}
+	\item Zusammenfügen von Listen per Reißverschluss: \texttt{zip = zipWith (,)}
+	\item \texttt{zipWith} definiert eine Zusätzliche Operation
+	\item Bricht ab, wenn eine der Listen keine weiteren Elemente enthält
+\end{itemize}
+
+\subsubsection{List Comprehensions}
+\begin{itemize}
+	\item Automatisiertes Erzeugen von Listen, basierend auf bereits existierenden Listen
+\end{itemize}
+
+
 \subsection{Lazy Evaluation}
 
 \subsubsection{Auswertung}
@@ -49,11 +130,6 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 		\item Fehler, die beim Testen nicht beachten wurden, tauchen eventuell später im Betrieb auf
 	\end{itemize}
 \end{itemize}
-
-
-\subsection{Funktionen höherer Ordnung}
-
-\subsubsection{Lambda-Notation}
 
 
 
@@ -249,7 +325,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & \\
-	\textnf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
+	\textbf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
 	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente einer Eingabeliste zurück \\
