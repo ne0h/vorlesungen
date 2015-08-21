@@ -134,9 +134,73 @@ energy m = m * c * c
 \end{itemize}
 
 
+\subsection{Typen}
+\begin{itemize}
+	\item Haskell ist statisch typisiert
+	\item Jeder gültige Ausdruck hat immer einen Typ und wertet immer zu gültigen Werten dieses Typs aus
+	\item Schreibweise: \texttt{e :: t} falls Ausdruck \texttt{e} und Typ \texttt{t}
+	\item Untypisierbare Ausdrücke erzeugen Übersetzerfehler
+	\item Haskell erkennt den korrekten Typ (fast immer) zuverlässig, optional manuelle Deklaration möglich
+	\item Typinferenz: Errechnen der Typen durch den Compiler. Kompakte Programme und trotzdem typsicher
+	\item Typsynonyme: Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (kann die Lesbarkeit erhöhen). Es werden keine explizit neuen Typen erzeugt
+\end{itemize}
+
+
+\subsection{Algebraische und rekursive Datentypen}
+
+\subsubsection{Nachteile von Tupeln}
+\begin{itemize}
+	\item Produkttypen: Typen mit mehreren Komponenten. Beispiel: Personen mit Name und Alter \texttt{type Person = (String, Int)}
+	\item Nachteil: Bedeutung von Werten nicht explizit; ungewollte Verwendung beliebiger \texttt{(String, Int)} Tupel
+\end{itemize}
+
+\subsubsection{Algebraische Datentypen}
+\begin{itemize}
+	\item Verwendung des Schlüsselwortes \texttt{data} statt \texttt{type} zur definition \textit{neuer} Typen
+	\item Mehrere Konstruktoren möglich
+\end{itemize}
+
+\subsection{Anwendung algebraischer Datentypen}
+\begin{itemize}
+	\item \textbf{Algebraischer Datenstrukturen ermöglichen}
+	\begin{itemize}
+		\item Implementierung von Datenstrukturen
+		\item Modellierung problemspezifischer Daten
+	\end{itemize}
+	\item \textbf{Einsatz von Pattern-Matching}
+	\begin{itemize}
+		\item Erleichtert Umsetzung komplexer Algorithmen
+		\item Besonders für baumartige Strukturen
+	\end{itemize}
+	\item \textbf{Anwendungsbeispiele}
+	\begin{itemize}
+		\item Datenstrukturen: Maps, Bäume, Rot-Schwarz-Bäume
+		\item Fehlerbehandlung
+		\item Termersetzungssysteme
+	\end{itemize}
+\end{itemize}
+
+
 
 \section{Theoretische Grundlagen}
+Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnungen.	
 
+\subsection{Der untypisierte $\lambda$-Kalkül}
+\begin{itemize}
+	\item Turing-mächtiges Modell funktionaler Programme zur Beschreibung sqeuentieller imperativer Konstrukte
+	\item Linkassoziative Funktionsanwendung
+	\item \textbf{\(\alpha\)-Äquivalenz}
+	\begin{itemize}
+		\item \(t_1\) und \(t_2\) heißen \(\alpha\)-äquivalent, wenn \(t_1\) in \(t_2\) durch konsistente Umbenennung der \(\lambda\)-gebundenen Variablen überführt werden kann
+		\item Funktionsbezeichnungen dürfen nicht geändert werden
+		\item Beispiel: \texttt{\(\lambda\)x. (\(\lambda\)z. f(\(\lambda\)y. z y) x) = \(\lambda\)y. (\(\lambda\)x. f(\(\lambda\)z. x z) y)}
+	\end{itemize}
+	\item \textbf{\(\eta\)-Äquivalenz}
+	\begin{itemize}
+		\item Zwei Funktionen genau dann gleich sind, wenn sie für alle Argumente dasselbe Resultat liefern\footnote{\url{https://de.wikipedia.org/wiki/Lambda-Kalkül\#.CE.B7-Konversion}}
+		\item Terme \texttt{\(\lambda\)x. f x} und \texttt{f} heißen \(\eta\)-äquivalent, falls \texttt{x} eine nicht-freie Variable von \texttt{f} ist
+	\end{itemize}
+\end{itemize}
 
 \section{Logische Programmierung}
 
@@ -180,7 +244,7 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 \subsubsection{Regeln}
 \begin{itemize}
 	\item Aufbau: Regelkopf (1 Term) und Regelrumpf (1+ Terme): \texttt{term :- termlist .}
-	\item \texttt{:-} liest sich als \textit{wenn}, Kammata als \textit{und}
+	\item \texttt{:-} liest sich als \textit{wenn}, Kommata als \textit{und}
 	\item \textbf{Beispiele}
 	\begin{itemize}
 		\item "`Wenn Inge X liebt und wenn X Fisch liebt, dann liebt Hugo X"':\newline\texttt{liebt(hugo,X) :- liebt(inge,X),liebt(X,fisch)}
@@ -325,6 +389,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 \begin{tabularx}{\textwidth}{l|X|X}
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} zurück \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
+	\textbf{\textit{isDigit}} & & Erkennt eine Zahl \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & \\
 	\textbf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
