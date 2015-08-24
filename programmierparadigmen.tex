@@ -189,6 +189,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \begin{itemize}
 	\item Turing-mächtiges Modell funktionaler Programme zur Beschreibung sqeuentieller imperativer Konstrukte
 	\item Linkassoziative Funktionsanwendung
+	\item \(\lambda\)-Term: Ein Term der Form \texttt{(\(\lambda\)x.\(t_1\))\(t_2\)}
 	\item \textbf{\(\alpha\)-Äquivalenz}
 	\begin{itemize}
 		\item \(t_1\) und \(t_2\) heißen \(\alpha\)-äquivalent, wenn \(t_1\) in \(t_2\) durch konsistente Umbenennung der \(\lambda\)-gebundenen Variablen überführt werden kann
@@ -202,13 +203,49 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\end{itemize}
 \end{itemize}
 
+\subsubsection{$\beta$-Reduktion}
+\begin{itemize}
+	\item Formalisiert das Konzept der Funktionsanwendung
+	\item Anwendung ausschlißelich von links nach rechts
+	\item Eine \(\beta\)-Reduktion entspricht der Ausführung der Funktionsanwendung auf einem Redex: \texttt{(\(\lambda\)x.\(t_1\))\(t_2 \Rightarrow\) \(t_1\){[} x \(\mapsto t_2\) {]}}
+	\item Volle \(\beta\)-Reduktion: Jeder Redex kann reduziert werden
+	\item \textbf{Beispiele}
+	\begin{itemize}
+		\item \texttt{(\(\lambda\)x.x)y \(\Rightarrow\) x{[} x \(\mapsto\) y {]} = y}
+		\item \texttt{(\(\lambda\)x.x (\(\lambda\)x.x))(y z) \(\Rightarrow\) (x (\(\lambda\)x.x)){[} x \(\mapsto\) y z {]} = (y z)(\(\lambda\)x.x)}
+	\end{itemize}
+	\item \textbf{Kodierung mit Funktionen höherer Ordnung}
+	\begin{itemize}
+		\item Man braucht nicht unbedingt primitive Operationen
+		\item Beispiel: \texttt{let}
+		\item \texttt{let x = \(t_1\) in \(t_2\)} wird zu \texttt{(\(\lambda\)x.\(t_2\)) \(t_1\))}
+		\item \texttt{let x = g y in f x = (\(\lambda\)x.f x)(g y) \(\Rightarrow\) f(g y)}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Kodierung natürlich Zahlen}
+\begin{itemize}
+	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
+	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
+	\item \textbf{Church-Zahlen}
+	\begin{itemize}
+		\item \texttt{\(c_0\) = \(\lambda\)s.\(\lambda\)z.z}
+		\item \texttt{\(c_1\) = \(\lambda\)s.\(\lambda\)z.s z}
+		\item \texttt{\(c_2\) = \(\lambda\)s.\(\lambda\)z.s (s z)}
+		\item \texttt{\(c_3\) = \(\lambda\)s.\(\lambda\)z.s (s (s z))} \\ \(\vdots\)
+		\item \texttt{\(c_n\) = \(\lambda\)s.\(\lambda\)z.\(s^n\) z}
+	\end{itemize}
+	\item Nachfolgerfunktion \texttt{succ} errechnet den Nachfolger. Beispielsweise ist \texttt{succ(\(c_2\)) = \(c_3\)}
+\end{itemize}
+
+
 \section{Logische Programmierung}
 
 \subsection{Einführung in Prolog}
 \begin{itemize}
 	\item Situationsbeschreibung
 	\item Definition von Objekten und Beziehungen zwischen Objekten
-	\item Darstellbar als Terme eine freien Termalgebra
+	\item Darstellbar als Terme einer freien Termalgebra
 \end{itemize}
 
 \subsubsection{Termsyntax}
