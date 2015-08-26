@@ -399,8 +399,41 @@ TODO
 \end{itemize}
 
 
-
 \subsection{Der Cut}
+
+\subsubsection{Determinismus}
+Ein Prädikat heißt \textit{deterministisch}, wenn es stets auf höchstens eine Weise erfüllt werden kann; hat es möglicherweise mehrere Lösungen, so heißt es nichtdeterministisch.
+
+In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, indem man von Lösungen zu Listen von Lösungen übergeht.
+
+\subsubsection{Beschneiden des Ausführungsbaums}
+\begin{itemize}
+	\item Die Lösungsfindung kann vorzeitig durch den Programmierer abgebrochen werden ("`Cut"')
+	\item Das Einfügen eines Cuts ("`\texttt{!}"') verhindert, dass im Fehlerfall, die Teilziele links davon nicht erneut aufgerufen werden
+	\item Beispiel auf Folie 246
+\end{itemize}
+
+\subsubsection{Blaue, grüne und rote Cuts}
+\begin{itemize}
+	\item \textbf{Blauer Cut}
+	\begin{itemize}
+		\item Beeinflusst weder Programmlaufzeit noch -verhalten
+	\end{itemize}
+	\item \textbf{Grüner Cut}
+	\begin{itemize}
+		\item Beeinflusst Programmlaufzeit aber nicht -verhalten
+		\item Schnellere Ausführung und weniger Speicherbedarf
+		\item Beispiel: Einfügen in Funktionen, von denen man weiß, dass sie deterministisch sind
+	\end{itemize}
+	\item \textbf{Roter Cut}
+	\begin{itemize}
+		\item Beeinflusst das Programmverhalten
+		\item Werden verwendet, um Wächter zu ersetzen. Ist der erste Wächter erfolgreich, wird der zweite nie angewendet
+		\item Können zu erheblichem Effiziensgewinn führen, da sie u.U. sehr komplexe und teure Wächter ersetzen
+	\end{itemize}
+	\item Faustregel: Der Cut darf erst kommen, wenn man weiß, dass man in der rechtigen Regel ist, aber muss vor der Instanziierung der Ausgabevariablen stehen
+	\item Negation: Ein Negationsprädikat ist in Prolog ohne (roten) Cut nicht ausdrückbar
+\end{itemize}
 
 
 \subsection{Unifikation und Resolution}
