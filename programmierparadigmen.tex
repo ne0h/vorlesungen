@@ -141,8 +141,45 @@ energy m = m * c * c
 	\item Schreibweise: \texttt{e :: t} falls Ausdruck \texttt{e} und Typ \texttt{t}
 	\item Untypisierbare Ausdrücke erzeugen Übersetzerfehler
 	\item Haskell erkennt den korrekten Typ (fast immer) zuverlässig, optional manuelle Deklaration möglich
-	\item Typinferenz: Errechnen der Typen durch den Compiler. Kompakte Programme und trotzdem typsicher
-	\item Typsynonyme: Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (kann die Lesbarkeit erhöhen). Es werden keine explizit neuen Typen erzeugt
+\end{itemize}
+
+\subsubsection{Polymorphe Typen}
+\begin{itemize}
+	\item Der Listen-Typ sind polymorph, die Typvariable \texttt{{[}t{]}} steht auch für Nicht-Basistypen
+	\item Typvariablen parametrisieren polymorphe Typen
+	\item Typkonstruktoren wie \texttt{{[} {]}} erzeugen neue Typen aus bestehenden
+	\item \textbf{Funktionstypen}
+	\item Funktionstypen sind ebenfalls polymorph
+\end{itemize}
+
+\subsubsection{Beispiele}
+\begin{itemize}
+	\item Typen mehrstelliger Funktionen: \texttt{f x y = x * y, f :: Integer -> Integer -> Integer}
+	\item Typen eingebauter Operatoren: \texttt{(<=) :: Integer -> Integer -> Bool}
+	\item Tupel: \texttt{(3, True) :: (Integer, Bool); (not, 7) :: (Bool -> Bool, Integer)}
+\end{itemize}
+
+\subsubsection{Typinferenz}
+Errechnen der Typen durch den Compiler, dadurch entstehen kompakte Programme, die trotzdem typsicher sind. Manuelle Deklaration ist dennoch möglich.
+
+\subsubsection{Typsynonyme}
+Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (kann die Lesbarkeit erhöhen). Es werden keine explizit neuen Typen erzeugt.
+
+\subsubsection{Typen bei der Fehlersuche}
+\begin{itemize}
+	\item Typendeklarationen können beim Lokalisieren von Programmfehlern helfen
+	\item Beabsichtigten Typ der Funktion deklarieren
+	\item \textbf{Beispiel}
+	\begin{itemize}
+		\item \texttt{isDigit :: Char -> Bool}\\\texttt{isDigit c = isIn c "0123456789"}
+		\item \texttt{*Main> isDigit '3'} würde zu einem Typfehler führen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Mengen}
+\begin{itemize}
+	\item Mengen bestehen aus dem Typ \texttt{Set = ...} sowie Funktionen zum Iterieren, Einfügen, Löschen, Vergleichen, usw.
+	\item Einfachste Implementierung als Listen: \texttt{type Set t = {[} {]}}
 \end{itemize}
 
 
@@ -178,14 +215,6 @@ energy m = m * c * c
 		\item Fehlerbehandlung
 		\item Termersetzungssysteme
 	\end{itemize}
-\end{itemize}
-
-
-\subsection{Typklassen}
-\begin{itemize}
-	\item Typklassen definieren Funktionen, die für jede Instanz der Typklasse aufgerufen werden können
-	\item Man kann eine Instanz für jeden Typ erstellen, indem man die Funktionen der Typklasse für den jeweiligen Typ definiert
-	\item Beispiel: Vergleichsoperator (\texttt{==})
 \end{itemize}
 
 
@@ -267,7 +296,35 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item Diese modellieren unendliche Ausführungen
 \end{itemize}
 
-TODO
+
+\subsection{Typsysteme}
+\begin{itemize}
+	\item Typklassen definieren Funktionen, die für jede Instanz der Typklasse aufgerufen werden können
+	\item Man kann eine Instanz für jeden Typ erstellen, indem man die Funktionen der Typklasse für den jeweiligen Typ definiert
+	\item Beispiel: Vergleichsoperator (\texttt{==})
+\end{itemize}
+
+\subsubsection{Typen}
+\begin{itemize}
+	\item \textbf{Typen} legen die möglichen Werte von Variablen, Operationen und Operanden fest. Beispiel: Integer, Float, String
+	\item \textbf{Statisch typisierte Sprachen:} Jede Variable/jeder Ausdruck hat einen vom Compiler bestimmbaren Typ. Beispiel: Java, Haskell, C++
+	\item \textbf{Dynamisch typisierte Sprachen:} Typ von Variablen kann sich zur Laufzeit ändern. Beispiele: JavaScript, Python, PHP
+\end{itemize}
+
+\subsubsection{Vorteile von statischer Typisierung}
+\begin{itemize}
+	\item Code ist verständlicher
+	\item Compiler kann effizienter Code erzeugen
+	\item Typsicherheit: Abstürze zur Laufzeit wegen falscher Typen nicht möglich
+\end{itemize}
+
+\subsubsection{Unsichere Programme: Typfehler bei der Auswertung}
+\texttt{(\(\lambda\)x. x + 42) true \(\Rightarrow\) true + 42 = ???} \\
+Weiße daher (möglichst vielen) sicheren Programmen Typen zu und lehne unsichere ab.
+\begin{itemize}
+	\item Einfache Typisierung: \texttt{(\(\lambda\)x. 2) : bool \(\rightarrow\) int}
+	\item Polymorphe Typen: \texttt{(\(\lambda\)x. 2) : \(\alpha\) \(\rightarrow\) int}
+\end{itemize}
 
 \section{Logische Programmierung}
 Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und Regeln nennen. Der Benutzer formuliert Anfragen an diese Datenbasis. Der Prolog-Interpreter benutzt die Fakten und Regeln, um systematisch eine Antwort zu finden. Ein positives Resultat bedeutet, dass die Anfrage logisch ableitbar ist. Ein negatives Resultat bedeutet nur, dass aufgrund der Datenbasis keine Ableitung gefunden werden kann.\footnote{\url{https://de.wikipedia.org/wiki/Prolog_(Programmiersprache)\#Grundprinzip}}
