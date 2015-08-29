@@ -311,20 +311,42 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item \textbf{Dynamisch typisierte Sprachen:} Typ von Variablen kann sich zur Laufzeit ändern. Beispiele: JavaScript, Python, PHP
 \end{itemize}
 
-\subsubsection{Vorteile von statischer Typisierung}
+\subsubsection{Typherleitung (F196)}
 \begin{itemize}
-	\item Code ist verständlicher
-	\item Compiler kann effizienter Code erzeugen
-	\item Typsicherheit: Abstürze zur Laufzeit wegen falscher Typen nicht möglich
+	\item Nachweis von Herleitbarkeit als Herleitungsbaum
+	\item Die Struktur des Herleitungsbaums wird durch den \(\lambda\)-Term bestimmt
+	\item Zu jedem Subterm genau eine passende Regel: \texttt{App, Var, Abs oder Const}
+	\item \texttt{t} ist typisierbar im Kontext \(\Gamma\), falls \(\tau\) mit \(\Gamma\vdash t_2~:~\tau_2\) exisitiert
+	\item Beispiel auf Folie 196
 \end{itemize}
 
-\subsubsection{Unsichere Programme: Typfehler bei der Auswertung}
-\texttt{(\(\lambda\)x. x + 42) true \(\Rightarrow\) true + 42 = ???} \\
-Weiße daher (möglichst vielen) sicheren Programmen Typen zu und lehne unsichere ab.
+\subsubsection{Untypisierbare \(\lambda\)-Terme (F197)}
 \begin{itemize}
-	\item Einfache Typisierung: \texttt{(\(\lambda\)x. 2) : bool \(\rightarrow\) int}
-	\item Polymorphe Typen: \texttt{(\(\lambda\)x. 2) : \(\alpha\) \(\rightarrow\) int}
+	\item Nicht alle sicheren Programme sind typisierbar \(\rightarrow\) Typsystem nicht vollständig bzgl. \(\beta\)-Reduktion
+	\item Beispiel: \texttt{(\(\lambda\)x. x + 42) true} ist nicht typisierbar
+	\item Die Korrektheit des Typsystems ist per Induktion über die Typsystemregeln beweisbar (F198)
 \end{itemize}
+
+
+\subsection{Polymorphie (F199)}
+\begin{itemize}
+	\item Polymorphe Funktionen: Verhalten hängt nicht vom konkreten Typ \(\tau\) der Elemente ab und haben unendlich viele Typen
+	\item Beispiel: Operationen auf Containern (Zusammenfügen von Listen)
+\end{itemize}
+
+\subsubsection{\texttt{let}-Polymorphismus}
+\begin{itemize}
+	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f(f true)}
+	\item \texttt{f} ist eine polymorphe Hilfsfunktion: Anwendung erst auf \texttt{true}, dann auf \texttt{2}
+	\item Kodierung: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
+	\item \textbf{Typschemata (F202)}
+	\begin{itemize}
+		\item Ein Typ der Gestalt \(\forall\alpha_1.\forall\alpha_2.~...~\forall\alpha_n.~\tau\) heißt Typschema
+		\item Es bindet freie Typvariablen \(alpha_1,...,\alpha_n\) in \(\tau\)
+		\item Beispiel: \(\forall\alpha.~\alpha\rightarrow\alpha\) steht für unendlich viele Typen
+	\end{itemize}
+\end{itemize}
+
 
 \section{Logische Programmierung}
 Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und Regeln nennen. Der Benutzer formuliert Anfragen an diese Datenbasis. Der Prolog-Interpreter benutzt die Fakten und Regeln, um systematisch eine Antwort zu finden. Ein positives Resultat bedeutet, dass die Anfrage logisch ableitbar ist. Ein negatives Resultat bedeutet nur, dass aufgrund der Datenbasis keine Ableitung gefunden werden kann.\footnote{\url{https://de.wikipedia.org/wiki/Prolog_(Programmiersprache)\#Grundprinzip}}
@@ -631,3 +653,8 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 	\textbf{\textit{zipWith}} & \((a \rightarrow b \rightarrow c) \rightarrow [a] \rightarrow [b] \rightarrow [c]\) & Kombiniert jeweils die Elemente zweier Listen über eine beliebige Funktion, beispielsweise \textit{(*)} \\
 \end{tabularx}
 \end{table}
+
+\section{Appendix B: Typherleitungsregeln}
+
+\subsection{\texttt{APP}}
+\[APP:\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
