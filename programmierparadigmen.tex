@@ -542,23 +542,24 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 
 
 
-\section{Grundlagen der Prallelprogrammierung}
-Motivation: Leistungssteigerung über steigende Taktfrequenzen hinaus.
+\section{Grundlagen der Prallelprogrammierung (RE1)}
+Motivation: Leistungssteigerung über steigende Taktfrequenzen hinaus. Murphys Gesetz der mangelnden Performance: Jeder Computer ist zu langsam.
 
-\subsubsection{Programmieransätze gemäß der Computerarchitektur}
+\subsubsection{Programmieransätze gemäß der Computerarchitektur (RE11)}
 \begin{itemize}
 	\item Gemeinsamer Speicher: Jeder Prozessor kann jede Speicherzelle ansprechen (z.B. Multikernrechner)
 	\item Verteilter Speicher: Jeder Prozessor hat seinen eigenen Speicher, Kommunikation über \textit{Message Passing} (z.B. bei Computerclustern)
 \end{itemize}
 Bei sequentieller Programmierung arbeitet der Prozessor nacheinander einzelne Befehle aus dem Arbeitsspeicher ab (von-Neumann-Architektur).
 
-Bei paralleler Programmierung wird in der Theorie häufig das \textit{PRAM-Modell} mit einer beliebigen Anzahl an Prozessoren mit
+Bei paralleler Programmierung wird in der Theorie häufig das \textit{PRAM-Modell} (RE12) mit einer beliebigen Anzahl an Prozessoren mit
 \begin{itemize}
 	\item jeweils lokalem Speicher
-	\item und synchronem Zugriff auf globalen, gemeinsam genutzten Speicher (in der Praxis eher problematisch bei der Umsetzung.
+	\item und synchronem Zugriff auf globalen, gemeinsam genutzten Speicher (in der Praxis eher problematisch bei der Umsetzung)
 \end{itemize}
+zu Grunde gelegt.
 
-\subsubsection{Flynn's Taxonomy}
+\subsubsection{Flynn's Taxonomy (RE13)}
 \begin{enumerate}
 	\item \textit{Single Instruction x Single Data:} Klassische von-Neumann-Architektur, ein Befehlsstrom arbeitet auf dem Speicher
 	\item \textit{Single Instruction x Multiple Data:} Ein Befehl wird auf gleichartige Daten (z.B. Arrays) angewendet, typischerweise in Vektorprozessoren früherer Supercomputers
@@ -566,7 +567,7 @@ Bei paralleler Programmierung wird in der Theorie häufig das \textit{PRAM-Model
 	\item \textit{Multiple Instruction x Single Data:} Mehrere Befehle werden gleichzeitig auf den gleichen Daten ausgeführt, beispielsweise in redundanten Architekturen oder in den Pipelines moderner Prozessoren (Ansicht ist umstritten)
 \end{enumerate}
 
-\subsubsection{Herausforderungen}
+\subsubsection{Herausforderungen (RE14)}
 \begin{itemize}
 	\item Bereits schrittweise Parallelität benötigt Synchronisation
 	\item Kommunikation der Prozesse untereinander
@@ -574,33 +575,70 @@ Bei paralleler Programmierung wird in der Theorie häufig das \textit{PRAM-Model
 \end{itemize}
 Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass sie ohne Abhängigkeiten berechnet werden können; auch stückweise Parallelisierung ist möglich.
 
-\subsubsection{Mögliche Beschleunigung}
+\subsubsection{Mögliche Beschleunigung (RE17)}
 \begin{itemize}
-	\item Speedup: \(S(p) = \frac{T(n,1)}{T(n,p)} = \frac{Anzahl~mit~einem~Prozessor}{Aufwand~mit~p~Prozessoren}\)
+	\item Speedup: \(S(p) = \frac{T(n,1)}{T(n,p)} = \frac{Aufwand~mit~einem~Prozessor}{Aufwand~mit~p~Prozessoren}\)
 	\item Amdahls Gesetz berechnet die maximale Beschleunigung, die durch Parallelverarbeitung erreicht werden kann: \(\frac{1}{(1-P)+\frac{P}{N}}\)
 \end{itemize}
 
 
-\subsection{Fortgeschrittene Konzepte in Java}
+\subsection{Fortgeschrittene Konzepte in Java (R21)}
+Beispiele befinden sich jeweils bei den entsprechenden Folien.
 
-\subsubsection{Multithreading in Java}
+\subsubsection{Multithreading in Java (RE22)}
 \begin{itemize}
 	\item Threads vor Java oft eher schwierig zu implementieren (in C/C++ zusätzliche Bibliotheken notwendig)
 	\item In Java bereits in der Sprache enthalten
 	\item Nicht vorgegeben ist allerdings die interne Implementierung des Multithreading in der jeweiligen VM
 	\item Erben von der Klasse \textit{Thread} oder implementieren des Interface \textit{Runnable}
-	\item \(stop()\) mit Hilfe von Pollen realisiert; ein Thread, der nicht beendet werden will, kann von außen nicht "`sauber"' beendet werden
-	\item Rückgabewerte über \(Thread.join()\) realisierbar oder durch die Verwendung von \(Callables\) oder \(Futures\)
+	\item Threads beenden (RE27): \(stop()\) mit Hilfe von Pollen realisiert; ein Thread, der nicht beendet werden will, kann von außen nicht "`sauber"' beendet werden
+	\item Rückgabewerte (RE30): Über \(Thread.join()\) realisierbar oder durch die Verwendung von \(Callables\) oder \(Futures\)
+	\item Prioritäten (RE31): Threads können mit Hilfe von \texttt{setPriority()} Prioritäten zugewiesen werden
+	\item Synchronisation (RE31): Methoden und Blöcke können mit dem Schlüsselwort \texttt{synchronized} vor Unterbrechnung geschützt werden
+\end{itemize}
+
+\subsubsection{Java ThreadPools und Executors (RE32)}
+\begin{itemize}
+	\item Seit Java 5 gibt es eine Reihe von Erleichterungen zur Umsetzung von Parallelität
+	\item \texttt{ThreadPools} und \texttt{Executors} ersparen eine eigene Thread-Verwaltung
+	\item \texttt{Futures} erlauben die Rückgabe von Ergebnissen (R33)
+	\item Ausführliches Beispiel auf Folie 34
 \end{itemize}
 
 
-\subsection{\textit{C/C++} Wiederholung}
+\subsection{Message Passing Interface (RM1)}
+\begin{itemize}
+	\item Prozesse mit separaten Speicherbereichen kommunizieren via \textit{Messages}
+	\item SIMD: Das selbe Programm wird auf allen Rechnern ausgeführt (RM6)
+	\item Jeder Teilnehmer kennt seinen eigenen Rang (ID) und die Anzahl an Teilnehmern (RM5)
+	\item Es gibt keinen direkten Master, allerdings wird Prozess 0 per Konvention als "`master control program"' verwendet (RM9)
+	\item Die Prozesse können explizit synchronisiert werden, um eine sortierte Ausgabe zu erhalten (RM9)
+\end{itemize}
+
+\subsubsection{Übertragen von Nachrichten (RM11)}
+\begin{itemize}
+	\item Asynchrone Übertragung und erst einmal blocking
+	\item \texttt{MPI_Send} blockiert bis der Nachrichtenpuffer wiederverwendet werden kann
+	\item \texttt{MPI_Recv} blockiert bis die Nachricht komplett gelesen worden ist
+	\item Non-blocking ebenfalls möglich, allerdings muss dann zusätzlich überprüft werden, ob die Nachricht vollständig übertragen worden ist (RM18)
+\end{itemize}
+
+\subsubsection{Data Distribution (RM19)}
+\begin{itemize}
+	\item \textbf{Generelles Vorgehen}
+	\begin{enumerate}
+		\item Verteilen der Daten ("`breakup"')
+		\item Durchführen der Berechnungen
+		\item Zusammenführen der Ergebnisse
+	\end{enumerate}
+	\item Spezielle Operationen zum Verteilen und Zusammenführen der Daten
+	\item Master-Teilnehmer zum Verteilen und Zusammenführen verantwortlich
+	\item Verschiedene Möglichkeiten zum Verteilen und Zusammenführen der Daten. Beispiele ab Folie 22
+\end{itemize}
 
 
-\subsection{Message Passing Interface (MPI)}
+\subsection{Scala (RS1)}
 
-
-\subsection{Scala}
 
 
 \subsection{X10}
@@ -611,7 +649,7 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Reiner Übersetzer: Liest den Quelltext Anweisung für Anweisung; billig; sinnvoll bei Kommandasprachen (Unix-Shell)
+	\item Reiner Übersetzer: Liest den Quelltext Anweisung für Anweisung; billig; sinnvoll bei Kommandosprachen (Unix-Shell)
 	\item Interpretation nach Vorübersetzer: Transformation in eine günstigere Form; nicht unbedingt maschinennah; beispielsweise Java-Bytecode oder Python
 	\item Vollständige Übersetzung: Übersetzung in Maschinencode,; Zielsprache beschreibt eine abstrakte Laufzeitmaschine, definiert durch Hardware, Betriebssystem, etc; beispielsweise C/C++ oder Fortran
 	\item Just-in-time-Compiler: Übersetzung bedarfsgerecht während der Ausführung; beispielsweise die moderne JVM oder .NET
