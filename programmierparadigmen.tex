@@ -678,8 +678,36 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\item Auf Feld zugreifen (S403)
 \end{itemize}
 
+
 \subsection{Codeerzeugung}
 
+\subsubsection{Umgekehrte polnische Notation (S405)}
+\begin{itemize}
+	\item Schreibweise für Ausdrücke, bei der zuerst die Operanden und dann die auszuführende Operation angegeben wird
+	\item Eindeutig, auch ohne Präzudenzen und Klammern
+	\item Natürliche Darstellung für Stackmaschinen
+	\item Beispiele auf der Folie
+	\item \textbf{Erzeugung von UPNs}
+	\begin{itemize}
+		\item Gegeben: Berechnungsformel als Baum
+		\item Postfixordnung bei Tiefensuche erzeugt UPN
+		\item Postfixordnung: Ausgabe beim Verlassen eines Knoten, also nach dem Kinder besucht sind
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Kontrollstukturen}
+\begin{itemize}
+	\item Kontrollstrukturen werden mit bedingten Sprüngen realisiert
+	\item \texttt{if} (S408): Labelbereiche mit Sprungbefehlen
+	\item \texttt{while} (S409): Aufgeteilt in \texttt{loopheader}, \texttt{loopbody} und \texttt{afterloop}
+\end{itemize}
+
+\subsubsection{Codeerzeugung: Bedingte Sprünge}
+\begin{itemize}
+	\item Hilfsmethoden zur Umsetzung von Kontrollstrukturen
+	\item \texttt{makeLabel();} erzeugt eine neue, eindeutige Sprungmarke
+	\item \texttt{evaluateBooleanExpression(expr, trueLabel, falseLabel);} wertet einen Ausdruck aus und springt zur angegebenen Zielmarke
+\end{itemize}
 
 
 
