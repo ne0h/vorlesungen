@@ -627,10 +627,59 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 \subsection{Semantische Analyse}
 
 
-\subsection{Java-Bytecode}
+\subsection{Java-Bytecode (S390)}
+\begin{itemize}
+	\item \textbf{Java-Technologie}
+	\begin{itemize}
+		\item Bytecode: Portable, plattformunabhängige Zwischensprache
+		\item Als virtuelle Maschine mit Laufzeitsystem spezifiziert
+		\item Umfangreiche Bibliothek
+	\end{itemize}
+	\item \textbf{Virtuelle Maschine - Laufzeitsystem (S392)}
+	\begin{itemize}
+		\item Heap: Speicher für Objektinstanzen, getypt, Garbage Collection, gemeinsamer Speicher für alle Threads
+		\item Method Area: Code für Methoden (read-only)
+		\item Runtime Constant Pool: Konstante Daten (Literale, Typinformationen, etc)
+		\item Threads: Jeweils mit Program Counter, JVM Stack mit Activation Records (Rücksprungadresse, dynamischer Vorgänger, lokale Variablen, Operandenstack) und Native JVM Stack (Laufzeitsystem, meist in C/C++ geschrieben) 
+	\end{itemize}
+\end{itemize}
 
+\subsubsection{Instruktionen (S395)}
+\begin{itemize}
+	\item Typen bekannt aus Java
+	\item Instuktionen explizit typisiert: \texttt{iadd(int)}, \texttt{fadd(float)}
+	\item Instruktionsklassen im Anhang
+	\item Beispiel ab S396
+\end{itemize}
+
+\subsubsection{Methodenaufrufe (S398)}
+Komplettes Beispiel mit Konstantenpool auf S399
+\begin{itemize}
+	\item Bezugsobjekt auf den Stack (falls nicht \texttt{static})
+	\item Parameter auf den Stack
+	\item \texttt{invokevirtual} oder \texttt{invokestatic} ausführen (weitere Details hierzu auf der Folie)
+	\item \texttt{Return}-Wert vom Stack holen und weiterarbeiten
+\end{itemize}
+
+\subsubsection{Deskriptoren (S400)}
+Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entsprechen. Beispiele sind auf der Folie zu finden.
+
+\subsubsection{Objekt erzeugen und initialisieren (S401)}
+\begin{itemize}
+	\item Objekt anlegen und Speicher reservieren
+	\item Danach Objekt initialisieren (Konstruktor aufrufen)
+	\item Jede Klasse braucht mindestens den Default-Konstruktor
+	\item Beispiel auf der Folie
+\end{itemize}
+
+\subsubsection{Weitere Beispiele}
+\begin{itemize}
+	\item Array anlegen und darauf zugreifen (S402)
+	\item Auf Feld zugreifen (S403)
+\end{itemize}
 
 \subsection{Codeerzeugung}
+
 
 
 
@@ -658,3 +707,15 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 
 \subsection{\texttt{APP}}
 \[APP:\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
+
+\section{Appendix C: Bytecode}
+
+\subsection{Instruktionsklassen (S395)}
+\begin{itemize}
+	\item Lesen/Schreiben von lokalen Variablen: \texttt{?load, ?store <x>, ...}
+	\item Lesen/Schreiben von Feldern: \texttt{getfield, putfield, ...}
+	\item Sprungbefehle: \texttt{ifeq, ifnull, tableswitch, ...}
+	\item Methodenaufrufe: \texttt{invokevirtual, invokestatic, ...}
+	\item Objekterzeugung: \texttt{new, newarray, ...}
+	\item Arithmetische Berechnung: \texttt{?mul, ?add, ...}
+\end{itemize}
