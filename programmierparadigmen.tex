@@ -639,10 +639,114 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 
 \subsection{Scala (RS1)}
 
+\subsubsection{Überblick (RS3)}
+\begin{itemize}
+	\item \textit{scalable language} mit kompakterem Code (beispielsweise automatische Getter und Setter)
+	\item Erweiterte Unterstützung für Parallelprogrammierung (Actors)
+	\item Kompiliert zu Java Bytecode
+	\item \textbf{Vergleich zu Java (RS5)}
+	\begin{itemize}
+		\item Primitive Datentype sind Objekte (vermeided Overhead beim boxing und unboxing)
+		\item In beiden Fällen keine Mehrfachvererbung
+		\item Compiler erkennt den Typ von Variablen ohne explizite Dekleration
+		\item \textit{Traits} (Interfaces) können bereits konkrete Implementierung enthalten
+		\item Direkte Integration von Singletons über das Schlüsselwort \texttt{objekt}
+		\item Funktional: Funktionen sind First-Class-Objects, Pattern-Matching, Closures, etc)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Referenz}
+\begin{itemize}
+	\item Variablen können als Konstanten definiert werden (RS8)
+	\item \textbf{Klassen und Konstruktoren (RS13)}
+	\begin{itemize}
+		\item Der primäre Konstruktor definiert impliziert \textit{einige} Getter und Setter (\texttt{.lastName} und \texttt{.LastName =})
+		\item Für Parameter ohne explizite Definition als Variable oder Konstante werden nicht als Feld initialisiert und erhalten daher auch weder Getter noch Setter
+		\item Uniform Access: Zugriffe werden auf Getter und Setter gemappt (RS14)
+	\end{itemize}
+	\item Methoden sind vergleichbar mit Java-Methoden, allerdings sind Kurzschreibweisen möglich, da Typen automatisch erkannt werden können (RS15)
+	\item Spezifische Getter und Setter: Die Namen von Feldern müssen umbenannt werden (RS16)
+	\item Typhierarchie (RS18)
+	\item \textbf{Traits (RS19)}
+	\begin{itemize}
+		\item Vergleichbar zu Java-Interfaces ("`Wesenszug"' oder "`Charaktereigenschaft"')
+		\item Können bereits (teilweise) implementiert sein (Vgl. Java-Abstract-Class)
+	\end{itemize}
+	\item Pattern-Matching: Vgl. mit Java-Switch (RS25)
+\end{itemize}
+
+\subsubsection{Parallelität in Scale (RS45)}
+\begin{itemize}
+	\item Java: Feingranular, threadbasiert
+	\item Scala unterstützt die Java API
+	\item \textbf{Actors (RS46)}
+	\begin{itemize}
+		\item Implementierung ähnlich wie bei einem Java-Thread (Erweitern einer Klasse oder per Factory)
+		\item Nachrichtenbasierte Kommunikation mit asynchroner, race-freier und non-blocking Warteschlange (RS48)
+		\item Implementierung vergleichsweise schwergewichtig, beispielsweise blockiert ein \texttt{receive} den kompletten Thread
+	\end{itemize}
+	\item \textbf{Futures in Scala (RS52)}
+	\begin{itemize}
+		\item Konzept: Platzhalter für ein Ergebnis, das später von einem bestimmten Thread ausgefüllt wird
+		\item Non-blocking und asynchron \(\rightarrow\) erlaubt Parallelität
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{X10}
 
+\subsubsection{Motivation (RX4)}
+\begin{itemize}
+	\item Parallele Berechnung ist von der Unterstützung der Programmiersprache abhängig
+	\item Automatisierte Parallelprogrammierung durch den Compiler funktioniert nicht
+	\item Existierende Programmiersprache sind weitestgehend auf Threads limitiert
+	\item Programmiersprachen mit direkter Integration benötigt
+\end{itemize}
+
+\subsubsection{Design}
+\begin{itemize}
+	\item \textbf{Designziele (RX7)}
+	\begin{itemize}
+		\item Safety: Vermeidung von typischen Programmierfehlern wie beispielsweise NPE, Initialisierungsfehler, Overflows, etc
+		\item Analyzability: Automatische Erkennung von Parallelpfaden innerhalb des Programms
+		\item Scalability: Hinzufügen von Prozessoren sollte die Performance verbessern
+		\item Flexibility: Unterstützung für verschiedene Parallelentwicklungsansätze
+	\end{itemize}
+	\item \textbf{Designentscheidungen (RX8)}
+	\begin{enumerate}
+		\item Neue Programmiersprache: Keine Bibliothek oder Framework
+		\item Java als Ausgangspunkt
+		\item Einführung des \textit{Partitioned global address space} (PGAS)
+		\item Leichtgewichtige Nebenläufigkeit
+		\item Unterstützung für große, mehrdimensionale Arrays
+	\end{enumerate}
+	\item \textbf{Gemeinsamkeiten mit Java (RX9)}
+	\begin{itemize}
+		\item Klassen und Interfaces mit Einfachvererbeung und Objekthierarchie
+		\item Die üblichen Programm- und Kontrollstrukturen
+	\end{itemize}
+	\item \textbf{Unterschiede gegenüber Java (RX11)}
+	\begin{itemize}
+		\item Zusätzliche arithmetische Datentypen
+		\item Variablen und Konstanten wie in Scala
+		\item "`Richtige"' mehrdimensionale Arrays (keine Arrays in Arrays)
+		\item Eingeschränkte Typen und Methoden
+	\end{itemize}
+	\item Structs: Performanter als Objekte, allerdings ohne Vererbung (RX13)
+	\item Functions sind First-Class-Objects (RX14)
+	\item \textbf{Distribution (RX15)}
+	\begin{itemize}
+		\item Fundamentale Möglichkeiten zur Datenverteilung
+		\item Messages: Message-passing, MPI, Actors
+		\item Prozesse/Threads: Gemeinsamer Speicher, OpenMP, Java
+		\item Address Space: PGAS, UPC, CAF, Chapel, X10
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{PGAS (RX17)}
+\begin{itemize}
+	\item 
+\end{itemize}
 
 
 \section{Compiler}
