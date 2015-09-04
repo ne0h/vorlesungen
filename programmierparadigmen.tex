@@ -545,6 +545,18 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 \section{Grundlagen der Prallelprogrammierung (RE1)}
 Motivation: Leistungssteigerung über steigende Taktfrequenzen hinaus. Murphys Gesetz der mangelnden Performance: Jeder Computer ist zu langsam.
 
+\subsubsection{Grundbegriffe}
+\begin{itemize}
+	\item Race Condition: Ein kritischer Wettlauf ist in der Programmierung eine Konstellation, in der das Ergebnis einer Operation vom zeitlichen Verhalten bestimmter Einzeloperationen abhängt. Im Allgemeinen ist die Möglichkeit, dass eine Race Condition entsteht, zu vermeiden.\footnote{\url{https://de.wikipedia.org/wiki/Race_Condition}}
+	\item \textbf{Bedingungen für einen Deadlock\footnote{\url{https://de.wikipedia.org/wiki/Deadlock_\%28Informatik\%29\#Allgemeines}}}
+	\begin{enumerate}
+		\item No Preemption: Die Betriebsmittel werden ausschließlich durch die Prozesse freigegeben
+		\item Hold and Wait: Die Prozesse fordern Betriebsmittel an, behalten aber zugleich den Zugriff auf andere
+		\item Mutual Exclusion: Der Zugriff auf die Betriebsmittel ist exklusiv
+		\item Circular Wait: Mindestens zwei Prozesse besitzen bezüglich der Betriebsmittel eine zirkuläre Abhängigkeit
+	\end{enumerate}
+\end{itemize}
+
 \subsubsection{Programmieransätze gemäß der Computerarchitektur (RE11)}
 \begin{itemize}
 	\item Gemeinsamer Speicher: Jeder Prozessor kann jede Speicherzelle ansprechen (z.B. Multikernrechner)
@@ -618,8 +630,8 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 \subsubsection{Übertragen von Nachrichten (RM11)}
 \begin{itemize}
 	\item Asynchrone Übertragung und erst einmal blocking
-	\item \texttt{MPI_Send} blockiert bis der Nachrichtenpuffer wiederverwendet werden kann
-	\item \texttt{MPI_Recv} blockiert bis die Nachricht komplett gelesen worden ist
+	\item \texttt{MPI\_Send} blockiert bis der Nachrichtenpuffer wiederverwendet werden kann
+	\item \texttt{MPI\_Recv} blockiert bis die Nachricht komplett gelesen worden ist
 	\item Non-blocking ebenfalls möglich, allerdings muss dann zusätzlich überprüft werden, ob die Nachricht vollständig übertragen worden ist (RM18)
 \end{itemize}
 
@@ -745,8 +757,41 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 
 \subsubsection{PGAS (RX17)}
 \begin{itemize}
-	\item Der globale Adressebereich im Arbeitsspeicher wird unterteilt und jeder Prozessor bekommt einen Teil davon zugewiesen (trotzdem kann immer auf alle Speicherbereiche zugegriffen werden)
-	\item 
+	\item \textbf{Eigenschaften eines PGAS-System}
+	\begin{itemize}
+		\item Besteht aus einer Menge von Prozessoren und Arbeitsspeicher. Letzterer wird zwischen den Porzessoren aufgeteilt
+		\item Es gibt einen Mechanismus, um auf den Speicherbereich anderer Prozessoren zuzugreifen, was allerdings zwangsläufig mit einer Verzögerung verbunden ist
+		\item Jede Speicherzelle ist mit einem Thread assoziiert
+	\end{itemize}
+	\item \textbf{Einfache Paralelität mit async: \texttt{async S} (RX19)}
+	\begin{itemize}
+		\item Legt eine neue Kind-Activity an, welches das Statement \texttt{S} ausführt und sofort zurückgibt
+		\item Kann nicht benannt oder abgebrochen werden
+	\end{itemize}
+	\item \textbf{Synchronisation: \texttt{finish S} (RX20)}
+	\begin{itemize}
+		\item Führt \texttt{S} aus und wartet, bis alle \texttt{asyncs} abgearbeitet worden sind \(\rightarrow\) geschachtelt mit \texttt{async} verwendbar
+		\item Nützlich für lokale oder entfernte Daten
+	\end{itemize}
+	\item \textbf{Isolation: \texttt{atomic S} (RX21)}
+	\begin{itemize}
+		\item Führt \texttt{S} atomar seriell aus
+		\item Vergleichbar mit \texttt{synchronized} in Java
+		\item Atomare Blöcke müssen non-blocking und sequentiell sein und müssen auf lokalen daten arbeiten
+		\item Diese Einschränkungen werden dynamisch überprüft
+	\end{itemize}
+	\item \textbf{Conditional Wait: \texttt{when (E) S} (RX22)}
+	\begin{itemize}
+		\item Die Activity setzt aus, bis der Zustand des Guard \texttt{E} \texttt{true} gesetzt wird
+		\item \texttt{S} wird dann atomar ausgeführt
+		\item Für den Guard \texttt{E} gelten die selben Eigenschaften, wie für atomare Blöcke
+	\end{itemize}
+	\item \textbf{Localization: \texttt{at (p) S} (RX23)}
+	\begin{itemize}
+		\item Leichtgewichtiger Thread ohne eigenen Namen, der asynchron ausgeführt wird
+		\item \texttt{S} wird bei \texttt{p} ausgeführt
+		\item Während der Ausführung von \texttt{S} wird \texttt{p} blockiert
+	\end{itemize}
 \end{itemize}
 
 
