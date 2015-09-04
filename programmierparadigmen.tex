@@ -796,9 +796,9 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 
 
 
-\section{Compiler}
+\section{Compiler (S323)}
 
-\subsection{Einführung}
+\subsection{Einführung (S324)}
 \begin{itemize}
 	\item Reiner Übersetzer: Liest den Quelltext Anweisung für Anweisung; billig; sinnvoll bei Kommandosprachen (Unix-Shell)
 	\item Interpretation nach Vorübersetzer: Transformation in eine günstigere Form; nicht unbedingt maschinennah; beispielsweise Java-Bytecode oder Python
@@ -807,13 +807,51 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 \end{itemize}
 
 
-\subsection{Lexikalische Analyse}
+\subsection{Lexikalische Analyse (S332)}
+\begin{itemize}
+	\item Eingabe: Sequenz von Zeichen
+	\item Erkennen von bedeutungstragenden Zeichengruppen (\textit{tokens}) und Überspringen unwichtiger Zeichen (Leerzeichen, Kommentare, etc)
+	\item Bezeichner identifizieren und in Stringtabelle zusammenfassen
+\end{itemize}
 
+\subsection{Syntaktische Analyse (S333)}
+\begin{itemize}
+	\item Eingabe: Sequenz von Tokens; Ausgabe; Abstrakter Syntaxbaum
+	\item Überprüfen, ob die Eingabe zu kontextfreier Sprache gehört
+	\item Erkennen der hierarchischen Struktur der Eingabe
+\end{itemize}
 
-\subsection{Syntaktische Analyse}
+\subsection{Semantische Analyse (S335)}
+\begin{itemize}
+	\item Eingabe: Abstrakter Syntaxbaum; Ausgabe: Attributierter Syntaxbaum
+	\item \textbf{Kontextsensitive Analyse}
+	\begin{itemize}
+		\item Namensanalyse: Beziehungen zwischen Deklaration und Verwendung
+		\item Typanalyse: Bestimme und prüfe Typen von Variablen, Funktionen, etc.
+		\item Konsistenzprüfung: Sind alle Einschränkungen der Programmiersprache eingehalten worden?
+	\end{itemize}
+	\item Ungültige Programme werden spätestens hier abgelehnt
+\end{itemize}
 
+\subsubsection{Zwischencodegenerator (S337)}
+\begin{itemize}
+	\item Aufgabe: Bringe den Code in sprach- und zielunabhängige Zwischensprache
+	\item Optimiere den Code: Konstantenfaltung (Konstanten zusammenfassen), Kopienfortschaltung (setze Werte direkt ein), Code-Verschiebung (Befehle vor statt in einer Schleife ausführen), gemeinsame Teilausdrücke entfernen, Inlining, etc.
+\end{itemize}
 
-\subsection{Semantische Analyse}
+\subsubsection{Codegenerierung (S338)}
+\begin{itemize}
+	\item Eingabe: Attributierter Syntaxbaum oder Zwischensprache; Ausgabe: Programm in Assembler oder Maschinencode
+	\item \textbf{Erzeuge Code für Zielmaschine}
+	\begin{itemize}
+		\item Anpassung an Konventionen des Laufzeitsystems
+		\item Codeauswahl
+		\item Scheduling
+		\item Registerallokation
+		\item Nachoptimierungen
+	\end{itemize}
+	\item Danach: Assemblieren und Binden
+\end{itemize}
 
 
 \subsection{Java-Bytecode (S390)}
