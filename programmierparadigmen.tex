@@ -222,7 +222,7 @@ Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (ka
 \section{Theoretische Grundlagen}
 Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnungen.	
 
-\subsection{Der untypisierte $\lambda$-Kalkül}
+\subsection{Der untypisierte $\lambda$-Kalkül (S159)}
 \begin{itemize}
 	\item Turing-mächtiges Modell funktionaler Programme zur Beschreibung sqeuentieller imperativer Konstrukte
 	\item Linkassoziative Funktionsanwendung
@@ -233,7 +233,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 		\item Funktionsbezeichnungen dürfen nicht geändert werden
 		\item Beispiel: \texttt{\(\lambda\)x. (\(\lambda\)z. f(\(\lambda\)y. z y) x) = \(\lambda\)y. (\(\lambda\)x. f(\(\lambda\)z. x z) y)}
 	\end{itemize}
-	\item \textbf{\(\eta\)-Äquivalenz}
+	\item \textbf{\(\eta\)-Äquivalenz (S160)}
 	\begin{itemize}
 		\item Zwei Funktionen genau dann gleich sind, wenn sie für alle Argumente dasselbe Resultat liefern\footnote{\url{https://de.wikipedia.org/wiki/Lambda-Kalkül\#.CE.B7-Konversion}}
 		\item Terme \texttt{\(\lambda\)x. f x} und \texttt{f} heißen \(\eta\)-äquivalent, falls \texttt{x} eine nicht-freie Variable von \texttt{f} ist
@@ -523,7 +523,20 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 \end{itemize}
 
 
-\subsection{Unifikation und Resolution}
+\subsection{Unifikation und Resolution (S272)}
+
+\subsubsection{Unifikation (S273)}
+\begin{itemize}
+	\item Methode zur Vereinheitlichung prädikatenlogischer Ausdrücke\footnote{\url{https://de.wikipedia.org/wiki/Unifikation_(Logik)}}
+	\item Ziel: Finde Substitution, die alle Gleichungen erfüllt \(\rightarrow\) "`Unifikator"'
+	\item Algorithmus auf Folie S274
+	\item Klammersetzung beachten!
+\end{itemize}
+
+\subsubsection{Resolution}
+\begin{itemize}
+	\item 
+\end{itemize}
 
 
 \subsection{Spracherweiterungen}
