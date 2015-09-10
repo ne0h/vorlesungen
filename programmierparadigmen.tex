@@ -2,9 +2,9 @@
 
 Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2014.\footnote{\url{https://pp.info.uni-karlsruhe.de/lehre/WS201415/paradigmen/}}
 
-\section{Funktionale Programmierung}
+\section{Funktionale Programmierung (S16)}
 
-\subsection{Rekursion}
+\subsection{Rekursion (S27)}
 \begin{itemize}
 	\item Auswertung: Zwischenausdrücke können mit Eingabegröße wachsen
 	\item Speicherverbrauch in \(\mathcal{O}(n)\) bei \(\mathcal{O}(n)\) Aufrufen
@@ -15,19 +15,19 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Endrekursion}
+\subsubsection{Endrekursion (S30)}
 \begin{itemize}
 	\item Linearität: Eine Funktion heißt \textit{linear rekursiv}, wenn in jedem Defitionszweig nur ein rekursiver Aufruf vorkommt.
 	\item Endrekursion: Eine linear rekursive Funktion heißt \textit{endrekursiv}, wenn in jedem Zweig der rekursive Aufruf nicht in andere Aufrufe eingebettet ist.
 \end{itemize}
 
 
-\subsection{Listen}
+\subsection{Listen (S34)}
 \begin{itemize}
 	\item Eine Liste \texttt{(x:xs)} besteht immer aus Listenkopf \texttt{x} und Listenrest \texttt{xs}
 \end{itemize}
 
-\subsubsection{Pattern Matching}
+\subsubsection{Pattern Matching (S37)}
 \begin{itemize}
 	\item Mehrere Gleichungen zur Definition einer Funktion
 	\item Jede Gleichung gilt für Argumente mit speziellem Strukturmuster
@@ -35,18 +35,18 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 \end{itemize}
 
 
-\subsection{Funktionen höherer Ordnung}
+\subsection{Funktionen höherer Ordnung (S44)}
 
-\subsubsection{Lambda-Notation}
+\subsubsection{Lambda-Notation (S45)}
 \begin{itemize}
 	\item Anonyme Funktionen und Funktionen höherer Ordnung möglich
 	\item Beispiel: \(g(x,y)=x-\frac{y}{2} \longrightarrow\) \texttt{g = \textbackslash x y -> x - 2/y}
 \end{itemize}
 
-\subsubsection{Definition: Funktion höherer Ordnung}
+\subsubsection{Definition: Funktion höherer Ordnung (S47)}
 Funktionen, die andere Funktionen als Parameter erhalten oder Funktionen als Rückgabewerte liefern, heißen Funktionen höherer Ordnung.
 
-\subsubsection{Currying}
+\subsubsection{Currying (S50)}
 \begin{itemize}
 	\item Ersetzung einer mehrstelligen Funktion durch Schachtelung einstelliger Funktionen.
 	\item Jede Funktion erhält, wie oben erwähnt, nur ein Argument. Werden scheinbar mehrere Argumente definiert, so steckt immer Currying dahinter.
@@ -62,7 +62,7 @@ addiereZu2  = addiere 2
 addiereZu2 1               -- 3
 \end{lstlisting}
 
-\subsubsection{Namensbindung}
+\subsubsection{Namensbindung (S54)}
 \begin{itemize}
 	\item Bindungsstrukte legen Bedeutung und Geltungsbereiche von Variablen fest
 	\item Verdeckung: Innere Bindungen verdecken äußere
@@ -73,13 +73,13 @@ addiereZu2 1               -- 3
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Lokale Bindung}
+\subsubsection{Lokale Bindung (S57)}
 \begin{itemize}
 	\item Anwendung: Lokale Hilfsfunktionen
 	\item \texttt{let} bindet stärker als \texttt{where}
 \end{itemize}
 
-\textbf{Beispielse}
+\textbf{Beispiele}
 
 \begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
 energy m = let c = 299792458
@@ -89,9 +89,9 @@ energy m = m * c * c
   where c = 299792458
 \end{lstlisting}
 
-\subsection{Kombinatoren}
+\subsection{Kombinatoren (S64)}
 
-\subsubsection{Folds}
+\subsubsection{Folds (S65)}
 \begin{itemize}
 	\item Anwendung einer Operation und eines Initialwertes auf eine Liste
 	\item \textbf{Beispiel Summenberechnung}
@@ -103,14 +103,14 @@ energy m = m * c * c
 	\item Anwendung: Koplexe Funktionen als Kombination einfacher Funktionen
 \end{itemize}
 
-\subsubsection{Kombination von Listen}
+\subsubsection{Kombination von Listen (S67)}
 \begin{itemize}
 	\item Zusammenfügen von Listen per Reißverschluss: \texttt{zip = zipWith (,)}
 	\item \texttt{zipWith} definiert eine Zusätzliche Operation
 	\item Bricht ab, wenn eine der Listen keine weiteren Elemente enthält
 \end{itemize}
 
-\subsubsection{List Comprehensions}
+\subsubsection{List Comprehensions (S67)}
 \begin{itemize}
 	\item Automatisiertes Erzeugen von Listen, basierend auf bereits existierenden Listen
 	\item Inspiriert durch die mathematische Mengenschreibweise: \texttt{s = {[} 2 * x {|} x <- {[}0..{]}, x\textasciicircum 2 > 3 {]} } \footnote{\url{https://en.wikipedia.org/wiki/List_comprehension\#Haskell}}
@@ -119,9 +119,9 @@ energy m = m * c * c
 \end{itemize}
 
 
-\subsection{Lazy Evaluation}
+\subsection{Lazy Evaluation (S70)}
 
-\subsubsection{Auswertung}
+\subsubsection{Auswertung (S73)}
 \begin{itemize}
 	\item Struturierte Daten: Nur auswerten, falls wirklich benötigt wird
 	\item Duplizierte Argumente: Auswertung maximal einmal (\textit{sharing})
@@ -135,7 +135,7 @@ energy m = m * c * c
 \end{itemize}
 
 
-\subsection{Typen}
+\subsection{Typen (S82)}
 \begin{itemize}
 	\item Haskell ist statisch typisiert
 	\item Jeder gültige Ausdruck hat immer einen Typ und wertet immer zu gültigen Werten dieses Typs aus
@@ -144,7 +144,7 @@ energy m = m * c * c
 	\item Haskell erkennt den korrekten Typ (fast immer) zuverlässig, optional manuelle Deklaration möglich
 \end{itemize}
 
-\subsubsection{Polymorphe Typen}
+\subsubsection{Polymorphe Typen (S86)}
 \begin{itemize}
 	\item Der Listen-Typ sind polymorph, die Typvariable \texttt{{[}t{]}} steht auch für Nicht-Basistypen
 	\item Typvariablen parametrisieren polymorphe Typen
@@ -160,13 +160,13 @@ energy m = m * c * c
 	\item Tupel: \texttt{(3, True) :: (Integer, Bool); (not, 7) :: (Bool -> Bool, Integer)}
 \end{itemize}
 
-\subsubsection{Typinferenz}
+\subsubsection{Typinferenz (S91)}
 Errechnen der Typen durch den Compiler, dadurch entstehen kompakte Programme, die trotzdem typsicher sind. Manuelle Deklaration ist dennoch möglich.
 
-\subsubsection{Typsynonyme}
+\subsubsection{Typsynonyme (S93)}
 Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (kann die Lesbarkeit erhöhen). Es werden keine explizit neuen Typen erzeugt.
 
-\subsubsection{Typen bei der Fehlersuche}
+\subsubsection{Typen bei der Fehlersuche (S94)}
 \begin{itemize}
 	\item Typendeklarationen können beim Lokalisieren von Programmfehlern helfen
 	\item Beabsichtigten Typ der Funktion deklarieren
@@ -177,28 +177,28 @@ Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (ka
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Mengen}
+\subsubsection{Mengen (S95)}
 \begin{itemize}
 	\item Mengen bestehen aus dem Typ \texttt{Set = ...} sowie Funktionen zum Iterieren, Einfügen, Löschen, Vergleichen, usw.
 	\item Einfachste Implementierung als Listen: \texttt{type Set t = {[} {]}}
 \end{itemize}
 
 
-\subsection{Algebraische und rekursive Datentypen}
+\subsection{Algebraische und rekursive Datentypen (S102)}
 
-\subsubsection{Nachteile von Tupeln}
+\subsubsection{Nachteile von Tupeln (S103)}
 \begin{itemize}
 	\item Produkttypen: Typen mit mehreren Komponenten. Beispiel: Personen mit Name und Alter \texttt{type Person = (String, Int)}
 	\item Nachteil: Bedeutung von Werten nicht explizit; ungewollte Verwendung beliebiger \texttt{(String, Int)} Tupel
 \end{itemize}
 
-\subsubsection{Algebraische Datentypen}
+\subsubsection{Algebraische Datentypen (S104)}
 \begin{itemize}
 	\item Verwendung des Schlüsselwortes \texttt{data} statt \texttt{type} zur definition \textit{neuer} Typen
 	\item Mehrere Konstruktoren möglich
 \end{itemize}
 
-\subsection{Anwendung algebraischer Datentypen}
+\subsection{Anwendung algebraischer Datentypen (S108)}
 \begin{itemize}
 	\item \textbf{Algebraischer Datenstrukturen ermöglichen}
 	\begin{itemize}
@@ -220,7 +220,7 @@ Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (ka
 
 
 
-\section{Theoretische Grundlagen}
+\section{Theoretische Grundlagen (S153)}
 Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnungen.	
 
 \subsection{Der untypisierte $\lambda$-Kalkül (S159)}
@@ -241,7 +241,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{$\beta$-Reduktion}
+\subsubsection{$\beta$-Reduktion (S161)}
 \begin{itemize}
 	\item Formalisiert das Konzept der Funktionsanwendung
 	\item Anwendung ausschlißelich von links nach rechts
@@ -261,7 +261,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Kodierung natürlich Zahlen (Church-Zahlen)}
+\subsubsection{Kodierung natürlich Zahlen (Church-Zahlen, S172)}
 \begin{itemize}
 	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
 	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
@@ -275,7 +275,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Rechnen mit Church-Zahlen}
+\subsubsection{Rechnen mit Church-Zahlen (S173)}
 \begin{itemize}
 		\item Nachfolgerfunktion: \texttt{succ = \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. s(n s z)} errechnet den Nachfolger. Beispielsweise ist \texttt{succ(\(c_2\)) = \(c_3\)}
 		\item Addition: \texttt{plus = \(\lambda\)m. \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. m s (n s z)}. Beispielsweise erreichnet \texttt{plus \(c_2\) \(c_3\) = \(c_5\)}
@@ -283,7 +283,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 		\item Potenzieren: \texttt{exp = \(\lambda\)m. \(\lambda\)n. n m}. Berechnung per Induktion über \texttt{n}
 \end{itemize}
 
-\subsubsection{Kodierung boolscher Werte}
+\subsubsection{Kodierung boolscher Werte (S174)}
 \begin{itemize}
 	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
 	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
@@ -292,7 +292,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item \texttt{True \&\& True} ergibt: \texttt{\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
 \end{itemize}
 
-\subsubsection{Divergenz}
+\subsubsection{Divergenz (S175)}
 \begin{itemize}
 	\item Terme, die nicht zu einer Normalform auswerten, divergieren
 	\item Diese modellieren unendliche Ausführungen
@@ -339,12 +339,12 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item Beispiel: Operationen auf Containern (Zusammenfügen von Listen)
 \end{itemize}
 
-\subsubsection{\texttt{let}-Polymorphismus}
+\subsubsection{\texttt{let}-Polymorphismus (S201)}
 \begin{itemize}
 	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f(f true)}
 	\item \texttt{f} ist eine polymorphe Hilfsfunktion: Anwendung erst auf \texttt{true}, dann auf \texttt{2}
 	\item Kodierung: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
-	\item \textbf{Typschemata (F202)}
+	\item \textbf{Typschemata (S202)}
 	\begin{itemize}
 		\item Ein Typ der Gestalt \(\forall\alpha_1.\forall\alpha_2.~...~\forall\alpha_n.~\tau\) heißt Typschema
 		\item Es bindet freie Typvariablen \(alpha_1,...,\alpha_n\) in \(\tau\)
@@ -353,17 +353,17 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \end{itemize}
 
 
-\section{Logische Programmierung}
+\section{Logische Programmierung (S210)}
 Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und Regeln nennen. Der Benutzer formuliert Anfragen an diese Datenbasis. Der Prolog-Interpreter benutzt die Fakten und Regeln, um systematisch eine Antwort zu finden. Ein positives Resultat bedeutet, dass die Anfrage logisch ableitbar ist. Ein negatives Resultat bedeutet nur, dass aufgrund der Datenbasis keine Ableitung gefunden werden kann.\footnote{\url{https://de.wikipedia.org/wiki/Prolog_(Programmiersprache)\#Grundprinzip}}
 
-\subsection{Einführung in Prolog}
+\subsection{Einführung in Prolog (S211)}
 \begin{itemize}
 	\item Situationsbeschreibung
 	\item Definition von Objekten und Beziehungen zwischen Objekten
 	\item Darstellbar als Terme einer freien Termalgebra
 \end{itemize}
 
-\subsubsection{Termsyntax}
+\subsubsection{Termsyntax (214)}
 \begin{itemize}
 	\item Atome: z.B. \texttt{hans, inge, fritz, fisch}
 	\item Zahlen: z.B. \texttt{3, 4.5}
@@ -372,10 +372,10 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 	\item Zusammengesetzt: z.B. \texttt{liebt(fritz,fisch), liebt(fritz,X)}
 \end{itemize}
 
-\subsubsection{Variablen}
+\subsubsection{Variablen (S216)}
 Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, beispielsweise \texttt{liebt(X, fussball)} \(\rightarrow\) "`Alle lieben Fußball"'.
 
-\subsubsection{Abfragen}
+\subsubsection{Abfragen (S217)}
 \begin{itemize}
 	\item Alle Fakten werden zur Laufzeit in einer Datenbank gehalten
 	\item Einleitung per \texttt{?}: z.B. \texttt{?liebt(fritz,fisch)}
@@ -393,7 +393,7 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Regeln}
+\subsubsection{Regeln (S222)}
 \begin{itemize}
 	\item Aufbau: Regelkopf (1 Term) und Regelrumpf (1+ Terme): \texttt{term :- termlist .}
 	\item \texttt{:-} liest sich als \textit{wenn}, Kommata als \textit{und}
@@ -404,7 +404,7 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Logische Programmierung ist anders}
+\subsubsection{Logische Programmierung ist anders (S225)}
 \begin{itemize}
 	\item Keine herkömmlichen Variablen
 	\item Prädikate liefern außer ihrer Erfüllbarkeit keinen Ergebniswert
@@ -413,13 +413,13 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 \end{itemize}
 
 
-\subsection{Backtracking}
+\subsection{Backtracking (S226)}
 \begin{itemize}
 	\item Visualisierung durch einen Ausführungsbaum
 	\item Jedes Teilziel wird als Box mit vier Ein- bzw. Ausgängen dargestellt
 \end{itemize}
 
-\subsubsection{Der Algorithmus informell}
+\subsubsection{Der Algorithmus informell (S228)}
 \begin{enumerate}
 	\item Anlegen und erstmaliges Betreten der Box durch den \texttt{call}-Eingang beim ersten Aufruf des Teilziels
 	\item Falls keine passende Regel gefunden wird, wird die Box durch den \texttt{fail}-Ausgang verlassen und gelöscht
@@ -432,9 +432,9 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 \end{enumerate}
 
 
-\subsection{Arithmetik und Listen}
+\subsection{Arithmetik und Listen (S230)}
 
-\subsubsection{Listen: \texttt{{[}X{|}Y{]}}}
+\subsubsection{Listen: \texttt{{[}X{|}Y{]}} (S231)}
 \begin{itemize}
 	\item \texttt{X} ist das erste Element der Liste (\textit{head}), \texttt{Y} ist der Rest der Liste (\textit{tail}), \texttt{{[}{]}} bezeichnet die leere Liste
 	\item \texttt{Y} muss nicht instanziiert sein
@@ -465,21 +465,21 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Arithmetik}
+\subsubsection{Arithmetik (S238)}
 \begin{itemize}
 	\item Reines Prolog kann alle berechnebaren Funktionen verarbeiten, Prädikate werden über Atome dargestellt
 	\item Zuweisung per Teilziel \texttt{is}
 	\item Unterschied zur normalen Resolution: Variablen im \textit{rechten} Term müssen instanziiert sein \(\rightarrow\) nur vorwärts anwendbar
 \end{itemize}
 
-\subsubsection{Funktionen}
+\subsubsection{Funktionen (S239)}
 \begin{itemize}
 	\item Funktionen in Prolog als Prädikate
 	\item Prädikate tragen außer der Erfüllbarkeit keinen Rückgabewert \(\rightarrow\) Rückgabewert als zusätzliche Variable
 	\item Formal ähnlich zum Pattern Matching
 \end{itemize}
 
-\subsubsection{Generate und Test}
+\subsubsection{Generate und Test (S241)}
 TODO
 \begin{itemize}
 	\item \textbf{Prolog ist besonders gut}
@@ -491,9 +491,9 @@ TODO
 \end{itemize}
 
 
-\subsection{Der Cut}
+\subsection{Der Cut (S243)}
 
-\subsubsection{Determinismus}
+\subsubsection{Determinismus (S244)}
 Ein Prädikat heißt \textit{deterministisch}, wenn es stets auf höchstens eine Weise erfüllt werden kann; hat es möglicherweise mehrere Lösungen, so heißt es nichtdeterministisch.
 
 In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, indem man von Lösungen zu Listen von Lösungen übergeht.
@@ -505,19 +505,19 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 	\item Beispiel auf Folie 246
 \end{itemize}
 
-\subsubsection{Blaue, grüne und rote Cuts}
+\subsubsection{Blaue, grüne und rote Cuts (S248)}
 \begin{itemize}
 	\item \textbf{Blauer Cut}
 	\begin{itemize}
 		\item Beeinflusst weder Programmlaufzeit noch -verhalten
 	\end{itemize}
-	\item \textbf{Grüner Cut}
+	\item \textbf{Grüner Cut (S249)}
 	\begin{itemize}
 		\item Beeinflusst Programmlaufzeit aber nicht -verhalten
 		\item Schnellere Ausführung und weniger Speicherbedarf
 		\item Beispiel: Einfügen in Funktionen, von denen man weiß, dass sie deterministisch sind
 	\end{itemize}
-	\item \textbf{Roter Cut}
+	\item \textbf{Roter Cut (S250)}
 	\begin{itemize}
 		\item Beeinflusst das Programmverhalten
 		\item Werden verwendet, um Wächter zu ersetzen. Ist der erste Wächter erfolgreich, wird der zweite nie angewendet
@@ -538,25 +538,16 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 	\item Klammersetzung beachten!
 \end{itemize}
 
-\subsubsection{Resolution}
+\subsubsection{Resolution (S281)}
 \begin{itemize}
 	\item 
 \end{itemize}
 
 
-\subsection{Spracherweiterungen}
+\subsection{Constraint Logic Programming (S296)}
 
 
-\subsection{Constraint Logic Programming}
-
-
-
-\section{Typinferenz}
-
-\subsection{Typinferenz: $\lambda$-Kalkül}
-
-
-\subsection{Typinferenz: \textit{let}-Polymorphismus}
+\subsection{Typinferenz: \textit{let}-Polymorphismus (S316)}
 
 
 
@@ -924,7 +915,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \end{itemize}
 
 
-\subsection{Codeerzeugung}
+\subsection{Codeerzeugung (S404)}
 
 \subsubsection{Umgekehrte polnische Notation (S405)}
 \begin{itemize}
@@ -940,14 +931,14 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Kontrollstukturen}
+\subsubsection{Kontrollstukturen (S408)}
 \begin{itemize}
 	\item Kontrollstrukturen werden mit bedingten Sprüngen realisiert
 	\item \texttt{if} (S408): Labelbereiche mit Sprungbefehlen
 	\item \texttt{while} (S409): Aufgeteilt in \texttt{loopheader}, \texttt{loopbody} und \texttt{afterloop}
 \end{itemize}
 
-\subsubsection{Codeerzeugung: Bedingte Sprünge}
+\subsubsection{Codeerzeugung: Bedingte Sprünge (S410)}
 \begin{itemize}
 	\item Hilfsmethoden zur Umsetzung von Kontrollstrukturen
 	\item \texttt{makeLabel();} erzeugt eine neue, eindeutige Sprungmarke
@@ -980,10 +971,19 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 
 
 
-\section{Appendix B: Typherleitungsregeln}
+\section{Appendix B: Typherleitungsregeln (S195)}
+
+\subsection{\texttt{CONST}}
+\[CONST:~\frac{c \in Const}{\Gamma \vdash c~:~\tau_c}\]
+
+\subsection{\texttt{VAR}}
+\[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau}\]
+
+\subsection{\texttt{ABS}}
+\[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2}\]
 
 \subsection{\texttt{APP}}
-\[APP:\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
+\[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
 
 
 
