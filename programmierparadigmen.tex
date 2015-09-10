@@ -115,6 +115,7 @@ energy m = m * c * c
 	\item Automatisiertes Erzeugen von Listen, basierend auf bereits existierenden Listen
 	\item Inspiriert durch die mathematische Mengenschreibweise: \texttt{s = {[} 2 * x {|} x <- {[}0..{]}, x\textasciicircum 2 > 3 {]} } \footnote{\url{https://en.wikipedia.org/wiki/List_comprehension\#Haskell}}
 	\item Multidimensionale Liste: \texttt{s = {[} 2*x*y {|} x <- {[}0..{]}, x\textasciicircum2 > 3, y <- {[}1,3..x{]}, y\textasciicircum2 < 100-x\textasciicircum2 {]}}
+	\item Bei mehrdimensionaler Eingabe: Nur die erste Liste gegen Unendlich laufen lassen (siehe Klausur WS1314, Aufgabe 1)
 \end{itemize}
 
 
@@ -285,6 +286,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \subsubsection{Kodierung boolscher Werte}
 \begin{itemize}
 	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
+	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
 	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
 	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
 	\item \texttt{True \&\& True} ergibt: \texttt{\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
@@ -296,15 +298,18 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item Diese modellieren unendliche Ausführungen
 \end{itemize}
 
+\subsubsection{Rekursionsoperator (S177)}
+\texttt{Y = \(\lambda\)f. (\(\lambda\)x. f (x x))(\(\lambda\)x. f (x x))}
 
-\subsection{Typsysteme}
+
+\subsection{Typsysteme (S192)}
 \begin{itemize}
 	\item Typklassen definieren Funktionen, die für jede Instanz der Typklasse aufgerufen werden können
 	\item Man kann eine Instanz für jeden Typ erstellen, indem man die Funktionen der Typklasse für den jeweiligen Typ definiert
 	\item Beispiel: Vergleichsoperator (\texttt{==})
 \end{itemize}
 
-\subsubsection{Typen}
+\subsubsection{Typen (S194)}
 \begin{itemize}
 	\item \textbf{Typen} legen die möglichen Werte von Variablen, Operationen und Operanden fest. Beispiel: Integer, Float, String
 	\item \textbf{Statisch typisierte Sprachen:} Jede Variable/jeder Ausdruck hat einen vom Compiler bestimmbaren Typ. Beispiel: Java, Haskell, C++
@@ -685,7 +690,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\item Variablen können als Konstanten definiert werden (RS8)
 	\item \textbf{Klassen und Konstruktoren (RS13)}
 	\begin{itemize}
-		\item Der primäre Konstruktor definiert impliziert \textit{einige} Getter und Setter (\texttt{.lastName} und \texttt{.LastName =})
+		\item Der primäre Konstruktor definiert impliziert \textit{einige} Getter und Setter (\texttt{.lastName} und \texttt{.lastName =})
 		\item Für Parameter ohne explizite Definition als Variable oder Konstante werden nicht als Feld initialisiert und erhalten daher auch weder Getter noch Setter
 		\item Uniform Access: Zugriffe werden auf Getter und Setter gemappt (RS14)
 	\end{itemize}
@@ -776,7 +781,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 		\item Es gibt einen Mechanismus, um auf den Speicherbereich anderer Prozessoren zuzugreifen, was allerdings zwangsläufig mit einer Verzögerung verbunden ist
 		\item Jede Speicherzelle ist mit einem Thread assoziiert
 	\end{itemize}
-	\item \textbf{Einfache Paralelität mit async: \texttt{async S} (RX19)}
+	\item \textbf{Einfache Parallelität mit async: \texttt{async S} (RX19)}
 	\begin{itemize}
 		\item Legt eine neue Kind-Activity an, welches das Statement \texttt{S} ausführt und sofort zurückgibt
 		\item Kann nicht benannt oder abgebrochen werden
@@ -954,12 +959,14 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \section{Appendix A: Haskell}
 
 \subsection{Funktionen}
-
-\begin{table}[h]
+\begin{table}[H]
 \begin{tabularx}{\textwidth}{l|X|X}
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} zurück \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
+	\textbf{\textit{inits}} & & \\
 	\textbf{\textit{isDigit}} & & Erkennt eine Zahl \\
+	\textbf{\textit{iterate}} & & \\
+	\textbf{\textit{last}} & & \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & \\
 	\textbf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
@@ -971,12 +978,72 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \end{tabularx}
 \end{table}
 
+
+
 \section{Appendix B: Typherleitungsregeln}
 
 \subsection{\texttt{APP}}
 \[APP:\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
 
-\section{Appendix C: Bytecode}
+
+
+\section{Appendix C: MPI}
+\begin{itemize}
+	\item \textbf{\texttt{MPI\_Send} (RM11)}
+	\begin{itemize}
+		\item Synchrone Punkt-zu-Punkt Kommunikation
+		\item \texttt{int MPI\_Send(void* buf, int count, MPI\_Datatype datatype, int dest, int tag, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Recv} (RM12)}
+	\begin{itemize}
+		\item Synchrone Punkt-zu-Punkt Kommunikation
+		\item \texttt{int MPI\_Recv(void* buf, int count, MPI\_Datatype datatype, int source, int tag, MPI\_Comm, MPI\_Status *status)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Bcast}: Streuen (RM20)}
+	\begin{itemize}
+		\item Ein ausgewählter MPI-Prozess \textit{root} schickt allen anderen Prozessen in seiner Gruppe \textit{comm} die gleichen Daten
+		\item Die dafür definierte Funktion ist dabei für alle beteiligten Prozesse identisch
+		\item \texttt{int MPI\_Bcast(void* buf, int count, MPI\_Datatype t, int root, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Scatter}: Streuen (RM23)}
+	\begin{itemize}
+		\item Der MPI Prozess \textit{root} jedem beteiligten Prozess ein unterschiedliches, aber gleich großes Datenelement
+		\item \texttt{MPI\_Scatterv} erlaubt das vektorbasierte Senden von unterschiedlicher Datengröße (RM24)
+		\item \texttt{int MPI\_Scatter(void* sendbuf, int sendcount, MPI\_Datatype sendtype, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, int root, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Gather}: Sammeln (RM25)}
+	\begin{itemize}
+		\item Der MPI-Prozess sammelt \textit{root} die Daten aller beteiligten Prozesse ein
+		\item Die Daten aller Sendepuffer werden dabei (nach Rang sortiert) hintereinander im Empfangspuffer abgelegt
+		\item Vektorbasierte Variante vorhanden
+		\item \texttt{int MPI\_Gather(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, int root, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Allgather} (RM27)}
+	\begin{itemize}
+		\item Jeder Prozess schickt an jeden anderen Prozess die gleichen Daten
+		\item Multi-Broadcast-Operation, bei der es keinen gesonderten MPI-Prozess gibt
+		\item Im Anschluss hält der Buffer von jedem Prozess in \textit{comm} die selben Daten in der selben Reihenfolge (inklusiv der eigenen)
+		\item \texttt{int MPI\_Allgather(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* *recvbuf, int recvcount, MPI\_Datatype recvtype, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Alltoall} (RM28}
+	\begin{itemize}
+		\item Datenaustausch zwischen allen Prozessen
+		\item Nur der i-te Teil des Sendebuffers wird an den i-ten Prozess gesendet, Daten, die vom Prozess mit dem Rang j kommen, werden entsprechend an j-ter Stelle im Empfangsbuffer gespeichert
+		\item Die Funktion kehrt erst zurück, nachdem alle in der angegebenen Gruppe befindlichen MPI-Prozesse diesen Teil des Programmes erreicht haben
+		\item \texttt{int MPI\_Alltoall(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, MPI\_Comm comm)}
+	\end{itemize}
+	\item \textbf{\texttt{MPI\_Reduce} (RM29)}
+	\begin{itemize}
+		\item Spezielle Form der Gather-Operation
+		\item Es werden ebenfalls die Daten aller beteiligten Prozesse aufgesammelt, aber zusätzlich noch mittels einer festgelegten Reduktionsoperation zu einem Datum reduziert
+		\item Arithmetische und logische Operationen verfügbar (siehe Folie)
+		\item \texttt{int MPI\_Reduce(void* sendbuf, void* recvbuf, int count, MPI\_Datatype type, MPI\_Op op, int root, MPI\_Comm comm)}
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{Appendix D: Bytecode}
 
 \subsection{Instruktionsklassen (S395)}
 \begin{itemize}
