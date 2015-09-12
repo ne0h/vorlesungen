@@ -244,7 +244,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \subsubsection{$\beta$-Reduktion (S161)}
 \begin{itemize}
 	\item Formalisiert das Konzept der Funktionsanwendung
-	\item Anwendung ausschlißelich von links nach rechts
+	\item Anwendung ausschließlich von links nach rechts
 	\item Eine \(\beta\)-Reduktion entspricht der Ausführung der Funktionsanwendung auf einem Redex: \texttt{(\(\lambda\)x.\(t_1\))\(t_2 \Rightarrow\) \(t_1\){[} x \(\mapsto t_2\) {]}}
 	\item Volle \(\beta\)-Reduktion: Jeder Redex kann reduziert werden
 	\item \textbf{Beispiele}
@@ -828,6 +828,12 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\item Eingabe: Sequenz von Tokens; Ausgabe; Abstrakter Syntaxbaum
 	\item Überprüfen, ob die Eingabe zu kontextfreier Sprache gehört
 	\item Erkennen der hierarchischen Struktur der Eingabe
+	\item \textbf{\texttt{First}- und \texttt{Follow}-Mengen (S364)}
+	\begin{itemize}
+		\item First: Die Menge der ersten Zeichen einer Ableitung innerhalb eines Oder-Blockes
+		\item Follow: TODO
+		\item Beispiele auf S365
+	\end{itemize}
 \end{itemize}
 
 \subsection{Semantische Analyse (S335)}
