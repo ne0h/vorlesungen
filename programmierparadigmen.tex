@@ -259,6 +259,12 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 		\item \texttt{let x = \(t_1\) in \(t_2\)} wird zu \texttt{(\(\lambda\)x.\(t_2\)) \(t_1\))}
 		\item \texttt{let x = g y in f x = (\(\lambda\)x.f x)(g y) \(\Rightarrow\) f(g y)}
 	\end{itemize}
+	\item \textbf{Auswertungsstrategien}
+	\begin{itemize}
+		\item Normalenreihenfolge: 
+		\item Call-by-Name: 
+		\item Call-by-Value:
+	\end{itemize}
 \end{itemize}
 
 \subsubsection{Kodierung natürlich Zahlen (Church-Zahlen, S172)}
@@ -1029,7 +1035,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 		\item Jeder Prozess schickt an jeden anderen Prozess die gleichen Daten
 		\item Multi-Broadcast-Operation, bei der es keinen gesonderten MPI-Prozess gibt
 		\item Im Anschluss hält der Buffer von jedem Prozess in \textit{comm} die selben Daten in der selben Reihenfolge (inklusiv der eigenen)
-		\item \texttt{int MPI\_Allgather(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* *recvbuf, int recvcount, MPI\_Datatype recvtype, MPI\_Comm comm)}
+		\item \texttt{int MPI\_Allgather(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, MPI\_Comm comm)}
 	\end{itemize}
 	\item \textbf{\texttt{MPI\_Alltoall} (RM28}
 	\begin{itemize}
