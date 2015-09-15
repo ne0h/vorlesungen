@@ -267,46 +267,6 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Kodierung natürlich Zahlen (Church-Zahlen, S172)}
-\begin{itemize}
-	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
-	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
-	\item \textbf{Church-Zahlen}
-	\begin{itemize}
-		\item \texttt{\(c_0\) = \(\lambda\)s. \(\lambda\)z. z}
-		\item \texttt{\(c_1\) = \(\lambda\)s. \(\lambda\)z. s z}
-		\item \texttt{\(c_2\) = \(\lambda\)s. \(\lambda\)z. s (s z)}
-		\item \texttt{\(c_3\) = \(\lambda\)s. \(\lambda\)z. s (s (s z))} \\ \(\vdots\)
-		\item \texttt{\(c_n\) = \(\lambda\)s. \(\lambda\)z. \(s^n\) z}
-	\end{itemize}
-\end{itemize}
-
-\subsubsection{Rechnen mit Church-Zahlen (S173)}
-\begin{itemize}
-		\item Nachfolgerfunktion: \texttt{succ = \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. s(n s z)} errechnet den Nachfolger. Beispielsweise ist \texttt{succ(\(c_2\)) = \(c_3\)}
-		\item Addition: \texttt{plus = \(\lambda\)m. \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. m s (n s z)}. Beispielsweise erreichnet \texttt{plus \(c_2\) \(c_3\) = \(c_5\)}
-		\item Multiplikation: \texttt{times = \(\lambda\)m. \(\lambda\)n. \(\lambda\)s. n (m s)}.
-		\item Potenzieren: \texttt{exp = \(\lambda\)m. \(\lambda\)n. n m}. Berechnung per Induktion über \texttt{n}
-\end{itemize}
-
-\subsubsection{Kodierung boolscher Werte (S174)}
-\begin{itemize}
-	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
-	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
-	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
-	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
-	\item \texttt{True \&\& True} ergibt: \texttt{\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
-\end{itemize}
-
-\subsubsection{Divergenz (S175)}
-\begin{itemize}
-	\item Terme, die nicht zu einer Normalform auswerten, divergieren
-	\item Diese modellieren unendliche Ausführungen
-\end{itemize}
-
-\subsubsection{Rekursionsoperator (S177)}
-\texttt{Y = \(\lambda\)f. (\(\lambda\)x. f (x x))(\(\lambda\)x. f (x x))}
-
 
 \subsection{Typsysteme (S192)}
 \begin{itemize}
@@ -982,8 +942,73 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \end{table}
 
 
+\subsection{Spezielle Listenoperationen}
+\begin{itemize}
+	\item \texttt{(x:xs)}: Trennt die übergebene Liste in einen Listenkopf \texttt{x} (einelementig) und einen Listenrest \texttt{xs} (kann mehrelementig oder auch leer sein)
+	\item \texttt{l ++ x}: Konkateniert die Listen \texttt{l} und \texttt{x}
+	\item \texttt{l !! n}: Gibt das \texttt{n}-te Element der Liste \texttt{l} zurück 
+\end{itemize}
 
-\section{Appendix B: Typherleitungsregeln (S195)}
+
+\section{Appendix B: Church Zahlen}
+
+\subsection{Zahlenkodierung (S172)}
+\begin{itemize}
+	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
+	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
+	\item \textbf{Church-Zahlen}
+	\begin{itemize}
+		\item \texttt{\(c_0\) = \(\lambda\)s. \(\lambda\)z. z}
+		\item \texttt{\(c_1\) = \(\lambda\)s. \(\lambda\)z. s z}
+		\item \texttt{\(c_2\) = \(\lambda\)s. \(\lambda\)z. s (s z)}
+		\item \texttt{\(c_3\) = \(\lambda\)s. \(\lambda\)z. s (s (s z))} \\ \(\vdots\)
+		\item \texttt{\(c_n\) = \(\lambda\)s. \(\lambda\)z. \(s^n\) z}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Kodierung boolscher Werte (S174)}
+\begin{itemize}
+	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
+	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
+	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
+	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
+	\item \texttt{True \&\& True} ergibt: \texttt{(\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
+\end{itemize}
+
+
+\subsection{Divergenz (S175)}
+\begin{itemize}
+	\item Terme, die nicht zu einer Normalform auswerten, divergieren
+	\item Diese modellieren unendliche Ausführungen
+\end{itemize}
+
+
+\subsection{Rekursionsoperator (S177)}
+\texttt{Y = \(\lambda\)f. (\(\lambda\)x. f (x x))(\(\lambda\)x. f (x x))}
+
+
+\subsection{Rechnen mit Church-Zahlen (S173)}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{l|X}
+	Paar & \texttt{pair = \(\lambda\)a. \(\lambda\)b. \(\lambda\)f. f a b} \\
+	Erstes Paarelement & \texttt{fst = \(\lambda\)p. p (\(\lambda\)a. \(\lambda\)b. a)} \\
+	Zweites Paarelement & \texttt{snd = \(\lambda\)p. (\(\lambda\)a. \(\lambda\)b. b)} \\
+	Paarnachfolger & \texttt{next = \(\lambda\)p. pair(snd p)(succ(snd p))} \\
+	Nachfolgerfunktion & \texttt{succ = \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. s(n s z)} \\
+	Vorgängerfunktion & \texttt{pred = \(\lambda\)n. fst(n next(pair \(c_0\) \(c_0\)))} \\
+	Test auf Null & \texttt{isZero = \(\lambda\)n. n (\(\lambda\)x. \(c_{false}\)) \(c_{true}\)} \\
+	Addition & \texttt{plus = \(\lambda\)m. \(\lambda\)n. \(\lambda\)s. \(\lambda\)z. m s (n s z)} \\
+	Subtraktion & \texttt{sub = \(\lambda\)m. \(\lambda\)m. n pred m} \\
+	Multiplikation & \texttt{times = \(\lambda\)m. \(\lambda\)n. \(\lambda\)s. n (m s)} \\
+	Potenzierung & \texttt{exp = \(\lambda\)m. \(\lambda\)n. n m} \\
+	Vergleichsoperator \texttt{(<=)} & \texttt{lessEq = \(\lambda\)m. \(\lambda\)n. isZero(sub n m)} \\
+\end{tabularx}
+\end{table}
+
+
+
+\section{Appendix C: Typherleitungsregeln (S195)}
 
 \subsection{\texttt{CONST}}
 \[CONST:~\frac{c \in Const}{\Gamma \vdash c~:~\tau_c}\]
@@ -992,14 +1017,14 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau}\]
 
 \subsection{\texttt{ABS}}
-\[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2}\]
+\[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_1 = \alpha_2 \rightarrow \alpha_3\]
 
 \subsection{\texttt{APP}}
-\[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau}\]
+\[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_2 = \alpha_3 \rightarrow \alpha_1\]
 
 
 
-\section{Appendix C: MPI}
+\section{Appendix D: MPI}
 \begin{itemize}
 	\item \textbf{\texttt{MPI\_Send} (RM11)}
 	\begin{itemize}
@@ -1055,7 +1080,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 
 
 
-\section{Appendix D: Bytecode}
+\section{Appendix E: Bytecode}
 
 \subsection{Instruktionsklassen (S395)}
 \begin{itemize}
