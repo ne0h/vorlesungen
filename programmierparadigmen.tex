@@ -662,7 +662,8 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\item Pattern-Matching: Vgl. mit Java-Switch (RS25)
 \end{itemize}
 
-\subsubsection{Parallelität in Scale (RS45)}
+\subsubsection{Parallelität in Scale
+a (RS45)}
 \begin{itemize}
 	\item Java: Feingranular, threadbasiert
 	\item Scala unterstützt die Java API
@@ -678,6 +679,15 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 		\item Non-blocking und asynchron \(\rightarrow\) erlaubt Parallelität
 	\end{itemize}
 \end{itemize}
+
+\subsubsection{Code-Beispiel: Actor}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Scala]
+finish for (i in array) async {
+	atomic doSomething();
+}
+\end{lstlisting}
+
+\subsubsection{Code-Beispiel: Future}
 
 
 \subsection{X10}
@@ -742,6 +752,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\begin{itemize}
 		\item Legt eine neue Kind-Activity an, welches das Statement \texttt{S} ausführt und sofort zurückgibt
 		\item Kann nicht benannt oder abgebrochen werden
+		\item Ersetzt kein \texttt{atomic} bei konkurierendem Zugriff auf ein Objekt!
 	\end{itemize}
 	\item \textbf{Synchronisation: \texttt{finish S} (RX20)}
 	\begin{itemize}
@@ -769,6 +780,10 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\end{itemize}
 \end{itemize}
 
+\subsubsection{Code-Beispiel}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Java]
+class 
+\end{lstlisting}
 
 
 \section{Compiler (S323)}
@@ -1013,14 +1028,21 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \subsection{\texttt{CONST}}
 \[CONST:~\frac{c \in Const}{\Gamma \vdash c~:~\tau_c}\]
 
+
 \subsection{\texttt{VAR}}
 \[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau}\]
+
 
 \subsection{\texttt{ABS}}
 \[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_1 = \alpha_2 \rightarrow \alpha_3\]
 
+
 \subsection{\texttt{APP}}
 \[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_2 = \alpha_3 \rightarrow \alpha_1\]
+
+
+\subsection{\texttt{LET}}
+
 
 
 
@@ -1046,7 +1068,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\begin{itemize}
 		\item Der MPI Prozess \textit{root} jedem beteiligten Prozess ein unterschiedliches, aber gleich großes Datenelement
 		\item \texttt{MPI\_Scatterv} erlaubt das vektorbasierte Senden von unterschiedlicher Datengröße (RM24)
-		\item \texttt{int MPI\_Scatter(void* sendbuf, int sendcount, MPI\_Datatype sendtype, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, int root, MPI\_Comm comm)}
+		\item \texttt{int MPI\_Scatter(void* sendbuf, int sendcount, MPI\_Datatype sendtype, void* recvbuf, int recvcount, MPI\_Datatype recvtype, int root, MPI\_Comm comm)}
 	\end{itemize}
 	\item \textbf{\texttt{MPI\_Gather}: Sammeln (RM25)}
 	\begin{itemize}
