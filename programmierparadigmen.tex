@@ -307,7 +307,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 
 \subsubsection{\texttt{let}-Polymorphismus (S201)}
 \begin{itemize}
-	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f(f true)}
+	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f (f true)}
 	\item \texttt{f} ist eine polymorphe Hilfsfunktion: Anwendung erst auf \texttt{true}, dann auf \texttt{2}
 	\item Kodierung: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
 	\item \textbf{Typschemata (S202)}
@@ -1025,24 +1025,32 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 
 \section{Appendix C: Typherleitungsregeln (S195)}
 
-\subsection{\texttt{CONST}}
+\subsection{Regeln für Typschemata}
+
+\subsubsection{\texttt{CONST}}
 \[CONST:~\frac{c \in Const}{\Gamma \vdash c~:~\tau_c}\]
 
+\subsubsection{\texttt{VAR}}
+\[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau},~Constrait: \frac{\alpha_1~\alpha_2}{} \Rightarrow \alpha_2 = \alpha_1\]
 
-\subsection{\texttt{VAR}}
-\[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau}\]
-
-
-\subsection{\texttt{ABS}}
+\subsubsection{\texttt{ABS}}
 \[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_1 = \alpha_2 \rightarrow \alpha_3\]
 
-
-\subsection{\texttt{APP}}
+\subsubsection{\texttt{APP}}
 \[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_2 = \alpha_3 \rightarrow \alpha_1\]
 
+\subsubsection{\texttt{LET} (S204)}
+\[LET:~\frac{\Gamma \vdash t_1~:~\tau_1~~~~~~~\Gamma,x~:~ta(\tau_1,\Gamma)\vdash t_2~:~\tau_2}{\Gamma \vdash let~x=t_1~in~t_2~:~\tau_2}\]
 
-\subsection{\texttt{LET}}
 
+\subsection{Angepasste Regeln für Typschemata}
+\texttt{CONST}- und \texttt{APP}-Regeln bleiben gleich.
+
+\subsubsection{\texttt{VAR}}
+\[VAR:~\frac{\Gamma(x)=\tau~~~~~~~\tau'\succeq\tau}{\Gamma \vdash x~:~\tau}\]
+
+\subsubsection{\texttt{ABS} (S203)}
+\[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2~~~~~~~\tau_1~kein~Typschema}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2}\]
 
 
 
