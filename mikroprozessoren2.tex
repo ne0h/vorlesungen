@@ -1,0 +1,103 @@
+\chapter{Mikroprozessoren II}
+
+Zusammenfassung der Vorlesung "`Mikroprozessoren II"' aus dem Wintersemester 2015.\footnote{\url{https://capp.itec.kit.edu/teaching/mp2/?lang=d&sem=ws15}}
+
+\section{Einführung}
+
+Entwurf einer Rechneranlage: Ingenieurmäßige Aufgabe der Kompromissfindung zwischen:
+\begin{itemize}
+	\item Zielsetzung: Einsatzgebiet, Anwendungsbereich, Leistung, Verfügbarkeit, etc.
+	\item Randbedingungen: Technologie, Größe, Geld, Energieverbrauch Umwelt, etc.
+	\item Gestaltungsgrundsätze: Modularität, Sparsamkeit, Fehlertoleranz, etc.
+	\item Anforderungen: Kompatibilität, Betriebssystemanforderungen, Standards, etc.
+\end{itemize}
+
+
+\subsection{Entwurfsfragen: Zielsetzungen}
+
+\subsubsection{Einsatzgebiete}
+\begin{itemize}
+	\item \textbf{Desktop Computing}
+	\begin{itemize}
+		\item PCs bis Workstations (\$1000 - \$10.000)
+		\item Günstiges Preis-/Leistungsverhältnis
+		\item Ausgewogene Rechenleistung für ein breites Spektrum von (interaktiven) Anwendungen
+	\end{itemize}
+	\item \textbf{Server}
+	\begin{itemize}
+		\item Rechen- und datenintensive Anwendungen
+		\item Hohe Anforderungen an die Verfügbarkeit und Zuverlässigkeit
+		\item Skalierbarkeit
+		\item Große Dateisysteme und Ein-/Ausgabesysteme
+	\end{itemize}
+	\item \textbf{Eingebettete Systeme}
+	\begin{itemize}
+		\item Mikroprozessorsysteme, eingebettet in Geräte und daher nicht unbedingt sichtbar
+		\item Sind auf spezielle Aufgaben zugeschnitten (hohe Leistungsfähigkeit, Spezialprozessoren)
+		\item Breites Preis-/Leistungsspektrum
+		\item Echtzeitanforderungen
+		\item Abwägung der Anforderungen an Rechenleistung, Speicherbedarf, Kosten, Energieverbrauch, etc.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Anwendungsbereiche}
+\begin{itemize}
+	\item Technisch-wissenschaftlicher Bereich: Hohe Anforderungen an die Rechenleistung, insbesondere Gleitkommaverarbeitung
+	\item Kommerzieller Bereich: Datenbanken, WEB, Suchmaschinen, Optimierung von Geschäftsprozessen, etc.
+	\item Eingebettete Systeme: Verarbeitung digitaler Medien, Automatisierung, Telekommunikation, etc.
+\end{itemize}
+
+\subsubsection{Rechenleistung}
+\begin{itemize}
+	\item Ermittlung übr Benchmarks
+	\item Maßzahlen für die Operationsleistung: \textit{MIPS} oder \textit{MFLOPS}
+	\item \(MFLOPS = \frac{Anzahl~ausgefuehrter~Gleitkommainstruktionen}{10^6 \cdot Ausfuerhungszeit}\)
+\end{itemize}
+
+\subsubsection{Zuverlässigkeit}
+\begin{itemize}
+	\item Bei Ausfällen von Komponenten muss ein betriebsfähiger Kern bereit sein
+	\item Verwendung redundanter Komponenten
+	\item Bewertung der Ausfallwahrscheinlichkeit mittels stochastischer Verfahren
+	\item Definition Verfügbarkeit: Wahrscheinlichkeit, ein System zu einem beliebigen Zeitpunkt fehlerfrei anzutreffen
+\end{itemize}
+
+\subsubsection{Energieverbrauch, Leistungsaufname}
+\begin{itemize}
+	\item \textbf{Mobile Geräte}
+	\begin{itemize}
+		\item Verfügbare Energiemenge durch Batterien und Akkumulatoren ist begrenzt \(\rightarrow\) möglichst lange mit der vorhandenen Energie auskommen
+		\item Vermeiden von Überhitzungen
+	\end{itemize}
+	\item Green IT: Niedriger Energieverbrauch, ökologische Produktion, einfaches Recycling
+\end{itemize}
+
+
+\subsection{Entwicklung der Rechnertechnik}
+
+
+\subsection{Entwicklung der Mikroprozessortechnik}
+
+
+
+\section{Parallelismus auf Maschinenbefehlsebene}
+
+\subsection{Superskalartechnik}
+
+
+\subsection{Very Long Instruction Word (VLIW)}
+
+
+\subsection{Explicitly Parallel Instruction Computing (EPIC)}
+
+
+
+\section{Parallelismus auf Thread-Ebene}
+
+
+
+\section{Multicore/Manycore}
+
+
+
+\section{Systemstrukturen}
