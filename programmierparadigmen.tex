@@ -186,16 +186,51 @@ Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (ka
 
 \subsection{Algebraische und rekursive Datentypen (S102)}
 
+\subsubsection{Produkttypen}
+Typen mit mehreren Komponenten.
+
 \subsubsection{Nachteile von Tupeln (S103)}
 \begin{itemize}
-	\item Produkttypen: Typen mit mehreren Komponenten. Beispiel: Personen mit Name und Alter \texttt{type Person = (String, Int)}
-	\item Nachteil: Bedeutung von Werten nicht explizit; ungewollte Verwendung beliebiger \texttt{(String, Int)} Tupel
+	\item Typsynonyme: Typen mit mehreren Komponenten. Beispiel: Personen mit Name und Alter \texttt{type Person = (String, Int)}
+	\item Nachteil: Bedeutung von Werten nicht explizit; ungewollte Verwendung gleicher Tupel (z.B. \texttt{(String, Int)}) mit verschiedener Bedeutung
 \end{itemize}
 
 \subsubsection{Algebraische Datentypen (S104)}
 \begin{itemize}
 	\item Verwendung des Schlüsselwortes \texttt{data} statt \texttt{type} zur definition \textit{neuer} Typen
-	\item Mehrere Konstruktoren möglich
+	\item Einfachste Anwendung: Aufzählungstypen. Funktionsimplementierung über Pattern Matching\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+data Temp   = Cold | Hot
+data Season = Spring | Summer | Autumn | Winter
+
+weather :: Season -> Temp
+weather spring = Cold
+weather summer = Hot
+weather autumn = Cold
+weather winter = Cold
+	\end{lstlisting}
+	\end{minipage}
+	\item Alternativ-Typen mit mehreren Konstruktoren\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+data Shape = Circle Double | Rectangle Double Double | Square Double
+
+-- Konstruktor
+dinA4 = Rectangle 210.0 297.0
+
+-- Flaechenberechnung
+area (Circle r)      = pi*r*r
+area (Rectangle a b) = a*b
+area (Square a)      = a*a
+	\end{lstlisting}
+	\end{minipage}
+	\item Polymorphe Datentypen\\\\ % TODO
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+data Maybe t = Nothing | Just t
+	\end{lstlisting}
+	\end{minipage}
 \end{itemize}
 
 \subsection{Anwendung algebraischer Datentypen (S108)}
@@ -212,11 +247,103 @@ Ableiten neuer Typen aus vorhandenen. Z.B. \texttt{type String = {[}char{]}} (ka
 	\end{itemize}
 	\item \textbf{Anwendungsbeispiele}
 	\begin{itemize}
-		\item Datenstrukturen: Maps, Bäume, Rot-Schwarz-Bäume
+		\item Datenstrukturen: Maps, Bäume, Rot-Schwarz-Bäume \\\\
+		\begin{minipage}{\linewidth}
+		\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+data Tree = Leaf | Node (Tree t) t (Tree t)
+someTree  = Node (Node Leaf 1 Leaf) 3 Leaf
+		\end{lstlisting}
+		\end{minipage}
+		\item Polymorphe Datentypen
 		\item Fehlerbehandlung
 		\item Termersetzungssysteme
 	\end{itemize}
 \end{itemize}
+
+
+\subsection{Typklassen (S124)}
+Motivation am Beispiel \textit{Quicksort}: Algorithmus prinzipiell für alle (sortierbaren) Element-Typen umsetzbar.
+
+\subsubsection{Implementierungsansätze (S126)}
+\begin{enumerate}
+	\item Eigene Funktion je Datentype: Softwaretechnisch katastrophal\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+qsortI :: [Integer] -> [Integer]
+qsortD :: [Double]  -> [Double]
+	\end{lstlisting}
+	\end{minipage}
+	\item Umsetzung als polymorphe Funktion: Funktioniert nicht, da nicht alle Typen \texttt{t} sortierbar sind.\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+qsort :: [t] -> [t]
+	\end{lstlisting}
+	\end{minipage}
+	\item Lösung: Polymorphe Funktion mit Typeinschränkung\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+qsort :: Ord t => [t] -> [t]
+	\end{lstlisting}
+	\end{minipage}
+\end{enumerate}
+
+\subsubsection{Standard-Typklassen (S127)}
+\begin{itemize}
+	\item Fassen Typen anhand auf ihnen definierter Operationen zusammen
+	\item Ähneln grob Java-Interfaces
+	\item \texttt{Beispiele}
+	\begin{itemize}
+		\item Äquivalenzrelation: \texttt{Eq t} (vergleichbar)
+		\item Geordnete Typen: \texttt{Ord t} (sortierbar)
+		\item Numerische Typen: \texttt{Num t} (berechenbar)
+		\item Anzeigbare Typen: \texttt{Show t}
+		\item Aufzählungstypen: \texttt{Enum t} (beispielsweise Vorgänger oder Nachfolger berechenbar)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Typklassendefinition (S128)}
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+-- Typklassendefinition: Eq t
+class (Eq t) where
+	(==) :: t -> t -> Bool
+	(/=) :: t -> t -> Bool
+
+-- Typklasseninstanziierung: Gleichheit von Bool
+instance (Eq Bool) where
+	True  == True  = True
+	False == False = True
+	False == True  = False
+	True  == False = False
+
+-- oder alternativ
+instance (Eq Bool) where
+	True  /= True  = False
+	False /= False = False
+	False /= True  = True
+	True  /= False = True
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Automatische Instanziierung (S129)}
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
+data Shape = Circle Double | Rectangle Double Double | Square Double deriving Eq
+
+-- Verschiedene Konstruktoren ergibt verschiedene Werte
+Circel 1      == Square 1 $\rightarrow$ False
+Rectangle 1 1 == Square 1 $\rightarrow$ False
+
+-- Gleicher Konstruktor, verschiedene Werte ergibt verschiedene Werte
+Circle 1 == Circle 3 $\rightarrow$ False
+
+-- Gleicher Konstruktor, gleiche Werte ergibt gleiche Werte
+Square 2 == Square 2  $\rightarrow$ True
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Vererbung von Typklassen (S130)}
+Typklassen sind vererbbar. Beispielsweise ist jede Instanz von \texttt{Ord} auch eine Instanz von \texttt{Eq}.
 
 
 
@@ -961,6 +1088,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{table}[H]
 \begin{tabularx}{\textwidth}{l|X|X}
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} Elemente zurück \\
+	\textbf{elem} & & Prüft, ob ein Element in einer Liste vorhanden ist \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{inits}} & & \\
 	\textbf{\textit{isDigit}} & & Erkennt eine Zahl \\
