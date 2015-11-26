@@ -4,6 +4,13 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 
 \section{Funktionale Programmierung (S16)}
 
+\subsection{Einführung: Funktionale Programmierung in Haskell}
+\begin{itemize}
+	\item Funktionale Programme sind kompakt, frei von Seiteneffekten, unabhängig von der Anweisungsreihenfolge
+	\item Der Begriff \textit{Funktion} in Sprachen wie Haskell entspricht der mathematischen Sicht: Ausgaben hängen lediglich von Eingaben ab \(\rightarrow\) Auswertungen haben keinen Effekt auf Daten des Programms.
+	\item Haskellprogramme sind Folgen von Funktionsdefinitionen
+\end{itemize}
+
 \subsection{Rekursion (S27)}
 \begin{itemize}
 	\item Auswertung: Zwischenausdrücke können mit Eingabegröße wachsen
@@ -379,13 +386,51 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 		\item \texttt{(\(\lambda\)x.x)y \(\Rightarrow\) x{[} x \(\mapsto\) y {]} = y}
 		\item \texttt{(\(\lambda\)x.x (\(\lambda\)x.x))(y z) \(\Rightarrow\) (x (\(\lambda\)x.x)){[} x \(\mapsto\) y z {]} = (y z)(\(\lambda\)x.x)}
 	\end{itemize}
-	\item \textbf{Kodierung mit Funktionen höherer Ordnung}
+	\item \textbf{Braucht man primitive Operationen?}
 	\begin{itemize}
-		\item Man braucht nicht unbedingt primitive Operationen
-		\item Beispiel: \texttt{let}
+		\item Nein, nicht unbedingt. Beispiel: \texttt{let}
 		\item \texttt{let x = \(t_1\) in \(t_2\)} wird zu \texttt{(\(\lambda\)x.\(t_2\)) \(t_1\))}
 		\item \texttt{let x = g y in f x = (\(\lambda\)x.f x)(g y) \(\Rightarrow\) f(g y)}
 	\end{itemize}
+\end{itemize}
+
+\subsubsection{Kodierung natürlicher Zahlen (S172)}
+\begin{itemize}
+	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
+	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
+	\item \textbf{Church-Zahlen}
+	\begin{itemize}
+		\item \texttt{\(c_0\) = \(\lambda\)s. \(\lambda\)z. z}
+		\item \texttt{\(c_1\) = \(\lambda\)s. \(\lambda\)z. s z}
+		\item \texttt{\(c_2\) = \(\lambda\)s. \(\lambda\)z. s (s z)}
+		\item \texttt{\(c_3\) = \(\lambda\)s. \(\lambda\)z. s (s (s z))} \\ \(\vdots\)
+		\item \texttt{\(c_n\) = \(\lambda\)s. \(\lambda\)z. \(s^n\) z}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Kodierung boolscher Werte (S174)}
+\begin{itemize}
+	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
+	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
+	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
+	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
+	\item \texttt{True \&\& True} ergibt: \texttt{(\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
+\end{itemize}
+
+\subsubsection{Divergenz (S175)}
+\begin{itemize}
+	\item Terme, die nicht zu einer Normalform auswerten, divergieren. Diese modellieren unendliche Ausführungen
+	\item Beispiel: \texttt{\(\lambda\)x. x x} wendet sein Argument auf das Argument selbst an und reprodiziert sich selbst. \texttt{\(\omega\) = (\(\lambda\)x. x x)(\(\lambda\)x. x x) \(\Rightarrow\) (\(\lambda\)x. x x)(\(\lambda\)x. x x)}
+\end{itemize}
+
+\subsubsection{Rekursionsoperator (S177)} % TODO
+\begin{itemize}
+	\item \texttt{\(\hat{f}\)} reproduziert sich ein jedem Schritt zusätzlich
+	\item \texttt{Y \(\hat{f}\) = (\(\lambda\)f. (\(\lambda\)x. f (x x))(\(\lambda\)x. f (x x))) \(\hat{f}\)}
+\end{itemize}
+
+\subsubsection{Auswertungsstrategien (S182)}
+\begin{itemize}
 	\item \textbf{Auswertungsstrategien}
 	\begin{itemize}
 		\item Normalenreihenfolge: Immer der linkeste, äußerste Redex wird reduziert (S170)
@@ -407,19 +452,22 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 
 \subsection{Typsysteme (S192)}
 \begin{itemize}
+	\item \textit{Typen} legen die möglichen Werte von Variablen, Operationen und Operanden fest. Beispiel: Integer, Float, String
+	\item Statisch typisierte Sprachen: Jede Variable/jeder Ausdruck hat einen vom Compiler bestimmbaren Typ. Beispiel: Java, Haskell, C++
+	\item Dynamisch typisierte Sprachen: Typ von Variablen kann sich zur Laufzeit ändern. Beispiele: JavaScript, Python, PHP
+	\item \textbf{Vorteile von Typsystemen}
+	\begin{itemize}
+		\item Code ist verständlicher
+		\item Compiler kann effizienteren Code erzeugen
+		\item Typsicherheit: Abstürze wegen falscher Typen zur Laufzeit unmöglich
+	\end{itemize}
 	\item Typklassen definieren Funktionen, die für jede Instanz der Typklasse aufgerufen werden können
 	\item Man kann eine Instanz für jeden Typ erstellen, indem man die Funktionen der Typklasse für den jeweiligen Typ definiert
 	\item Beispiel: Vergleichsoperator (\texttt{==})
 \end{itemize}
 
-\subsubsection{Typen (S194)}
-\begin{itemize}
-	\item \textbf{Typen} legen die möglichen Werte von Variablen, Operationen und Operanden fest. Beispiel: Integer, Float, String
-	\item \textbf{Statisch typisierte Sprachen:} Jede Variable/jeder Ausdruck hat einen vom Compiler bestimmbaren Typ. Beispiel: Java, Haskell, C++
-	\item \textbf{Dynamisch typisierte Sprachen:} Typ von Variablen kann sich zur Laufzeit ändern. Beispiele: JavaScript, Python, PHP
-\end{itemize}
 
-\subsubsection{Typherleitung (S196)}
+\subsubsection{Typherleitung (S196)} % TODO
 \begin{itemize}
 	\item Nachweis von Herleitbarkeit als Herleitungsbaum
 	\item Die Struktur des Herleitungsbaums wird durch den \(\lambda\)-Term bestimmt
@@ -456,13 +504,15 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \begin{itemize}
 	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f (f true)}
 	\item \texttt{f} ist eine polymorphe Hilfsfunktion: Anwendung erst auf \texttt{true}, dann auf \texttt{2}
-	\item Kodierung: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
+	\item Typisierung auf so nicht möglich. Daher: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
 	\item \textbf{Typschemata (S202)}
 	\begin{itemize}
 		\item Ein Typ der Gestalt \(\forall\alpha_1.\forall\alpha_2.~...~\forall\alpha_n.~\tau\) heißt Typschema
 		\item Es bindet freie Typvariablen \(alpha_1,...,\alpha_n\) in \(\tau\)
 		\item Beispiel: \(\forall\alpha.~\alpha\rightarrow\alpha\) steht für unendlich viele Typen
+		\item Ausführliches Ableitungsbeispiel auf Folie S205 % TODO
 	\end{itemize}
+	\item Flexibel einsetzbar, trotzdem bleibt Typsicherheit garantiert
 \end{itemize}
 
 
@@ -1093,13 +1143,15 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\textbf{\textit{inits}} & & \\
 	\textbf{\textit{isDigit}} & & Erkennt eine Zahl \\
 	\textbf{\textit{iterate}} & \((a \rightarrow a) \rightarrow [a] \rightarrow [a]\) & Gibt eine unendliche Liste durch mehrfachausführung einer Funktion zurück \\
+	\textbf{\textit{head}} &  & Gibt das erste Element einer Liste zurück \\
 	\textbf{\textit{last}} & \([a] \rightarrow a\) & Gibt das letzte Element einer Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & Führt eine gegebene Operation auf allen Elementen einer Liste aus \\
+	\textbf{\textit{max}} & & Vergleicht zwei Elemente und gibt das größere zurück \\
 	\textbf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
-	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente einer Eingabeliste zurück \\
+	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente der Eingabeliste (Listenrest) zurück \\
 	\textbf{\textit{take}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die ersten \textit{n} Elemente einer Liste zurück \\
 	\textbf{\textit{zipWith}} & \((a \rightarrow b \rightarrow c) \rightarrow [a] \rightarrow [b] \rightarrow [c]\) & Kombiniert jeweils die Elemente zweier Listen über eine beliebige Funktion, beispielsweise \textit{(*)} \\
 \end{tabularx}
@@ -1114,43 +1166,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \end{itemize}
 
 
-\section{Appendix B: Church Zahlen}
-
-\subsection{Zahlenkodierung (S172)}
-\begin{itemize}
-	\item Einbettung von Daten und Operationen in den \(\lambda\)-Kalkül
-	\item Eine (natürliche) Zahl drückt aus, wie oft die Funktion \texttt{s} angewendet wird
-	\item \textbf{Church-Zahlen}
-	\begin{itemize}
-		\item \texttt{\(c_0\) = \(\lambda\)s. \(\lambda\)z. z}
-		\item \texttt{\(c_1\) = \(\lambda\)s. \(\lambda\)z. s z}
-		\item \texttt{\(c_2\) = \(\lambda\)s. \(\lambda\)z. s (s z)}
-		\item \texttt{\(c_3\) = \(\lambda\)s. \(\lambda\)z. s (s (s z))} \\ \(\vdots\)
-		\item \texttt{\(c_n\) = \(\lambda\)s. \(\lambda\)z. \(s^n\) z}
-	\end{itemize}
-\end{itemize}
-
-
-\subsection{Kodierung boolscher Werte (S174)}
-\begin{itemize}
-	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
-	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
-	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
-	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
-	\item \texttt{True \&\& True} ergibt: \texttt{(\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
-\end{itemize}
-
-
-\subsection{Divergenz (S175)}
-\begin{itemize}
-	\item Terme, die nicht zu einer Normalform auswerten, divergieren
-	\item Diese modellieren unendliche Ausführungen
-\end{itemize}
-
-
-\subsection{Rekursionsoperator (S177)}
-\texttt{Y = \(\lambda\)f. (\(\lambda\)x. f (x x))(\(\lambda\)x. f (x x))}
-
+\section{Appendix B: Zahlenkodierungen}
 
 \subsection{Rechnen mit Church-Zahlen (S173)}
 \begin{table}[H]
@@ -1188,18 +1204,18 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \subsubsection{\texttt{APP}}
 \[APP:~\frac{\Gamma \vdash t_1~:~\tau_2 \rightarrow \tau~~~~~~~\Gamma\vdash t_2~:~\tau_2}{\Gamma\vdash t_1t_2~:~\tau},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_2 = \alpha_3 \rightarrow \alpha_1\]
 
-\subsubsection{\texttt{LET} (S204)}
-\[LET:~\frac{\Gamma \vdash t_1~:~\tau_1~~~~~~~\Gamma,x~:~ta(\tau_1,\Gamma)\vdash t_2~:~\tau_2}{\Gamma \vdash let~x=t_1~in~t_2~:~\tau_2}\]
-
 
 \subsection{Angepasste Regeln für Typschemata}
 \texttt{CONST}- und \texttt{APP}-Regeln bleiben gleich.
 
-\subsubsection{\texttt{VAR}}
+\subsubsection{\texttt{VAR} (S203)}
 \[VAR:~\frac{\Gamma(x)=\tau~~~~~~~\tau'\succeq\tau}{\Gamma \vdash x~:~\tau}\]
 
 \subsubsection{\texttt{ABS} (S203)}
 \[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2~~~~~~~\tau_1~kein~Typschema}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2}\]
+
+\subsubsection{\texttt{LET} (S205)}
+\[LET:~\frac{\Gamma \vdash t_1~:~\tau_1~~~~~~~\Gamma,x~:~ta(\tau_1,\Gamma)\vdash t_2~:~\tau_2}{\Gamma \vdash let~x=t_1~in~t_2~:~\tau_2}\]
 
 
 
