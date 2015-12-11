@@ -1196,7 +1196,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \[CONST:~\frac{c \in Const}{\Gamma \vdash c~:~\tau_c}\]
 
 \subsubsection{\texttt{VAR}}
-\[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau},~Constrait: \frac{\alpha_1~\alpha_2}{} \Rightarrow \alpha_2 = \alpha_1\]
+\[VAR:~\frac{\Gamma(x)=\tau}{\Gamma \vdash x~:~\tau},~Constrait: \frac{\alpha_1~\alpha_2}{} \Rightarrow \alpha_1 = \alpha_2\]
 
 \subsubsection{\texttt{ABS}}
 \[ABS:~\frac{\Gamma,x~:~\tau_1 \vdash t~:~\tau_2}{\Gamma \vdash \lambda x.t~:~\tau_1 \rightarrow \tau_2},~Constrait: \frac{\alpha_2~\alpha_3}{\alpha_1} \Rightarrow \alpha_1 = \alpha_2 \rightarrow \alpha_3\]
