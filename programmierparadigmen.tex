@@ -521,22 +521,9 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 
 \subsection{Einführung in Prolog (S211)}
 \begin{itemize}
-	\item Situationsbeschreibung
-	\item Definition von Objekten und Beziehungen zwischen Objekten
-	\item Darstellbar als Terme einer freien Termalgebra
+	\item Situationsbeschreibung sowie Definition von Objekten und Beziehungen zwischen Objekten. Prolog-Programme definieren eine Liste von Regeln und Fakten
+	\item Elemente: \textit{Atome} (z.B. \texttt{hans, inge, fritz, fisch}), \textit{Zahlen (z.B. \texttt{3, 4.5})}, \textit{Variablen} (z.B. \texttt{X, Y, \_X, X1, Fisch}) oder \textit{Termlisten (z.B. \texttt{3, 4.5, X, fritz})}
 \end{itemize}
-
-\subsubsection{Termsyntax (214)}
-\begin{itemize}
-	\item Atome: z.B. \texttt{hans, inge, fritz, fisch}
-	\item Zahlen: z.B. \texttt{3, 4.5}
-	\item Variablen: z.B. \texttt{X, Y, \_X, X1, Fisch}
-	\item Termlisten: z.B. \texttt{3, 4.5, X, fritz}
-	\item Zusammengesetzt: z.B. \texttt{liebt(fritz,fisch), liebt(fritz,X)}
-\end{itemize}
-
-\subsubsection{Variablen (S216)}
-Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, beispielsweise \texttt{liebt(X, fussball)} \(\rightarrow\) "`Alle lieben Fußball"'.
 
 \subsubsection{Abfragen (S217)}
 \begin{itemize}
@@ -546,6 +533,8 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 	\begin{itemize}
 		\item Durchsuche Datenbank von vorne nach hinten
 		\item Versuche jeweils, Abfrageparameter mit Datenbankfaktor zu unifizieren
+		\item Wenn Variablen übergeben werden, dann werden diese gefüllt. Es wird immer die erste Lösung zurückgegeben
+		\item Bei Bedarf kann nach weiteren Lösungen gesucht werden
 	\end{itemize}
 	\item \textbf{Konjunktion von Abfragen}
 	\begin{itemize}
@@ -601,12 +590,13 @@ Platzhalter für unbekannte Terme. Können auch "`Allgemeinheit"' ausdrücken, b
 \begin{itemize}
 	\item \texttt{X} ist das erste Element der Liste (\textit{head}), \texttt{Y} ist der Rest der Liste (\textit{tail}), \texttt{{[}{]}} bezeichnet die leere Liste
 	\item \texttt{Y} muss nicht instanziiert sein
+	\item Listen können von vorne aufgebaut werden (im Gegensatz zu Haskell)
 	\item \textbf{Listenfunktionen}
 	\begin{itemize}
 		\item \texttt{member}
 		\begin{itemize}
 			\item Berechnet, ob ein Element in der Liste vorkommt
-			\item \texttt{member(X, {[}X{|}R{]}).} \\ \texttt{member(X, {[}X{|}R{]}) := member(X,R).}
+			\item \texttt{member(X, {[}X{|}R{]}).} \\ \texttt{member(X, {[}Y{|}R{]}) := member(X,R).}
 		\end{itemize}
 		\item \texttt{append}
 		\begin{itemize}
