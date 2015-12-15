@@ -72,12 +72,84 @@ Entwurf einer Rechneranlage: Ingenieurmäßige Aufgabe der Kompromissfindung zwi
 	\item Green IT: Niedriger Energieverbrauch, ökologische Produktion, einfaches Recycling
 \end{itemize}
 
+\subsubsection{Trends in der Rechnerarchitektur: Herausforderungen}
+Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
+\begin{itemize}
+	\item Verlustleistung: Überträgt man heutige (Stand 2010) Höchstleistungsrechner in den Exascale-Bereich, hätte man eine Verlustleistung von etwa 40 GW (diese kann allerdings höchstens 20-40 MW betragen)
+	\item Hauptspeicher (DRAM), permanenter Speicher: Kapazität und Zugriffsgeschwindigkeit muss mit der Rechengeschwindigkeit mithalten
+	\item Zuverlässigkeit und Verfügbarkeit
+	\item Parallelität und Lokalität
+\end{itemize}
+
 
 \subsection{Entwicklung der Rechnertechnik}
+
+\subsubsection{Halbleitertechnologie}
+\begin{itemize}
+	\item Mikrominiaturisierung setzt sich fort. Verkleinerung der Strukturbreiten sowie Erhöhung der Integrationsdichte: Anzahl der Transistoren verdoppelt sich alle 18 Monate)
+	\item \textbf{Technologische Entwicklung bei Intel Prozessoren}
+	\begin{itemize}
+		\item Neuer Herstellungsprozess alle zwei Jahre mit Verdopplung der Transistorenanzahl
+		\item Strukturgröße reduziert sich jedes Jahr um 30\% oder halbiwert sich alle 5 Jahre
+		\item 1 Mrd. Transistoren in 2018 \(\rightarrow\) 100 Mrd. in 2021
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Forschungsansätze}
+\begin{itemize}
+	\item Erforschung zukünftiger Fertigungstechnologien auf der Grundlage von Kohlenstoff, Nanotechnologie
+	\item Beispiele: Single Molecule Diode, Single Electron Transistor, Carbon Nano Tube
+\end{itemize}
 
 
 \subsection{Entwicklung der Mikroprozessortechnik}
 
+\subsubsection{Taktrate}
+\begin{itemize}
+	\item Bis 2000 ist die Taktrate exponentiell gestiegen
+	\item Steigerung der Prozessorleistung seither durch Verbesserungen des Herstellungsprozesses, tieferen Pipelines und verbesserten Schaltkreistechnologien
+\end{itemize}
+
+\subsubsection{Steigerung der Rechenleistung durch Parallelverarbeitung}
+\begin{itemize}
+	\item Integration vieler Prozessorkerne auf einem Chip (Multicore/Manycore)
+	\item Integration hierarchischer Speicher-/Cache-Strukturen
+	\item Neue Verbindungsstrukturen (beispielsweise NoCs)
+	\item Adaptive Strukturen
+\end{itemize}
+
+\subsubsection{Aufbau eines Rechners mit Multicore}
+\begin{itemize}
+	\item \textbf{Aufbau eines Rechners mit Multicore}
+	\begin{itemize}
+		\item Mehrere Prozessorkerne mit separaten Steuerwerk und Rechenwerk, teilweise auch eigener Cache (L1 und L2)
+		\item Gemeinsamer Shared Cache (L3)
+		\item Northbridge zur Anbindung schneller Geräte (PCIe, RAM) und Sothbridge für die restlichen Geräte (IDE, SATA, PCI, SMB, HD-Audio, etc.)
+		\item Struktur: \texttt{CPU<-----Front Side Bus----->Northbridge<-----Direct Media Interface----->Southbridge}
+	\end{itemize}
+	\item \textbf{Speicher-/Cache-Strukturen}
+	\begin{itemize}
+		\item Zugriffsgeschwindigkeit der Hauptspeicherkomponenten (DRAMs) wächst nicht mit der Prozessorgeschwindigkeit: Lücke zwischen Zugriffsgeschwindkeit und Prozessorgeschwindigkeit (Memory Wall) \(\rightarrow\) Lösung: Speicherhierarchie
+		\item Zuwachs Prozessorgeschwindkeit pro Jahr um 50\% gegenüber Steigerung der Zugriffsgeschwindigkeit um 7\% pro Jahr
+	\end{itemize}
+	\item \textbf{Verbinungsstrukturen}
+	\begin{itemize}
+		\item Hierarchische Mehrbusstrukturen
+		\begin{itemize}
+			\item Verbinden Komponenten auf verschiedenen Ebenen
+			\item On-Chip Verbindungsnetzwerke: Leiten Werte zwischen den Pipelinestufen weiter und verbinden Prozessorkerne
+			\item Systemverbindungsstrukturen: Verbinden Prozessoren (CMPs) mit Speicher und I/O
+			\item Peripheriebusse: Verbinden I/O-Schnittstellenbausteine mit dem Systembus
+			\item System-Verbindungsnetzwerke: SANs (sehr kurze Entfernungen), LANs (in Organisationen und Gebäude) und WANs (weite Entfernungen)
+		\end{itemize}
+		\item Punkt-zu-Punkt-Verbindungen: Quick-Path-Interconnect (QPI)
+		\begin{itemize}
+			\item Von Intel entwickelte Struktur zur Kommunikation zwischen Prozessoren untereinander und für die Kommunikation zwischen Prozessoren und Chipsatz
+			\item Direkte Verbindungen können zwischen jedem Prozessorpaar eingerichtet werden
+			\item Anbindung von PCIe und dediziertem Speicherbus
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \section{Parallelismus auf Maschinenbefehlsebene}

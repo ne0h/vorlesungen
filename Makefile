@@ -13,3 +13,6 @@ algo2only:
 propaonly:
 	pdflatex propaonly.tex
 	pdflatex propaonly.tex
+mp2only:
+	pdflatex mp2only.tex
+	pdflatex mp2only.tex
