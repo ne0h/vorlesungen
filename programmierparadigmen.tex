@@ -474,7 +474,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item Zu jedem Subterm genau eine passende Regel: \texttt{App, Var, Abs oder Const}
 	\item \texttt{t} ist typisierbar im Kontext \(\Gamma\), falls \(\tau\) mit \(\Gamma\vdash t_2~:~\tau_2\) exisitiert
 	\item Beispiel mit Ableitungsbaum auf Folie 196
-	\item \texttt{Beispiele zum direkten Ablesen}
+	\item \textbf{Beispiele zum direkten Ablesen}
 	\begin{itemize}
 		\item \texttt{\(\lambda\)f. \(\lambda\)x. f x \\ x: \(\alpha\) \\ f x: \(\beta\) \(\Rightarrow\) f: \(\alpha\) \(\rightarrow\) \(\beta\) \\ \(\lambda\)x. f x: \(\alpha\) \(\rightarrow\) \(\beta\) \\ \(\lambda\)f. \(\lambda\)x. f x: (\(\alpha\) \(\rightarrow\) \(\beta\)) \(\rightarrow\) \(\alpha\) \(\rightarrow\) \(\beta\)}
 		\item \texttt{\(\lambda\)o. \(\lambda\)f. \(\lambda\)g. \(\lambda\)x. o (f g) (g x) \\ x: \(\alpha\) \\ g x: \(\beta\) \(\Rightarrow\) g: \(\alpha\) \(\rightarrow\) \(\beta\) \\ f x: \(\gamma\) \(\Rightarrow\) f: \(\alpha\) \(\rightarrow\) \(\gamma\) \\ o (f x) (g x): \(\delta\) \(\Rightarrow\) \(\gamma\) \(\rightarrow\) \(\beta\) \(\rightarrow\) \(\delta\) \\ \(\lambda\)o. \(\lambda\)f. \(\lambda\)g. \(\lambda\)x. o (f g) (g x): (\(\gamma\) \(\rightarrow\) \(\beta\) \(\rightarrow\) \(\delta\)) \(\rightarrow\) (\(\alpha\) \(\rightarrow\) \(\gamma\)) \(\rightarrow\) (\(\alpha\) \(\rightarrow\) \(\beta\)) \(\rightarrow\) \(\alpha\) \(\rightarrow\) \(\delta\) \(\Rightarrow\)  (\(\alpha\) \(\rightarrow\) \(\beta\) \(\rightarrow\) \(\gamma\)) \(\rightarrow\) (\(\delta\) \(\rightarrow\) \(\alpha\)) \(\rightarrow\) (\(\delta\) \(\rightarrow\) \(\beta\)) \(\rightarrow\) \(\delta\) \(\rightarrow\) \(\gamma\)}
@@ -593,34 +593,32 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 	\item Listen können von vorne aufgebaut werden (im Gegensatz zu Haskell)
 	\item \textbf{Listenfunktionen}
 	\begin{itemize}
-		\item \texttt{member}
+		\item \texttt{member (S232)}
 		\begin{itemize}
 			\item Berechnet, ob ein Element in der Liste vorkommt
 			\item \texttt{member(X, {[}X{|}R{]}).} \\ \texttt{member(X, {[}Y{|}R{]}) := member(X,R).}
 		\end{itemize}
-		\item \texttt{append}
+		\item \texttt{append (S232)}
 		\begin{itemize}
 			\item Fügt zwei Listen zusammen (Konkatenation)
 			\item Wenn die Konkatenation von \texttt{R} und \texttt{L} die Liste \texttt{T} ergibt, dann ergibt die Konkatenation von \texttt{{[}X{|}R{]}} und \texttt{L} die Liste \texttt{{[}X{|}T{]}}.
 			\item \texttt{append({[]}, L, L).} \\ \texttt{append({[}X{|}R{]}, L, {[}X{|}T{]}) :- append(R, L, T).}
 			\item Beispiel: \texttt{?append({[}1, 2, 3, 4{]}, {[}2, 3, 4, 5{]}, X).} ergibt \texttt{X = {[}1, 2, 3, 4, 2, 3, 4, 5{]}}
 		\end{itemize}
-		\item \texttt{rev}
+		\item \texttt{rev (S234)}
 		\begin{itemize}
 			\item Naiver Ansatz: Eine nichtleere Liste wird invertiert, in dem man rekursiv den Listenrest invertiert und jeweils die Listenköpfe davor hängt
 			\item Ineffizient, da in jedem Schritt die neue Liste durchlaufen und kopiert werden muss, um ein neues Element anzuhängen
 			\item Alternativ: Nutze Akkumulator zum Zwischenspeichern des Ergebnisses
 		\end{itemize}
-		\item \texttt{permute}
-		\begin{itemize}
-			\item Erzeugt alle möglichen Permutationen einer Liste
-		\end{itemize}
+		\item \texttt{Quicksort (S236)}
+		\item \texttt{permute (S237)}: Erzeugt alle möglichen Permutationen einer Liste
 	\end{itemize}
 \end{itemize}
 
 \subsubsection{Arithmetik (S238)}
 \begin{itemize}
-	\item Reines Prolog kann alle berechnebaren Funktionen verarbeiten, Prädikate werden über Atome dargestellt
+	\item Reines Prolog kann alle berechnebaren Funktionen verarbeiten, Prädikate werden über Atome dargestellt. In der Praxis können Arithmetik/Datentypen trotzdem nützlich sein
 	\item Zuweisung per Teilziel \texttt{is}
 	\item Unterschied zur normalen Resolution: Variablen im \textit{rechten} Term müssen instanziiert sein \(\rightarrow\) nur vorwärts anwendbar
 \end{itemize}
@@ -628,19 +626,18 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 \subsubsection{Funktionen (S239)}
 \begin{itemize}
 	\item Funktionen in Prolog als Prädikate
-	\item Prädikate tragen außer der Erfüllbarkeit keinen Rückgabewert \(\rightarrow\) Rückgabewert als zusätzliche Variable
+	\item Prädikate tragen außer der Erfüllbarkeit keinen Rückgabewert \(\rightarrow\) Rückgabewert als zusätzliche, uninstanziirte Variable
 	\item Formal ähnlich zum Pattern Matching
 \end{itemize}
 
 \subsubsection{Generate und Test (S241)}
-TODO
+Prolog ist besonders gut:
 \begin{itemize}
-	\item \textbf{Prolog ist besonders gut}
-	\begin{itemize}
-		\item für systematisches Durchprobieren
-		\item mittels mehrfach reerfüllbarer Prädikate
-		\item erzeugen Lösungskandidaten, welche danach getestet werden
-	\end{itemize}
+	\item Für systematisches Durchprobieren
+	\item Mittels mehrfach reerfüllbarer Prädikate
+	\item Erzeugen von Lösungskandidaten, welche danach getestet werden
+	\item Häufiges Entwurfsmuster in Prolog. Zur Vermeidung vonkominatorischen Explosionen: Generator möglichst intelligent machen
+	\item Beispiel: \texttt{nat(X) :- nat(Y), X is Y+1.}
 \end{itemize}
 
 
@@ -693,7 +690,7 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 
 
 
-\section{Grundlagen der Prallelprogrammierung (RE1)}
+\section{Grundlagen der Parallelprogrammierung (RE1)}
 Motivation: Leistungssteigerung über steigende Taktfrequenzen hinaus. Murphys Gesetz der mangelnden Performance: Jeder Computer ist zu langsam.
 
 \subsubsection{Grundbegriffe}
