@@ -152,9 +152,117 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 \end{itemize}
 
 
+
 \section{Parallelismus auf Maschinenbefehlsebene}
 
+\subsection{Einführung}
+
+\subsubsection{RISC (Reduced Instruction Set Computers)}
+Einfache, einzyklische Maschinenbefehle; Load/Store Architektur; optimierende Compiler.
+
+\subsubsection{Pipelining (Instruction Pipelining)}
+\begin{itemize}
+	\item Zerlegung der Ausführung einer Maschinenoperation in Teilphasen, die dann von hintereinander geschalteten Verarbeitungseinheiten taktsynchron ausgeführt werden, wobei jede Einheit genau eine spezielle Teiloperation ausführt.
+	\item Stufen einer Standard-RISC-Pipeline (DLX-Pipeline: \texttt{Instruction Fetch (IF)}, \texttt{Instruction Decode (ID)}, \texttt{Execution (EX)}, \texttt{Memory Access (MA)} und \texttt{Writeback (WB)}, wobei alle Stufen unterschiedliche Ressourcen benutzen
+	\item Idealerweise wird mit jedem Takt ein Befehl beendet
+	\item Zykluszeit abhängig von der langsamsten Pipelinestufe
+	\item Gleitkommeverarbeitung und Integer-Division: Einführung spezieller Rechenwerke, um die Berechnung innerhalb eines Schrittes ausführen zu können
+	\item \textbf{Verfeinerung der Pipeline-Stufen ("`Superpipelining"')}
+	\begin{itemize}
+		\item Weitere Unterteilung der Pipeline-Stufen
+		\item Weniger Logik-Ebenen pro Pipeline-Stufe % TODO
+		\item Erhöhung der Taktrate
+		\item Führt aber auch zu einer Erhöhung der Ausführungszeit pro Instruktion
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Superskalar}
+\begin{itemize}
+	\item Mehrfachzuweisung: Pro Takt können mehrere Befehle den Ausführungseinheiten zugeordnet und die gleiche Anzahl von Befehlsausführungen pro Takt beendet werden
+	\item RISC-Eigenschaften bleiben weitestgehend erhalten
+	\item Entwurfsziel: Erhöhung des IPC (Instruction per Cycle)
+\end{itemize}
+
+\subsubsection{Datenabhängigkeiten und Konflikte}
+\begin{itemize}
+	\item Situationen, die verhindern, dass die nächste Instruktion im Befehlsstrom im zugewiesenen Taktzyklus ausgeführt wird
+	\item Verursachen Leistungseinbußen und erfordern ein Anhalten der Pipeline ("`Leerlaufen"' lassen der Pipeline)
+	\item \textbf{Strukturkonflikte}
+	\begin{itemize}
+		\item Ergeben sich aus Ressourcenkonflikten: Die Hardware kann nicht alle möglichen Kombinationen von Befehlen unterstützen, die sich in der Pipeline befinden
+		\item Beispiel: Gleichzeitiger Schreibzugriff zweier Befehle auf einer Registerdatei mit nur einem Schreibeingang
+	\end{itemize}
+	\item \textbf{Datenkonflikte}
+	\begin{itemize}
+		\item Ergeben sich aus Datenabhängigkeiten zwischen Befehlen im Programm (und sind damit Eigenschaften des Programms)
+		\item Instruktion benötigt das Ergebnis einer vorangehenden und noch nicht abgeschlossenen Instruktion in der Pipeline
+		\item Verschiedene Datenkonflikte\footnote{\url{https://de.wikipedia.org/wiki/Pipeline-Hazard}}
+		\begin{itemize}
+			\item Echte Datenabhängigkeiten (Read-after-Write): Ein Operand wurde verändert und kurz darauf gelesen. Da der erste Befehl den Operanden evtl. noch nicht fertiggeschrieben hat (Pipeline-Stufe "`store"' ist weit hinten), würde der zweite Befehl falsche Daten verwenden. Ein "`Shortcut"' im Datenweg der Pipeline kann den Hazard vermeiden. Bei problematischeren Situationen, wenn beispielsweise ein Rechenergebnis zur Adressierung verwendet wird oder bei berechneten und bedingten Sprüngen, ist ein Anhalten der Pipeline aber unumgänglich.
+			\item Gegenabhängigkeit (Write-after-Read): Ein Operand wird gelesen und kurz danach überschrieben. Da das Schreiben bereits vor dem Lesen vollendet sein könnte, könnte der Lese-Befehl die neu geschriebenen Werte erhalten. In der normalen Pipeline eher kein Problem.
+			\item Ausgabeabhängigkeit (Write-after-Write): Zwei Befehle schreiben auf denselben Operanden. Der zweite könnte vor dem ersten Befehl beendet werden und somit den Operanden mit einem falschen Wert belassen.
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Steuerkonflikte}
+	\begin{itemize}
+		\item Treten bei Verzweigungsbefehlen und anderen Instruktionen auf, die den Befehlszähler verändern
+	\end{itemize}
+\end{itemize}
+
+
 \subsection{Superskalartechnik}
+
+\subsubsection{Superskalare Prozessorpipeline}
+\begin{itemize}
+	\item \textbf{1. In-order-Abschnitt}
+	\begin{itemize}
+		\item Befehle werden entsprechend ihrer Programmordnung bearbeitet
+		\item Umfasst: Befehlsholphase (IF), Dekodierphase (ID) und Dispatch
+		\item Dynamische Zuordnung der Befehle an die Ausführungseinheiten. Der Scheduler bestimmt die Anzahl der Befehle, die im nächsten Takt zugeordnet werden können
+		\item Befehlsholphae (IF)
+		\begin{itemize}
+			\item Holen mehrerer Befehle aus dem Befehlscache in der Befehlsholpuffer (Anzahl entspricht typischerweise der Zuordnungsbreite)
+			\item Welche Befehle geholt werden hängt von der Sprungvorhersage ab
+		\end{itemize}
+		\item Verzweigungseinheit
+		\begin{itemize}
+			\item Überwacht die Ausführung von prungbefehlen
+			\item Spekulatives Holen von Befehlen und Spekulation über den weiteren Programmverlauf (Verwendung hierzu der Vorgeschichte)
+			\item Gewährleistet im Falle einer Fehlspekulation die Abänderung der Tabellen sowie das Rückholen der fälschlicherweise ausgeführten Befehle
+		\end{itemize}
+		\item Befehlsholpuffer: Entkoppelt die IF-Phase von der ID-Phase
+	\end{itemize}
+	\item \textbf{Out-of-order-Abschnitt}
+	\begin{itemize}
+		\item Ausführungsphase
+	\end{itemize}
+	\item \textbf{2. In-order-Phase}
+	\begin{itemize}
+		\item Gültigmachen der Ergebnisse entsprechend der ursprünglichen Programmordnung
+		\item Einhalten der korrekten Programmsemantik (Ausnahmeverarbeitung, Spekulation)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Spekulative Ausführung}
+\begin{itemize}
+	\item Befehlsausführung über nicht aufgelöste Verzweigungen. Impliziert, dass ein Befehl nutzlos sein kann, da zum Ausführungszeitpunkt nicht bekannt ist, ob der Befehl ausgeführt werden soll
+	\item Mikroarchitektur muss die Ressourcen haben und in der Lage sein, die Effekte einer fälschlicherweise spekulativ ausgeführten Instruktion zu löschen (beispielsweise Modifikationen im Speicher oder bei Ausnahmesituationen)
+	\item \textbf{Sprungvorhersage (Branch Prediction)}
+	\begin{itemize}
+		\item Verhalten beim Auftreten von Verzweigungen: Vorhersagen des Sprungziels; Füllen der Verzögerungsphasen spekulativ mit Befehlen; Fortfahren mit der Ausführung ohne Verzögerung bei korrekter Vorhersage oder Verwerfen der geholten Befehle bei falscher Vorhersage
+		\item Ansätze
+		\begin{itemize}
+			\item Statische Sprungvorhersage: Richtung der Vorhersage ist für einen Befehl immer gleich und festverdrahtet. Sprungvorhersage durch den Compiler
+			\item Dynamische Sprungvorhersage
+			\begin{itemize}
+				\item Hängt von der Vorgeschichte ab und berücksichtigt das Programmverhalten
+				\item Genauere Vorhersagen bei allerdings auch höherem Hardwareaufwand möglich
+				\item Sprungzielcache: \texttt{Branch Target Address Cache} (Tabelle: Adresse der Verzweigung \(\rightarrow\) Sprungzieladresse) und \texttt{Branch Target Buffer} (Direct-mapped-Cache) speichern die Adresse der Verzweigung und das entsprechende Sprungziel
+				\item \texttt{Branch History Table} hält das Verhalten der Sprungbefehle während der Ausführung des Programms fest: Prädikatoren
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Very Long Instruction Word (VLIW)}
