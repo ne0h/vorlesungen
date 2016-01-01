@@ -1,0 +1,1276 @@
+\section{Fragenkatalog}
+\subsection{Eintrittsfrage}
+	\subsubsection{Welche Themen wurden in der Vorlesung behandelt?}
+		\begin{itemize}
+			\item{Kryptographische Grundlagen}
+			\item{Schlüsselaustausch}
+			\item{Vertrauensmodelle}
+			\item{Authentifikation}
+			\item{Kerberos}
+			\item{Zugangsschutz}
+			\item{IPsec}
+			\item{TLS}
+			\item{Internetdienste}
+			\item{Privatsphäre}
+		\end{itemize}
+		
+	\subsubsection{Was sind Güter?}
+	Güter sind Ressourcen die für mindestens einen Akteur einen realen oder ideelen Wert besitzen, z.B Adressbuch, Patientendatenbank oder Kreditkarteninformationen.
+	
+	\subsubsection{Was ist ein Schutzziel?}
+	Ein Schutzziel ist eine Anforderung an eine Komponente oder ein System, die erfüllt werden müssen um Güter vor Bedrohungen zu schützen. Z.B das übertragene Daten nicht abgehört oder verändert werden.
+	Häufige Unterteilung in CIA
+	\begin{itemize}
+		\item Confidential (Vertraulichkeit) : Es wird keine unautorisierte Informationsgewinnung ermöglicht.
+		\item Integrity (Integrität) 
+		\begin{itemize}
+			\item Starke Integrität: Es ist nicht möglich Daten unautorisiert zu manipulieren.
+			\item Schwache Integrität: Es ist nicht möglich Daten unautorisiert \textbf{unbemerkt} zu manipulieren.
+		\end{itemize}
+		\item Availability (Verfügbarkeit): Beschreibt in Gegenwart von Angreifern, in welchem Maß die Funktionalität des Systems von berechtigten Subjekten unabhängig von gezielten Einflüssen in Anspruch genommen werden kann.
+	\end{itemize}
+	Daneben gibt es noch die Schutzziele Authentizität, Privatsphäre und (Nicht-)Abstreitbarkeit.
+	
+	\subsubsection{Was ist eine Bedrohung?}
+	Die Bedrohung eines IT-Systems ist eine Möglichkeit, ein oder mehrere Schutzziele gezielt zu beeinträchtigen. Dazu gehörten z.B. das abhören von Daten, das verändern von Daten oder allgemein die Sabotage.
+	
+%	\subsubsection{Was versteht man unter Sicherheit?}
+	Unter Sicherheit versteht man den Zustand des Geschütztseins von schützenswerten Gütern vor Bedrohungen. 
+	\subsubsection{Was ist Safety und was Security?}
+	\begin{itemize}
+		\item Safety: Schutz vor Gefahren die nicht von einem Angreifer ausgehen, z.B. Funktions und Betriebssicherheit. Verhinderung von Personenschäden. "Ist-Funktionalität stimmt mit Soll-Funktionalität überein".
+		\item Security: Angriffsicherheit, Schutz vor "böswilligen Angreifern". Z.B. der Schutz der Integrität von Informationen.
+	\end{itemize}
+	
+	\subsubsection{Welche Art von Angriffen gibt es?}
+		\begin{itemize}
+			\item Abhören
+			\item Man in the Middle
+			\item Manipulieren
+			\item Unterdrücken
+			\item Einfügen
+			\item Wiedereinspielen (Replay)
+			\item Denial of Service (DoS)
+		\end{itemize}
+		
+	\subsubsection{Durch welche Mechanismen lassen sich die Schutzziele gewährleisten?}
+	\begin{itemize}
+		\item Vertraulichkeit : Verschlüsselung
+		\item Integrität bzw. Authentizität: Digitale Signaturen / Message Authentication Code (MAC) und Schutz vor Replay
+		\item Authentifikation : Passwörter und Zertifikate
+		\item Verfügbarkeit : Schutz durch Cookie-Mechanismen
+		\item Zusätzlich müssen Schlüsselaustauschverfahren benutz werden
+	\end{itemize}
+	
+		\subsubsection{Was gibt es für Verschlüsselungsarten}
+	Symmetrisch als auch Asymmetrisch.
+	
+		
+	\subsubsection{Was ist der Unterschied?}
+	Schlüssellänge bei asymetischer Verschlüsselung kürzer.
+	
+	\subsubsection{Was versteht man unter symmetrischer Verschlüsselung?}
+	Alle Kommunikationspartner verfügen über den selben Schlüssel zum Ver- und Endschlüsseln. Symmetrische Verschlüsselung ist hoch Effizient, da es sich meist um Einfache Operationen (Bit-Shift, XOR) handelt.
+	
+%	\subsubsection{Wie funktioniert symmetrische Verschlüsselung?}
+	Gemeinsames Geheimnis: Schlüssel K
+	Verschlüsselung \textbf{Enc}:
+		\begin{itemize}
+			\item Eingabe Schlüssel K, Klartextnachricht m
+			\item Ausgabe Chiffrat c
+			\item Es git $c=\textbf{Enc}_K(M)$
+		\end{itemize}
+	Entschlüsselung \textbf{Dec}:
+		\begin{itemize}
+			\item Eingabe Schlüssel K, Chiffrat c
+			\item Ausgabe Klartextnachricht m
+			\item Es gilt: $m = \textbf{Dec}_K(c)$
+				\begin{itemize}
+					\item $m = f^{-1}(K,f(K,m))$
+					\item $f^{-1}$ ist die Umkehrfunktion von $f$
+				\end{itemize}
+		\end{itemize}
+		
+	\subsubsection{Welche Klassen gibt es bei symmetrischer Verschlüsselung?}
+	\begin{itemize}
+		\item Blockchiffren: Aufteilung der Daten in Blöcke der Länge k
+		Beispiele: AES, DES
+		
+		\item Stromchiffren: Bit- oder Zeichenweise Verschlüsseln der Daten
+		Beispiel: RSA
+		Man muss nicht warten bis ein Block von Daten bereitsteht (z.B. Mobilfunk). Sender und Empfänger benutzen den gleichen Schlüssel als Seed für einen Pseudozufallsgenerator der eine deterministische Folge generiert.
+	\end{itemize}
+	
+	\subsubsection{Was versteht man unter asymmetrischer Verschlüsselung?}
+	Kommunikationspartner verfügen jeweils über privaten und öffentlichen Schlüssel. Basis: Faktorisierung von Zahlen gilt als schwer. Assymetrische Verschlüsselung wird auch Public-Key-Kryptografie genannt.
+	
+	\subsubsection{Wie funktioniert assymetrische Verschlüsselung?}
+	Kein gemeinsames Geheminis sondern zwei unterschiedliche Schlüssel pro Kommunikationspartner. 
+	\begin{itemize}
+		\item Öffentlicher Schlüssel(public key): Ist allen bekannt, auch dem Angreifer
+		\item Privater Schlüssel (privat key): Ist nur dem Empfänger bekannt. 
+	\end{itemize}
+	
+	Verschlüsselung \textbf{Enc}
+		\begin{itemize}
+			\item Eingabe öffentlicher Schlüssel $K_p$, Klartextnachricht m
+			\item Ausgabe Chiffrat c
+			\item Es gilt $c=\textbf{Enc}_{K_p}(m)$
+		\end{itemize}
+		
+	Enschlüsselung \textbf{Dec}
+		\begin{itemize}
+			\item Eingabe Chiffrat c, privater Schlüssel $K_s$
+			\item Ausgabe Klartextnachricht m
+			\item Es gilt $m=\textbf{Dec}_{K_s}(c)$
+		\end{itemize}
+		
+	\subsubsection{Wie funktioniert RSA?}
+	Schlüsselerzeugung:	
+	\begin{itemize}
+		\item Auswahl zweier großer Primzahlen p und q
+		\item Berechne $n = p*q$ und $z=(p-1)(q-1)$
+		\item Wähle eine Zahl $1<e<z$, die teilerfremd $z$ ist
+		\item Find $d$, so dass $ed -1$ durch $z$ dividierbar ist, also $e*d \equiv 1 \mod z$
+		\item Öffentlicher Schlüssel: $K_p = (n,e)$
+		\item Privater Schlüssel: $K_s = (n,d)$
+	\end{itemize}
+	
+	Verschlüsselung:
+	\begin{itemize}
+		\item Bitmuster $m$ mit $m < n$ soll verschickt werden
+		\begin{itemize}
+			\item In Blöcke unterteilt mit Blockgrößen kleiner oder gleich $ld(n)+1$ 
+			\item Praktisch verwendete Blockgröße $2^k$ bit mit $2^k < n \leq 2^{k+1}$	
+		\end{itemize}
+		\item Alice berechnet $m^e$
+		\item Alice berechnet anschließend Rest bei Division durch n
+		\begin{itemize}
+			\item $c = m^e \mod n$
+		\end{itemize}
+		\item c wird an Bob gesendet
+	\end{itemize}
+	
+	Entschlüsselung:
+	\begin{itemize}
+		\item Bob berechnet $ m = c^d \mod n$
+	\end{itemize}
+	
+	\subsubsection{Wie verhält sich Symmertrische Verschlüsselung(AES) imd vergleich zu asymmertrischer?}
+	\begin{itemize}
+		\item Symmertrisch:
+		\begin{itemize}
+			\item + Geringe Komplexität, höhere Effizient (HW-Implementierung)
+			\item - Aufwändige Schlüsselverwaltung
+			\item - Aufwändige Realisierung von digitalen Unterschriften
+		\end{itemize}
+		
+		\item Asymmetrisch:
+		\begin{itemize}
+			\item + Einfache Schlüsselverwaltung
+			\item + Digitale Unterschriften einfach zu realisieren
+			\item - Höhere Komplexität, geringere Effizient (trotz HW-Implementierung)
+		\end{itemize}
+	\end{itemize}
+	
+	\subsubsection{Was ist ein MAC?}
+	Ein MAC, Message Authentication Code ermöglicht es die manipulation von Daten zu erkennen. Hierzu setzt es voraus, das Alice und Bob jeweils den gleichen symmetrischen Schlüssel besitzen. Sendet Alice Bob eine Nachricht so errechnet sie mithilfe des Schlüssels einen Hashwert der Nachricht und hängt sie an die Nachricht an. Bob kann nun auf seiner Seite mit dem Schlüssel den Hashwert zur empfangenen Nachricht bilden und mit dem Emfpangenen Hashwert vergleichen, sollten sie sich unterscheiden so fand eine Manipulation statt.
+	
+	\subsubsection{Wie funktioniert HMAC?}
+	Gegeben: 
+	\begin{itemize}
+		\item Nachricht m
+		\item Kryptografische Hashfunktion H
+		\item Schlüssel K
+		\item Zwei Zeichenketten \textbf{ipad} und \textbf{opad} der Länge des Eingangsblock
+	\end{itemize}
+	
+	Berechnung beim Sender: $HMAC(m) = H(K \oplus \textbf{opad} | H(K \oplus \textbf{ipad}|m))$
+	
+	
+	Berechnung beim Empfänger: $HMAC(m) = H(K \oplus \textbf{opad} | H(K \oplus \textbf{ipad} |m))$
+	
+	Dabei ist HMAC unabhängig von der verwendeten Hashfunktion aber abhängig von Schlüssel K um die Authentizität zu überprüfen.
+	
+	\subsubsection{Wie funktioniert eine digitale Signatur?}
+	Verfahren das dafür sorgt das eine Nachricht nachweisbar, nicht fälschbar und nicht geleugnet werden kann (Nichtabstreitbarkeit). Hierzu kommt asymmetrische Kryptografie zum Einsatz. Durch den Einsatz von asymmetrischer Kryptografie kann Bob bestätigen das nur Alice die Nachricht unterschrieben hat bzw. ob die Nachricht verändert wurde.
+	Eine digitale Signatur wird erzeugt indem der Hashwert einer Nachricht mit dem privaten Schlüssel von Alice verschlüsselt an die Nachricht angehängt wird. Nun kann Bob die Signatur mit dem öffentlichen Schlüssel von Alice entschlüsseln und kommt so an den Hashwert der Nachricht den er mit dem Hashwert der Empfangenen Nachricht vergleichen kann.
+	
+	\subsubsection{Welche Methoden der Authentifizierung haben wir behandelt?}
+	\begin{itemize}
+		\item Passwort: Hier wird zum Nachweis ein Gehimniss verwendet welches auf dem Server vorgehalten werden muss und übertragen werden muss. Durch die Übertragung ist die Vertraulichkeit gefährdet. 
+		\item Passwort-Hashes: Anstelle des Passwortes wird hier ein Passwort-Hash übertragen der immer noch auslesbar und durch aufzeichen und systematisches Ausprobieren gelöst werden kann.
+		\item Challenge-Response: Unter der Vorraussetzung das die Passwörter ausgetauscht und gespeichert sind kann sich Alice bei Bob anmelden und bekommt von Bob die Challenge C. Alice hängt nun an ihr Passwort die Challenge C an und überträgt nur den Hashwert davon an Bob. Da Bob Challenge und Passwort kennt kann er selbst den Hashwert bilden und vergleichen.
+	\end{itemize}
+
+	\subsection{Kryptografische Grundlagen}
+	
+	\subsubsection{Wie funktioniert Perfect Forwars Secrecy?}
+	Ein Angreiffer kann, obwohl er den kompletten Nachrichten verkehr aufgezeichnet und das Langzeitgeheimnis entwendet hat, die Kommunikation nicht entschlüsseln. Dazu muss der Sitzungsschlüssel unabhängig vom Langzeitgeheimnis sein und der Sitzungsschlüssel muss nach Ende der Kommunikation vernichtet werden.\newline
+	Dies lässt sich z.B. über DH-Austausch mit Authentifikation erreichen. Hierbei authentifizieren sich Alice und Bob über digitale Signaturen.
+	\newline
+	Vorgehensweise: \newline
+	Alice: $A=g^a \mod p,SIG_{Alice}(A=g^a \mod p)$ \newline
+	Bob: $B=g^b \mod p, SIG_{BOB}(B=g^b \mod p)$	\newline
+	Nun können die Signaturen überprüft werden.
+	\subsubsection{Was ist das Problem bei PFS?}
+	Ein passiver Angreifer kann die Identitäten der Kommunikationspartner abhören um dies zu umgehen kann man erst mittels DH ein gemeinsames Geheimnis berechnen und die Identitäten danach verschlüsselt austauschen.
+	\subsubsection{Wie funktioniert Stateless Server?}
+	Da eine initialer Schlüsselaustausch recht teuer(rechenintensiv) ist, wird der Zustand nach einem Schlüsselaustausch in ein geschütztes Cookie ausgelagert und zur Wiederaufnahme der Verbindung beim Verbindungspartner vorgelegt.
+	
+	\subsubsection{Wie funktionieren Cookies/Puzzle?}
+	Ziel von Cookies und Puzzles ist es DoS Angriffe einzuschränken. Dazu werden rechenintensive Operationen solange aufgeschoben, bis klar ist ob die Absenderadresse echt ist. 
+	\begin{itemize}
+		\item Cookie: Ein Cookie enthält zufällige Informationen des Angefragten, wird ein Cookie gesendet so ist Absenderadresse mit hoher Wahrscheinlichkeit nicht gefälscht.Dazu wird auf die Anfrage ein Cookie generiert der die Zustandsdaten beinhaltet. Diese müssen dann nicht auf dem Server gespeichert werden sondern können dem Cookie aus der Antwort des Clients entnommen werden.
+		\item Puzzle: Bevor eine Anfrage vom Server bearbeitet wird, wird dem Client eine rechenintensive Aufgabe gestellt und die Anfrage wird erst mit lösen der Aufgabe bearbeitet.
+	\end{itemize}
+	
+	
+	
+	
+	\subsubsection{Was ist eine PKI Infrastuktur?}
+	Eine PKI dient dem Managment von ID-Zertifikaten und somit Authentifikation öffentlicher Schlüssel.
+	Bausteine: 
+	\begin{itemize}
+		\item Oragnisatorische Bausteine: Zertifizierungsrichtlinie(Certification Policy)
+		\item Technische Bausteine: Zertifikatsformat(z.B. x509) und Managementprotokolle zur technischen Umsetzung des PKI Dienstes.
+	\end{itemize}
+	Eine PKI muss sowohl die Sicherheit des Signaturschlüssels als auch der internen Abläufe sicherstellen.
+	
+	\subsubsection{Wie sieht das PKI Modell aus?}
+	\begin{itemize}
+		\item Benutzer(Subject) meldet sich bei der PKI an und lässt sich ein Zertifikat ausstellen.
+		\item Registration Authority(RA): Schnittstelle zwischen Benutzer und CA. Prüft den Benutzer und gibt an die in der regel offline aggierende CA weiter.
+		\item Certification Authority(CA): Implementiert das Zertifikat, erzeugt durch Signatur Zertifikate und erstellt Widerruflisten.
+		\item Speicher/Verzeichnis (Directory): Ermöglicht den Abruf von Zertifikaten und publiziert die Gültigkeit über Widerruflisten.
+	\end{itemize}
+	
+	\subsubsection{Was ist eine PMI}
+	Eine PMI ist fur Autorisation was PKI für Authentifikation ist, also eine Infrastruktur zum Management von Zugriffsrechten basierend auf Attributzertifikaten.
+	\begin{itemize}
+		\item CA der PMI: Attribute Authority(AA): vergibt Zugriffsrechte in Form von Attributszertifikaten.
+		\item ROOT CA der PMI: Source of Authority(SOA): Verifizierung eines Privilegs beginnt bie der SOA als oberste AA für dieses Privileg. Attributszertifikate der SOA sind selbstzertifiziert und signiert mit dem zum ID-Zertifikat der SOA gehörenden privaten Schlüssel.
+	\end{itemize}
+	
+	\subsubsection{Was für Vertrauensmodelle gibt es?}
+	Ein Vertrauensmodell beschreibt welchen Zertifikaten ein Benutzer trauen kann und mit welchen Elementen des Modells Vertrauen hergestellt werden kann.
+	\begin{itemize}
+		\item Single-CA:Eine einzige CA stellt alle Zertifikate aus und ist d.h. für Registrierung und Zertifizierung zuständig. Einfache Validierung aber bei Kompromittierung der einen Ca fällt das ganze Modell auseinander(Single-Point-of-Failure)
+		\item Oligarchie von CAs: Zertifizierung durch mehrere CAs. Hier gibt es keine Monopolstellung und eine Kompromittierung setzt nur einen Teil des Modells außer Kraft, dafür muss die initiale Prüfung mit mehreren CA-Schlüsseln erfolgen und falsche CAs sind einfacher in Software implementierbar. Es ist nie klar, welche CA der Oligarchie die Richtige ist.
+		\item Top-Down: Single-CA mit Delegation und Einschränkung der Delegation auf Teilbereiche eines hierarchischen Namensraum (z.B. DNS)-
+		\item Anarchie: Jeder Benutzer ist eine CA und kann je nach Vertrauen eingesetzt werden. Kompromittierung wirkt sich nur sehr beschränkt aus dafür ist die Zertifizierung schwer kontrollierbar und es ist schlecht skalierbar.
+		\item Oligarchie von CAs + Delegierung: Durch die Delegierung können CAs untergeordnete CAs einsetzen. Dabei gibt es Root-CAs als Vertrauensanker, Parent-CAs und Sub-CAs. Dieses Modell skaliert gut und eine Kompromittierung einer Sub-CA hat nur einen beschränkten Wirkungsbereich, dafür ist die Validierung aufwändiger und es gibt eine höhere CA-Schlüsselzahl.
+	\end{itemize}
+	
+	\subsubsection{Was ist X.509}
+	X.509 ist ein Zertifikatsstandard. Er spezifiziert die Syntax einer Zertifikats, einer CRL und der Validierung einer Zertifikatskette. Wird genutzt bei: TLs, S/MIME, IPsec, WLAN nach 802.11x bzw. 802.11i und S-BGP.
+	\newline
+	Das Zertifikat muss die ID der CA und die ID des Schlüsselbesitzers beinhalten. Die ID ist die Grundlage für Aufbau der Zertifikatskette.\newline
+	Aufbau: 
+	\begin{itemize}
+		\item version:Versionsnummer des Zertifikatsformates
+		\item seralNumber: Serinnummer, zusammen mit issuer eindeutig.
+		\item issuer: ID des Erzeugers des Zertifikates
+		\item signatureAlgorithm: Für Signatur genutzer Algorithmus
+		\item validity: Gültigkeitsdauer
+		\item subject: ID des Zertifikatsbesitzers
+		\item subjectPublicKeyinfo: Öffentlicher Schlüssel
+		\item issuerUniqueIdentifier: Erweiterte ID des Zertifizierenden
+		\item subjectUniqueIdentifier: Erweitere ID des Besitzers
+		\item extensions: Erweiterungen		
+	\end{itemize}
+	Wichtige Erweiterungen sind z.B: die Verwendungen mehrere Schlüssel. 
+	
+	\subsubsection{Was ist OCSP}
+	OCSP ist das Online Certificate Status Protocol, es war der erste Ansatz eines Protokolls zur Online-Prüfung von Zertifikaten auf Widerruf. Bassiert auf einem einfachen Frage-Antwort Schema.  OCSP antwortet nur in Bezug auf Widerruf, pfürg nicht ob das Zertifikat abgelaufen ist.
+	
+	\subsection{Authentifikation}
+	\subsubsection{Was sind die Aufgaben eines Dienstbetreibers?}
+	\begin{itemize}
+		\item Authentifizierung: Überprüfung ob der Kommunikationspartner wirklich der ist, für den er sich vorgibt.
+		\item Autorisierung: Abgleich der angeforderten Daten mit vertraglich vereinbarten
+		\item Abrechnung: Erfassung des Nutzungsverhalten z.B. nach Dauer, Anzahl etc.
+	\end{itemize}
+	
+	\subsubsection{Welche Methoden zut Authentifizierung von Nutzern gibt es?}
+	\begin{itemize}
+		\item PAP: Password Authentication Protocol
+		\item CHAP: Challenge Handshake Protocol
+		\item S/Key 
+		\item EAP: Extensible Authentication Protocol
+	\end{itemize}
+	
+%	\subsubsection{Wie funktioniert PAP?}
+	Bei PAP Identifiziert sich der Nutzer mittels ID und Password, hierzu schickt der Client das ID-Passwort Paar an die Ressource und die Ressource bestätigt oder lehnt ab. Da hier die Übertragung im Klartext stattfindet ist diese Methode anfällig für Replay und Man-In-The-Middle. Ebenfalls initialisiert der Client die Anfrage, wodurch die Methode anfällig für DoS wird. Bei einem Einbruch in die Ressource kann der Angreifer alle Passwörter im Klartext auslesen. Dieses Verfahren sollte wenn überhaupt nur über einen zuvor aufgebauten sicheren Kanal benutzt werden. 
+	
+		\subsubsection{Wenn PAP so unsicher ist, wie kann man es dann trotzdem sicher benutzen?}
+	Indem man einen gesicherten Kanal z.B. TLS darüber legt.
+	
+%	\subsubsection{Mit TLS kann man sich doch selbst schon Authentifizieren. Warum dann noch PAP?}
+	Bei TLS authentifiziert sich normalerweise nur der Server, aber selbt wenn die Client-Authentikation aktiviert ist, so funktioniert diese über Zertifikate. Diese lassen sich nicht ganz so einfach von einem Gerät auf ein anderes nutzen.
+	
+	\subsubsection{Wie funktioniert CHAP?}
+	Bei CHAP ist die Grundidee anstelle des Passworts  nur einen Passwort-Hash gekoppelt mit einem Challenge zu übertragen.
+	\begin{itemize}
+		\item Client: Auth?
+		\item Server: Challenge n
+		\item Client: Response: H(Passwort,n)
+		\item Server: Success/Failure
+	\end{itemize}
+	
+	Das verhindet Replay Angriffe, allerdings müssen auch hier die Passwörter im Klartext auf dem Server gespeichert werden.
+	
+		\subsubsection{Wie funktioniert der Schlüsselaustausch nach Diffie-Hellmann?}
+	Alice und Bob einigen sich auf eine große Primzahl p und wählen gemeinsam Element g nach bestimmter Rechenvorschrift. Beide Zahlen sind öffentlich bekannt.\newline	
+	Alice wählt Zufallszahl a mit $2 \leq a \leq p-2$ und berechnet damit ihren öffentlichen Schlüssel $A=g^a \mod p$
+	Bob tut das gleiche mit der Zufallszahl b also $B=g^b \mod p$.
+	Die Zahlen a und b bleiben geheim.
+	Nun tauschen Alice und Bob A und B aus und berechnen damit jeweils den gemeinsamen geheimen Schlüssel K.\newline	
+	Alice: $K=B^a \mod p = (g^b)^a \mod p = g^{ab} \mod p$
+	\newline	
+	Bob: $K=A^b \mod p = (g^a)^b \mod p = g^{ab} \mod p$
+	 
+	Alice und Bob haben sich auf g und Primzahl p geeinigt. Alice wählt Zufallszahl a berechnet $A=g^a \mod p$ und sendet A an Bob. Bob macht das selbe. Beide können dann den Wert des jeweils anderen hoch ihrer Zufallsfahl mod p nehmen und erhalten so das gemeinsame Geheimnis K
+	
+	\subsubsection{Was ist der Standardangriff auf Diffie-Hellman}
+	Man-in-the-Middle, Vorberechnungen.
+	
+	
+	\subsubsection{Wie funktioniert S/KEY}
+	S/Key ist ein One-Time-Passwort Verfahren. Der Client wählt Password, Seed und Hash-Algorithmus und berechnet daraufhin n Einmalpasswörter $S_n$
+	\begin{itemize}
+		\item $S_0 = H(Passwort +Seed)$
+		\item $S_1 = H(S_0)$
+		\item ...
+		\item $S_n = H(S_{n-1})$
+	\end{itemize}
+	Auf dem Server wird das Paar {$n,S_n$} gespeichert während der Client alle Einmalpasswörter speichert.
+	Ablauf der Authentifizierung:
+	\begin{itemize}
+		\item Client meldet Authentifizierungswunsch
+		\item Server antwortet Challenge n
+		\item Client antwortet $S_{n-1}$
+		\item Server berechnet $H(S_{n-1}) == S_n$ wenn richtig Bestätigt er die Anfrage und Löscht $S_n$ andernfalls wir die Anfrage abgelehnt. Für die nächste Anfgrage wird das Paar {$n-1,S_{n-1}$} gespeichert.
+	\end{itemize}
+	
+	
+	 Der User wählt ein Passwort, hasht dieses n mal und speichert das Tupel (n, Hn) beim Server. Zur Authentifikation sendet er dann Hn-1. Server hasht und vergleicht mit Hn. Bei Erfolg speichert er (n-1, Hn-1). Da jedes Passwort nur einmal verwendet wird ist ein wiedereinspielen unmöglich.
+	
+%	\subsubsection{Was ist EAP?}
+	Extensible Authentication Protokol ist ein generisches Authentifizierungsprotokoll welches einen modularen Block besitzt der es ermöglicht unterschiedliche Verfahren zur Authetifizierung einzusetzen. %auf Challenge-Response bassiert.
+	
+	\subsubsection{Wie läuft EAP ab}
+	Der Client sendet einen Authentifizierungswunsch worauf der Server eine oder mehrere anfragen an den Client Stellt. Diese Anfragen können die Frage nach der ID, das Angebot an Modulen oder z.B. eine Challenge sein.
+	Daraufhin sendet der Client die angeforderten Daten zurück oder lehnt die Anfrage ab. Der Server antwortet mit Success oder Failure wenn das Authentifizierungsergebnis feststeht.
+	\subsubsection{Welche Verfahren gibt es in EAP so?}
+		\begin{itemize}
+			\item MD5-Challenge, ähnlich wie CHAP
+			\item Generic Toke Card (GTC), ähnlich wie CHAP nur Hardware-basiert
+			\item One-Time Password (OTP) ähnlich wie S/KEY
+\end{itemize}		 			
+		
+	\subsubsection{Wie sieht ein IKE Schlüsselaustausch aus?}
+	%TODO Initial Austausch Bild
+	Nonce zum Replay Schutz. ID wird mit SK verschlüsselt übertragen zum schutz der Identität, da ein Angreifer die ID so nicht im Klartext sehen kann.
+	AUTH zum Integritätsschuz, damit übertragene Daten nicht auf dem Weg zum Empfänger manipuliert werden können. 
+	TS beschreibt den zu schützenden Verkehr, also von welcher IP und Port zu welcher IP und Port.
+	
+	\subsubsection{Wie nennt man den Angriff, wenn ein Angreifer die ID mithört?}
+	Passiver Angriff.
+	
+	\subsubsection{Gegen welche Art von Angriff schützt das nicht?}
+	Gegen Man in the Middle Angriffe.
+	
+	
+	\subsection{Authentifizierungsdienste}
+	
+	\subsubsection{Was ist ein AS}
+	Ein AS ist ein Authentication Server. 
+	
+	\subsubsection{Welche Authentifizierungsdienste wurden behandelt?}
+	\begin{itemize}
+		\item RADIUS: Remote Authentication Dial In User Service
+		\item Diameter: Nachfolger von RADIUS
+		\item Kerberos: Single Sign On
+	\end{itemize}
+	
+	\subsubsection{Wo steht Radius im Protokollstack?}
+	Auf Anwendungsschicht über UDP. Arbeitet nur zwischen Ressource und AS.
+	
+	\subsubsection{Welche Schutzziele gibt es bei RADIUS?}
+	\begin{itemize}
+		\item Vertraulichkeit der übertragenen Nachrichten: über 16 Byte shared secret, welches manuell verteilt wird
+		\item Integrität der übertragenen Nachrichten
+		\item Authentizität der Kommunikationspartner
+	\end{itemize}
+	Das shared secret wird gleichzeitig zum Schutz der Integrität, Authentizität und Vertraulichkeit genutzt.
+	
+	\subsubsection{Was ist Diameter}
+	Diameter ist der Nachfolger von Radius mit dem Fokus auf Sicherheit durch den verpflichtenden Einsatz von IPsec oder TLS und den verlässlichen Transport über TCP. F+r Server und Client sind IPsec zwingend vorgeschrieben, der Server muss aber zusätzlich TLS unterstützen.
+	
+\subsection{Kerberos}
+	\subsubsection{Was ist Kerberos?} 	
+	Kerberos ist ein verteilter Authentifizierungsdienst welcher die Authentifizierung von Entitäten(Nutzer oder Server) anbietet, wobei hier das Netzwerk nicht geschützt sein muss. Kerberos Arbeitet als Single Sign-On für verteilte Dienste in einer Netzdomäne, ein Nutzer muss sich also nur einmal anmelden.
+	
+	\subsubsection{Welche Kerberos Komponenten gibt es?}
+	\begin{itemize}
+		\item Key Distribution Center
+			\begin{itemize}
+				\item Authentication Server(AS) Authentiziert den Benutzer und stellt das Ticket-Granting-Ticket(TGT) aus
+				\item Ticket-Granting-Server(TGS): Ist der Ressourcen-Zugangs-Server und autorisiert den Ressourcenzugriff bei Vorlage eines gültigen TGTs durch ausstellung einer Zugangsberechtigung (Tickets)
+				\item Benutzer-Datenbank: Speichert Master-Secrets aller Benutzer und Ressourcen.
+			\end{itemize}
+			\item Workstation
+			\item Netz-Ressource
+	\end{itemize}
+	
+	\subsubsection{Welche Teilnehmer gibt es in Kerberos?}
+	Client, Ressourcen, KDC mit AS und TGS
+
+	\subsubsection{Erkläre den Ablauf}
+	Der Client authentifiziert sich bei AS und bekommt ein TGT, welches er beim TGS vorlegen und damit ein Ticket für eine Ressource anfordern kann. Das Ticket kann der Client wieder bei Ressourcen vorlegen und bekommt so Zugriff auf die Ressourcen.
+	
+	AS\textunderscore REQ, AS\textunderscore REP, TGS\textunderscore REQ, TGS\textunderscore REP im Detail wissen. Wichtig ist mit welchem Key verschlüsselt wird. %TODO genau aufschreiben	
+	
+	\subsubsection{Wie sieht die Anmeldung an einer Workstation aus?}
+	Authentifizierung über Benutzername und Passwort, wobei das Passwort über eine Hash Funktion in einen geheimen Schlüssel gewandelt wird.
+	
+	\subsubsection{Wie sieht die Anmeldung am Netz aus?}
+	Als erstes Sendet die Workstation einen Authentication Server Request(AS\textunderscore REQ an den Server, hierbei wird der Benutzername im Klartext übertragen, wodurch ein Angreifer die Identität von Alice abhören kann.
+
+
+	
+	Der Server Antwortet mit einem Authentication Server Reply(AS\textunderscore REP) welcher mit dem Master-Secret von Alice verschlüsselt ist und einen geheimen Sitzungsschlüssel als auch das TGT beinhaltet.
+	
+	\subsubsection{Wie sieht AS\textunderscore REP aus?}
+
+	
+	\subsubsection{Wie sieht das TGT aus?}
+
+		
+	\subsubsection{Wie sieht ein Ticket aus?}
+	Wie ein TGT nur das der Session Key von Alice nach Bob benutzt wird und Bob als Server Name eingetragen ist. Das Ticket ist mit dem Master-Secret von Bob verschlüsselt.
+	\subsubsection{Was ist ein Authenticator?}
+	Der Authenticatior wird vom Client erzeugt und besteht aus dem Namen des Clients und einem Zeitstempel. Er ist mit dem jeweiligen Session-Key verschlüsselt und soll vor Replay-Angriffen schützen, da er nur in einem Zeitfenster gültig ist.
+	
+
+	
+	\subsubsection{Fassen sie kurz den Anmeldevorgang zusammen}
+	\begin{itemize}
+		\item KDC authentifiziert Alice anhand der Kenntnis des Master-Secrets von Alice, welches aus dem Passwort abgeleitet in der Benutzerdatenbank des KDC steht.
+		\item  Alice erhält TGT. KDC kann damit vorherige Authentifizierung überprüfen.
+		\item Alice und KDC verfügen nach dem Anmeldevorgang über einen Sitzungsschlüssel, wodurch das Master-Secret von Alice nicht weiter benutzt werden muss und das Langlebige Geheimnis geschützt wird.
+	\end{itemize}
+	
+	\subsubsection{Wie sieht die Ressourcenanforderung aus?}
+	Alice möchte ein Ticket für Bob. Hierzu sendet sie ein \textbf{Ticket-Granting Server-Request (TGS\textunderscore REQ)} welcher das TGT, den Ressourcen-Namen und den Authenticator enthält. Der TGS überprüft diese Anforderung auf Absenderadresse, Name und Zeitstempel. Nach erfolgreicher Überprüfung antwortet der TGS  ein \textbf{Ticket-Granting Server Reply (TGS\textunderscore REP)} welches das angeforderte Ticket, verschlüsselt mit dem Master-Secret von Bob, enthält.
+	
+	\subsubsection{Wie sieht ein TGS\textunderscore REQ aus?}
+
+	
+	\subsubsection{Wie sieht ein TGS\textunderscore REP aus?}
+
+	
+	\subsubsection{Wie sieht die Kommunikation mit der Ressource aus?}
+	Der Client sendet einen Application Request(AP\textunderscore REQ) 
+	
+		 Überprüfung der Ressource analog zu Überprüfung eines TGT durch TGS, also Absenderadresse, Name und Zeitstempel. Die Antwort der Resource ist der Application Reply(AP\textunderscore REP), dieser enthält den Authenticator und danach die Anwendungsdaten.
+	
+	
+	\subsubsection{Was überprüft TGS, wenn er ein TGS-REQ bekommt?}
+	TGS entschlüsselt zuerst das TGT und vergleicht die angebene IP Adresse und die Sender-IP. Er bezieht einen SessionKey und entschlüsselt damit den Authenticator. Im Authenticator stehen ClientName und Zeitstempel. Es wird der Name mit dem im TGT als auch der Zeitstempel verglichen. 
+	\subsubsection{Auf welcher Schicht arbeitet Kerberos?}
+	Anwendungsschicht, Schicht 7.
+	\subsubsection{Welche Schutzziele gibt es?}
+		\begin{itemize}
+			\item Authentifizierung: Echtheit von Subjekt und Daten. Soll heißen Bob kann davon ausgehen das eine Nachricht auch wirklich von Alice kommt und der Inhalt nicht verändert wurde.
+			\item Autorisierung: Nut berechtigte Instanzen bekommen Zugriff auf bestimmte Ressourcen.
+			\item Accounting: Erhebung von Daten zur Abrechnung.
+		\end{itemize}
+	
+	\subsubsection{Was sind denn Vor- oder Nachteile von langlebigen Ticket?}
+	Der Nachteil bei Langlebigen Tickets ist das sich innerhalb der Gültigkeitsdauer die Zugriffsrechte eines Users ändern können, sie aber erst nach Ablauf des Tickets in kraft treten.
+	
+	\subsubsection{Was für ein Problem hat Kerberos in großen Netzen und was kann man dagegen Tun?}
+	Kerberos stell einen single Point-of-Failure da, dies lässt sich durch eine Master - Slave Anordnung umgehen. Also mehrere Kopien des KDC die als read-only Slaves ausgelegt sind.
+	
+	\subsubsection{Werden bei einer Passwort-Änderung alle ausgestellten Tickets ungültig?}
+	Nein, zwar sind die Tickets dann nicht mit dem aktuellen Master-Secret verschlüsselt aber die alten Passwörter werden in Versionen vorgehalten wodurch alte Ticket gültig bleibt.
+
+	\subsubsection{Bietet Kerberos PFS}
+	nein.
+	
+	\subsubsection{Wofür braucht man einen Nonce oder einen Timestamp?}
+	Um Replay zu verhindern
+	
+	\subsubsection{Sind bei Kerberos IPs im Ticket sinnvoll oder hinderlich?}
+	Eher nicht, IP-Spoofing, roaming oder Tickettransfer.
+	Durch Adressen in den Tickets wird die Weitergabe des Tickets verhindet, allerdings schützt das nicht vor fälschung der Absender-Adresse durch IP-Spoofing. Verhindet die Rechteübertragung.
+	
+	\subsubsection{Was ist ein Offline-Passwod-Guessing Angriff}
+	Abhören der Anmelde Nachrichten, dadurch erhält man den Nutzernamen im Klartext und kann mittels Wörterbuch Angrif AS\textunderscore REP entschlüsseln. Dazu Testet man z.B. mittelst des Zeitstempels die entschlüsselten Nachrichten auf Richtigkeit. 
+	
+	\subsubsection{Wie funktioniert eine Inter-Domänen-Authentifizierung?}
+	Um Authentifizierung über Domänengrenzen hinweg zu ermöglichen Kann der KDC als Client eines anderen KDC registriert werden. Bsp Alice@Wonderland möchte mit Bob@Oz kommunizieren, dazu fordert sie ein Ticket für KDC der Domäne Oz beim KDC Wonderland an. Der KDC von Wonderland stellt ein Ticket für KDC von Oz aus und übergibt es an Alice. Alice fordert Ticket für Bob von der KDC von Oz an worauf der KDC von Oz Alice ein Ticket für Bob ausstellt.
+	
+	\subsubsection{Welche Vorteile hat Kerberos?}
+	Es ist ein Single-Sign-On verfahren, es ist also nur ein Passwort zum Anmelden notwendig. Kerberos stellt eine sichere Netzwerkweite Authentifizierung  bereit, bei der sich DIenste und Nutzer gegenseitig Authentifizieren. 
+
+	\subsubsection{Welche Nachteile hat Kerberos?}
+	Das Client Master Secret befindet auf dem KDC, durch eine Kompromittierung des KDC werden somit alle Master-Secrets des Clients offen gelegt. Desweiteren ist Challenge-Response bei der Passwort-Überprüfung nur optional und es ist erforderlich, dass die Systemuhren der Netzwerkkomponenten eng Synchronisiert sind.
+	
+	
+		
+		\subsection{Zugangstechniken}
+		
+		\subsubsection{Was ist ein Network Access Server(NAS?)}
+		Gewährt Netzzugriff gegen erfolgreiche Authentifizierung und Autorisierung.
+		
+		\subsubsection{Was ist ein Authentication Server(AS)}
+		Nimmt Authentifizierungsanfragen entgegen und bestätigt diese oder lehnt sie ab.
+		
+		\subsubsection{Welche Netzzugangstechniken gibt es?}
+		\begin{itemize}
+			\item Dediziertes physisches Medium: z.B ISDN
+			\item Geteiltes Medium: Punkt zu Mehrpunkt Verbindung, z.B. Ethernet
+			\item Broadcast Medium: Drahtlose Punkt-zu-Mehrpunkt-Verbindung an alle in Empfangsreichweite, z.B. WLAN
+			\item Netzübergreifend: Supplicant ist nicht im gleichen Netz wie NAS, z.B. bei VPN 
+			
+		\end{itemize}
+		\subsubsection{Wie funktioniert die Einwahlverbidnung bei POTS/ISDN}
+		Bei POTS/ISDN geht man von einem dedizierten physischen Medium zwischen Supplicant und NAS aus, dadurch schwere angreifbar denn der Angreifer bräuchter direkten Zugriff. Zum Aufbau einer Verbindung wird das Point-to-Point Protokoll (PPP) benutzt. Es ist unterteilt in Link Configuration Protokol welches den Medienzugriff regelt und für die Authentifizierung des Nutzers zuständig ist und in das Network Configuration Protocol welches Schicht 3 einrichtet.
+		
+		\subsubsection{Wie funktioniert die Einwahl bei DSL?}
+		Im Vergleich zur direkten Verbindung bei ISDN muss hier von einem geteilten Medium ausgegangen werden und ein Angriff wird als schwer erachtet, da der Angreifer physischen Zugang zum Medium bräuchte. Im Gegensatz zu reinem PPP muss bei DSL die Gegenstelle mittels PPPoE-Discovery gefunden werden.
+		
+		\subsubsection{Welche Problemstellung gibt es bei dem Zugriff auf VPN?}
+		Man kommuniziert Netz übergreifend also kann ein Angreifer die Nachrichten irgendwo auf dem Weg zwischen Supplicant und NAS mitlesen. Deswegen versucht man mit einem VPN eine gesicherte Verbindung zum Zielnetz herzustellen. Dabei will man nur legitime Nutzer zulassen und die Daten auf dem Transportweg schützen.
+		Dazu baut man zunächst einen sicheren Kanal auf und Authentifiziert anschließend den Nutzer.
+		
+		\subsubsection{Wie funktioniert PPP über IP?}
+		Nutzung von PPP-Authentifizierung über Schicht 3(IP), Herstellung von IP-Konnektivität zwischen Supplicant und NAS dann PPP zur Authentifizierung und Konfiguration. Nutzung zum Transport von Daten in/aus dem Netz. z.B. per Layer 2 Tunneling Protocol(L2TP)
+		
+		\subsubsection{Was ist L2TP?}
+		Virtuelle Punkt zu Punkt Verbindung. L2TP nutzt UDP als Transportprokoll bietet keine Vertraulichkeit und nutzt PPP zut Authentifizierung und Einwahl ins Ziel-Netz. Vertraulichkeit muss z.B. über IPsec realisiert werden.
+		
+		\subsubsection{Was ist OpenVPN?}
+		Offene, Betriebssystem unabhängige VPN Einwahl auf Basis von TLS.
+		Ablauf:
+		\begin{itemize}
+			\item Aufbau eines TLS Tunnels
+			\item Authentifizierung über PSK, Benutzername und Passwort oder über Zertifikate.
+			\item Etablierung von IP-Konnektivität.
+		\end{itemize}
+		
+		\subsubsection{Was macht 802.1X?}
+		802.1X ist ein Protokoll zur Authentifizierung und Autorisierung des Nutzers  zum Zugang zu Switch Ports oder z.B. Wlan. Hierbei wird der Datenverkehr erst nach der Authentifizierung zugelassen. Nach einer definierten Zeitspanne oder wenn z.B. der Port inaktiv wurde muss eine Re-Authentifizierung durchgeführt werden. Zur Authentifizierung wird EAP over Lan eingesetzt. Zu beachten ist hier, dass ein Switch selber auch ein Supplicant sein kann, z.B. bei der Verbindung zwischen Switchen.
+		
+		\subsubsection{Welche Sicherheitsbedenken gibt es bei 802.1X}
+		Z.b: kann ein authentifizierter Port "entführt" werden wenn ein Hub zwischen geschaltet wurde. Ausserdem bietet es keine Sicherheit auf dem Übertragungsweg zwischen Supplicant und NAS wie auch die anschließende Kommunikation. 
+		
+		\subsubsection{Welches Medium kommt bei WLAN zum Einsatz?}
+		Bei WLAN nutzen wir ein Broadcast Medium, das heißt jeder in Funkreichweite empfängt das Signal, somit ist ein Angriff leicht möglich. Desswegen ist es notwendig Illegitime Nutzer aus dem Netz fern zu halten.
+		
+		\subsubsection{Was für Protokolle gibt es zur WLAN Verschlüsselung?}
+	\begin{itemize}
+	\item Wired Equivalent Privacy (WEP) Das älteste der Protokolle. Es ist gilt als gebrochen. Unter anderem weil RC4 und CRC-Prüfusmmen eingesetzt werden. Es Authentifiziert lediglich Gruppenzugehörigkeit, jedoch nicht einzelne Nutzer. Es nutzt zur Authentifizierung ein gemeinsames Geheimnis oder verzichtet auf Authentifizierung.
+	\item Wi-Fi Protected Access (WPA) Der Nachfolger von WEP. Authentifizierung über PSK oder 802.11X .Implementiert teilweise 802.11i(definiert verbesserte Algorithmen), Verschlüsselung/Integrität wird TKIP eingesetzt welches auf RC4 basiert und auch nicht mehr verwendet werden sollte.
+	\item{WPA2} Setzt nun 802.11i komplett um(RSN, Robus Security Netzwork). Personal Mode mit PSK und Enterprise Mode per 802.11X. Nutz AES zur Vertraulichkeit und Integritätssicherung.  Hier wird für jedes System (Paar aus Supplicant und AP) eine individueller Sitzungsschlüssel ausgehandelt der die Verbindung auf Schicht 2 Schützt.
+\end{itemize}	
+
+	\subsubsection{Wie sieht die Authentifizierung eines Gruppenmitglieds in WEP aus?}
+	Challenge-Response, NAS wählt Challenge und Nutzer verschlüsselt vom NAS gewählte Challenge mit Schlüssel K und der Stromchiffre RC4.	
+	
+	
+	\subsubsection{Wo liegt der Unterschied?}
+	WEP authentifiziert nur Gruppenzugehörigkeit( über gemeinsames Passwort) wohingegen WPA im Enterprise-Mmodus unterschiedliche Zugangsdaten pro Teilnehmer unterstützt.
+	
+	\subsubsection{Warum ist WEP unsicher?}
+	Benutzt RC4  und ist für XOR Replay angriffe anfällig. %mehr hierzu aufschreiben.
+	
+	\subsubsection{Wo kommt unter WEP die CEC-Prüfsumme zum einsatz?}
+	Für jedes Paket wird vor dem Versenden die CRC-Prüfsumme berechnet. Diese bietet jedoch keine Sicherheit, da es sich bei CRC lediglich um eine Hashfunktion handelt. Jeder kann die Nachricht verändern und anschließend die CRC-Prüfsumme neu berechnen.
+	
+	\subsubsection{Wo liegt der Unterschied bei WPA Personal und WPA Enterprise?}
+	Personal authentifiziert lediglich die Gruppenzugehörigkeit wohingegen Enterprise einzelne Nutzer authentifiziert.
+	
+	\subsubsection{Wie viele Gruppen gibt es bei WPA Personal?}
+	Eine, die die das Passwort kennen.
+	
+	\subsubsection{Wie funktioniert der WPA2-Personal Verbindungsaufbau?}
+	AP und Supplicant verfügen über PSK. Hieraus berechnet sich das \textbf{Pairwise Master Key(PMK)} durch Mehrfachanwendung einer Hashfunktion (SHA1 / 4096 Durchgängen) 
+		\begin{itemize}
+			\item $I_1 = H(PSK + SSID)$
+			\item $I_2 = H(I_1)$
+			\item $I_{4096} = H(I_4098) := PMK$
+		\end{itemize}
+	
+	Kombiniertes Verfahren zur Authentifizierung über Kenntnis des PMK und Aushandlung/Verteilung von Sitzungsschlüsseln.
+	Ablauf:
+		\begin{itemize}
+			\item AP sendet Nonce $N_A$ an Supplicant
+			\item Supplicant sendet Nonce $N_S$ an AP + dazugehörenden \textbf{Message Integrity Code (MIC)}
+			\item Aushandlung von Schlüsselmaterial
+		\end{itemize}
+		Authentifizierung indirekt. Ähnlich wie bei WEP durch Berechnung des korrekten MIC, Nutzung des PMK			
+		
+	 
+	
+	Für Unicast-Kommunikation: \textbf{Pairwise Transient Key(PTK)} welcher aus der PMK abgeleitet wird und die Nonces aus dem Handshake nutzt.
+	\begin{equation}
+		PTK:= PMK + N_A + N_S +\text{SupplicantMacAdresse} + \text{APMacAdresse}
+	\end{equation}
+	
+	Für Multicats-Kommunikation: AP wählt je Gruppe zufällig \textbf{Group Master Key(GMK)} woraus sich der \textbf{Group Transient Key(GTK)} ableitet der vom AP an die Gruppenmitglieder verteilt wird und bei verlassen eines Mitglieds erneuert wird.
+	
+	Handshake: \newline
+	Supplicant->AP:	Auth? \newline
+	Ab hier berechnung PTK: \newline
+	AP->Supplicant:	Nonce:$N_A$ \newline
+	Supplicant->AP:	Nonce:$N_S +MIC$ \newline
+	Ab hier verschlüsselt: \newline
+	AP->Supplicant: GTK + MIC \newline
+	Supplicant->ACK \newline
+	
+	Wann findet die Authentifizierung statt? (MIC über vorherige Nachrichten)
+	
+	\subsubsection{Wie sieht der Ablauf eine Authentifizierung in WPA2-Enterprise aus?}
+	\begin{itemize}
+		\item Supplicant stellt Konnektivität mit AP her
+		\item AP sperrt Nutzung des WLANs und lässt nur Authentifizierungsverkehr zu.		
+		\item Supplicant authentifiziert sich per EAP
+		\item Schlüsselverteilung wie bei WPA2-Personal
+		\item Freischaltung der Nutzung des WLANS
+	\end{itemize}
+	\subsubsection{Was ist ein MIC?} %TODO weder in den Foline noch bei Wikipedia eine erklärung gefunden.
+		
+%	
+	\subsubsection{Personal schützt die Vertraulichekit gegenüber wem?}
+	Nur gegenüber denen, die den Pre Shared Key (PSK) nicht kennen, alle anderen können den Verbindungsaufbau mithören und auch den PTK berechnen.
+	
+	\subsubsection{Wozu wird der Verbindungsaufbau benötigt?}
+	Der Verbindungsaufbau bringt Zufallswerte in Form eines Nonce mit, der in die Berechnung des PTK eingeht.	
+		
+		
+	\subsubsection{Was ist 802.11i?}
+	802.11i Ist das Robust Security Network, beschriebt die Authentifizierung über PSK oder 802.11X und setzt zwingend die Verschlüsselung per AES-CCMP (Advanced Encryption Standard - Counter Mode with Cipher Block Chaining Message Authentication Code Protokol) vorraus. Das Ziel war es eine Grundarchitektur für Authentifizierung, Verschlüsselung und Integritätsicherung darzustellen. 
+	
+	\subsubsection{Was ist bei WLAN besonders zu beachten?}
+	Der Kommunikationskanal ist komplett öffentlich und es werden die Schutzziele Vertraulichkeit, auch gegenüber anderen Teilnehmenr, Integrität und Authentizität umgesetzt.
+	
+	\subsubsection{Was sind die Herrausforderungen bei Drahtlosnetzwerken?}
+	Netzzugang hat keine festen Grenzen wie bei einem Kabel.
+	
+	\subsubsection{Welche Probleme gibt es bei 802.1X und WLAN?}
+	Passive Angriffe durch mithören der Identitäten beim Initialen Austausch sind einfacher möglich. Genauso sind Man-in-the-Middle Angriffe während der Authentifizierung möglich. Es können auch falsche Dateneinheiten gesendet werden.
+	
+		\subsection{IPsec}
+		
+
+	
+	\subsubsection{Was ist IPsec?}
+
+	IPsec ist eine Erweiterung von IP welche aller oberhalb von IP angesiedelten Protkolle schützt und für die Anwendungen transparent ist. Mit IKE werden Parameter über IPsec ausgehandelt, die benutzt werden um IP-Nutzdaten zu schützen.
+Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei Endsystemen oder Security Gateways. Schnittstelle dazwischen PF\textunderscore KEY %TODO Was ist ein PFKEY
+	
+	\subsubsection{Was sind die Schutzziele von IPSec?}
+	Klassische Schutzziele:
+	\begin{itemize}
+		\item Integrität und Authentizität der Daten durch MAC
+		\item Vertraulichkeit durch Verschlüsselung
+	\end{itemize}
+	Weitere Schutzziele:
+	\begin{itemize}
+		\item Zugangskontrolle durch Authentifikation und grundlegende Filter-Funktionalität.
+		\item Schutz vor Wiedereinspielen durch die Verwendung von Sequenznummern
+		\item Schutz vor Verkehrsanalyse durch Paddung und Dummy-Dateneinheiten
+	\end{itemize}
+	
+		\subsubsection{Was sind die Schutzziele bei IPsec?}
+	\begin{itemize}
+		\item Bei AH: 
+			\begin{itemize}
+				\item Schwache Integrität %TODO warum nur schwache?
+				\item Authentizität
+				\item Zugangskontrolle
+				\item Schutz vor Replay
+			\end{itemize}
+		\item Mit ESP zusätzlich:
+			\begin{itemize}
+				\item Vertraulichkeit
+				\item Schutz vor Verkehrsanalyse
+			\end{itemize}
+	\end{itemize}
+	
+		\subsubsection{Welche Schutzziele werden im klassischen IP Kontext nicht gewährleistet?}
+	\begin{itemize}
+		\item Authentizität und Integrität der Dateneinheiten: Es kann nicht sichergestellt werden der Inhalt unverfälscht und der angegeben Sender wirklich der Ursprung ist.
+		\item Vertraulichkeit: Wurden die Daten vom Angreifer gelesen?
+		\item Authentifikation der Kommunikationspartner: Wem sende ich gerade Dateneinheiten?
+		\item Schutz vor Wiedereinspielen: Aktuelle Dateneinheit oder Wiedereinspieleung von Angreifer?
+	\end{itemize}
+	
+%	\subsubsection{Wozu braucht man IPsec}
+	Zum transparenten Absichern von Verbindungen.
+	
+	\subsubsection{Aus welchen wesentlichen Komponenten besteht IPsec?}
+	\begin{itemize}
+		\item Schlüsselaustausch: Internet Key Exchangen (IKE)
+		\item Protokolle zur sicheren Kommunikation
+		\begin{itemize}
+			\item Authentication Header (AH)
+			\item Encapsulating Security Payload (ESP)
+		\end{itemize}
+	\end{itemize}
+	
+	\subsubsection{Was war eine wichtige Entwurfsentscheidung bei IPsec?}
+	Eine wichtige Entwurfsentscheidung war die Entkopplung von Schlüsselaustausch und Kommunikation über getrennte Kontroll und Datenpfade.
+	
+	\subsubsection{Was ist eine Security Policy?}
+	Eine Security Policy gibt an welche Sicherheitsanforderungen an einen IP-Datenstrom gestellt werden.
+	
+	\subsubsection{Was ist eine Security Association (SA)}
+	Eine SA ist eine unidirektionale Sicherheitsassosiation("Verbindung") zwischen zei IP Instanzen, für eine bidirektionale Verbindung sind 2 SA notwendig.
+	
+		\subsubsection{Welche Informationen enthält eine SA (Security Associations)?} %TODO was ist eine SA???
+	
+	Eindeutige Identifikatone pro System:
+	\begin{itemize}
+		\item Security Parameter Index(SPI):  Index der benötigte SA in der SAD des Empfängers identifiziert
+		\item IP-Zieladresse
+		\item Das verwendete Protokoll: AH oder ESP.
+	\end{itemize}
+	
+	%TODO Sie enthält die IPs der Kommunikationspartner, das Schlüsselmaterial, die TTL der SA, die maximial übertragbare Paketgröße (PMTU) %TODO was ist eine PMTU? und die Sequenznummer.	Ob Tunnel oder Transportmodus.
+	
+	\subsubsection{Was ist SPI}
+	Der Index SA in der SAD um SA zu identifizieren.
+	
+	\subsubsection{Wie viele SA existieren denn in der Regel insgesammt?}
+	Drei. 1 für IKE und 2 für IPSec: unidirektional bei IKE und bidirektional bei IPSec
+	
+	\subsubsection{Was ist eine SAD?}
+	Eine SAD ist eine "Datenbank" der Sicherheitsassoziationen. Ihre Aufgabe ist es dir Parameter aktiver gesicherter IP-Datenströme zu sichern.
+	
+	\subsubsection{Welche Parameter enhält eine SAD?}
+	\begin{itemize}
+		\item SPI
+		\item Sequenznummer
+		\item Flag das anzeigt ob Sequenznummernüberlauf SA beendet
+		\item Fenster zum Schutz gegen Wiedereinspielen
+		\item AH oder ESP-Informationen: Schlüssel etc.
+		\item Lebenszeit der SA
+		\item IPsec Übertragunsmodus: Tunnel oder Transport.
+		\item Pfad MTU (Pfad Maximum Transfer Unit: maximale Paketgröße), zur Verhinderung der Fragmentierung
+	\end{itemize}
+	
+	\subsubsection{Was ist eine SPD?}
+	Eine SPD ist als Datenbank an Policies zu sehen. Sie beinhaltet die Richtlinien nach denen der Verkehr zu schützen ist.  Sie regelt für welche Partnerinstanzen Sicherheitsassoziationen mit welchen Parametern ausgehandelt werden müssen und bildet zu sendende Dateneinheiten gemäß SPD auf SA ab.
+	
+	\subsubsection{Welche Einträge enthält ein SPD?}
+	\begin{itemize}
+		\item Quell und Ziel IP-Adresse
+		\item Quell und Ziel Port
+		\item Protokoll der nächsten Schicht
+	\end{itemize}	
+	
+	\subsubsection{Woher kommen die Einstellungen der SPD}
+	Die Einstellungen werden vom Administrator konfiguriert		
+	
+	\subsubsection{Was passiert wenn eine Dateneinheit gesendet werden soll?}
+		
+	\subsubsection{Auf welcher Schicht arbeitet IPSec?}
+	Schicht 3, Vermittlungsschicht, Sicherheitsergänzung zu IP.
+	
+	\subsubsection{Was passiert wenn ein Packet an die Schicht 3 übergeben wird?}
+	In SPD nach Policy schauen, dann je nachdem in SAD nach SA suchen.
+	
+	\begin{itemize}
+		\item Policy in der SPD nachschlagen
+			\begin{itemize}
+				\item DISCARD verwerfen
+				\item BYPASS weiterleiten
+				\item PROTECT weiter nächstem Schritt
+			\end{itemize}
+		\item SA in der SAD nachschlagen
+			\begin{itemize}
+				\item falls gefunden verarbeiten und weiterleiten
+				\item sonst SA mit IKE aufbauen, danach verarbeiten und weiterleiten.
+			\end{itemize}
+	\end{itemize}
+
+	\subsubsection{Was passiert wenn eine Dateneinheit empfangen wird?}
+
+	
+	\subsubsection{Was passiert wenn ich ein IP Paket schicken möchte?}
+	Ein Ip-Paket wird als erstes anhand des SPD klassifiziert. Es wird entweder verworfen, weitergeleitet oder geschützt. Die typischen Selektoren sind z.B. QuellIP, ZielIP, Quellport, Zielport oder Schicht-4 Protokoll.
+
+	\subsubsection{Was passiert wenn es geschützt werden soll?}
+	Es wird zuerst in der SAD den richtigen SA gesucht. Falls es noch nicht vorhanden ist, wird per IKE eine neue SA aufgestellt und dabei Algorithmen für Verschlüsselung und Integritätsschutz und Schlüsselmaterial ausgehandelt. Dann wird das IP-Paket verschlüsselt, MAC berechnet und es wird ein neuer Header hinzugefügt.
+	
+	\subsubsection{generelle Verarbeitung- Was passiert mit einem ankommenden IP Paket?}
+	Male: SPD,SAD,PK\textunderscore KEY IKE, Krypto und Erkläre die Bestandteile bzw Ablauf gemäß Folie %TODO ausformulieren
+	
+	\subsubsection{Welche unterschiedlichen Modi gibt es?}
+	Es gibt den Transport und den Tunnel Modus.
+	Der Transportmodus ist für Ende zu Ende Verschlüsselung gedacht, bei ihm stimmen Kryptografischer und Kommunikationsendpunkt überein, wohin gegen der Tunnelmodus dazu gedacht ist Security Gateways Ende zu Ende zu Verschlüsseln, womit der Rest des Netzes nicht IPSec fähig sein muss. Beim Tunnel-Modus stimmen Kryptografischer und Kommunikationsendpunkt nicht \textbf{zwingend} überein. Beim Tunnel-Modus wird die gesamte IP-Dateneinheit geschützt und Router haben auf dem Weg keienn Zugriff auf den Original IP-Kopf.
+	
+	\subsubsection{Wie lassen sich die Endpunkte unterscheiden?}
+	\begin{itemize}
+		\item Kommunikationsendpunkt: Quell und Zielsystem der ausgetauschten IP-Dateneinheiten
+		\item Kryptografischer Endpunkt: Endpunkt der Sicherheitsprotokolle also AH oder ESP.
+	\end{itemize}
+			
+	\subsubsection{Malen sie das Paketdiagramm des Transportmodus}
+
+	Beim Transportmodus wird der IPsec Header direkt mit  dem IP-Paket transportiert.
+	\subsubsection{Malen sie das Paketdiagramm des Tunnelmodus}
+
+	Das IP-Paket wird in eine äußeres IP-Paket eingekapselt und der IPsec-Header wird zwischen äußerem IP-Header und innerem IP-Header hinzugefügt.
+	\subsubsection{Was wird im IP Header verändert, wenn IPsec eingesetzt wird?}
+	Längenfeld und NextProtocol Eintrag wird angepasst %TODO nicht vollständig.
+	\subsubsection{Was muss im äußeren IP-Header im Tunnelmodus geändert werden?}
+	Das Feld NextHeader muss geändert werden. Es soll auch das verwendete Protokoll der nächsthöheren Schicht identifizieren, in diesem Fall IPsec.
+	
+	\subsubsection{Wie ist der Schutz gegen Replay-Attacken umgesetzt?}
+	Über Sequenznummern %TODO muss noch ausführlicher werden. Auch aufmalen können. 
+	Durch die Verwendung von Sequenznummern welche Monoton wachsen und bei Sequenznummernüberlauf die Neuaushandlung des Schlüsselmaterials verursachen können.
+	\subsubsection{Wie funktioniert das Anti-Replay-Empfangsfenster?}
+	Es wird hierzu ein Sequenznummernfesnter eingesetzt. Das Fenster stellt den akzeptierten Bereich von Sequenznummern da.  Dabei hat das Fenster eine gewisse Fenstergröße W, empfohlen wird eine W=64. Dem oberen Ende, die höchste empfangene Sequenznummer und dem unteren Ende $\text{Obres Ende} -W +1$
+	\newline
+	Wird nun eine Dateneinheit empfangen so kann es sein das:
+	\begin{itemize}
+		\item Sequenznummer größer als höchste bisher empfangene: Akzeptieren(nach Authentizitätprüfung) und Fenster verschieben
+		\item Sequenznummer im Fensterbereich und noch nicht erhalten: Akzeptieren (nach Authentizitätsprüfung) und Sequenznummer als empfangen markieren
+		\item Sequenznummer im Fenster und bereits erhalten: Dateneinheit verwerfen
+		\item Sequenznummer kleiner als unteres Ende: Dateneinheit verwerfen. 
+	\end{itemize}
+	
+	Mit Sequenznummern und Sequenznummernfenster beim Empfänger.
+	Das Fenster hat eine bestimmte Größe. Das obere Ende ist die letzte empfangene Sequenznummer. Wenn ein Paket unterhalb des Fenster ankommt, wird es verworfen. Angenommene Pakete werden markiert, falls es oberhalb des Fensters ist, so wird das Fenster verschoben.
+	\subsubsection{Malen Sie das mal hin}
+	Empfangsfenster der Größe 16, nicht empfangene Dateneineheiten sind markiert.
+
+	Die höchste empfangene Dateneineheit hat Sequenznummer N+15 und die letzte empfangene Dateneineheit N+13. Die Dateneinheit mit der Sequenznummer N kann nocht empfangen werden.
+
+	Dateneinheit N wurde nicht empfangen, dafür Dateneinheit N+17 und das Fenster wurde um zwei stellen verschoben. Sollte Dateneinheit N nun eintreffen muss sie verworfen werden.
+	
+	\subsubsection{Was passiert mit älteren Nachrichten, wenn das Fenster verschoben wird?}
+	Diese werden beim Eintreffen verworfen.
+	
+	\subsubsection{Kann ich aus dem Fenster gerutschte Datenpakete nicht mehr empfangen? Ist mein Download dann einfach unvollständig?}
+	Das ist von übergeordneten Schichten abhängig. Da ein Download vermutlich über TCP läuft wird der Server keine bestätigung für die Pakete bekommen und sie erneut übertragen, der Download bricht nicht ab.
+	
+	\subsubsection{Wie Schütz man vor Verkehrsanalyse?}
+	Durch Padding auf bist zu 64k Größe einer Dateneinheit und einfügen von Dummy Dateneinheiten.
+	
+\subsubsection{Welche Protoklle werden bei IPsec verwendet?}
+	Authentication Header (AH) und Encapsulating Security Payload (ESP). AH schützt Authentizität, Integrität, Zugangskontrolle und Schutz vor Replay Angriffen. ESP bietet zusätzlich die Vertraulichkeit und Schutz vor Verkehrsanalyse.
+	
+	\subsubsection{Welches Krypto Verfahren kommt bei AH zum einsatz?}
+	HMAC und setzt ein gemeinsames Geheimnis vorraus.
+	
+	\subsubsection{Was ist das Hauptziel von AH?}
+	Abwer von Address Spoofing Angriffen.
+	
+	\subsubsection{Was für Felder hat der AH-Kopf?}
+	\begin{itemize}
+		\item Next Header: Übernimmt dei Rolle des Protokollfelds im IP-Kopf
+		\item Nutzdaten-Länge
+		\item Reservierte für zukünftige Nutzung
+		\item SPI um die benötigte SA in der SAD des Empfängers zu identifizieren. Muss beim Einrichten der SA ausgetauscht werden.
+		\item Sequenznummer
+		\item Authentifizierungsdaten (Integrity Check Value,ICV): Variable Länge mindest anzubietende Verfahren HMAC-MD5 und HMAC-SHA1
+	\end{itemize}
+
+	
+	\subsubsection{Was für Felder hat eine ESP-Dateneinheit?}
+	ESP-Kopf:	
+	\begin{itemize}
+		\item SPI
+		\item Sequenznummer
+		\item Initialisierungsvektor, in den Nutzdaten plaziert
+	\end{itemize}
+	ESP-Anhang
+	\begin{itemize}
+		\item TFC-Padding, im Tunnelmodus möglich und in den Nutzdaten plaziert
+		\item Padding, Ausrichten von Feldern(z.B: Pad-Länge und Next-Header) Blockgröße für Verschlüsselungsverfahren erreichen.
+		\item Länge des Passings
+		\item Next Header
+	\end{itemize}
+	ESP-Auth:
+	\begin{itemize}
+		\item Authentifizierungsdaten (Integrity Check Value,ICV)
+	\end{itemize}
+	
+	\subsubsection{Wie ist IPSec aufgebaut?}
+	Kontrollpfad mit IKe, Datenpfad mit AH/ESP. Über IKE werden die Security Associations für IPSec etabliert.
+	
+	
+	\subsubsection{Was versteht man in diesem Fall unter Sicherheit?}
+	AH %TODO was ist AH?
+	unterstützt Authentizität der Daten und Kommunikationspartner und schützt außerdem gegen Replay-Attacken. Möchte man noch Vertraulichkeit, so kann man das mit EDP %TODO was ist EDP?
+	bewerkstelligen.
+	
+
+	
+	
+	
+	
+	
+
+	
+	\subsubsection{Welche Bausteine hat eine IKE?}
+		\begin{itemize}
+			\item Schutz der Identität
+			\item Modulare Wahl der Verfahren
+			\item Perfekt Forward Secrecy
+		\end{itemize}
+	
+	\subsubsection{Wie sieht in IKE der initiale Austausch aus?}
+		
+	Nachrichten 1 und 2
+	\begin{itemize}
+		\item $SA_j$: Unterstüzte Algorithmen
+		\item $SA_r$: Ausgewählte Algorithmen
+		\item $KEY_i$ und $KEY_r$: Diffi-Hellman-Werte des Initiators bzw. Responders.
+		\item $Nonce_j$ und $Nonce_r$: Zufallszahlen des Initiators bzw. Responders
+		\item CERTREQ: Optionale Anforderung eines Zertifikats
+		
+	\end{itemize}
+	Schlüsselerzeugung mittels DH-Verfahren unter Verwendung der beiden Nonces
+	\begin{itemize}
+		\item SK: Seeded Key, Seed wird aus Nonces berechnet
+		\item Es werden unterschiedliche Schlüssel für Verschlüsselung und zur Integritätssicherun pro Kommunikationsrichtung erzeugt.
+	\end{itemize}
+	Nachrichten 3 und 4
+	\begin{itemize}
+		\item $ID_j$ und $ID_r$: Identifikator des Initiators bzw. Responders
+		\item $AUTH$ Authentifizierung aufgrund gemeinsamen Geheimnisses oder über PKI bzw. Zertifikate. Berechnet über Nachricht 1 bzw 2 um Downgrad-Angriffe zu erkennen z.B. signierter Hash der Austausch-Nachrichten.
+	\end{itemize}
+	Authentifikation abgeschlossen, ab jetzt Aushandlung der Child-SAs
+	\begin{itemize}
+		\item $CERT$ und $CERTREQ$: Optional falls Authentifikation mit Zertifikaten durchgeführt werden soll.
+		\item $SA_{i2}$ und $SA_{r2}$: Vorgeschlagene bzw. ausgewählte Algorithmen
+		\item $TS_j$ und $TS_r$: Traffic-Selektoren
+	\end{itemize}
+	
+	\subsubsection{Wie wird eine SA identifiziert?}
+	Über die SPI
+	
+	\subsubsection{Was sind Probleme bei IPsec und NAT?}
+	UDP-Einkapselung
+		
+	\subsubsection{IKE(Internet Key Exchange): welche Schlüsselaustauschverfahren haben wir in der Vorlesung behandelt?}
+	\begin{itemize}
+		\item Statischer Ansatz: z.B. persönliche Übergabe. Verschlüsselung und Authentifizierung der auszutauschenden Daten mit erhaltenem Schlüssel. Einfaches Verfahren benötigt aber reales Treffen bei jeder Erneuerung des Schlüssels.
+		\item Statischer Ansatz ohne Treffen: Hinterlegung des Schlüsselmaterial bei einer vertrauenswürdigen Instanz(Trustes Third Party) welche den Schlüssel auf Anfrage herausgibt.Dies erfordert einen sicheren Kanal zu TTP, der Schlüssel ist nur indirekt authentifiziert und eine Kompromittierung der TTP betrifft alle Kommunikationsteilnehmer.
+		\item Dynamischer Ansatz: Z.B. über Diffie-Hellman, Es ist weder ein treffen noch eine zentrale Instanz notwendig und über die dynamische Aushandlung kann "Perfect Forward Secrecy" ermöglicht werden. Dafür sind die Schlüssel nicht authentifiziert und das Verfahren ist sehr rechenintensiv.
+	\end{itemize}
+	Perfect Forward Secrecy, Statless Server, Cookies/Puzzle.
+	
+	\subsubsection{Bietet IKE PFS?}
+	Ja
+	
+	\subsubsection{Was sind die Probleme bei IPsec und Firewalls?}
+	Firewalls nutzen häufit die Portnummer eines Pakets zum Filtern des Verkehrs, diese ist jedoch bei ESP verschlüsselt.
+	
+	
+	
+	
+	
+
+\subsection{TLS}
+	\subsubsection{Wofür verwendet man TLS?}
+	TLS wird verwendet um die Kommunikation zwischen Anwendungen abzusichern. Anwendungsprotokolle können transparent auf TLS aufgesetzt werden.
+	
+	\subsubsection{Auf welcher Schicht wird TLS benutzt}
+	Schicht 5 (Session Layer) direkt über TCP.
+	
+	\subsubsection{Wie ist der allgemeine Aufbau von TLS?}
+
+	
+	\subsubsection{Welche Schutzziele erfüllt Record Protocol?}
+	Vertraulichkeit (symmetrischer Krypto), Integritätssicherung (HMAC).
+	
+	\subsubsection{Was sind die Aufgaben des TLS-Record Protocols?}
+	\begin{itemize}
+		\item Verwaltung der TLS-Sitzung
+		\item Fragmentierung der Anwendungsdaten
+		\item Optionale Komprimierung der Anwendungsdaten
+		\item Kryptografische Verarbeitung der zu übertragenden Daten
+	\end{itemize}
+	
+	\subsubsection{Was ist die Aufgabe des Record Layers?}
+	Das Record Layer hat die Aufgabe TLS Sitzungen über mehrere TLS-Verbindungen hinweg zu verwalten.
+	
+	\subsubsection{Wie wird im TLS Record Layer die Integrität sichergestellt?}
+	TLS nutzt zu Integritätssicherung einen MAC, mit MD5 oder SHA Hasfunktion. 
+	
+	\subsubsection{Wie sieht der Grundlegende Ablauf beim Senden über Record Layer aus?}
+	\begin{itemize}
+		\item Anwendung übergibt zu übertragende Daten
+		\item Fragementierung der Daten sofern notwendig
+		\item Komprimierung der Daten (Default wird nicht komprimiert)
+		\item Integritätssicherung mittels MAC
+		\item Verschlüsselung (Abhängig von ausgehandelter CipherSuite)
+		\item Übergabe an Transportschicht
+	\end{itemize}
+	\subsubsection{Wie sieht der TLS Schlüsselaustausch aus?}
+
+
+	
+	\subsubsection{Wenn kein Diffie-Hellman genutzt wird, wie wird verhindert, dass ein Angreifer die Handshake-Nachrichten mithört und selbst den Schlüssel berechnet?} 
+	Verschlüsselung des ClientKeyExchange mit dem öffentlichen Schlüssel des Servers aus dem Zertifikat.
+	
+	
+
+	\subsubsection{Wie wird bei TLS die Authentizität hergestellt?}
+		
+	
+	\subsubsection{Was ist eine ChipherSuite?}
+	Cipher-Suites sind vordefinierte Kombinationen von Sicherheitsalgorithmen.
+	TLS\textunderscore (Algorithem für Schlüsselaustausch) WITH (Algorithemn für Datenaustausch)
+	Bso: TLS\textunderscore NULL\textunderscore WITH\textunderscore NULL : Kein Schutz.
+	
+	\subsubsection{Was ist eine Downgrade Attacke?}
+	Eine Downgrade Attacke ist ein Angriff bei dem versucht wird ein schwächere Verschlüsselung zu erzwingen. Beispiel anhand von TLS und ChipherSuite TLS\textunderscore NULL\textunderscore WITH\textunderscore NULL\textunderscore NULL.	
+	
+	Angreifer fängt ClientHello ab, löscht strake CipherSuites und leitet es dann an den Server weiter. Als Folge wir dann eine schwache CipherSuite ausgehandelt, welche einfacher zu brechen ist.
+	\subsubsection{Wie könnte Client oder Server einen Downgrade Angriff erkennen?}
+	In den Finished-Nachrichten schicken beide einen HMAC, der über alle vorherigen Nachrichten gebildet wird
+	
+	
+	\subsubsection{Wie ist der TLS Stack aufgebaut?}
+
+	
+	\subsubsection{Worin unterscheidet sich TLS von IPSec?}
+	TLS Schützt nur Anwendungen oberhalb von TCP wohingegen IPSec IP und alle Protokolle oberhalb von IP schützt. TCP muss explizit durch eine Anwendung genutzt werden und IPSec ist dagegen für Anwendungen transparent.
+	Der Schutz durch TLS ist pro Anwendung/Nutzer definiert während der Schutz bei IPSec pro Host, feingranular durch verschiedene SAs einstellbar ist. Bei IPSec kann der Administrator in die Poicy eingreifen, bei TLS ist die nicht möglich das die Policy von der Anwendung vorgegeben wird.
+
+	\subsubsection{Gegen welche Angriffe ist TLS anfällig?}
+	Truncate Angriff, Client will TLS-Verbindung schließen jedoch schleust der Angreifer ein unverschlüsseltes TCP-FIN Pakcket ein und der Server bekommt den Auslogversuch nie mit.\newline
+	Das Wird durch die \textbf{CloseNotify} Nachricht verhindert, dazu müssen beide Kommunikationspartner CloeNotify verschicken.
+	\subsubsection{Wie schützt man sich gegen einen TCP-SYN-Flood Angriff}
+	
+	\subsubsection{Welche Variante von TLS baut auf UDP auf?}
+	DTLS läuft über UDP. Es werden Sequenznummern im Record Protocol eingeführt. Im Record Layer wird keine Stromchiffre eingesetzt und das Handshake Protocol wird verändert so das verlorene Pakete erneut übertregen werden.
+		
+	\subsubsection{Was steht in ClientHello?}
+	In ClientHello steht zum einen die Nonce, also eine Zufallszahl als auch eine Sequenznummer, falls der Client eine Sitzungswiederaufnahme machen will und die vom Client angebotenen Algorithmen in Form von CipherSuites
+
+	\subsection{Internetdienste}
+	
+		\subsubsection{Was ist BGP und welche Angriffe wurden dazu besprochen?}
+	BGP ist das Border Gateway Protokol. Ein Routing Protokoll. Es ist anfällig für das unautorisierte bekanntgeben von Präfixen von AS-Pfaden, Fälschen von AS-PATH angaben und Eindringen in BGP-TCP Sessions.
+	Damit kann ein Angreifer Traffic über sich umleiten. 
+
+	
+	
+	\subsubsection{Mit welchen BGP-Nachrichten kann man die Routen zu den Pfäfixbereichen veröffentlichen?}
+	Mit Hilfe von UPDATE-Nachrichten.
+	
+	\subsubsection{Wie lässt sich BGP absichern?}
+	Mit Hilfe von S-BGP, welches auf IPSec aufbaut. Vertrauensanker bis zu IANA.
+	
+	\subsubsection{Welche Angriffsziele gibt es bei DNS?}
+	\begin{itemize}
+		\item Unautorisiere Bekanntgabe von Records
+		\item Manipulation des Caches
+		\item Eindringen in UDP-Datenverkehr
+	\end{itemize}
+	Problem: Die schnellste Antwort gewinnt. Ist ein Angreifer schnell genug kann er bei einer DNS Anfrage einen falsche Antwort einschleusen.
+	\subsubsection{Was ist DNSsec}
+	DNSsec wird TLS verwendet um Authentizität und Integrität zu gewährleisten.
+	Hier werden zusätzliche DNS-Records benutzt um öffentliche Schlüssel und Signaturen zu hinterlegen.
+	
+	\subsubsection{Wo werden hier Zertifikate eingesetzt?}
+	Zertifikate für den TLS Tunnel, um die Authentizität eines Server zu gewährleisten. 
+	
+	\subsubsection{Was ist DANE?}
+	Protokol zur überprüfbarkeit ob Server-Zertifikat tatsächlich zur Domain gehört. Hierbei werden Zertifikate für Server per DNSSEC in gesicherten Zonen hinterlegt. Dadurch kann der Client per DNSSEC überprüfen ob das angebotene Server-Zertifikat mit dem hinterlegtem übereinstimmt.
+	
+	\subsubsection{Was ist DoS?}
+	Denial of Service. Ein Angreifer möchte einen Dienst sabotieren, so das dieser nicht mehr Erreichbar/Benutzbar ist.
+	
+	\subsubsection{Welche Arten von Denial of Service Attaken hatten wir behandelt?}
+	Physische Angriffe, Ausnutzung von Implementierungsschwächen, Ausnutzung von Protokollschwächen und erzeugung eines Ressourcenmangels.
+	
+	\subsubsection{Was ist ein Physische DoS Angriff und was kann man dagegen unternehmen?}
+	Damit ist das physische Zerstören oder Stören von Übertragungswegen wie Seekabeln oder z.B. Antennen gemeint. Bei Kabelgebundenen Medien hilft es Angreifer fernzuhalten bei drahtlosen Medien ist dies praktisch unmöglich.
+	
+	\subsubsection{Wie sieht der Angriff auf eine Implementierungsschwäche aus?}
+	Der Angreifer nutzt Fehlerhaftes Verhalten welches  das Programm bzw. System zum Absturz bring. Abwehr durch aktuelle Patches oder Filtern von potentiellen Angriffspaketen.
+	
+	\subsubsection{Wie sieht ein Angriff auf Protokollschwächen aus}
+	Gezieltes ausnutzen von Protokollschwächen, z.B. SYN-Flooding bei TCP. Server legt Verbindungskontext direkt bei erhalt eines SYN-Pakets an bis verfügbare Verbindungskontexte erschöpft sind. Abwer durch aktualisierung von Protokollspezifikationen und abschalten gefährdeter und ungenutzter Optionen.
+	
+	\subsubsection{DoS mit Ressourcenmangel}
+	Mehr legitime Anfragen liefern als der Server bedienen kann und dadurch die Verfügbarkeit für realte Teilnehmer unterdrücken.
+	
+	\subsubsection{Was kann man dagegen unternehmen?}
+	Monitoring beim Dienst um ungewöhnliche Netzlast zu detektieren. Filtern durch die Firewall möglichst weit im Upstream, so dass die Netzwerkverbindung nicht überlastet werden kann. 
+	
+	\subsubsection{Was macht ein Cleaning Center?}
+	Dienst als Proxy zwischen Angreifer udn Dienst. Stellt extrem viel Bandbreite udn Ressourcen zur Verfügung, so das es dem Angreifer nicht/schwer möglich ist diese vollständig auszulasten und sortiert unzulässigen Verkehr aus und leitet nur das gefilterte zum Dienst weiter.
+	
+	\subsubsection{Was muss der Dienstanbieter ändern um ein Cleaning Center einzusetzen und was ändert sich für den Nutzer?}
+	Der Verkehr muss über das Cleaining Center geroutet werden, für den Nutzer ist dies Transparent.
+	
+	\subsubsection{Wie schützen die Verfahren gegen DOS?}
+	Aushandlung der Sicherungsprotokolle, Schutz gegen Downgrade Attacken.
+	
+	\subsection{Privatsphäre}
+	\subsubsection{Wie definieren sie Privatsphäre?}
+	Informationelle Selbstbestimmung, jeder hat über die Preisgabe und Verwendung seiner Daten selbst zu bestimmen.
+	
+	\subsubsection{3 Säulen für Schutz der Privatsphäre?}
+	Regulierung, Selbstregulierung und Selbstschutz (PET)
+	
+	\subsubsection{Was schützen PETs?}
+	Schutz der Identität eines Benutzer, der Herkunft von Daten und Schutz personenbezogener Daten.
+	Identität z.B. durch Sender/Empfängeranonymität. Als Beispiel für die Empfängeranonymität könnte man hier einen Broadcast nennen und für die Senderanonymität einen Proxy. 
+	Beispiel: Onion Routing, schützt Unverkettbarkeit und gewährleistet Teilnehmer-Anonymität.
+	\newline
+	Grundprinzip: Datensparsamkeit
+	
+	\subsubsection{Was bringt Message Broadcasting?}
+	Empfängeranonymität, dafür keine Senderanonymität.
+	
+	\subsubsection{Was bringt ein Proxy?}
+	Proxy als "Anonymizer" entfernt persönliche Daten -> Senderanonymität, allerdings muss man dem Anonymizer vertrauen.
+	
+	\subsubsection{Was macht ein Identity Protector?}
+	Ein Identity Protector erzeugt Pseudonyme wodurch die Senderidentität verschleiert wird auch hier muss dem Identity Protector vertraut werden.
+	Der Wechsel von Pseudonymen darf nicht beobachtbar sein.
+	
+	\subsubsection{Was bringen Mixes?}
+	Ein Mix Server sammelt Nachrichten verschiedene Clients vertauscht udn transkodiert sie wodurch eine Senderanonymität und Unverkettbarkeit entsteht.
+	
+	\subsubsection{Wie funktioniert Onion Routing?}
+	 Nachrichten werden in Schalen eingepackt und jeweils mit dem öffentlichen Schlüssel des nächsten Empfängers verschlüsselt verpackt. Dabei werden sie durch zufällig gewählte Reihe von Onion Routern weitergeleitet. Auf dem Rückweg wird wieder ein zufälliger Weg gewählt. 
+	 \newline
+	 Dies bringt Unverkettbarkeit allerdings sind viele Public-Key-Operationen notwendig und die Unverkettbarkeit wird nur erreicht, wenn viel Verkehr über die Onion Router geht.
+	
+	TOR bietet Senderanonymität. Empfängeranonymität über Hidden Services.
+	
+	\subsubsection{Wie funktionieren Crowds?}
+	Menge von Nutzern auf deren Knoten "Jondo" läuft. Jeder leitet Anfragen zufällig  entweder verschlüsselt an andere Miglied oder unverschlüsselt an das Ziel weiter. Das bringt Senderanonymität gegenüber dem Ziel aber keine Senderanonymität gegenüber einem netzwerkweiten Lauscher.
+	
+	\subsubsection{Wie Funktioniert Peer-to-Peer-Netz Freenet?}
+	Soll Anonymität, Abstreitbarkeit, Sicherheit vor Zensur, Effizientes Routing und vollständige Deentralisierung liefern.
+	
+	Anfragen über mehrere Hops wobei jeder nur den direkten Nachbarn kennt, Antwort auf gleichem Weg zurück.
+	Dokumente werden verschlüsselt gespeichert, wobei der speichernde Knoten den Schlüssel nicht kennt.
+	
+	\subsubsection{Wie funktioniert OpenPGP?}
+	Hybrides verfahren. es wird ein symmetrischer Schlüssel generiert der mit dem asymetrischen Schlüssel des Empfängers verschlüsselt wird. Nachrichten sind nicht abstreitbar.
+	
+	\subsubsection{Wie funktioniert OTR?}
+	\begin{itemize}
+		\item Deffie Hellman für Sitzungsschlüssel
+		\item Verschlüsseln mit aktuellen Schlüssel
+		\item HMAC über Nachricht mit aktuellem Schlüssel für Integirtätsschutz
+		\item neuer Sitzungsschlüssel beim empfang einer neuen Nachricht
+		\item Offenlegung der in Vergangenheit verwendeten H(Sitzungsschlüssel) <-- Abstreitbarkeit weil bekannt.
+	\end{itemize}
+	Ziele: Vertraulichkeit(PFS), Authentifizierung, Abstreitbarkeit.
+	\subsubsection{Es gibt zwei verschiedene Typen von Anonymität. welche?}
+	Anonymität und Pseudoanonymität.
+	
+	\subsubsection{Was ist der Unterschied zwischen Anonymität und Pseudoanonymität?}
+	Bei Pseudoanonsymität wird lediglich Name und andere Identifikationsmerkmale durch Kennzeichen ersetzt bei Anonymität werden die Angaben jedoch so verändert das Einzelangaben über persönliche oder sachliche Verhältnisse nicht ohne großen Aufwand bestimmt werden können.	
+	
+	\subsubsection{Was sind Tracking Cookies?}
+	Cookies mit ID welche es ermöglichen das Verhalten eines Nutzers über Webseiten hinweg zu ermöglichen.
+	
+	\subsubsection{Was ist Browser Fingerprinting?}
+	Eindeutige zuordnen eins Browser durch den User-Agent, installierte Schriftarten etc.. 
+	
+	\subsubsection{Was ist DNS-Tracking?}
+	Durch Protokolierung der DNS Anfragen kann ein Nutzerprofil erstellt werden.
+	\subsection{noch nicht eingeordnet}
+	
+	\subsubsection{Wie wird Vetraulichkeit erreicht?}
+	Durch Verschlüsselung
+
+	\subsubsection{Wie funktioniert ein Zertifikat und was ist darin enthalten?}
+	Normalerweise ein Identitätszertifikat, bindet einen Public Key an eine Identität. Signiert von einer CA. Die CA stellt bevor das Zertifikat ausgegeben wird sicher, dass die Identität und Key zusammen gehören.
+	In einem Zertifikat stehen: 
+	\begin{itemize}
+		\item Identität
+		\item Public Key
+		\item Identität der CA
+		\item Signatur der CA
+	\end{itemize}	 
+	Eine andere Art eines Zertifikat wäre ein Autorisationszertifikat welches Rechte an eine Identität und Attributszertifikate an einen Public Key bindet.
+	Als Beispiel aus der realen Welt wäre der Studentenausweiß zu nennen.
+
+	\subsubsection{Welche Protokolle hatten wir beim Netzzugangsschutz?}
+	EAP, CHAP und PAP
+	
+	\subsubsection{Zeichne wie CHAP funktioniert}
+	Challenge mit Passwort als Hash etc.	
+	
+	\subsubsection{Wie funktioniert ein Angriff auf Diffi-Hellmann?}
+	Über einen Man in the Middle Angriff. Angreifer hört $g^x$ mit und sender eigenes $g^x$ und andersrum. Dadurch kann der Angreifer beide Schlüssel austauschen.
+	
+	\subsubsection{Was ist eine digitale Signatur?}
+	Unterschrift die ein Dokument bestätigt. Wird mit privatem Schlüssel unterschrieben und kann mit dem öffentlichen Schlüssel überprüft werden.
+	
+	\subsubsection{Von was für einem Angreifermodell gehen wir in der Regel aus?}
+	Von einem Dolev-Yao Angreifer. Der Angreifer ist Omnipräsent und kann in den Netzwerkverkehr eingreifen, aber die Endsysteme der Kommunikationspartner sind sicher. Er kann eigene Dateneinheiten erzeugen und versenden  sowie fremde Dateneinheiten modifizieren allerdings  nicht Enschlüsseln oder Verschlüsseln ohne den Schlüssel zu kennen. Der Angreifer ist ein Outsider, da er ein legitimer Nutzer des Netztes darstellt.
+	
+	\subsubsection{Wozu dient ein Nonce?}
+	Ein Nonce schützt vor dem Wiedereinspielen. 
+	
+	\subsubsection{Welches Transportprotokolle benötigen TLS bzw. IPsec?}
+	TLS benötigt ein Protokoll, welches einen zuverlässigen Dienst bereitstellt, z.B. TCP. IPsec ?? vermutlich reicht hier UDP
+
+	
+	\subsubsection{Was ist ein Zertifikat? was für ein Zertifikat wird bei IKE eingesetzt?}
+	Vertrauenswürdige Instantz bestätigt Sachverhalt, welchen man selbst nicht Prüfen kann. Es kommt ein ID-Zertifikat zum Einsatz.	
+	
+	\subsubsection{Was steht alles in einem ID-Zertifikat?}
+	Name des Subjekts( Name, Organisation, Email etc..), Client-Public-Key,Seriennummer, Ausstellungszeitpunkt, Ablaufdatum,CA-Signatur, CA Name, CA-Public-Key,   Angabe. 	
+	
+	\subsubsection{Was wird überprüft, wenn ein Zertifikat erhalten wird?}
+	passendes Subjekt, Signatur, Herausgeber vertrauenswürdig
+	
+	\subsubsection{Wie sieht so eine Signatur aus? Wie funktioniert Sie?}
+	Hash über Datum mit Private Key verschlüsseln, mit Public Key entschlüsselbar und somit vergleichbar. Vertrauen braucht einen Anker (unbedingtes Vertrauen), bis dahin wird eine Vertrauenkette von CAs aufgebaut.
+	
+	\subsubsection{Von welchem Vertraunesmodell sprechen Sie hier?}
+	Oligarch von CAs mit Delegierung. Typisches Miodell für TLS / SMIME. Arbeitet mit transitivem Vertraugen.
+	
+	\subsubsection{Ist das alles was geprüft werden muss?}
+	Zusätzlich muss das Ablaufdatum sowie der Zertifikatswiderruf über die Certificate Recovation List geprüft werden.
+	
+	\subsubsection{Was muss bei der CA besonders geschützt werden?}
+	Der Private Key der CA zum Signieren.
+	
+	\subsubsection{Welche CA Modelle gibt es?}
+	Single-CA, Oligarchie, Oligarchie mit Delegierung und Anarchie
+	
+	\subsubsection{Wie überprüft man ein Zertifikat?}
+	Man entschlüsselt die Signatur der CA mit dem öffentlichen Schlüssel der CA und vergleicht das Ergebnis mit dem öffentlichen Schlüssel aus dem Zertifikat.
+	
+	\subsubsection{Wie kann man feststellen ob ein Zertifikat widerrufen wurde?}
+	Man schaut in der Certificat Revocation List nach.
+	\subsubsection{Wann widerruft man ein Zertifikat?}
+	Man legt das Wiederruffunszertifikat bei der CA vor und diese nimmt das Zertifikat in die CRL auf.
+	
+	\subsubsection{Was sind Zertifikate und welche Typen gibt es?}
+	Zertifikate stellen garantierte Sachverhalte da, welche man nicht selbst überprüfen kann, aber von einer Trusted Third Party(CA) überprüft wurden. 
+	Es gibt: 
+	\begin{itemize}
+		\item ID-Zertifikate: binden Identität an Public Key
+		\item Attribut-Zertifikate: binden Eigenschaft an Identität
+		\item Autorisierungs-Zertifikate: binden Privileg an Public Key
+	\end{itemize}
+		
+	\subsubsection{Welche Authentifizierungsdienste haben wir behandelt?}
+	Radius, Diameter und Kerberos.
+	
+	
+
