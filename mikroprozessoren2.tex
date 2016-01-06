@@ -244,22 +244,35 @@ Einfache, einzyklische Maschinenbefehle; Load/Store Architektur; optimierende Co
 \end{itemize}
 
 \subsubsection{Spekulative Ausführung}
+In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritten innerhalb einer Verarbeitungskette (Pipeline) ausgeführt. Um die Leistungsfähigkeit des Prozessors zu maximieren, wird, nachdem ein Befehl in die Pipeline geladen wurde und z. B. im nächsten Schritt mit der Analyse des Befehls fortgefahren werden soll, gleichzeitig mit dem Laden des nächsten Befehles begonnen. Es befinden sich also (meistens) eine ganze Reihe von Befehlen zur sequentiellen Abarbeitung in der Pipeline. Wird jetzt am Ende der Pipeline festgestellt, dass ein bedingter Sprung ausgeführt wird, so sind alle in der Pipeline anstehenden und teilabgearbeiteten Befehle ungültig. Der Prozessor löscht jetzt die Pipeline und lädt diese dann von der neuen Programmcodeadresse neu. Je mehr Stufen die Pipeline hat, desto mehr schon berechnete Zwischenergebnisse müssen verworfen werden und um so mehr Takte wird die Pipeline nur partiell genutzt. Das reduziert die Abarbeitungsgeschwindigkeit von Programmen und reduziert die Energieeffizienz.\footnote{\url{https://de.wikipedia.org/wiki/Sprungvorhersage\#.C3.9Cbersicht}}
 \begin{itemize}
-	\item Befehlsausführung über nicht aufgelöste Verzweigungen. Impliziert, dass ein Befehl nutzlos sein kann, da zum Ausführungszeitpunkt nicht bekannt ist, ob der Befehl ausgeführt werden soll
-	\item Mikroarchitektur muss die Ressourcen haben und in der Lage sein, die Effekte einer fälschlicherweise spekulativ ausgeführten Instruktion zu löschen (beispielsweise Modifikationen im Speicher oder bei Ausnahmesituationen)
-	\item \textbf{Sprungvorhersage (Branch Prediction)}
+	\item Ziel: Möglichst frühes Erkennen eines Sprungbefehls und Erkennen seiner Sprungzieladresse, damit gleich die Daten der Zieladresse dem Sprungbefehl in die Pipeline folgen können.
+	\item Beinhaltet die Vorhersage, ob ein Sprung ausgeführt wird und berechnet die Zieladresse des Sprungs
+	\item \textbf{Statische Sprungvorhersage}
 	\begin{itemize}
-		\item Verhalten beim Auftreten von Verzweigungen: Vorhersagen des Sprungziels; Füllen der Verzögerungsphasen spekulativ mit Befehlen; Fortfahren mit der Ausführung ohne Verzögerung bei korrekter Vorhersage oder Verwerfen der geholten Befehle bei falscher Vorhersage
-		\item Ansätze
+		\item Vorhersage wird beim Compilieren eingebaut und ändert sich während des Programmablaufs nicht. Genauigkeit etwa bei 55 bis 80 \% (Quelle: Wikipedia)
+		\item Geht bei Schleifen davon aus, dass Sprünge häufig ausgeführt werden, während dies bei Auswahlverfahren seltener vorkommt
+		\item Sprungvorhersagetechniken
 		\begin{itemize}
-			\item Statische Sprungvorhersage: Richtung der Vorhersage ist für einen Befehl immer gleich und festverdrahtet. Sprungvorhersage durch den Compiler
-			\item Dynamische Sprungvorhersage
-			\begin{itemize}
-				\item Hängt von der Vorgeschichte ab und berücksichtigt das Programmverhalten
-				\item Genauere Vorhersagen bei allerdings auch höherem Hardwareaufwand möglich
-				\item Sprungzielcache: \texttt{Branch Target Address Cache} (Tabelle: Adresse der Verzweigung \(\rightarrow\) Sprungzieladresse) und \texttt{Branch Target Buffer} (Direct-mapped-Cache) speichern die Adresse der Verzweigung und das entsprechende Sprungziel
-				\item \texttt{Branch History Table} hält das Verhalten der Sprungbefehle während der Ausführung des Programms fest: Prädikatoren
-			\end{itemize}
+			\item \texttt{Stall/Freeze}: Wird während der ID-Phase ein Sprungbefehl festgestellt, wird die Pipeline bis in der EX-Phase bekannt ist, ob der Sprung ausgeführt wird
+			\item \texttt{Predict taken}: Geht immer davon aus, dass ein Sprung ausgeführt wird (verwendet bei Schleifen)
+			\item \texttt{Predict not taken}: Geht immer davon aus, dass ein Sprung nicht ausgeführt wird (verwendet bei Auswahlverfahren)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Dynamische Sprungvorhersage}
+	\begin{itemize}
+		\item Sprungvorhersage wird zur Laufzeit von der CPU ausgeführt. Genauigkeit bei etwa 98\% (Quelle: Wikipedia)
+		\item Sprungvorhersagetechniken
+		\begin{itemize}
+			\item Der \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
+			\item \texttt{1-Bit-Prädikator}: Zu jedem Sprung wird ein Bit gespeichert. Ist es gesetzt, dann wird ein gespeicherter Sprung genommen. Bei Falschannahme wird dessen Bit invertiert. Problem: Alternierende Sprünge werden nicht berücksichtigt \(\rightarrow\) \texttt{n-Bit-Prädikator}
+			\item \texttt{2-Bit-Prädikator}: Speichert vier Zustände und setzt das Korrektheitsbit erst nach \texttt{2} Fehlschlägen neu. Zustände sind \texttt{Predict strongly taken (11)}, \texttt{Predict weakly taken (10)}, \texttt{Predict weakly not taken (01)} und \texttt{Predict stronly not taken (00)}. In der Praxis bringen Prädikatoren mit mehr als 2 Bit kaum Vorteile.
+		\end{itemize}
+		\item Sprungzielvorhersagetechniken
+		\begin{itemize}
+			\item Erweitert die Sprungvorhersage um eine Sprungzielvorhersage. Somit kann man den Programmzähler sofort auf dieses Sprungziel stellen und die dortigen Instruktionen in die Pipeline laden
+			item Sprungzielcache: \texttt{Branch Target Address Cache} (Tabelle: Adresse der Verzweigung \(\rightarrow\) Sprungzieladresse) und \texttt{Branch Target Buffer} (Direct-mapped-Cache) speichern die Adresse der Verzweigung und das entsprechende Sprungziel
+			\item \texttt{Branch Prediction Buffer}: Paralleler Zugriff auf den Befehlsspeicher und den BPB in der Befehlsholphase. Falls die Instruktion eine Verzweigung ist, bestimmt die Vorhersage die nächste zu holende Instruktion und berechnet die Adresse des Befehls. Nach Ausführung der Verzweigung wird die Sprungsvorhersage verifiziert und der Eintrag im BPB ggf. aktualisiert
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
