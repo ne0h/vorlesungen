@@ -684,8 +684,26 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 \begin{itemize}
 	\item Methode zur Vereinheitlichung prädikatenlogischer Ausdrücke\footnote{\url{https://de.wikipedia.org/wiki/Unifikation_(Logik)}}
 	\item Ziel: Finde Substitution, die alle Gleichungen erfüllt \(\rightarrow\) "`Unifikator"'
-	\item Algorithmus auf Folie S274
+	\item Formaler Algorithmus auf Folie S274, ausführliches Beispiel auf Folie S275
 	\item Klammersetzung beachten!
+\end{itemize}
+
+\subsubsection{Elemente}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{l|X|X|X}
+	Typterme \(\tau\) & Basistypen: \texttt{int, bool} & Variablen: \(\alpha,~\alpha_2,~\beta\) & Typkonstruktor: \(\tau_1 \rightarrow \tau_2\) \\
+	Prologterme \(\theta\) & Atome: \texttt{f, g, a, hans, ...} & Variablen: \texttt{X, Y, \_Y, ...} & Funktor: Atom\((\theta_1,...,\theta_2)\) \\
+\end{tabularx}
+\end{table}
+
+\subsubsection{Der Algorithmus}
+\begin{itemize}
+	\item Eingabe: Eine Liste von Gleichungen
+	\item Wiederhole, solange Gleichungen in der Liste
+	\begin{enumerate}
+		\item Nehme die erste Gleichung und versuche die Variable, die alleine steht, in den anderen Gleichungen zu ersetzen
+		\item Füge die Gleichung einer invertierten Ergebnisliste hinzu
+	\end{enumerate}
 \end{itemize}
 
 
