@@ -449,8 +449,54 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 
 
 
-\section{Parallelismus auf Thread-Ebene}
+\section{Parallelismus auf Thread-Ebene: Multithreading}
 
+\subsection{Einführung}
+
+\subsubsection{Problem: Überbrücken von Wartezeiten}
+\begin{itemize}
+	\item \textbf{Wartezeiten durch}
+	\begin{itemize}
+		\item Konflikte aufgrund von echten Datenabhängigkeiten. Lösungen: Superskalartechnik, VLIW, EPIC
+		\item Speicherzugriffe, die Cache-Fehler verursachen oder Zugriffe auf nicht-lokalen Speicher im Mehrprozessorsystem (zusätzlicher Aufwand zum Übertragen durch das Kommunikationsnetz)
+		\item Ausführen von Befehlen mit langen Ausführungszeiten
+		\item Anhalten des Prozessors zur Auflösung von Konflikten
+		\item Synchronisation von parallelen Kontrollfäden
+	\end{itemize}
+	\item \textbf{Lösungsansatz}
+	\begin{itemize}
+		\item Idee: Füllen von Wartezyklen durch Umschalten auf andere Threads
+		\item Allerdings: Hoher Aufwand bei Threadwechseln in "`konventionellen"' Prozessoren \(\rightarrow\) mehrfädige Prozessortechnik (Multithreading)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Mehrfädige Prozessortechnik (Multithreading)}
+\begin{itemize}
+	\item \textbf{Explizit mehrfädige Prozessoren}
+	\begin{itemize}
+		\item Überlappte Ausführung von Befehlen aus verschiedenen benutzerdefinierte Kontrollfäden (BS-Threads, Prozesse) in einer Pipeline \(\rightarrow\) bessere Auslastung der Pipeline
+		\item Speicherung der Kontexte der verschiedenen Kontrollfäden: Mehrere getrennte Registersätze auf einem Chip sowie mehrere Befehlszähler in der Befehlsholeinheit
+		\item Mehrere Kontexte von Befehlsfäden sind geladen: Umschalten der Ausführung zur Überbrückung von Ladezeiten. Erfolgt automatisch durch Hardware-unterstützte Wechselstrategie
+		\item Multithreading in skalaren Prozessoren: Eine Befehlspipeline
+		\item Multithreading in superskalaren Prozessoren: Mehrere Befehle von möglicherweise verschiedenen Befehlsströmen werden gleichzeitig zur Ausführung angestoßen. \textit{Simultanious Multithreading} (SMT) kombiniert Superskalartechnik mit Multithreading
+		\item Anstoßen von Befehlen
+		\begin{itemize}
+			\item Anstoßen von Befehlen aus einem Kontrollfaden in einem Zyklus
+			\begin{itemize}
+				\item Interleaved Multithreading (cycle-by-cycle): In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
+				\item Blocked Multithreading: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
+			\end{itemize}
+			\item Anstoßen von Befehlen aus mehreren Kontrollfäden in einem Zyklus: Befehle aus mehreren Kontrollfäden werden gleichzeitig zur Ausfürhung auf einem superskalaren Prozessor angestoßen (\textit{Simultaneous Multithreading})
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Implizit mehrfädige Prozessoren} % TODO
+	\begin{itemize}
+		\item Erzeugen dynamisch Kontrollfäden aus einem Programm (single-threaded)
+		\item Thread-level Spekulation: Führt die Kontrollfäden spekulativ parallel aus und verwirft ggf. spekulativ berechnete Ergebnisse
+	\end{itemize}
+\end{itemize}
+
+% Vgl der Prozessortechniken: Folie137-139
 
 
 \section{Multicore/Manycore}
