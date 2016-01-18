@@ -366,7 +366,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\end{itemize}
 	\item \textbf{TI TMS320C6400}
 	\begin{itemize}
-		\item 2 mal 4 Funktionseinheiten (A- und B -Seite) mit jeweils 16 Registern, einer 40-Bit-ALU (\texxttt{L-Unit}), einem 16-Bit-Multiplizierer sowie verschiedene Addierer- und Schiebeeinheiten zur Adressgenerierung und arithmetischen/logischen Operationen
+		\item 2 mal 4 Funktionseinheiten (A- und B -Seite) mit jeweils 16 Registern, einer 40-Bit-ALU (\texttt{L-Unit}), einem 16-Bit-Multiplizierer sowie verschiedene Addierer- und Schiebeeinheiten zur Adressgenerierung und arithmetischen/logischen Operationen
 		\item VLIW-Prinzip
 		\begin{itemize}
 			\item Holen von acht 32 Bit Befehlen über 256 Bit Befehlsbus
@@ -380,13 +380,13 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsubsection{Vergleich Hardware- vs Software-Scheduling}
 \begin{itemize}
-	\item \textb{Hardware-Scheduling}
+	\item \textbf{Hardware-Scheduling}
 	\begin{itemize}
 		\item Bessere Speicherdisambiguierung, da zur Laufzeit die Adressen bekannt sind % TODO
 		\item Sprungvorhersage, Precise Interrupts, kein Kompensierungscode
 		\item Kompatibilität über mehrere Implementierungen
 	\end{itemize}
-	\item \textb{Software-Scheduling}
+	\item \textbf{Software-Scheduling}
 	\begin{itemize}
 		\item Größereres Befehlsfenster zum Finden von Parallelismus
 		\item Geringerer Hardware-Aufwand
@@ -395,6 +395,57 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 
 \subsection{Explicitly Parallel Instruction Computing (EPIC)}
+Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 auf dem Markt). Ziele:
+\begin{itemize}
+	\item 64 Bit Architektur: IA-64
+	\item Explizite Spezifikation des Parallelismus im Maschinencode: \texttt{EPIC-Format} (entspricht dem VLIW-Prinzip)
+	\item Bedingte Ausführung von Befehlen (Predication) sowie spekulative Ausführung von Ladeoperationen (Data Speculation)
+	\item Großer Registersatz sowie skalierbarer Befehlssatz
+	\item Sinnvolles Zusammenwirken zwischen Compiler und Hardware
+	\item Beispiele: Intel Itanium und Intel Itanium 2
+\end{itemize}
+
+\subsubsection{Intel IA-64}
+\begin{itemize}
+	\item \textbf{Registersatz}
+	\begin{itemize}
+		\item Integer Register: Sind als Stack organisiert (\texttt{GR32-GR127}) und unterstützen geschachtelte Prozessaufrufe. \texttt{GR0-GR31} sind immer zugreifbar und direkt adressierbar. \texttt{CFP} zeigt auf die Menge der Register, die für die aktuelle Prozedur verwendet werden
+		\item Acht 64 Bit Branch-Register: Enthalten die Zieladressen für indirekte Verzweigungen
+		\item 64 1 Bit Predicate-Register
+	\end{itemize}
+	\item \textbf{Befehlsformat (IA-64 ISA)}
+	\begin{itemize}
+		\item | Opcode (14 Bit) | Register 1 (7 Bit) | Register 2 (7 Bit) | Register 3 (7 Bit) | Predicate (6 Bit) |
+		\item IA-64-Instruktionen werden vom Compiler in \texttt{Bundles} gepackt (128 Bit Länge). \texttt{Template} zeigt an, ob die Instruktionen parallel, eine oder mehrere sequentiell oder benachbarte \texttt{Bundles} parallel ausgeführt werden können. Beispiel Folie 112f \\ | Instruction 2 (41 Bit) | Instruction 1 (41 Bit) | Instruction 0 (41 Bit) | Template (5 Bit) |
+	\end{itemize}
+	\item \textbf{Skalierbarkeit}
+	\begin{itemize}
+		\item Jedes \texttt{Bundle} enthält drei Instruktionen für drei Funktionseinheiten
+		\item Hat ein IA-64-Prozessor ein Vielfaches von jeweils drei Funktionseinheiten, dann können mehrere \texttt{Bundles} in ein Instruktionswort gepackt werden \(\rightarrow\) Skalierbarkeit bezüglich der Anzahl der Funktionseinheiten
+	\end{itemize}
+	\item \textbf{Predication, bedingte Befehlsausführung}
+	\begin{itemize}
+		\item Evaluierung der bedingten Ausdrücke mit Hilfe von Compare-Operationen. Jeder Befehl hat ein 6 Bit breites Predicate-Feld zur Angabe eines Predicate-Registers
+		\item Befehle werden nur ausgeführt, wenn das Predicate-Register \texttt{true} ist, anderenfalls wirken sie wie ein \texttt{NOP}
+		\item Beispiel:\\ \texttt{cmp.eq p1, p2 = r1, r2;;\\(p1) sub r9 = r10, r11\\(p2) add r5 = r6. r7}
+		\item Verfahren: Zur Laufzeit werden die voneinander unabhängigen Befehle angestoßen; der Prozessor führt die Befehle auf den möglichen Programmverzweigungen aus, speichert die Ergebnisse aber nicht endgültig; Überprüfen der Predicate Register und ggf. abschließen der Ausführung der Instruktionen (oder verwerfen des Ergebnisses)
+		\item Implementierung
+		\begin{itemize}
+			\item Statische Vorschläge können in Verzweigungen kodiert werden und entscheiden, ob ein Eintrag von der dynamischen Branch Prediction Hardware alloziert wird
+			\item Software und Hardware haben die gemeinsame Kontrolle über die Branch Prediction Hardware
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Control Speculation}
+	\begin{itemize}
+		\item Problem (1): Verzweigungen schränken Code-Verschiebungen ein
+		\item Lösung (1): Einführung von spekulativen Ladeoperationen VOR der Verzweigung mit \texttt{Speculation Check}, NACHDEM der Sprung ausgeführt worden ist. Alle Operatione, die spekulative Ergebnisse verwendenm, können spekulativ ausgeführt werden (Beispiel Folie 119)
+		\item Problem (2): Ladeoperation kann nicht vor eine Speicheroption geschoben werden, da beide die selbe Adresse referenzieren könnten (Aliasing)
+		\item Lösung (2): Vorgezogene Ladeoperation \texttt{ld.a} und Einfügen einer Load-Check-Operation \texttt{ld.c}. Bei \texttt{ld.a}-Operationen wird fortlaufend beobachtet, ob eine Speicheroperation die selbe Adresse referenziert, wie die \texttt{ld.a}-Operation. Falls keine Speicheroperation die Adresse von \texttt{ld.a} referenziert, ist \texttt{ld.c} eine Leeroperation, anderenfalls läd \texttt{ld.c} aus dem Speicher. Implementierung mit einer \texttt{Advanced Load Address Table}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Architektur Intel Itanium}
+\includegraphics[scale=0.68]{mikroprozessoren2/Itanium_architecture.pdf}
 
 
 
