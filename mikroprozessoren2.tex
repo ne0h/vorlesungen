@@ -446,6 +446,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 
 \subsubsection{Architektur Intel Itanium}
 \includegraphics[scale=0.68]{mikroprozessoren2/Itanium_architecture.pdf}
+% Quelle: https://upload.wikimedia.org/wikipedia/commons/a/ae/Itanium_architecture.svg
 
 
 
@@ -496,8 +497,125 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 		\item Thread-level Spekulation: Führt die Kontrollfäden spekulativ parallel aus und verwirft ggf. spekulativ berechnete Ergebnisse
 	\end{itemize}
 \end{itemize}
+% Vgl der Prozessortechniken: Folie 137-139
 
-% Vgl der Prozessortechniken: Folie137-139
+
+\subsection{Multithreading-Techniken}
+
+\subsubsection{Interleaved Multithreading (IMT, cycle-by-cycle, fine-grain Multithreading)}
+\begin{itemize}
+	\item Idee: Verhinderung von Pipelinekonflikten
+	\item Der Prozessor wählt aus einer Anzahl geladener Kontrollfäden einen ausführbereiten aus und gibt einen Befehl in die Pipeline. Schema: \texttt{[1,2,3,4,1,2,3,4,...]}
+	\item Es wird immer erst ein neuer Befehl eines Threads in die Pipeline getan, wenn der vorherige komplett abgearbeitet worden ist (gilt auch bei Speicherzugriff) \(\rightarrow\) Elimination von Pipelinekonflikten
+	\item Aufwand zum Thread-Wechseln beträgt null Zyklen
+	\item Idealerweise gibt genau so viele Threads wie Taktzyklen für Speicherzugriffe benötigt werden. Anderenfalls werden Wartezyklen eingebaut
+	\item Reduziert die Ausführungszeit eines Kontrollfadens zugunsten des Durchsatzes vieler Threads
+	\item \textbf{Dependence look-ahead Technik}
+	\begin{itemize}
+		\item Begrenzte Anzahl Befehlen desselben Kontrollfadens kann überlappend ausgeführt werden
+		\item Compiler kennzeichnet im Opcode eines Befehls die Anzahl der von diesem Befehl unabhängigen Folgebefehle \(\rightarrow\) unabhängige Befehle können zum Auffüllen benutzt werden
+		\item Bessere Auslastung der Ressourcen, falls nicht genügend Kontrollfäden zur Verfügung stehen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Blocked Multithreading (BMT, coarse-grain Multithreading)}
+\begin{itemize}
+	\item Befehle eines Kontrollfadens werden solange ausgeführt, bis eine höhere Leistung bei der Ausführung oder höherer Aufwand beim Thread-Wechseln (Flush der Pipeline) notwendig ist
+	\item \textbf{Statische Modelle zum Threadwechseln}
+	\begin{itemize}
+		\item Explicit switch
+		\begin{itemize}
+			\item Ein Thread-Wechsel tritt jedes Mal auf, wenn ein bestimmter Befehl im Befehlsstrom auftritt
+			\item Thread-Wechsel werden durch den Compiler kodiert und kann bereits in der Befehlsbereitstellung erkannt und durchgeführt werden \(\rightarrow\) verringerter Aufwand für den Kontextwechsel
+		\end{itemize}
+		\item Implicit switch
+		\begin{itemize}
+			\item Jeder Befehl wird einer Befehlsklasse zugeordnet. Diese bestimmt, ob ein Kontextwechsel notwendig ist
+			\item Beispiele für Befehlsklassen, die Kontextwechsel auslösen: Lade-, Speicher- und Sprungbefehle
+			\item Techniken
+			\begin{itemize}
+				\item Switch-on-load: Kontextwechsel nach jedem Ladebefehl. Bei vorhandenem Datencache erfolgt der Kontextwechsel öfters als notwendig
+				\item Switch-on-store: Kontextwechsel nach jedem Schreibbefehl. Bietet sich nur an, wenn sequentielle Speicherkonsistenz implementiert werden soll, da anderenfalls ein Schreibpuffer vorhanden ist
+				\item Switch-on-branch: Kontextwechsel nach jeder Verzweigung. Damit kann auf Speungvorhersage und spekulative Ausführung verzichtet werden, ist in modernen Prozessoren allerdings eher ungewöhnlich
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Dynamische Modelle zum Threadwechseln}
+	\begin{itemize}
+		\item Kontextwechsel wird durch ein dynamisch auftretendes Ereignis ausgelöst. Alle Instruktionen in der Pipeline bis zu der Phase, die den Kontextwechsel ausgelöst hat werden verworfen \(\rightarrow\) höherer Aufwand für den Kontextwechsel
+		\item \textbf{Modelle}
+		\begin{itemize}
+			\item Switch-on-cache-miss: Wird erst spät erkannt, deswegen müssen alle nachfolgenden Befehle in der Pipeline verworfen werden
+			\item Switch-on-signal: Kontextwechsel beim Auftreten eines speziellen Signals, beispielsweise Interrupts, Trap, etc.
+			\item Switch-on-use: Kontextwechsel, falls ein Befehl einen Wert verwenden will, der (nach einer Ladeoperation) noch nicht bereit gestellt ist. Für die Implementierung wird ein Valid-Bit hinzgefügt das anzeigt, ob ein Wert nach einer Ladeoperation bereits bereitsteht
+			\item Conditional-switch: Bindet expliziten Switch-Befehl an eine Bedingung (ersetzt damit switch-on-use). Ein Kontextwechsel erfolgt nur dann, wenn diese Bedingung erfüllt ist. Beispielsweise bei Lade- und Speicherbefehlen erfolgt der Kontextwechsel bei einem Cache-Miss
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Simultaneous Multithreading (SMT)}
+\begin{itemize}
+	\item \textbf{Kombiniert Superskalartechnik mit Multithreading}
+	\begin{itemize}
+		\item Verwendet Hardware-Ressourcen für das gleichzeitige Festhalten mehrerer Kontexte, die alle gleichzeitig aktiv sind
+		\item In jedem Zyklus können mehrere Befehle aus verschiedenen Kontrollfäden gleichzeitig angestoßen werden
+		\item Thread level Parallelismus: Multithreaded parallele Programme. Mehrere unabhängige Programme in einer Multiprogramming-Umgebung
+		\item Mehrere Registersätze auf einem Prozessor
+		\item Wartezyklen, die von einer Instruktion aus einem Kontrollfaden verursacht werden, können durch das Ausführen von Befehlen aus anderen Kontrollfäden verdeckt werden
+	\end{itemize}
+	\item \textbf{Organisation der Hardware}
+	\begin{itemize}
+		\item Gemeinsame Hardware-Ressourcen (resource sharing): Die Befehle aus den verschiedenen Kontrollfäden können auf alle Ressourcen gemeinsam zugeifen. Beispielsweise Befehlsholpuffer, RATs, Befehsfenster, Retire, etc.
+		\item Minimaler zusätzlicher Hardwareaufwand für superskalaren Prozessor: Zusätzlich Thread-Tag für jede interne Befehlsdarstellung, mehrere Registersätze, Befehlsholen und -abschließen (retire) für mehrere Kontrollfäden
+		\item Replikation von Ressourcen
+		\begin{itemize}
+			\item Replizieren der internen Puffer von superskalaren Prozessoren. Jeder Kontrollfaden ist einem Puffer zugeordnet
+			\item Die Einheiten zum Befehlholen, -dekodieren und -abschließen
+			\item Befehle können aus verschiedenen Befehlsfenstern gleichzeitig zur Ausführung angestoßen werden
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+% Siehe Diagramm auf Folie 153
+
+
+\subsection{Fallstudien}
+
+\subsubsection{Fallstudie: Intel Hyperthreading Technology}
+\begin{itemize}
+	\item Simultanious Multithreading für Intel-Xeon Prozessoren
+	\item Eingeführt 2004 mit dem Intel Pentium 4
+	\item Ein physikalischer Prozessor erscheint wie zwei logische Prozessoren. Die physikalischen Ausfürhungsressourcen werden zwischen den logischen Prozessoren geteilt \(\rightarrow\) aus Softwaresicht können Prozesse und Threads auf zwei Prozessoren aufgeteilt werden
+	\item Unterschiede zum "`klassischen"' SMT-Modell: Gemeinsame Funktionseinheiten und Caches sowie statische Aufteilung von Queues und Puffer, einschließlich der Instruction Schedule Queue
+\end{itemize}
+
+\subsubsection{Fallstudie: Sun UltraSPARC T1, T2 (Niagara)}
+\begin{itemize}
+	\item \textbf{Niagara 1}
+	\begin{itemize}
+		\item Cycle-by-cycle Multithreading: LRU-Strategie für die Auswahl der bereiten Threads. Falls vier Threads bereit sind: Round-Robin-Strategie in jedem Taktzyklus. Falls ein Thread warten muss, wird er aus der RR-Strategie herausgenommen, bis er wieder bereit ist
+		\item Leistungsvergleich Single threaded vs. Four threaded: 21 \% Effiziens gegenüber 72 \%
+	\end{itemize}
+	\item \textbf{Niagara 2}
+	\begin{itemize}
+		\item Einführung einer zweiten Pipeline (dual execution pipeline). Beide Pipelines unterstützen vier Kontrollfäden
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Pipeline Niagara 1}
+\includegraphics[scale=0.3]{mikroprozessoren2/Niagara1.pdf}
+
+Niagara 1 core pipeline. This unit handles basic integer ALU operations plus shifts and integer multiply and divide. The only features that distinguish it from a basic 1980s scalar RISC pipeline are the thread-select stage and the cryptographic coprocessor. The cryptographic coprocessor shares the crossbar interface with the L1 D-cache but does not modify its contents, streaming data directly out of and back into the L2 cache.\footnote{\url{Quelle: Niagara 2 Opens the floodgates (11/06/6-01)}}
+
+\subsubsection{Leistungsvergleich Single threaded vs. Four threaded}
+\includegraphics[scale=0.25]{mikroprozessoren2/Niagara1_Leistungsvergleich.pdf}
+
+Here is a measured example of Niagara 1’s execution efficiency, drawn from an analysis of the SPECjbb benchmark program that Sun provided at the 2006 International Solid-State Circuits Conference (ISSCC). Although the four-way multithreaded Niagara 1 core is not perfectly efficient, it is far more efficient than any single-threaded core. The idleness of nearly 80 \% shown for a single-threaded core on this benchmark is shocking in its own right, but it is only the tip of the iceberg of inefficiency where superscalar designs are concerned. For a superscalar processor, most busy cycles leave some execution slots unfilled, while every idle cycle leaves all its multiple execution slots unfilled. Source: A. S. Leon et al., "`A Power-Efficient High Throughput 32-Thread SPARC Processor,"' ISSCC06, Paper 5.1\footnote{\url{Quelle: Niagara 2 Opens the floodgates (11/06/6-01)}}
+
+\subsubsection{Erweiterungen beim Niagara 2}
+\includegraphics[scale=0.35]{mikroprozessoren2/Niagara2_Erweiterungen.pdf}
+
+In Niagara 2 cores, the most visible changes are the dual execution pipelines (EXU0 and EXU1), each supporting four threads, and the new FGU. Other units were present in the Niagara 1 core. TLU is the trap logic unit (for interrupt and trap handling); IFU is the instruction-fetch unit (which includes the 16KB I-cache); SPU is the stream processing or crypto unit (which now shares resources with the FGU); and LSU is the load/store unit (which includes the 8KB D-cache). The memory management unit (MMU) includes hardware table walk (HWTW) for page sizes ranging from 8KB to 256MB. The gasket is the interface to the crossbar, which handles all traffic in and out of the core.\footnote{\url{Quelle: Niagara 2 Opens the floodgates (11/06/6-01)}}
+
 
 
 \section{Multicore/Manycore}
