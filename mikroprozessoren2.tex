@@ -633,6 +633,146 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 
 \section{Multicore/Manycore}
 
+\subsection{Multicore, Manycore}
+
+\subsubsection{Merkmale von Multicore-Architekturen}
+\begin{itemize}
+	\item Gemeinsamer oder privater Speicher
+	\item \textbf{Verbindungsstrukturen}
+	\begin{itemize}
+		\item Cache-kohärenter Chip-Multiprozessor: Transportiert Nachricht des Cache-Kohärenzprotokolls und Cache-Zeilen zwischen Prozessorkernen (On-Chip-Netzwerk)
+		\item Merkmale
+		\begin{itemize}
+			\item Topologie (Wie werden die Knoten verbunden): Beispielsweise Bus-System (IBM Power5 oder AMD Opteron), Ringnetzwerk (IBM Cell Broadband Engine) oder Gitternetz (MIT Raw Processor)
+			\item Routing beim MIT Raw Processor: Mesh-Netzwerk, bei dem jeweils die benachbarten Kerne direkt miteinander kommunizieren
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsection{Prallele Architekturen}
+\begin{itemize}
+	\item \textbf{Programmiermodell}
+	\begin{itemize}
+		\item Abstraktion einer virtuellen Maschine, auf welcher der Anwender sein Programm formuliert
+		\item Spezifiziert, wie Teile des Programms parallel abgearbeitet werden, wie Informationen ausgetauscht werden und welche Synchronisationsoperationen verfügbar sind, um die Aktivität zu koordinieren
+		\item Anwendungen werden auf der Grundlage eines parallelen Programmiermodells formuliert
+	\end{itemize}
+	\item \textbf{Datenparallelismus}
+	\begin{itemize}
+		\item Gleichzeitiges Ausführen von Operationen auf getrennten Elementen einer Datenmenge (Feld, Matrix)
+		\item Typischerweise in Vektorprozessoren, heute auch vielfach in Mikroprozessoren (Intel MMX oder SSE, AMD 3Dnow!, IMB VMX im PowerPC, Sparc VIS). Spezielle Form: Single-Instruction-Multiple-Data
+	\end{itemize}
+	\item \textbf{Funktionsparallelismus/Task-level parallelism}
+	\begin{itemize}
+		\item Unabhängige Funktionen werden auf verschiedenen Prozessoren ausgeführt
+		\item Beispiel Video-Streaming: Verschiedene Formen werden auf einen Strom von Daten angewendet
+		\item Funktionen können Funktions-Pipeline bilden
+	\end{itemize}
+	\item \textbf{Gemeinsamer Speicher (Shared Memory)}
+	\begin{itemize}
+		\item Gemeinsame genutzer Speicherbereich
+		\item Kommunikation und Koordination von Prozessen über gemeinsame Variablen
+		\item Kommunikationsarchitektur: Verwendung konventioneller Speicheroperationen für die Kommunikation gemeinsamer Adressen. Die Synchronisationsoperationen sind atomar
+	\end{itemize}
+	\item \textbf{Multiprozessor mit gemeinsamem Speicher}
+	\begin{itemize}
+		\item Uniform Memory Access: Speicherarchitektur in Multiprozessorsystemen, bei denen es nur einen globalen Speicher gibt, auf den alle Prozessoren einheitlich zugreifen
+		\item Zugriff erfolgt über ein Verbindungsnetzwerk
+	\end{itemize}
+	\item \textbf{Chip Multiprocessors (Eigenschaften)}
+	\begin{itemize}
+		\item Gemeinsamer L2-Cache über gemeinsamen Bus
+		\item Kohärenz (verhindert, dass die einzelnen Caches für dieselbe Speicheradresse unterschiedliche (inkonsistente) Daten zurückliefern\footnote{\url{https://de.wikipedia.org/wiki/Cache-Koh\%C3\%A4renz}}) für L1-Caches wird durch Bus-Snooping hergestellt (stetige Kontrolle der Speicher-Adressleitungen (Bus), um eventuellen Konflikten zwischen Speicher- und Cacheinhalten vorzubeugen\footnote{\url{https://de.wikipedia.org/wiki/Bus_snooping}})
+		\item Beispiel: Pentium IV Dual Core Prozessor
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Chip Multiprocessors: Ringbasierte CMPs}
+\begin{itemize}
+	\item Knoten (Prozessorkerne und L2-Bank) sind über einen Ring verbunden
+	\item Mehrere Abfragen können auf verschiedenen Links überlappend bearbeitet werden
+	\item Router in jedem Knoten leiten die Pakete weiter
+	\item Geschwindkeitsvorteil gegenüber Bussen: Ringe können schneller getaktet werden
+	\item Snooping-Protokolle: Kohärenzanfragen besuchen einen jeden Knoten. Anforderungen werden an alle Knoten verschickt. Owner antworten mit dem Block bei einem Fehlzugriff (Kohärenztransaktionen benötigen einen Umlauf)
+	\item Beispiel: Intel Core i7
+\end{itemize}
+
+
+\subsection{Parallele Programmiermodelle: OpenMP}
+
+\subsubsection{Einführung}
+\begin{itemize}
+	\item Schnittstelle für die Shared-Memory-Programmierung in C, C++ und Fortran auf Multiprozessorsystemen
+	\item Parallelisiert Programme auf der Ebene von Schleifen, die in verschiedenen Threads ausgeführt werden und unterscheidet sich dadurch von anderen Ansätzen (z. B. MPI), bei denen ganze Prozesse parallel laufen und durch Nachrichtenaustausch zusammenwirken\footnote{\url{https://de.wikipedia.org/wiki/OpenMP}}
+	\item Fork/Join-Ausführungsmodell: Betritt ein Thread eine parallele Region dann wird er Master-Thread und erzeugt ein Thread-Tem. Ersterer  übernimmt die Kontrolle und startet die parallele Abarbeitung durch Thread-Team (Fork) mit abschließender Barrieren-Synchronisation (Join). Danach Weiterfürhung durch den Master-Thread
+	\item \textbf{Parallele Regionen}
+	\begin{itemize}
+		\item Fork-Join-Modell (s.o.)
+		\item Threadzahl: Vorgabe durch Umgebungsvariable oder durch explizites Setzen oder durch Dynamisierung druch OpenMP
+		\item Verschachtelung: Erzeugen neuer Teams
+	\end{itemize}
+	\item \textbf{Parallelisierungsderektiven}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=C]
+foo(int a[]) {
+  #pragma omp for
+  for (int i=1; i<n; i++)
+    a[i]=i
+}
+
+main() {
+  int a[100]
+
+  #pragma omp parallel
+  {
+    foo(a)
+  }
+}
+	\end{lstlisting}
+	\begin{itemize}
+		\item Parameter zur Steuerung: Definition privater oder gemeinschaftlicher Variablen, Werteübernahme in/aus paralle(r) Region, Zusammenführung von Werten. Standardverhalten bei lokalen Variablen: Privat.
+	\end{itemize}
+	\item \textbf{Gemeinsame und private Daten}
+	\begin{itemize}
+		\item Gemeinsame Daten: In allen Threads sichtbar, Referenzen beziehen sich auf identische Adressen
+		\item Private Daten: Nur innerhalb eines Threads sichtbar. Keine Wechselwirkung mit anderen Threads
+	\end{itemize}
+	\item \textbf{Datenkonstrukte}
+	\begin{itemize}
+		\item \texttt{\#pragma omp threadprivate (list)}
+		\item Aufsetzen von Thread-internen Variablen
+		\item Jeder Thread erhält dabei eine lokale Kopie. Schreibvorgänge anderer Threads sind unsichtbar
+		\item Übernahme aus dem Master-Thread möglich, sonst undefiniert
+		\item Unterschied zu \texttt{PRIVATE}: Bisher Deklaration in jeder Routine mit blockspezifischem oder globalen Scope. Bei \texttt{PRIVATE} erfolgt eine einmalige Definition zu Beginn einer Region
+	\end{itemize}
+	\item \textbf{Work-Sharing-Konstrukte}
+	\begin{itemize}
+		\item Aufteilung der Ausführung des eingeschlossenen Code-Regionen innerhalb des Thread-Teams
+		\item Do/for: Sharing der Schleifeniterationen
+		\item Sektion: Zerlegung in separate Sektionen. Ausführung einer Sektion pro Thread
+	\end{itemize}
+	\item Parallele Schleifen: \texttt{for}-Direktive
+	\begin{itemize}
+		\item Verteilung der Iterationen an alle Threads
+		\item Scheduling gemäßg gewählter Strategie
+		\item Implizite Barriere zur Synchronisation sowie Definition von Reduktionsoperatoren für Variablen zur Zusammenführung
+	\end{itemize}
+	\item Ablaufsteuerung % TODO: Finde Beispiele
+	\begin{itemize}
+		\item Geordnetes Konstrukt (\texttt{\#pragma omp [for] ordered}): Ausführung in Reihenfolge wie bei sequentieller Abarbeitung. Kein "`Überholen"' innerhalb der parallelen Region
+		\item Sektionen \texttt{\#pragma omp section[s] ordered}): Kapseln von Threads (jede Sektion wird von einem Thread ausgeführt). Synchronisation durch implizite Barriere
+		\item Kritische Sektionen \texttt{\#pragma omp critical [name]}): Kritische Sektionen können nur von einem Thread ausgeführt werden. Es wird gewartet bis die kritische Sektion frei ist, dann erfolgt die weitere Abarbeitung. Synchronisation durch implizite Barriere
+	\end{itemize}
+	\item \textbf{Synchronisationskonstrukte} % TODO: Beispiele
+	\begin{itemize}
+		\item \texttt{MASTER}: Ausführung durch einen einzelnen Thread. Implizite Synchronisation aller Threads am Ender der Master-Region
+		\item \texttt{SINGLE}: Ausführung durch einen einzelnen Threads mit Parameter zur Variablenverwaltung
+		\item \texttt{BARRIER}: Synchronisation aller Threads eines Teams. Es wird gewartet bis alle Threads die Barriere erreicht haben
+		\item \texttt{ATOMIC}: Ausführen einer atomaren Speicheroperation. Beispiele: Variablenänderung oder Vergleichsoperationen
+		\item \texttt{FLUSH}: Synchronisationspunkt zum Erzwingen einer konsistenten Speichersicht. Erfolgt explizit bei Barrieren, beim Betreten und Verlassen kritischer Sektionen und beim Verlassen bestimmter Blöcke (\texttt{PARALLEL, FOR, SECTIONS, SINGLE})
+	\end{itemize}
+	\item Laufzeitumgebung: Verschiedene Funktionen zum Auslesen/Setzen von Threadzahlen oder Teamgrößen oder zum Ermitteln der Prozessoranzahl oder der Threadanzahl
+\end{itemize}
+
 
 
 \section{Systemstrukturen}
