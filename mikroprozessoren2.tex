@@ -774,5 +774,21 @@ main() {
 \end{itemize}
 
 
+\subsection{Parallele Architekturen: No Remote Memory Access (NoRMA)}
+\begin{itemize}
+	\item Jede CPU verfügt über einen eigenen Cache, eigenen Speicher sowie ein separates Interface zum Interconnection Network. Der Speicher ist statisch partitioniert, es gibt keinen globalen Speicherbereich. Austausch von Informationen zwischen den CPUs per Message-Passing
+	\item NoC: Gitterstruktur
+	\item Zugriffe auf entfernte Speichermodule nur per Message-Passing möglich
+	\item Vorteil: Extrem große Konfigurationen möglich
+	\item \textbf{Kommunikationsarchitektur}
+	\begin{itemize}
+		\item Verwendung von korrespondierenden Send- und Receive-Operationen
+		\item Send: Spezifiziert einern lokalen Datenpuffer und einen Empfangsprozess auf einem entfernten Prozessor
+		\item Receive: Spezifiziert einen Sendeprozess auf einen lokalen Datenpuffer, in dem die Daten ankommen
+	\end{itemize}
+	\item Definition von Parallelisierungsprozessen mit Hilfe von \texttt{CREATE, SEND, RECEIVE} und \texttt{BARRIER}
+\end{itemize}
+
+
 
 \section{Systemstrukturen}
