@@ -774,7 +774,7 @@ main() {
 \end{itemize}
 
 
-\subsection{Parallele Architekturen: No Remote Memory Access (NoRMA)}
+\subsubsection{Parallele Architekturen: No Remote Memory Access (NoRMA)}
 \begin{itemize}
 	\item Jede CPU verfügt über einen eigenen Cache, eigenen Speicher sowie ein separates Interface zum Interconnection Network. Der Speicher ist statisch partitioniert, es gibt keinen globalen Speicherbereich. Austausch von Informationen zwischen den CPUs per Message-Passing
 	\item NoC: Gitterstruktur
@@ -790,5 +790,198 @@ main() {
 \end{itemize}
 
 
+\section{Heterogene Parallelsysteme}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Definition}
+	\begin{itemize}
+		\item Verbund von Instanzen mit unterschiedlichen Eigenschaften
+		\item Vorteilhaft, wenn eine Klasse nicht für alle Anforderungen optimal geeignet ist
+		\item Einsatz mit unterschiedlichen Zielen. Beispielsweise um die Leistung, Energieeffiziens oder Robustheit zu erhöhen
+		\item Heterogene Netzwerke: Knoten mit unterschiedlicher Hardware oder Betriebssystem. Beispielsweise neue Aufbaustufe eines Clusters mit besseren Prozessoren
+		\item Heterogenität innerhalb eines Knotens: Beispielsweise unterschiedliche CPUs oder Beschleuniger, die per QuickPath, Hypertransport oder PCIe verbunden sind. Meist CPUs in Kombination mit dedizierten Grafikkarten odr FPGAs
+		\item Heterogenität auf Carrier-Ebene: Separate Dies auf einem Chip. Beispielsweise Intel Atom E600C mit CPU und FPGA, verbunden über on-Chip-PCIe
+		\item Heterogenität auf einem Die: Unterschiedliche CPUs oder Beschleuniger wie GPUs oder DSPs. Beispielsweise nutzt ARM big.LITTLE einen Cluster aus vier A15 CPUs für aufwendige Rechenoperationen und einen A7 Cluster bestehend aus vier CPUs für energieeffizienten Normalbetrieb
+		\item \textbf{Vergleich Eindindungen von Beschleunigern}
+		\begin{itemize}
+			\item Dedizierte Beschleuniger: Beliebige Kombination von CPUs und GPUs mit eigenem Speicher und hoher Bandbreite. Allerdings teure Speichertransfers notwendig und die Datenkonsistenz ist meist Aufgabe des Programmierers
+			\item Integrierte Beschleuniger: Gemeinsamer Speicher mit der CPU. Allerdings muss die Fläche der CPU aufgeteilt werden und die Kombination von CPU und GPU ist fix
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Beschleunigungsarchitekturen}
+
+\subsubsection{Field Programmable Gate Array (FPGA)}
+\begin{itemize}
+	\item Rekonfigurierbare Hardware mit der beliebige digitale Schaltungen realisiert werden können
+	\item Anwendungsgebiete: Anwendungsbeschleunigung (Verlagerung von Code in die Hardware) oder Funktionstest realer Hardware
+	\item Programmierung beispielsweise mittels VHDL oder Verilog. Des Weiteren gibt es hochsprachige Ansätze wie Maxeler oder OpenCL
+\end{itemize}
+
+\subsubsection{Grafikkarten}
+\begin{itemize}
+	\item General-purpose computation on Graphics Processng Units (GPGPU): Allzweckberechnungen auf Grafikkarten. Erste Verwendung etwa 2002 mittels Shader-Programmen. Weitere Verbreitung ca. 2008 mit einfacheren Programmiermodellen
+	\item \textbf{GPU Shader}
+	\begin{itemize}
+		\item Programmierbare Einheiten in der Grafik-Pipeline
+		\item Frühere Einteilung: Vector-, Geometry- und Pixel-Shader
+		\item Programmierung mittels spezieller Shader-Sprachen wie beispielsweise GLSL
+		\item Fokus auf Grafikberechnungen, daher Einsatz für Allzweckberechnungen schwierig
+		\item Heute Unified Shader, die flexibel einsetzbar sind und in C-ähnlicher Hochsprache entwickelt werden können (Einführung mit Nvidia Geforce 8)
+	\end{itemize}
+	\item \textbf{Wieso GPGPU?}
+	\begin{itemize}
+		\item Vorteile: Massiv-parallele Ausführung durch große Anzahl Cores sowie schnelle Anbindung von dediziertem, hierarchischen Speicher. Speicherlatenzen werden durch schnelle Thread-Wechsel maskiert
+		\item Nachteile: Hoher Zeitverbrauch für Datentransfer und Kernelinitialisierung. Weniger geeignet für Code mit Verzweigungen und Synchronisation
+	\end{itemize}
+	\item \textbf{Einsatzbereich GPGPU}
+	\begin{itemize}
+		\item Besonders gut geeignet für Probleme mit: Unabhängigen Einzeldaten (parallele Ausführung mit wenig Synchronisation), hohem Rechenanteil (wenig Verzweigungen und Synchronisation) und großen Problemgrößen (Ausgleich der Kosten für Initialisierung und Datentransfer)
+		\item Beispiele: Bild- oder Videofilter, Simulationen
+	\end{itemize}
+	\item Prinzipieller Vergleich CPU vs. GPU
+	\begin{itemize}
+		\item CPU: Kleine Anzahl Allzweckkerne mit großen Caches. Peak-Performance ist leichter zu erreichen
+		\item CPU: Viele einfache Kerne
+	\end{itemize}
+\end{itemize}
+
+
+
+\subsection{Fallbeispiel: NVIDIA Fermi}
+
+\subsubsection{Eigenschaften}
+\begin{itemize}
+	\item GPU-Mikroarchitektur, die vorwiegend bei den Nvidia Geforce 400 und 500 Serien eingesetzt wird (ab 2009)
+	\item 16 Streming Multiprocessors (SM) mit jeweils 32 CUDA-Cores und bis zu 1536 Threads \(\rightarrow\) 512 Cores und 24576 Threads
+	\item Sechs 64 Bit breite GDDR5 DRAM Interfaces, gemeinsamer 768 KByte L2 Cache und 40 Bit Adressraum mit Seitenverwaltung für den Hauptspeicher
+	\item Optionale ECC-Unterstützung
+	\item Architektur eines Streaming Multiprocessors: 32 Cores mit jeweils 16 L/S-Units und vier Special Function Units. 64 KByte shared L1 Cache
+	\item \textbf{Thread Scheduling}
+	\begin{itemize}
+		\item Zur Ausführung werden 32 Threads zu einem \textit{Warp} gruppiert. Pro Streaming Multiprocessor sind zwei \textit{half Warps} pro Takt ausführbar
+		\item Single Instruction, Multiple Threads. Bei Verzweigungen werden Pfade serialisiert (alle ausgeführt)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{GPGPU-Programmierung mit CUDA}
+
+\subsubsection{CUDA}
+\begin{itemize}
+	\item Compute Unified Device Architecture
+	\item Hauseigene GPGPU-Lösung von NVIDIA, die im Februar 2007 veröffentlich worden ist und ab der Geforce 8 nutzbar ist
+	\item Programmierung in leicht verändertem C
+	\item \textbf{Logische Thread-Organisation}
+	\begin{itemize}
+		\item Threads werden in ein- oder mehrdimensionalen Blöcken (ein- oder mehrdimensionale Grids) organisiert. Die Größe der Blöcke ist i.d.R. ein Vielfaches der Warp-Blöcke
+		\item Einteilung Thread/Block/Grid wichtig für effiziente Kernelausführung
+	\end{itemize}
+	\item \textbf{Speicherhierarchie}
+	\begin{itemize}
+		\item Block/shared memory: Schneller gemeinsamer Speicher für einen Block
+		\item Local memory: Privater Bereich pro Thread im globalen Speicher
+		\item Global memory: Groß, relativ langsamer Zugriff
+		\item Constant und Texture memory: Spezieller Zugriff auf Bereich im globalen Speicher
+	\end{itemize}
+	\item \textbf{Speicherzugriff}
+	\begin{itemize}
+		\item CPU kann nur auf Global, Constant und Texture Memory zugreifen
+		\item GPU-Cores sollten nur auf GPU-Speicher zugreifen
+		\item CPU sollte Speichertransfers initiieren
+		\item Andres Vorgehen nur für bestimmte fälle vorteilhaft
+		\item Overhead durch PCIe: PCIe 3.0 x16 etwa 15 GB/s vs. Speicher Fermi etwa 192 GB/s
+	\end{itemize}
+	\item \textbf{Anwendungsausführung: Typischer Ablauf}
+	\begin{enumerate}
+		\item Ausführung des normalen CPU-Codes
+		\item Speicherallokation auf der GPU
+		\item Transfer der benötigten Daten zur GPU
+		\item Start des Kernels
+		\item Transfer der Ergebniss von GPU in den Host-RAM
+		\item Verarbeitung der Ergebnisse auf der CPU
+	\end{enumerate}
+	\item \textbf{CUDA Runtime API}
+	\begin{itemize}
+		\item Methoden um die Anzahl der CUDA-Karten und deren Eigenschaften auszulesen
+		\item Methoden für Speichermanagement (allokieren, freigeben, transferieren)
+		\item Vordefinierte Strukturen: \texttt{blockDim, blockIdx, threadIdx}
+		\item Problemaufteilung auf Threads nicht automatisch wie bei OpenMP
+	\end{itemize}
+	\item \textbf{Compiliervorgang}
+	\begin{itemize}
+		\item Preprozessor (EDG) trennt CPU- und GPU-Code
+		\item Modifizierter Open64-Compilier generiert Byte-Code (PTX)
+		\item Treiber generiert Binärcode aus generischem Byte-Code
+		\item Ab v4.1: LLVM
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Beispiel: Bestimmung des Thread-Index zweidimensional}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=C]
+// Bestimmung des Index
+__global__ void my_kernel(int **array) {
+  int col = blockIdx.x * blockDim.x + threadIdx.y;
+  int row = blockIdx.y * blockDim.y + threadIdx.y;
+
+  array[row][col] = 5;
+}
+
+// Kernel-Aufruf
+dim3 dimGrid  = (dimGridX, dimGridY, 1);
+dim3 dimBlock = (dimBlockX, dimBlockY, 1);
+
+my_kernel <<< dimGrid, dimBlock >>> (array);
+\end{lstlisting}
+
+\subsubsection{Komplettes Beispiel}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,language=C]
+__global__ void increment(char **array, int length) {
+  int idx = blockIdx.x * blockDim.x + threadIlx.x;
+  if (idx < length) array[idx] = array[idx] + 1;
+}
+
+int increment_on_gpu(char **array_host, int length) {
+  cudaMalloc((void**) &array_gpu, length);
+  cudaMemcpy(array_gpu, array_host, length, cudaMemcpyHostToDevice);
+
+  int block_size = 16;
+  int n_blocks = length / block_size + (length % block_size) ? 1 : 0;
+  increment <<< n_blocks, block_size >>> (array_gpu, length);
+
+  cudaMemcpy(array_host, array_gpu, length, cudaMemcpyDeviceToHost);
+}
+\end{lstlisting}
+
+
+\subsection{CUDA-Anwendungsoptimierung}
+\begin{itemize}
+	\item \textbf{Reduzierung der Anzahl an Transfers}
+	\begin{itemize}
+		\item Statischer Overhead für Initialisierung des Transfers, größenabhängiger Anteil nur für große Mengen signifikant
+		\item Ansatz: Ausführung auch ungünstiger Operationen auf der GPU
+		\item Beispiel: Initialisierung von Datenstrukturen oder langsame Zwischenoperationen
+	\end{itemize}
+	\item \textbf{Reduzierung der Transferkosten: Memory pinning}
+	\begin{itemize}
+		\item Ohne Vorbereitung doppelter Kopiervorgang: Kopie in den geschützten Speicherbereich sowie Transfer mittels DMA in GPU-Speicher
+		\item Seiten im geschützten Bereich pinnen damit sie nicht ausgelagert werden \(\rightarrow\) direkt geschützten Bereich für Daten allokieren
+		\item Größe des geschützten Speicher ist allerdings begrenzt
+	\end{itemize}
+	\item \textbf{Vereinigung von Speicherzugriffen: Coalescing memory access}
+	\begin{itemize}
+		\item Threads eines Warps sollen auf ausgerichtete und fortlaufende Adressen zugreifen
+		\item Möglichst nur Daten aus einer Cache-Zeile pro Warp
+		\item Bei neueren GPUs ähnlich zu Cache-Optimierung auf CPUs
+	\end{itemize}
+	\item \textbf{Weitere Techniken}
+	\begin{itemize}
+		\item Überlappung von Transfer und Berechnung
+		\item Nutzung des gemeinsamen Blockspeichers für oft benötigte Daten oder Zwischenergebnisse
+	\end{itemize}
+\end{itemize}
 
 \section{Systemstrukturen}
