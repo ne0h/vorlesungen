@@ -467,9 +467,9 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 
 \subsection{Einführung}
 
-\subsubsection{Problem: Überbrücken von Wartezeiten}
+\subsubsection{Problem: Teilweise schlechte Auslastung der Prozessorpipeline.}
 \begin{itemize}
-	\item \textbf{Wartezeiten durch}
+	\item \textbf{Wartezeiten durch:}
 	\begin{itemize}
 		\item Konflikte aufgrund von echten Datenabhängigkeiten. Lösungen: Superskalartechnik, VLIW, EPIC
 		\item Speicherzugriffe, die Cache-Fehler verursachen oder Zugriffe auf nicht-lokalen Speicher im Mehrprozessorsystem (zusätzlicher Aufwand zum Übertragen durch das Kommunikationsnetz)
@@ -479,28 +479,24 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 	\end{itemize}
 	\item \textbf{Lösungsansatz}
 	\begin{itemize}
-		\item Idee: Füllen von Wartezyklen durch Umschalten auf andere Threads
-		\item Allerdings: Hoher Aufwand bei Threadwechseln in "`konventionellen"' Prozessoren \(\rightarrow\) mehrfädige Prozessortechnik (Multithreading)
+		\item Füllen von Wartezyklen durch Umschalten auf andere Threads
+		\item Allerdings: Hoher Aufwand bei Threadwechseln in konventionellen Prozessoren \(\rightarrow\) mehrfädige Prozessortechnik (Multithreading)
 	\end{itemize}
+	\item Zusammenfassung von Wikipedia: Prozessoren mit hardwareseitigem Multithreading können auf jedem Prozessorkern parallel mehrere Prozesse, d. h. mehrere Programme oder Programmteile gleichzeitig ausführen. Der Nutzen besteht in einer besseren Auslastung der Rechenwerke einer CPU und in einer schnelleren Antwort des Gesamtsystems auf externe Ereignisse, da mehr Aufgaben parallel bearbeitet werden können.\footnote{\url{https://de.wikipedia.org/wiki/Hardwareseitiges_Multithreading}}
 \end{itemize}
 
 \subsubsection{Mehrfädige Prozessortechnik (Multithreading)}
 \begin{itemize}
 	\item \textbf{Explizit mehrfädige Prozessoren}
 	\begin{itemize}
-		\item Überlappte Ausführung von Befehlen aus verschiedenen benutzerdefinierte Kontrollfäden (BS-Threads, Prozesse) in einer Pipeline \(\rightarrow\) bessere Auslastung der Pipeline
+		\item Überlappte Ausführung von Befehlen aus verschiedenen, benutzerdefinierten Kontrollfäden (BS-Threads, Prozesse) in einer Pipeline \(\rightarrow\) bessere Auslastung der Pipeline
 		\item Speicherung der Kontexte der verschiedenen Kontrollfäden: Mehrere getrennte Registersätze auf einem Chip sowie mehrere Befehlszähler in der Befehlsholeinheit
 		\item Mehrere Kontexte von Befehlsfäden sind geladen: Umschalten der Ausführung zur Überbrückung von Ladezeiten. Erfolgt automatisch durch Hardware-unterstützte Wechselstrategie
-		\item Multithreading in skalaren Prozessoren: Eine Befehlspipeline
 		\item Multithreading in superskalaren Prozessoren: Mehrere Befehle von möglicherweise verschiedenen Befehlsströmen werden gleichzeitig zur Ausführung angestoßen. \textit{Simultanious Multithreading} (SMT) kombiniert Superskalartechnik mit Multithreading
-		\item Anstoßen von Befehlen
+		\item Anstoßen von Befehlen aus einem Kontrollfaden in einem Zyklus
 		\begin{itemize}
-			\item Anstoßen von Befehlen aus einem Kontrollfaden in einem Zyklus
-			\begin{itemize}
-				\item Interleaved Multithreading (cycle-by-cycle): In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
-				\item Blocked Multithreading: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
-			\end{itemize}
-			\item Anstoßen von Befehlen aus mehreren Kontrollfäden in einem Zyklus: Befehle aus mehreren Kontrollfäden werden gleichzeitig zur Ausfürhung auf einem superskalaren Prozessor angestoßen (\textit{Simultaneous Multithreading})
+			\item Interleaved Multithreading (cycle-by-cycle): In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
+			\item Blocked Multithreading: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
 		\end{itemize}
 		\item Embedded Systems: Prozessor bietet Algorithmen zur Steuerung der einzelnen Programmthreads. Sie können durch entsprechende Befehle in einen Wartezustand versetzt und durch Hardware-Ereignisse aufgeweckt werden. Hierdurch sind sehr schnelle Reaktionen des Systems möglich, da im Gegensatz zum klassischen Hardware-Interrupt keinerlei Overhead beim Kontextwechsel notwendig ist und ohne die Leistung des Systems merklich zu beeinflussen.\footnote{\url{https://de.wikipedia.org/wiki/Hardwareseitiges_Multithreading\#Multithreadingf.C3.A4hige_Prozessoren_f.C3.BCr_eingebettete_Anwendungen}}
 	\end{itemize}
@@ -518,14 +514,14 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 \subsubsection{Interleaved Multithreading (IMT, cycle-by-cycle, fine-grain Multithreading)}
 \begin{itemize}
 	\item Idee: Verhinderung von Pipelinekonflikten
-	\item Der Prozessor wählt aus einer Anzahl geladener Kontrollfäden einen ausführbereiten aus und gibt einen Befehl in die Pipeline. Schema: \texttt{[1,2,3,4,1,2,3,4,...]}
-	\item Es wird immer erst ein neuer Befehl eines Threads in die Pipeline getan, wenn der vorherige komplett abgearbeitet worden ist (gilt auch bei Speicherzugriff) \(\rightarrow\) Elimination von Pipelinekonflikten
+	\item Der Prozessor wählt aus einer Anzahl geladener Kontrollfäden einen ausführbereiten aus und gibt einen Befehl in die Pipeline. Schema: \texttt{[1, 2, 3, 4, 1, 2, 3, 4, , ...]}
+	\item Es wird immer erst ein neuer Befehl eines Threads in die Pipeline geladen, wenn der vorherige komplett abgearbeitet worden ist (gilt auch bei Speicherzugriff) \(\rightarrow\) Elimination von Pipelinekonflikten
 	\item Aufwand zum Thread-Wechseln beträgt null Zyklen
-	\item Idealerweise gibt genau so viele Threads wie Taktzyklen für Speicherzugriffe benötigt werden. Anderenfalls werden Wartezyklen eingebaut
-	\item Reduziert die Ausführungszeit eines Kontrollfadens zugunsten des Durchsatzes vieler Threads
+	\item Idealerweise gibt es genau so viele Threads wie Taktzyklen für Speicherzugriffe benötigt werden. Anderenfalls werden Wartezyklen eingebaut
+	\item Erhöht die Ausführungszeit eines Kontrollfadens zugunsten des Durchsatzes vieler Threads
 	\item \textbf{Dependence look-ahead Technik}
 	\begin{itemize}
-		\item Begrenzte Anzahl Befehlen desselben Kontrollfadens kann überlappend ausgeführt werden
+		\item Eine begrenzte Anzahl Befehlen desselben Kontrollfadens können überlappend ausgeführt werden
 		\item Compiler kennzeichnet im Opcode eines Befehls die Anzahl der von diesem Befehl unabhängigen Folgebefehle \(\rightarrow\) unabhängige Befehle können zum Auffüllen benutzt werden
 		\item Bessere Auslastung der Ressourcen, falls nicht genügend Kontrollfäden zur Verfügung stehen
 	\end{itemize}
@@ -539,7 +535,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 		\item Explicit switch
 		\begin{itemize}
 			\item Ein Thread-Wechsel tritt jedes Mal auf, wenn ein bestimmter Befehl im Befehlsstrom auftritt
-			\item Thread-Wechsel werden durch den Compiler kodiert und kann bereits in der Befehlsbereitstellung erkannt und durchgeführt werden \(\rightarrow\) verringerter Aufwand für den Kontextwechsel
+			\item Thread-Wechsel werden durch den Compiler kodiert und können bereits in der Befehlsbereitstellung erkannt und durchgeführt werden \(\rightarrow\) verringerter Aufwand für den Kontextwechsel
 		\end{itemize}
 		\item Implicit switch
 		\begin{itemize}
@@ -547,9 +543,9 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 			\item Beispiele für Befehlsklassen, die Kontextwechsel auslösen: Lade-, Speicher- und Sprungbefehle
 			\item Techniken
 			\begin{itemize}
-				\item Switch-on-load: Kontextwechsel nach jedem Ladebefehl. Bei vorhandenem Datencache erfolgt der Kontextwechsel öfters als notwendig
+				\item Switch-on-load: Kontextwechsel nach jedem Ladebefehl. Bei vorhandenem Datencache erfolgt der Kontextwechsel öfters als notwendig, da der Geschwindigkeitsvorteil durch den Cache nicht genutzt wird
 				\item Switch-on-store: Kontextwechsel nach jedem Schreibbefehl. Bietet sich nur an, wenn sequentielle Speicherkonsistenz implementiert werden soll, da anderenfalls ein Schreibpuffer vorhanden ist
-				\item Switch-on-branch: Kontextwechsel nach jeder Verzweigung. Damit kann auf Speungvorhersage und spekulative Ausführung verzichtet werden, ist in modernen Prozessoren allerdings eher ungewöhnlich
+				\item Switch-on-branch: Kontextwechsel nach jeder Verzweigung. Damit kann auf Sprungvorhersage und spekulative Ausführung verzichtet werden, ist in modernen Prozessoren allerdings eher ungewöhnlich
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
@@ -559,7 +555,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 		\item \textbf{Modelle}
 		\begin{itemize}
 			\item Switch-on-cache-miss: Wird erst spät erkannt, deswegen müssen alle nachfolgenden Befehle in der Pipeline verworfen werden
-			\item Switch-on-signal: Kontextwechsel beim Auftreten eines speziellen Signals, beispielsweise Interrupts, Trap, etc.
+			\item Switch-on-signal: Kontextwechsel beim Auftreten eines speziellen Signals, beispielsweise Interrupts, Traps, etc.
 			\item Switch-on-use: Kontextwechsel, falls ein Befehl einen Wert verwenden will, der (nach einer Ladeoperation) noch nicht bereit gestellt ist. Für die Implementierung wird ein Valid-Bit hinzgefügt das anzeigt, ob ein Wert nach einer Ladeoperation bereits bereitsteht
 			\item Conditional-switch: Bindet expliziten Switch-Befehl an eine Bedingung (ersetzt damit switch-on-use). Ein Kontextwechsel erfolgt nur dann, wenn diese Bedingung erfüllt ist. Beispielsweise bei Lade- und Speicherbefehlen erfolgt der Kontextwechsel bei einem Cache-Miss
 		\end{itemize}
@@ -570,15 +566,14 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 \begin{itemize}
 	\item \textbf{Kombiniert Superskalartechnik mit Multithreading}
 	\begin{itemize}
-		\item Verwendet Hardware-Ressourcen für das gleichzeitige Festhalten mehrerer Kontexte, die alle gleichzeitig aktiv sind
+		\item Verwendet Hardware-Ressourcen für das gleichzeitige Vorhalten mehrerer Kontexte, die alle gleichzeitig aktiv sind \(\rightarrow\) mehrere unabhängige Programme in einer Multiprogramming-Umgebung (Thread level Parallelismus)
 		\item In jedem Zyklus können mehrere Befehle aus verschiedenen Kontrollfäden gleichzeitig angestoßen werden
-		\item Thread level Parallelismus: Multithreaded parallele Programme. Mehrere unabhängige Programme in einer Multiprogramming-Umgebung
-		\item Mehrere Registersätze auf einem Prozessor
 		\item Wartezyklen, die von einer Instruktion aus einem Kontrollfaden verursacht werden, können durch das Ausführen von Befehlen aus anderen Kontrollfäden verdeckt werden
 	\end{itemize}
 	\item \textbf{Organisation der Hardware}
 	\begin{itemize}
 		\item Gemeinsame Hardware-Ressourcen (resource sharing): Die Befehle aus den verschiedenen Kontrollfäden können auf alle Ressourcen gemeinsam zugeifen. Beispielsweise Befehlsholpuffer, RATs, Befehsfenster, Retire, etc.
+		\item Mehrere Registersätze auf einem Prozessor
 		\item Minimaler zusätzlicher Hardwareaufwand für superskalaren Prozessor: Zusätzlich Thread-Tag für jede interne Befehlsdarstellung, mehrere Registersätze, Befehlsholen und -abschließen (retire) für mehrere Kontrollfäden
 		\item Replikation von Ressourcen
 		\begin{itemize}
@@ -595,7 +590,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 
 \subsubsection{Fallstudie: Intel Hyperthreading Technology}
 \begin{itemize}
-	\item Simultanious Multithreading für Intel-Xeon Prozessoren
+	\item Simultanious Multithreading für Xeon Prozessoren von Intel
 	\item Eingeführt 2004 mit dem Intel Pentium 4
 	\item Ein physikalischer Prozessor erscheint wie zwei logische Prozessoren. Die physikalischen Ausfürhungsressourcen werden zwischen den logischen Prozessoren geteilt \(\rightarrow\) aus Softwaresicht können Prozesse und Threads auf zwei Prozessoren aufgeteilt werden
 	\item Unterschiede zum "`klassischen"' SMT-Modell: Gemeinsame Funktionseinheiten und Caches sowie statische Aufteilung von Queues und Puffer, einschließlich der Instruction Schedule Queue
@@ -606,7 +601,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 	\item \textbf{Niagara 1}
 	\begin{itemize}
 		\item Cycle-by-cycle Multithreading: LRU-Strategie für die Auswahl der bereiten Threads. Falls vier Threads bereit sind: Round-Robin-Strategie in jedem Taktzyklus. Falls ein Thread warten muss, wird er aus der RR-Strategie herausgenommen, bis er wieder bereit ist
-		\item Leistungsvergleich Single threaded vs. Four threaded: 21 \% Effiziens gegenüber 72 \%
+		\item Leistungsvergleich single-threaded vs. four-threaded: 21 \% Effiziens gegenüber 72 \%
 	\end{itemize}
 	\item \textbf{Niagara 2}
 	\begin{itemize}
@@ -643,7 +638,7 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 		\item Cache-kohärenter Chip-Multiprozessor: Transportiert Nachricht des Cache-Kohärenzprotokolls und Cache-Zeilen zwischen Prozessorkernen (On-Chip-Netzwerk)
 		\item Merkmale
 		\begin{itemize}
-			\item Topologie (Wie werden die Knoten verbunden): Beispielsweise Bus-System (IBM Power5 oder AMD Opteron), Ringnetzwerk (IBM Cell Broadband Engine) oder Gitternetz (MIT Raw Processor)
+			\item Topologie: Beispielsweise Bus-System (IBM Power5 oder AMD Opteron), Ringnetzwerk (IBM Cell Broadband Engine) oder Gitternetz (MIT Raw Processor)
 			\item Routing beim MIT Raw Processor: Mesh-Netzwerk, bei dem jeweils die benachbarten Kerne direkt miteinander kommunizieren
 		\end{itemize}
 	\end{itemize}
@@ -660,7 +655,7 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 	\item \textbf{Datenparallelismus}
 	\begin{itemize}
 		\item Gleichzeitiges Ausführen von Operationen auf getrennten Elementen einer Datenmenge (Feld, Matrix)
-		\item Typischerweise in Vektorprozessoren, heute auch vielfach in Mikroprozessoren (Intel MMX oder SSE, AMD 3Dnow!, IMB VMX im PowerPC, Sparc VIS). Spezielle Form: Single-Instruction-Multiple-Data
+		\item Typischerweise in Vektorprozessoren, heute auch vielfach in Mikroprozessoren (Intel MMX oder SSE, AMD 3Dnow!, IBM VMX im PowerPC, Sparc VIS). Spezielle Form: Single-Instruction-Multiple-Data
 	\end{itemize}
 	\item \textbf{Funktionsparallelismus/Task-level parallelism}
 	\begin{itemize}
@@ -670,7 +665,7 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 	\end{itemize}
 	\item \textbf{Gemeinsamer Speicher (Shared Memory)}
 	\begin{itemize}
-		\item Gemeinsame genutzer Speicherbereich
+		\item Gemeinsam genutzer Speicherbereich
 		\item Kommunikation und Koordination von Prozessen über gemeinsame Variablen
 		\item Kommunikationsarchitektur: Verwendung konventioneller Speicheroperationen für die Kommunikation gemeinsamer Adressen. Die Synchronisationsoperationen sind atomar
 	\end{itemize}
@@ -691,10 +686,11 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 \begin{itemize}
 	\item Knoten (Prozessorkerne und L2-Bank) sind über einen Ring verbunden
 	\item Mehrere Abfragen können auf verschiedenen Links überlappend bearbeitet werden
-	\item Router in jedem Knoten leiten die Pakete weiter
+	\item Router in allen Knoten leiten die Pakete weiter
 	\item Geschwindkeitsvorteil gegenüber Bussen: Ringe können schneller getaktet werden
-	\item Snooping-Protokolle: Kohärenzanfragen besuchen einen jeden Knoten. Anforderungen werden an alle Knoten verschickt. Owner antworten mit dem Block bei einem Fehlzugriff (Kohärenztransaktionen benötigen einen Umlauf)
+	\item Snooping-Protokolle: Stetige Kohärenzanfragen besuchen einen jeden Knoten. Anforderungen werden an alle Knoten verschickt. Owner antworten mit dem Block bei einem Fehlzugriff aufgetreten ist (Kohärenztransaktionen benötigen einen Umlauf)
 	\item Beispiel: Intel Core i7
+	\item Bus Snooping auf Wikipedia: Das Grundprinzip des Bus-Snoopings ist, dass jeder Teilnehmer des Hostbus Adressierungen eines anderen Teilnehmers auf dem Bus mitliest und seinen Cache überprüft, ob eine Cache-Line mit der entsprechenden Adresse vorhanden ist. Dazu wird der Cache-Controller um eine Snoop-Logik erweitert. In der Regel befinden sich alle Teilnehmer in diesem Snooping-Zustand, bis auf den Teilnehmer, der die Transaktion auf dem Bus ausführt.\footnote{\url{https://de.wikipedia.org/wiki/Bus_snooping\#Grundprinzip}}
 \end{itemize}
 
 
@@ -704,7 +700,7 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 \begin{itemize}
 	\item Schnittstelle für die Shared-Memory-Programmierung in C, C++ und Fortran auf Multiprozessorsystemen
 	\item Parallelisiert Programme auf der Ebene von Schleifen, die in verschiedenen Threads ausgeführt werden und unterscheidet sich dadurch von anderen Ansätzen (z. B. MPI), bei denen ganze Prozesse parallel laufen und durch Nachrichtenaustausch zusammenwirken\footnote{\url{https://de.wikipedia.org/wiki/OpenMP}}
-	\item Fork/Join-Ausführungsmodell: Betritt ein Thread eine parallele Region dann wird er Master-Thread und erzeugt ein Thread-Tem. Ersterer  übernimmt die Kontrolle und startet die parallele Abarbeitung durch Thread-Team (Fork) mit abschließender Barrieren-Synchronisation (Join). Danach Weiterfürhung durch den Master-Thread
+	\item Fork/Join-Ausführungsmodell: Betritt ein Thread eine parallele Region dann wird er Master-Thread und erzeugt ein Thread-Team. Ersterer  übernimmt die Kontrolle und startet die parallele Abarbeitung durch das Thread-Team (Fork) mit abschließender Barrieren-Synchronisation (Join). Danach Weiterfürhung durch den Master-Thread
 	\item \textbf{Parallele Regionen}
 	\begin{itemize}
 		\item Fork-Join-Modell (s.o.)
@@ -800,10 +796,10 @@ main() {
 		\item Vorteilhaft, wenn eine Klasse nicht für alle Anforderungen optimal geeignet ist
 		\item Einsatz mit unterschiedlichen Zielen. Beispielsweise um die Leistung, Energieeffiziens oder Robustheit zu erhöhen
 		\item Heterogene Netzwerke: Knoten mit unterschiedlicher Hardware oder Betriebssystem. Beispielsweise neue Aufbaustufe eines Clusters mit besseren Prozessoren
-		\item Heterogenität innerhalb eines Knotens: Beispielsweise unterschiedliche CPUs oder Beschleuniger, die per QuickPath, Hypertransport oder PCIe verbunden sind. Meist CPUs in Kombination mit dedizierten Grafikkarten odr FPGAs
+		\item Heterogenität innerhalb eines Knotens: Beispielsweise unterschiedliche CPUs oder Beschleuniger, die per QuickPath, Hypertransport oder PCIe verbunden sind. Meist CPUs in Kombination mit dedizierten Grafikkarten oder FPGAs
 		\item Heterogenität auf Carrier-Ebene: Separate Dies auf einem Chip. Beispielsweise Intel Atom E600C mit CPU und FPGA, verbunden über on-Chip-PCIe
 		\item Heterogenität auf einem Die: Unterschiedliche CPUs oder Beschleuniger wie GPUs oder DSPs. Beispielsweise nutzt ARM big.LITTLE einen Cluster aus vier A15 CPUs für aufwendige Rechenoperationen und einen A7 Cluster bestehend aus vier CPUs für energieeffizienten Normalbetrieb
-		\item \textbf{Vergleich Eindindungen von Beschleunigern}
+		\item \textbf{Vergleich Einbindungen von Beschleunigern}
 		\begin{itemize}
 			\item Dedizierte Beschleuniger: Beliebige Kombination von CPUs und GPUs mit eigenem Speicher und hoher Bandbreite. Allerdings teure Speichertransfers notwendig und die Datenkonsistenz ist meist Aufgabe des Programmierers
 			\item Integrierte Beschleuniger: Gemeinsamer Speicher mit der CPU. Allerdings muss die Fläche der CPU aufgeteilt werden und die Kombination von CPU und GPU ist fix
@@ -823,12 +819,12 @@ main() {
 
 \subsubsection{Grafikkarten}
 \begin{itemize}
-	\item General-purpose computation on Graphics Processng Units (GPGPU): Allzweckberechnungen auf Grafikkarten. Erste Verwendung etwa 2002 mittels Shader-Programmen. Weitere Verbreitung ca. 2008 mit einfacheren Programmiermodellen
+	\item General-purpose computation on Graphics Processing Units (GPGPU): Allzweckberechnungen auf Grafikkarten. Erste Verwendung etwa 2002 mittels Shader-Programmen. Weitere Verbreitung ab ca. 2008 mit einfacheren Programmiermodellen
 	\item \textbf{GPU Shader}
 	\begin{itemize}
 		\item Programmierbare Einheiten in der Grafik-Pipeline
-		\item Frühere Einteilung: Vector-, Geometry- und Pixel-Shader
-		\item Programmierung mittels spezieller Shader-Sprachen wie beispielsweise GLSL
+		\item Frühere Einteilung: Vector-, Geometry- und Fragment- (Pixel)-Shader
+		\item Programmierung mittels spezieller Shader-Sprachen wie GLSL
 		\item Fokus auf Grafikberechnungen, daher Einsatz für Allzweckberechnungen schwierig
 		\item Heute Unified Shader, die flexibel einsetzbar sind und in C-ähnlicher Hochsprache entwickelt werden können (Einführung mit Nvidia Geforce 8)
 	\end{itemize}
@@ -845,7 +841,7 @@ main() {
 	\item Prinzipieller Vergleich CPU vs. GPU
 	\begin{itemize}
 		\item CPU: Kleine Anzahl Allzweckkerne mit großen Caches. Peak-Performance ist leichter zu erreichen
-		\item CPU: Viele einfache Kerne
+		\item GPU: Viele einfache Kerne
 	\end{itemize}
 \end{itemize}
 
@@ -856,7 +852,7 @@ main() {
 \subsubsection{Eigenschaften}
 \begin{itemize}
 	\item GPU-Mikroarchitektur, die vorwiegend bei den Nvidia Geforce 400 und 500 Serien eingesetzt wird (ab 2009)
-	\item 16 Streming Multiprocessors (SM) mit jeweils 32 CUDA-Cores und bis zu 1536 Threads \(\rightarrow\) 512 Cores und 24576 Threads
+	\item 16 Streaming Multiprocessors (SM) mit jeweils 32 CUDA-Cores und bis zu 1536 Threads pro Streaming Multiprocessors \(\rightarrow\) 512 Cores und 24576 Threads
 	\item Sechs 64 Bit breite GDDR5 DRAM Interfaces, gemeinsamer 768 KByte L2 Cache und 40 Bit Adressraum mit Seitenverwaltung für den Hauptspeicher
 	\item Optionale ECC-Unterstützung
 	\item Architektur eines Streaming Multiprocessors: 32 Cores mit jeweils 16 L/S-Units und vier Special Function Units. 64 KByte shared L1 Cache
@@ -866,6 +862,9 @@ main() {
 		\item Single Instruction, Multiple Threads. Bei Verzweigungen werden Pfade serialisiert (alle ausgeführt)
 	\end{itemize}
 \end{itemize}
+
+\subsubsection{Architektur}
+\includegraphics[scale=0.2]{mikroprozessoren2/Nvidia-Fermi.pdf}
 
 
 \subsection{GPGPU-Programmierung mit CUDA}
