@@ -17,6 +17,8 @@ Um lediglich den Teil zu Programmierparadigmen zu bauen:
 Aktuell enthalten
 -----------------
 
+### Bachelor
+
 * Algorithmen 2
 * BWL C/FR
 * Computergrafik
@@ -25,3 +27,7 @@ Aktuell enthalten
 * Investments
 * IT-Sicherheitsmanagement für vernetzte Systeme
 * Programmierparadigmen
+
+### Master
+
+* Mikroprozessoren 2
