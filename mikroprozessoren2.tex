@@ -49,9 +49,9 @@ Entwurf einer Rechneranlage: Ingenieurmäßige Aufgabe der Kompromissfindung zwi
 
 \subsubsection{Rechenleistung}
 \begin{itemize}
-	\item Ermittlung übr Benchmarks
+	\item Ermittlung über Benchmarks
 	\item Maßzahlen für die Operationsleistung: \textit{MIPS} oder \textit{MFLOPS}
-	\item \(MFLOPS = \frac{Anzahl~ausgefuehrter~Gleitkommainstruktionen}{10^6 \cdot Ausfuerhungszeit}\)
+	\item \(MFLOPS = \frac{Anzahl~ausgefuehrter~Gleitkommainstruktionen}{10^6 \cdot Ausfuehrungszeit}\)
 \end{itemize}
 
 \subsubsection{Zuverlässigkeit}
@@ -163,7 +163,7 @@ Einfache, einzyklische Maschinenbefehle; Load/Store Architektur; optimierende Co
 \subsubsection{Pipelining (Instruction Pipelining)}
 \begin{itemize}
 	\item Zerlegung der Ausführung einer Maschinenoperation in Teilphasen, die dann von hintereinander geschalteten Verarbeitungseinheiten taktsynchron ausgeführt werden, wobei jede Einheit genau eine spezielle Teiloperation ausführt.
-	\item Stufen einer Standard-RISC-Pipeline (DLX-Pipeline: \texttt{Instruction Fetch (IF)}, \texttt{Instruction Decode (ID)}, \texttt{Execution (EX)}, \texttt{Memory Access (MA)} und \texttt{Writeback (WB)}, wobei alle Stufen unterschiedliche Ressourcen benutzen
+	\item Stufen einer Standard-RISC-Pipeline (DLX-Pipeline): \texttt{Instruction Fetch (IF)}, \texttt{Instruction Decode (ID)}, \texttt{Execution (EX)}, \texttt{Memory Access (MA)} und \texttt{Writeback (WB)}, wobei alle Stufen unterschiedliche Ressourcen benutzen
 	\item Idealerweise wird mit jedem Takt ein Befehl beendet
 	\item Zykluszeit abhängig von der langsamsten Pipelinestufe
 	\item Gleitkommeverarbeitung und Integer-Division: Einführung spezieller Rechenwerke, um die Berechnung innerhalb eines Schrittes ausführen zu können
@@ -219,7 +219,7 @@ Einfache, einzyklische Maschinenbefehle; Load/Store Architektur; optimierende Co
 		\item Befehle werden entsprechend ihrer Programmordnung bearbeitet
 		\item Umfasst: Befehlsholphase (IF), Dekodierphase (ID) und Dispatch
 		\item Dynamische Zuordnung der Befehle an die Ausführungseinheiten. Der Scheduler bestimmt die Anzahl der Befehle, die im nächsten Takt zugeordnet werden können
-		\item Befehlsholphae (IF)
+		\item Befehlsholphase (IF)
 		\begin{itemize}
 			\item Holen mehrerer Befehle aus dem Befehlscache in der Befehlsholpuffer (Anzahl entspricht typischerweise der Zuordnungsbreite)
 			\item Welche Befehle geholt werden hängt von der Sprungvorhersage ab
@@ -282,7 +282,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item \textbf{Dekodierphase (ID-Phase)}
 	\begin{itemize}
 		\item Dekodierung der im Befehlspuffer abgelegten Befehle. Die Anzahl entspricht typischerweise der Befehlsbereitstellungsbandbreite
-		\item Bei CISC-Architekturen (IA-32): Mehrere Schritte zur Dokodierung notwendig. Bestimmung der Grenzen der geholten Befehle sowie Generierung einer Folge von RISC-ähnlichen Befehlen
+		\item Bei CISC-Architekturen (z.B. IA-32): Mehrere Schritte zur Dokodierung notwendig. Bestimmung der Grenzen der geholten Befehle sowie Generierung einer Folge von RISC-ähnlichen Befehlen % TODO: CISC
 		\item Registerumbenennung: Dynamische Umbenennung der Operanden- und Resultatsregister. Zur Laufzeit wird für jeden Befehl das jeweils spezifizierte Zielregister auf ein unbelegtes physikalisches Register abgebildet. Automatische Auflösung von Namensabhängigkeitskonflikten
 		\item Befehlsfenster (instruction window): Durch das Schreiben der Befehle in ein Befehlsfenster sind diese durch die Sprungvorhersage frei von Steuerflussabhängigkeiten und aufgrund der Registerumbenennung frei von Namensabhängigkeiten
 	\end{itemize}
@@ -291,7 +291,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Zuführung der im Befehlsfenster wartenden Befehle zu den Ausführungseinheiten sowie dynamischer Auflösung von echten Datenabhängigkeiten und Ressourcenkonflikten
 		\item Zuordnung bis zur maximalen Zuordnungsbandbreite pro Takt
 		\item Rückordnungspuffer (Reorder buffer): Festhalten der ursprünglichen Befehlsanordnung sowie Protokollierung der Ausführungszustände der Befehle in den folgenden Phasen
-		\item Zweistufige Zuweisung: Jeder Auführungseinheit ist ein Umordnungspuffer (den sie sich ggf. mit anderen Ausführungseinheiten teilt) vorgelagert. Zuordnung eines Befehls an einen Umordnungspruffer kann nur erfolgen, wenn dieser einen freien Platz hat, ansonsten müssen die nachfolgenden Befehle warten (Auflösung von Ressourcenkonflikten)
+		\item Zweistufige Zuweisung: Jeder Ausführungseinheit ist ein Umordnungspuffer (den sie sich ggf. mit anderen Ausführungseinheiten teilt) vorgelagert. Zuordnung eines Befehls an einen Umordnungspruffer kann nur erfolgen, wenn dieser einen freien Platz hat, ansonsten müssen die nachfolgenden Befehle warten (Auflösung von Ressourcenkonflikten)
 	\end{itemize}
 	\item \textbf{Befehlsausführung}
 	\begin{itemize}
@@ -328,6 +328,21 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item Ausführliches Beispiel ab Folie 70
 \end{itemize}
 
+\subsubsection{Vergleich Hardware- vs Software-Scheduling}
+\begin{itemize}
+	\item \textbf{Hardware-Scheduling}
+	\begin{itemize}
+		\item Bessere Speicherdisambiguierung, da zur Laufzeit die Adressen bekannt sind % TODO
+		\item Sprungvorhersage, Precise Interrupts, kein Kompensierungscode
+		\item Kompatibilität über mehrere Implementierungen
+	\end{itemize}
+	\item \textbf{Software-Scheduling}
+	\begin{itemize}
+		\item Größereres Befehlsfenster zum Finden von Parallelismus
+		\item Geringerer Hardware-Aufwand
+	\end{itemize}
+\end{itemize}
+
 \subsubsection{Zusammenfassung Superskalartechnik}
 \begin{itemize}
 	\item Aus einem sequentiellen Befehlsstrom werden Befehle zur Ausführung angestoßen
@@ -335,16 +350,27 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item Es kann mehr als ein Befehl zugewiesen werden. Die Anzahl der zugewiesenen Befehle pro Takt wird dynamisch von der Hardware bestimmt und liegt zwischen Null und der maximalen Zuordnungsbreite
 	\item Komplexe Hardwarelogik für dynamische Zuweisung notwendig
 	\item Mehrere, von einander unabhängige Funktionsanweisungen verfügbar
-	\item Mikroarchitektur bestimmt superskalare Eigenschaft
+	\item Mikroarchitektur, da der Befehlssatz nicht verändert wird. Technisch gesehen "`nur"' eine Erweiterung der Pipeline
+	\item \textbf{Formen}\footnote{\url{https://de.wikipedia.org/wiki/Superskalarit\%C3\%A4t}}
+	\begin{itemize}
+		\item Superskalare Prozessoren mit statischem Scheduling: Die Anzahl der pro CPU-Zyklus parallel ausführbaren Befehle ist nicht vorgegeben, sondern wird durch die CPU dynamisch bestimmt. Da es sich um statisches Scheduling handelt, wird die Reihenfolge der Befehle vom Compiler vorgegeben
+		\item Superskalare Prozessoren mit dynamischem Scheduling: Die CPU bestimmt sowohl, welche Befehle parallel ausgeführt werden, als auch die Reihenfolge, in der dies geschieht (Out-of-order execution)
+		\item VLIW-Prozessoren: Die Architekturen benutzen deutlich längere Befehle, in denen die parallel auszuführenden Befehle vorgegeben werden
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{Very Long Instruction Word (VLIW)}
 \begin{itemize}
+	\item Ziel: Beschleunigen der Abarbeitung durch Parallelität auf Befehlsebene
 	\item Breites Befehlsformat, das in mehrere Felder aufgeteilt ist, aus denen die Funktionseinheiten gesteuert werden
 	\item Eine VLIW-Architektur mit \texttt{n} unabhängigen Funktionseinheiten kann bis zu \texttt{n} Operationen gleichzeitig ausführen
 	\item RISC-Architektur
-	\item Steuerung der parallelen Abarbeitung zur Übersetzungszeit (automatisch parallelisierender Compiler)
+	\item Steuerung der parallelen Abarbeitung zur Übersetzungszeit (automatisch parallelisierender Compiler). Der Compiler gruppiert die Befehle, die parallel ausgeführt werden können
+	\item Die Gruppengröße ist abhängig von der Anzahl der Ausführungseinheiten
+	\item Vorteil gegenüber superskalaren Prozessoren: Weniger Hardware-Logik notwendig \(\rightarrow\) mehr Platz auf dem Chip für zusätzliche Funktionalität bei beispielsweise mehr Ausführungseinheiten
+	\item Vorteile: Einfacher Kontrollpfad sowie Ausnutzungsmöglichkeiten der Compilertechnik (z.B. Softwarepipeling, Schleifenparallelisierung, etc.)
+	\item Nachteil: Portierung des Codes auf andere Prozessoren eventuell schwierig
 \end{itemize}
 
 \subsubsection{Statische Steuerung der parallelen Abarbeitung}
@@ -383,29 +409,14 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 Quelle: http://www.ti.com/lit/ug/spru732j/spru732j.pdf
 
-\subsubsection{Vergleich Hardware- vs Software-Scheduling}
-\begin{itemize}
-	\item \textbf{Hardware-Scheduling}
-	\begin{itemize}
-		\item Bessere Speicherdisambiguierung, da zur Laufzeit die Adressen bekannt sind % TODO
-		\item Sprungvorhersage, Precise Interrupts, kein Kompensierungscode
-		\item Kompatibilität über mehrere Implementierungen
-	\end{itemize}
-	\item \textbf{Software-Scheduling}
-	\begin{itemize}
-		\item Größereres Befehlsfenster zum Finden von Parallelismus
-		\item Geringerer Hardware-Aufwand
-	\end{itemize}
-\end{itemize}
-
 
 \subsection{Explicitly Parallel Instruction Computing (EPIC)}
 Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 auf dem Markt). Ziele:
 \begin{itemize}
 	\item 64 Bit Architektur: IA-64
-	\item Explizite Spezifikation des Parallelismus im Maschinencode: \texttt{EPIC-Format} (entspricht dem VLIW-Prinzip)
+	\item Statische Befehlsgruppierung: Explizite Spezifikation des Parallelismus im Maschinencode: \texttt{EPIC-Format} (entspricht dem VLIW-Prinzip)
 	\item Bedingte Ausführung von Befehlen (Predication) sowie spekulative Ausführung von Ladeoperationen (Data Speculation)
-	\item Großer Registersatz sowie skalierbarer Befehlssatz
+	\item Großer Registersatz, teilweise als Stack organisiert (Vorteil: Skalierbar) sowie skalierbarer Befehlssatz
 	\item Sinnvolles Zusammenwirken zwischen Compiler und Hardware
 	\item Reduzierung der Logikgatter, um den freigewordenen Platz besser zu nutzen (ermöglicht beispielsweise mehr ALUs, größere Caches, Reduzierung der Verlustleistung)
 	\item Beispiele: Intel Itanium und Intel Itanium 2
@@ -417,11 +428,11 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 	\begin{itemize}
 		\item Integer Register: Sind als Stack organisiert (\texttt{GR32-GR127}) und unterstützen geschachtelte Prozessaufrufe. \texttt{GR0-GR31} sind immer zugreifbar und direkt adressierbar. \texttt{CFP} zeigt auf die Menge der Register, die für die aktuelle Prozedur verwendet werden
 		\item Acht 64 Bit Branch-Register: Enthalten die Zieladressen für indirekte Verzweigungen
-		\item 64 1 Bit Predicate-Register
+		\item 64 1-Bit-Predicate-Register
 	\end{itemize}
 	\item \textbf{Befehlsformat (IA-64 ISA)}
 	\begin{itemize}
-		\item | Opcode (14 Bit) | Register 1 (7 Bit) | Register 2 (7 Bit) | Register 3 (7 Bit) | Predicate (6 Bit) |
+		\item Aufbau einer Instruktion: \texttt{| Opcode (14 Bit) | Register 1 (7 Bit) | Register 2 (7 Bit) | Register 3 (7 Bit) | Predicate (6 Bit) |}
 		\item IA-64-Instruktionen werden vom Compiler in \textit{Bundles} gepackt (128 Bit Länge). \textit{Template} zeigt an, ob die Instruktionen parallel, eine Instruktion oder mehrere sequentiell oder benachbarte \textit{Bundles} parallel ausgeführt werden können. Beispiel Folie 112f \\ | Instruction 2 (41 Bit) | Instruction 1 (41 Bit) | Instruction 0 (41 Bit) | Template (5 Bit) |
 	\end{itemize}
 	\item \textbf{Befehlsgruppen}
@@ -440,7 +451,7 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 		\item Evaluierung der bedingten Ausdrücke mit Hilfe von Compare-Operationen. Die Predicate-Register können mit Compare-Befehlen gesetzt werden. Jeder Befehl hat ein 6 Bit breites Predicate-Feld zur Angabe eines Predicate-Registers \(\rightarrow\) eleminiert Sprungbefehle
 		\item Befehle werden nur ausgeführt, wenn das Predicate-Register \texttt{true} ist, anderenfalls wirken sie wie ein \texttt{NOP}
 		\item Beispiel:\\ \texttt{cmp.eq p1, p2 = r1, r2;;\\(p1) sub r9 = r10, r11\\(p2) add r5 = r6. r7}
-		\item Verfahren: Zur Laufzeit werden die voneinander unabhängigen Befehle angestoßen; der Prozessor führt die Befehle auf den möglichen Programmverzweigungen aus, speichert die Ergebnisse aber nicht endgültig; Überprüfen der Predicate Register und ggf. abschließen der Ausführung der Instruktionen (oder verwerfen des Ergebnisses)
+		\item Verfahren: Zur Laufzeit werden die voneinander unabhängigen Befehle angestoßen; der Prozessor führt die Befehle auf den möglichen Programmverzweigungen aus, speichert die Ergebnisse aber nicht endgültig; Überprüfen der Predicate Register und ggf. abschließen der Ausführung der Instruktionen (oder Verwerfen des Ergebnisses)
 		\item Implementierung
 		\begin{itemize}
 			\item Statische Vorschläge können in Verzweigungen kodiert werden und entscheiden, ob ein Eintrag von der dynamischen Branch Prediction Hardware alloziert wird
@@ -449,7 +460,8 @@ Gemeinsames Projekt von Hewlett-Packard und Intel (1994 angekündigt, ab 2001 au
 	\end{itemize}
 	\item \textbf{Control Speculation}
 	\begin{itemize}
-		\item Ladebefehle werden vor Verzweigungen gezogen
+		\item Je schneller ein Prozessor ist, desto störender sind lange Wartezeiten beim Laden von Inhalten aus dem Hauptspeicher
+		\item Idee: Ladebefehle werden vor Verzweigungen gezogen und somit früher ausgeführt
 		\item Problem (1): Verzweigungen schränken Code-Verschiebungen ein
 		\item Lösung (1): Einführung von spekulativen Ladeoperationen VOR der Verzweigung mit \texttt{Speculation Check}, NACHDEM der Sprung ausgeführt worden ist. Alle Operationen, die spekulative Ergebnisse verwenden, können spekulativ ausgeführt werden (Beispiel Folie 118f)
 		\item Problem (2): Ladeoperation kann nicht vor eine Speicheroption geschoben werden, da beide die selbe Adresse referenzieren könnten (Aliasing)
@@ -688,7 +700,7 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 	\item Mehrere Abfragen können auf verschiedenen Links überlappend bearbeitet werden
 	\item Router in allen Knoten leiten die Pakete weiter
 	\item Geschwindkeitsvorteil gegenüber Bussen: Ringe können schneller getaktet werden
-	\item Snooping-Protokolle: Stetige Kohärenzanfragen besuchen einen jeden Knoten. Anforderungen werden an alle Knoten verschickt. Owner antworten mit dem Block bei einem Fehlzugriff aufgetreten ist (Kohärenztransaktionen benötigen einen Umlauf)
+	\item Snooping-Protokolle: Stetige Kohärenzanfragen besuchen jeden Knoten. Anforderungen werden an alle Knoten verschickt. Owner antworten mit dem Block bei einem Fehlzugriff aufgetreten ist (Kohärenztransaktionen benötigen einen Umlauf)
 	\item Beispiel: Intel Core i7
 	\item Bus Snooping auf Wikipedia: Das Grundprinzip des Bus-Snoopings ist, dass jeder Teilnehmer des Hostbus Adressierungen eines anderen Teilnehmers auf dem Bus mitliest und seinen Cache überprüft, ob eine Cache-Line mit der entsprechenden Adresse vorhanden ist. Dazu wird der Cache-Controller um eine Snoop-Logik erweitert. In der Regel befinden sich alle Teilnehmer in diesem Snooping-Zustand, bis auf den Teilnehmer, der die Transaktion auf dem Bus ausführt.\footnote{\url{https://de.wikipedia.org/wiki/Bus_snooping\#Grundprinzip}}
 \end{itemize}
@@ -700,19 +712,19 @@ In Niagara 2 cores, the most visible changes are the dual execution pipelines (E
 \begin{itemize}
 	\item Schnittstelle für die Shared-Memory-Programmierung in C, C++ und Fortran auf Multiprozessorsystemen
 	\item Parallelisiert Programme auf der Ebene von Schleifen, die in verschiedenen Threads ausgeführt werden und unterscheidet sich dadurch von anderen Ansätzen (z. B. MPI), bei denen ganze Prozesse parallel laufen und durch Nachrichtenaustausch zusammenwirken\footnote{\url{https://de.wikipedia.org/wiki/OpenMP}}
-	\item Fork/Join-Ausführungsmodell: Betritt ein Thread eine parallele Region dann wird er Master-Thread und erzeugt ein Thread-Team. Ersterer  übernimmt die Kontrolle und startet die parallele Abarbeitung durch das Thread-Team (Fork) mit abschließender Barrieren-Synchronisation (Join). Danach Weiterfürhung durch den Master-Thread
+	\item Fork/Join-Ausführungsmodell: Betritt ein Thread eine parallele Region dann wird er Master-Thread und erzeugt ein Thread-Team. Ersterer  übernimmt die Kontrolle und startet die parallele Abarbeitung durch das Thread-Team (Fork) mit abschließender Barrieren-Synchronisation (Join). Danach Weiterführung durch den Master-Thread
 	\item \textbf{Parallele Regionen}
 	\begin{itemize}
 		\item Fork-Join-Modell (s.o.)
-		\item Threadzahl: Vorgabe durch Umgebungsvariable oder durch explizites Setzen oder durch Dynamisierung druch OpenMP
-		\item Verschachtelung: Erzeugen neuer Teams
+		\item Threadzahl: Vorgabe durch Umgebungsvariable oder durch explizites Setzen oder durch Dynamisierung durch OpenMP
+		\item Bei Verschachtelung: Erzeugen neuer Teams
 	\end{itemize}
 	\item \textbf{Parallelisierungsderektiven}
 	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=C]
 foo(int a[]) {
   #pragma omp for
   for (int i=1; i<n; i++)
-    a[i]=i
+    a[i]=i;
 }
 
 main() {
@@ -720,7 +732,7 @@ main() {
 
   #pragma omp parallel
   {
-    foo(a)
+    foo(a);
   }
 }
 	\end{lstlisting}
@@ -734,8 +746,8 @@ main() {
 	\end{itemize}
 	\item \textbf{Datenkonstrukte}
 	\begin{itemize}
-		\item \texttt{\#pragma omp threadprivate (list)}
 		\item Aufsetzen von Thread-internen Variablen
+		\item \texttt{\#pragma omp threadprivate (list)}
 		\item Jeder Thread erhält dabei eine lokale Kopie. Schreibvorgänge anderer Threads sind unsichtbar
 		\item Übernahme aus dem Master-Thread möglich, sonst undefiniert
 		\item Unterschied zu \texttt{PRIVATE}: Bisher Deklaration in jeder Routine mit blockspezifischem oder globalen Scope. Bei \texttt{PRIVATE} erfolgt eine einmalige Definition zu Beginn einer Region
@@ -746,13 +758,13 @@ main() {
 		\item Do/for: Sharing der Schleifeniterationen
 		\item Sektion: Zerlegung in separate Sektionen. Ausführung einer Sektion pro Thread
 	\end{itemize}
-	\item Parallele Schleifen: \texttt{for}-Direktive
+	\item \textbf{Parallele Schleifen: \texttt{for}-Direktive}
 	\begin{itemize}
 		\item Verteilung der Iterationen an alle Threads
 		\item Scheduling gemäßg gewählter Strategie
 		\item Implizite Barriere zur Synchronisation sowie Definition von Reduktionsoperatoren für Variablen zur Zusammenführung
 	\end{itemize}
-	\item Ablaufsteuerung % TODO: Finde Beispiele
+	\item \textbf{Ablaufsteuerung} % TODO: Finde Beispiele
 	\begin{itemize}
 		\item Geordnetes Konstrukt (\texttt{\#pragma omp [for] ordered}): Ausführung in Reihenfolge wie bei sequentieller Abarbeitung. Kein "`Überholen"' innerhalb der parallelen Region
 		\item Sektionen \texttt{\#pragma omp section[s] ordered}): Kapseln von Threads (jede Sektion wird von einem Thread ausgeführt). Synchronisation durch implizite Barriere
@@ -863,8 +875,14 @@ main() {
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Architektur}
+\subsubsection{Architektur eines Streaming-Prozessors}
 \includegraphics[scale=0.2]{mikroprozessoren2/Nvidia-Fermi.pdf}
+
+\begin{itemize}
+	\item Peak-Performance: 1,5 TFlops
+	\item SFU: Special Function Unit, beispielsweise zur Berechnung trigonometrischer Funktionen oder Wurzeln. Entkoppelt von der Hauptplatine
+	\item Uniform Cache: Interface zum gemeinsam genutzen L2-Cache
+\end{itemize}
 
 
 \subsection{GPGPU-Programmierung mit CUDA}
@@ -877,7 +895,7 @@ main() {
 	\item \textbf{Logische Thread-Organisation}
 	\begin{itemize}
 		\item Threads werden in ein- oder mehrdimensionalen Blöcken (ein- oder mehrdimensionale Grids) organisiert. Die Größe der Blöcke ist i.d.R. ein Vielfaches der Warp-Blöcke
-		\item Einteilung Thread/Block/Grid wichtig für effiziente Kernelausführung
+		\item Einteilung Thread/Block/Grid wichtig für effiziente Kernelausführung, da so die Aufgabenteilung zwischen den Threads bestimmt wird. Beispielsweise wird so die Berechnung innerhalb eines Arrays aufgeteilt (SIMD)
 	\end{itemize}
 	\item \textbf{Speicherhierarchie}
 	\begin{itemize}
@@ -994,14 +1012,14 @@ print(dest - a * b)
 \begin{itemize}
 	\item \textbf{Reduzierung der Anzahl an Transfers}
 	\begin{itemize}
-		\item Statischer Overhead für Initialisierung des Transfers, größenabhängiger Anteil nur für große Mengen signifikant
+		\item Statischer Overhead für Initialisierung des Transfers, größenabhängiger Anteil, nur für große Mengen signifikant
 		\item Ansatz: Ausführung auch ungünstiger Operationen auf der GPU
 		\item Beispiel: Initialisierung von Datenstrukturen oder langsame Zwischenoperationen
 	\end{itemize}
 	\item \textbf{Reduzierung der Transferkosten: Memory pinning}
 	\begin{itemize}
 		\item Ohne Vorbereitung doppelter Kopiervorgang: Kopie in den geschützten Speicherbereich sowie Transfer mittels DMA in GPU-Speicher
-		\item Seiten im geschützten Bereich pinnen damit sie nicht ausgelagert werden \(\rightarrow\) direkt geschützten Bereich für Daten allokieren
+		\item Seiten direkt im geschützten Bereich pinnen damit sie nicht ausgelagert werden \(\rightarrow\) direkt geschützten Bereich für Daten allokieren
 		\item Größe des geschützten Speicher ist allerdings begrenzt
 	\end{itemize}
 	\item \textbf{Vereinigung von Speicherzugriffen: Coalescing memory access}
