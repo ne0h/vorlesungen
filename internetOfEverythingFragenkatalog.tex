@@ -12,12 +12,22 @@
 			\item Möglichste Energiesparend, da Batteriebetrieben
 			\item Sehr beschränkte Rechenleistung
 			\item Kommunikationswege nicht zuverlässig
-			\item Meist keine Infrastruktur vorhanden
-			\item Greif tief in die Privatsphäre des Menschen ein
+			\item Meist keine Infrastruktur vorhanden, wenig zentrale Infrastruktur
+			\item Greif tief in die Privatsphäre des Menschen ein, Sammelt private Daten.
 			\item Omnipräsenz?
 		\end{itemize}
 	\subsubsection{Was muss man deswegen besonders beachten?}
-		Durch die allgegenwärtigkeit der Knoten muss besonders auf die Privatsphäre geachtet werden.
+		Durch die Allgegenwärtigkeit der Knoten muss besonders auf die Privatsphäre geachtet werden.
+		
+	\subsection{Was ist das Problem bei vielen Geräten auf kleinem Raum, und was macht man dagegen?}
+	Das Problem sind Kollisionen und der damit verbundene Energieverbrauch durch erkennung und retransmission. Das Routing wird komplexer. Die Gegenmaßnahme ist Topologiekontrolle.
+	
+	\subsection{Welche Netztopologien kommen im IoE vor?}
+	\begin{itemize}
+		\item Einzellnes Gateway
+		\item Mehrere Gateways (Redundanz)
+		\item Ad\- Hoc\- Netz
+	\end{itemize}
 		
 \section{Routing}
 	\subsection{Welche Verfahren gibt es?}
@@ -58,6 +68,10 @@
 
 
 \section{Sicherheit}
+	\subsection{Warum wollen wir vertraulich kommunizieren}
+	
+	\subsection{Reicht Verschlüsselung um die Privatsphäre zu schützen}
+	Nein, Beispiel SMART\- METER
 	\subsection{Was haben wir besprochen?}
 	Single Mission Key, Zufallsverteilte Schlüssellisten und Key Infection
 	
@@ -68,19 +82,66 @@
 	
 	\subsection{Was ist EGLI?}
 	\subsubsection{Wei funktioniert EGLI?}
+	Es gibt eine globale Schlüsselliste und lokale zufällige Teilmengen als Keyrings.
+	
+	%TODO Digagramm des Schlüsselaustauschs
+	A sendet Zufallszahl, B antwortet mit verschlüsselter Zahl mit allen Schlüsseln, damit kennt A nun die Schlüssel(durch Entschlüsseln mit eigenen Schlüsseln) 
+	
 	Keypool P wird vom Benutzer zufällig erzeugt. Jedes System erhält einen Keyring R mit einer Teilmenge von P. Es wird gezeigt, dass mit guter Wahl von P und R eine Wahrscheinlichkeit von mehr als 99\% erreicht werden kann, dass zwei Systeme einen gemeinsamen Schlüssel in ihren Keyring haben. 
 	\subsubsection{Wie Kann man den Aufwand minimieren?}
 	Wert selbst mitschicken und damit nur mit richtigem entschlüsseltem Antworten.
+	
+	\subsection{Was ist Privatsphäre?}
+	Right to be let alone, hat sich zu Recht auf Bestimmung über Verwendung persönlicher Daten entwickelt.
+	\subsubsection{Beispiele für Geräte die persönliche Daten aufzeichnen?}
+	Smart Watch, SmartPhone, Thermometer, Smart Meter...
+	\subsubsection{Was ist bei Stromzählern problematisch? Die werden doch heutzutage auch schon abgelesen?}
+	Die zeitliche Auflösung ist das Problem, bisher gab es einen Verbrauchswert pro Jahr, jeder sind Werte im Bereich von weniger als einer Sekunde möglich. Dies lässt Rückschlüsse auf das private Leben schließen.
+	\subsubsection{Warum benötigt man Smart\- Meter?}
+	Dezentrale Steuerung des Stromnetzes v.a. bei volatilen regenerativen Energiequellen (dezentral Energiequellen oder Verbraucher passend ein\-  und ausschalten, z.B. schaltet sich die Waschmaschine erst bei lokalem Stromüberschuss an.)
+	\subsubsection{Wie kann man Schutz der Privatsphäre bei Smart\- Metern absichern?} 
+	\begin{itemize}
+		\item Grundmaßnamen sind immer Pseudoanonymisierung und Verschleierung (zeitliche und örtliche Auflösung)
+		\item Pseudoanonymisierung ist jedoch problematisch da hier eine Trusted Third Party notwendig ist
+		\item Zeitliche Verschleierung verhindert jedoch die effiziente Nutzung der Daten
+		\item Besser ist hier eine örtliche Verschleierung durch Gruppenbildung (SMART\- ER)
+	\paragraph{Wie funktioniert SMART\- ER?}
+	%TODO Diagramm einfügen
+	Gruppenbildung und Zufallszahlen austauschen
+	
+	Summe und Menge der Kommunikationspartner zurückgeben( weil Gültigkeit der Werte davon abhängt, ob Kommunikationspartner gültige Werte geliefert haben)
+	
+	Das Problem ist die Gruppeneinteilung durch Anbieter oder Trusted Third Party, so könnte ein Anbieter einfach jeden Zähler in eine eigene Gruppe zuweisen und das ganze Verfahren wäre sinnlos. Alternativen sind Smart Meter Speed\- dating(aber: Woher bekommen die Knoten vertrauenswürdig die gloable Liste aller Teilnehmer?) oder dezentrales Aggegieren in Overlay\- Netzen.
+	\end{itemize}
+	
+	\subsection{Was ist das besondere im Bezug auf traditionelle Sicherheit?}
+	\begin{itemize}
+		\item Hauptproblem: Ressourcenknappheit, d.h. asymmetrische Verfahren sind problematisch, Schlüsselaustausch muss mit symmetrischen Verfahren implementiert werden.
+		\item Oft gibt es keine zentrale Infrastruktur
+		\item Schlüsselaustauschverfahren für klassische Sensornetzen: EGLI, Key Infection: DICE als schlankeres DTLS
+	\end{itemize}
+	
+	\subsection{Wie funktioniert Key Infection?}
+	%TODO Diagramm des Schlüsselaustausches zeichnen
+	A sendet $k_i$, B sendet $Enc_{k_i}(k)$ zurück, dies ist nun der Sitzungsschlüssel.
+	Nur wer in direkter Reichweite von A war, konnte $k_i$ abhören und kennt damit den Sitzungsschlüssel, damit muss der Angreifer sehr viele räumlich verteilte Systeme korrumpieren.
 \section{noch nicht zugeordnet}
 	\subsection{Wie kriegt man ein Sensornetz ans Internet angebunden?}
 		Mit 6LoWPAN, angepasste Version von IPv6 für das IoT.
 		
 		\subsubsection{Wie funktioniert 6LoWPAN?}
 		komprimierung/dekomprimierung am Edge-Router
+		\subsubsection{Wie sieht eine 6LoWPAN Datenpaket aus?}
+		Dispatch\- Byte (Header\- Typ/Fragmentierung), danach Paketheader
+		Paketheader kann z.B. komprimierter IP\-  bzw. UDP\- Header sein, in diesem Fall enthält er ein Bitfeld, welches angibt welche Teile des Headers komprimiert werden.
 		\subsubsection{Was ist das Dispatch/Compress Byte?}
 		\subsubsection{Welche Header Felder werden komprimiert und wie?}
+		Direkt aus PAN bzw. MAC\- Adresse abgeleitet, konkateniert mit Netzpräfix, d.h. Präfix kann bei lokalen Adressen weggelassen werden, bei direkter Kommunikation kann die Adresse sogar ganz weg gelassen werden, das sie bereits im MAC\- Header steht.
 		Alle Felder die bereits duch MAC Felder abgedeckt werden und ansonsten redundante Informationen darstellen würden.
-		Version, Addressen, Flow Feld...
+		Verkehrsklasse/Flow Label, Version, Addressen, Länge...
+		
+		\subsubsection{Wie lang ist eine IPv6\- Adresse?}
+		128 Bit
 		\subsubsection{Wie groß ist ein 6LoWPAN Paket?}
 		\subsubsection{Wie groß ist ein 801.15.4 Frame?}
 		
@@ -92,6 +153,8 @@
 	\subsection{Welche Kommunikationsformen gibt es in WPANs?}
 		Unicast, Multicast und Concast
 		\subsubsection{Was ist Unicast?}
+			\paragraph{Was ist HHR?}
+			\paragraph{Was ist E2ER?}
 		\subsubsection{Was ist Multicast?}
 		\paragraph{Gibt es bei Multicast ein spezielles Verfahren bezüglich der Zuverlässigkeit, wenn ja welches und wie funktioniert es?}
 			Pump Slowly Fetch Quickly: %TODO
@@ -108,4 +171,24 @@
 			
 		\subsubsection{Was ist Concast?}
 		
+		\subsubsection{Was ist ein Semi\- Broadcast Medium?}
+		Funk, nur eine Teilmenge aller Empfänger liegt in der Sendereichweite
+		
+	\subsection{Wie funktioniert LEACH?}
+	Zeit wird in Runden diskreditiert, in jeder Runde werden zufällig $N \times P$ Cluster\- Heads bestimmt.
+	Es gibt jeweils $\frac{1}{P}$ Runden zusammengefasst, innerhalb dieser Runden wächst die Wahrscheinlichkeit, dass sich ein Knoden als Cluster\- Head definiert, bis auf 1 an. 
+	
+	Nach der Wahl der Cluster\- Heads: Andere Knoten wählen ein Cluster
+	
+	%TODO ich hab keine Ahnung
+	
+	\subsubsection{Wie wird in LEACH Energie gespart?}
+	Nur die Cluster\- Heads müssen jederzeit mit Gateway o.ä. kommunizieren (hohe Sendeleistung).
+	Die Cluster\- Heads stellen einen Zeitplan auf und die anderen Knoten kommunizieren immer nur mit den Cluster\- Heads (Sterntopologie) und müssen nur wach sein, wenn es der Zeitplan vorsieht.
+	
+	\subsection{Was ist CoAP}
+	CoAP ist eine leichtgewichtige Variante von HTTP(kompaktes binäres Protokoll, dass auf UDP aufbaut).
+	Anfragetypen, zwei Schichten, Pakettypen.
+	
+	
 						
