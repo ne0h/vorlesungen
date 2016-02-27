@@ -1,1 +1,111 @@
-\section{Foo}
+\section{Allgemeines}
+	\subsection{Welche Themen wurden in der Vorlesung behandelt?}
+		\begin{itemize}
+			\item Klassifikation von Geräten
+			\item Privatsphäre im IoE
+			\item Betrachtung des IoE in Bezug auf das OSI-Modell
+			\item Sicherheitsaspekte
+		\end{itemize}
+	
+	\subsection{Auf welche Probleme stößt man im IoE? Warum müssen diese extra behandelt werden?}
+		\begin{itemize}
+			\item Möglichste Energiesparend, da Batteriebetrieben
+			\item Sehr beschränkte Rechenleistung
+			\item Kommunikationswege nicht zuverlässig
+			\item Meist keine Infrastruktur vorhanden
+			\item Greif tief in die Privatsphäre des Menschen ein
+			\item Omnipräsenz?
+		\end{itemize}
+	\subsubsection{Was muss man deswegen besonders beachten?}
+		Durch die allgegenwärtigkeit der Knoten muss besonders auf die Privatsphäre geachtet werden.
+		
+\section{Routing}
+	\subsection{Welche Verfahren gibt es?}
+		Probalistische, lokalisationsbasierte und inhaltsbasierte Verfahren.
+		
+	\subsection{Welches inhaltsbasierte Verfahren hatten wir?}
+		Direct Diffusion
+	
+	\subsubsection{Wie funktioniert Direct Diffusion?}		
+		Sender broadcastet Interesse nach bestimmten Daten in Form von Attribut-Wert Paaren. System speichert Richtung aus der ein Intresse kam in Form von Gradienten. Sensoren mit entsprechenden Daten schicken die Daten an den Sender. Sobal der Sender merkt, dass die Daten verfügbar sind, startet er eine Reinforcment Phase zur Verstärkung der Gradienten.
+		\subsubsection{Genaures im Detail } %TODO
+		
+
+\section{MAC}
+	\subsection{Welche Verfahren hatten wir auf der MAC-Schicht?}
+		S-MAC, B-MAC und 802.15.4 
+		
+		\subsubsection{Wie lassen sich diese Klassifizieren?}
+		Zentral(802.15.4) Dezentral(S-Mac), Synchron(S-Mac) Asynchron(B-Mac) %TODO
+		
+	\subsection{Wie funktioniert S-MAC?}
+	%TODO	
+	
+	\subsubsection{Welche Erweiterungen gab es bei S-MAC und wie funktionieren diese?}
+		\begin{itemize}
+			\item ALP:
+			\item MP (Message Passing):
+		\end{itemize}
+		
+	\subsection{Wie funktioniert B-MAC?}
+	
+	\subsection{Wie funktioniert 802.15.4 im Beacon Modus?}
+	Duty Cycling, gibt das Verhältnis zwischen wach und schlafphasen an.
+	\subsubsection{Wie erhält man im Beacon Modus einen garantierten Zeitschlitz?}
+	%TODO Zeit Paket Diagram aus der Vorlesung zeichen
+	
+	
+
+
+\section{Sicherheit}
+	\subsection{Was haben wir besprochen?}
+	Single Mission Key, Zufallsverteilte Schlüssellisten und Key Infection
+	
+	\subsection{Wie funktioniert Single Mission Key?}
+	Ein Schlüssel für alle Systeme, alle nutzen diesen für Verschlüsselung und Integritätssicherung. Problem ist, dass ein kompromitiertes Gerät reicht umd die gesamte Sicherheit zu brechen.
+	\subsubsection{passiert wenn ein neues System hinzukommt?}
+	Es wird mit dem selben Single Mission Key konfiguriert und kann dann mit dem Rest des Netzes kommunizieren.
+	
+	\subsection{Was ist EGLI?}
+	\subsubsection{Wei funktioniert EGLI?}
+	Keypool P wird vom Benutzer zufällig erzeugt. Jedes System erhält einen Keyring R mit einer Teilmenge von P. Es wird gezeigt, dass mit guter Wahl von P und R eine Wahrscheinlichkeit von mehr als 99\% erreicht werden kann, dass zwei Systeme einen gemeinsamen Schlüssel in ihren Keyring haben. 
+	\subsubsection{Wie Kann man den Aufwand minimieren?}
+	Wert selbst mitschicken und damit nur mit richtigem entschlüsseltem Antworten.
+\section{noch nicht zugeordnet}
+	\subsection{Wie kriegt man ein Sensornetz ans Internet angebunden?}
+		Mit 6LoWPAN, angepasste Version von IPv6 für das IoT.
+		
+		\subsubsection{Wie funktioniert 6LoWPAN?}
+		komprimierung/dekomprimierung am Edge-Router
+		\subsubsection{Was ist das Dispatch/Compress Byte?}
+		\subsubsection{Welche Header Felder werden komprimiert und wie?}
+		Alle Felder die bereits duch MAC Felder abgedeckt werden und ansonsten redundante Informationen darstellen würden.
+		Version, Addressen, Flow Feld...
+		\subsubsection{Wie groß ist ein 6LoWPAN Paket?}
+		\subsubsection{Wie groß ist ein 801.15.4 Frame?}
+		
+		\subsubsection{Wie funktioniert das Routing bei 6LoWPAN?}
+		RPL???? DAG? NodeRank? Wurzel? RootRank??
+		\subsubsection{Wie funktioniert Address Autoconfig?}
+		\subsubsection{Wie funktioniert Fragmentierung?}
+	
+	\subsection{Welche Kommunikationsformen gibt es in WPANs?}
+		Unicast, Multicast und Concast
+		\subsubsection{Was ist Unicast?}
+		\subsubsection{Was ist Multicast?}
+		\paragraph{Gibt es bei Multicast ein spezielles Verfahren bezüglich der Zuverlässigkeit, wenn ja welches und wie funktioniert es?}
+			Pump Slowly Fetch Quickly: %TODO
+			\subparagraph{Wie funktioniert das?}
+			Szenario: Sender sendet, System leitet nach Verzögerung weiter
+			\subparagraph{Leiten sie immer weiter?}
+			Nein, wenn mindestens 3 andere bereits weitergeleitet haben, dann nicht
+			\subparagraph{Und ansonten immer?}
+			Neun, nur wenn das System alle Sequenznummern erhalten hat. Fehlet eine Sequenznummer, so wird diese erstmal mit einem NACK an alle Nachbarn angefragt. Nachbarn warten zufällige Zeit pro Sequenznummer und verschicken das Paket nur nochmal, falls nicht schon ein anderes System auf das NACK reagiert hat.
+			\subparagraph{Wann und wie werden NACKs verbreitet?} 1Hop Umgebung (semi-bc)
+			\subparagraph{Wann werden Daten gepumpt?} Probalistisches Multicast bis zu gewissen grenzen, kein Fluten
+		\paragraph{Was ist ESRT und wie funktioniert es?}
+		Senke broadcastet gewünschte Rate über starke Sendeleistung, da es meistens am Stromnetz hängt.
+			
+		\subsubsection{Was ist Concast?}
+		
+						
