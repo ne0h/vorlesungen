@@ -14,6 +14,11 @@ Um lediglich den Teil zu Programmierparadigmen zu bauen:
 
 `$ make propaonly`
 
+Um den Fragenkatalog zu Netzsicherheit: Architekturen und Protokolle zu 
+bauen:
+
+`$ make netzsicherheitonly`
+
 Aktuell enthalten
 -----------------
 
@@ -27,6 +32,7 @@ Aktuell enthalten
 * Investments
 * IT-Sicherheitsmanagement für vernetzte Systeme
 * Programmierparadigmen
+* Fragenkatalog: Netzsicherheit: Architekturen und Protokolle
 
 ### Master
 
