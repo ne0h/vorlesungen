@@ -11,14 +11,38 @@
 		\begin{itemize}
 			\item Möglichste Energiesparend, da Batteriebetrieben
 			\item Sehr beschränkte Rechenleistung
-			\item Kommunikationswege nicht zuverlässig
+			\item Kommunikationswege nicht zuverlässig, Semi-Broadcast
 			\item Meist keine Infrastruktur vorhanden, wenig zentrale Infrastruktur
 			\item Greif tief in die Privatsphäre des Menschen ein, Sammelt private Daten.
 			\item Omnipräsenz?
 		\end{itemize}
+		
 	\subsubsection{Was muss man deswegen besonders beachten?}
 		Durch die Allgegenwärtigkeit der Knoten muss besonders auf die Privatsphäre geachtet werden.
 		
+	\subsubsection{Privatsphäre was ist das?}
+	Die Möglichkeit vertraulich zu kommunizieren und selbst darüber zu bestimmen, wer welche Daten über mich erhält.
+	
+	\subsubsection{Warum ist Privatsphäre wichtig? Wo ist das Problem beim Datenschutz?}
+	sensitive Daten?
+	
+	\subsubsection{Was sind die Prinzipien des Datenschutzes?}
+	Datensicherheit, Datensparsamkeit, Rechtmässigkeit, Transparenz, Nutzerrechte, Kontrolle.
+		
+	\subsubsection{Was gibt es für Schutzziele?}
+	
+	\subsubsection{Wie realisieren wir Sicherheit im IoE?}
+	
+	\subsubsection{Wir hatten eine Wetterstation als Beispiel, wie funktioniert das?}
+	Wetterstation sammelt Daten und überträgt diese an die Server des Herstellers. Kunde greift mit seinem Smartphone auf die gesammelten Daten auf den Servern des Herstellers zu. Die Daten liegen nicht beim Kunden sondern beim Hersteller in fremder Hand.
+	\paragraph{Wo liegt hier das Problem?}
+		Es wird unter anderem die Lautsärke gemessen, die lässt eventuell sogar Sprachaufzeichnungen zu. Desweiteren können über diese Daten auf das Verhalten der Bewohner schließen lassen.
+	\subsubsection{Wo liegt das Problem bei Smart Metering?}
+	Aus dem hochfrequenten sampling der Verbrauchswerte lassen sich ebenso Verhaltensmuster schließen.
+	\paragraph{Warum will man das dann?}
+		Durch die hochfrequenten Messwerte lassen sich Geräte schalten wenn Stromüberschüsse vorhanden sind außerdem kann der Netzbetreiber mit diesen Informationen sein Stromnetz besser regeln und weiß wann er mehr oder weniger erzeugen muss.
+	\paragraph{Womit lässt sich dieses Problem umgehen?}
+		SMART-ER
 	\subsection{Was ist das Problem bei vielen Geräten auf kleinem Raum, und was macht man dagegen?}
 	Das Problem sind Kollisionen und der damit verbundene Energieverbrauch durch erkennung und retransmission. Das Routing wird komplexer. Die Gegenmaßnahme ist Topologiekontrolle.
 	
@@ -81,6 +105,7 @@
 	Es wird mit dem selben Single Mission Key konfiguriert und kann dann mit dem Rest des Netzes kommunizieren.
 	
 	\subsection{Was ist EGLI?}
+	Eschenauer Gligor
 	\subsubsection{Wei funktioniert EGLI?}
 	Es gibt eine globale Schlüsselliste und lokale zufällige Teilmengen als Keyrings.
 	
@@ -88,8 +113,16 @@
 	A sendet Zufallszahl, B antwortet mit verschlüsselter Zahl mit allen Schlüsseln, damit kennt A nun die Schlüssel(durch Entschlüsseln mit eigenen Schlüsseln) 
 	
 	Keypool P wird vom Benutzer zufällig erzeugt. Jedes System erhält einen Keyring R mit einer Teilmenge von P. Es wird gezeigt, dass mit guter Wahl von P und R eine Wahrscheinlichkeit von mehr als 99\% erreicht werden kann, dass zwei Systeme einen gemeinsamen Schlüssel in ihren Keyring haben. 
+	\paragraph{Ist EGLI zuverlässig?}
+	Nein, da es keine E2E Quittungen gibt.
 	\subsubsection{Wie Kann man den Aufwand minimieren?}
 	Wert selbst mitschicken und damit nur mit richtigem entschlüsseltem Antworten.
+	
+	\subsubsection{Was ist Zuverlässigkeit?}
+	Vollständige Übertragung in der korrekten Reihenfolge ohne Dupplikate.
+	\paragraph{Wie stellen wir Zuverlässigkeit sicher?}
+		Time, Quittungen, Sequenznummern, FEC, E2E Quittungen, Hop by Hop Quittungen.
+	\subsubsection{Was ist der Unterschied zwischen E2E und Hop 2 Hop Kommunikation?}
 	
 	\subsection{Was ist Privatsphäre?}
 	Right to be let alone, hat sich zu Recht auf Bestimmung über Verwendung persönlicher Daten entwickelt.
@@ -127,21 +160,52 @@
 	Nur wer in direkter Reichweite von A war, konnte $k_i$ abhören und kennt damit den Sitzungsschlüssel, damit muss der Angreifer sehr viele räumlich verteilte Systeme korrumpieren.
 \section{noch nicht zugeordnet}
 	\subsection{Wie kriegt man ein Sensornetz ans Internet angebunden?}
-		Mit 6LoWPAN, angepasste Version von IPv6 für das IoT.
-		
+		Mit 6LoWPAN, angepasste Version von IPv6 für das IoT. Bildet Adaptionsschicht zwischen 802.15.4 und IPv6.
+		\subsubsection{Was ist 6LoWPAN?}
+		IPv6 für schwache Knoten, z.B. Sensornetzen. Ermöglicht Anbindung an das "normale" Internet. Bietet bspw. Header Compression. Ein Gateway setzt dann von 6LoWPAN in normales IPv6 um.
 		\subsubsection{Wie funktioniert 6LoWPAN?}
 		komprimierung/dekomprimierung am Edge-Router
+		\subsubsection{Welche Arten von Adressierung gibt es in IPv6?}
+		Unicast, Multicast und Anycast
 		\subsubsection{Wie sieht eine 6LoWPAN Datenpaket aus?}
 		Dispatch\- Byte (Header\- Typ/Fragmentierung), danach Paketheader
 		Paketheader kann z.B. komprimierter IP\-  bzw. UDP\- Header sein, in diesem Fall enthält er ein Bitfeld, welches angibt welche Teile des Headers komprimiert werden.
 		\subsubsection{Was ist das Dispatch/Compress Byte?}
+		Das Dispatch Byte ist ein verpflichtendes "Headerfeld", das angibt ob es sich um einen komprimierten/unkomprimierten IPv6 Header handelt oder ob das Paket fragmentiert ist. Danach kommt nochmal ein Byte das anzeigt welches Feld des IP Heads komprimiert ist.
 		\subsubsection{Welche Header Felder werden komprimiert und wie?}
 		Direkt aus PAN bzw. MAC\- Adresse abgeleitet, konkateniert mit Netzpräfix, d.h. Präfix kann bei lokalen Adressen weggelassen werden, bei direkter Kommunikation kann die Adresse sogar ganz weg gelassen werden, das sie bereits im MAC\- Header steht.
 		Alle Felder die bereits duch MAC Felder abgedeckt werden und ansonsten redundante Informationen darstellen würden.
 		Verkehrsklasse/Flow Label, Version, Addressen, Länge...
+		Versionsfeld wird komprimiert, da immer 6.
+		
+		Traffic-Control und Flow Label sind meist 0
+		
+		Adresse bei Link-Lokaler Kommunikation,  volle Adressen nur, wenn vorher ein Kontext etabliert wurde)
+		
+		Next Header
+		
+		Länge aus Schicht 2 
+		
+		\paragraph{Wie sieht ein komprimierter Header aus?}
+		Mehrere Bits die angeben, ob Adresse, Länger, NextHeader etc... komprimiert oder unkomprimiert vorliegen, gefolgt von den entsprechenden Feldern.
+		
+		\subsubsection{In welche Richtung setzt das Gateway die komprimierten Header um?}
+		Von IPv6 zu 6LoWPAN: komprimierung
+		Von 6LowPan zu IPv6: dekomprimierung
+		
+		\subsubsection{Gibt es noch andere Header die komprimiert werden können?}
+		Ja, UDP. Hierbei werden weniger Ports benutzt und die Länge auf Schicht 3 berechnet. Die Sequenznummer kann komprimiert werden, das UDP nicht zuverlässig ist.
+		\paragraph{Wofür braucht man überhaupt Ports?} Bindung von Programmen an die Netzwerkadresse.
+		\paragraph{Wieso benötigt UDP hier weniger Ports?} UDP ist kein zuverlässiges Protokoll und belegt deswegen keinen Port um auf eine Bestätigung des Empfangs zu hören.	Ausserdem kann die Anzahl der verfügbaren Ports reduziert werden da so ein ressourcenarmes Gerät vermutlich keine $2^{16}$ Anwendungen ausführen wird.	
+		
+		
+		
+		
 		
 		\subsubsection{Wie lang ist eine IPv6\- Adresse?}
-		128 Bit
+		128 Bit. Die ersten 64Bit sind der Präfix, welche bei link-lokaler Kommunikation nicht benötigt wird und die zweiten 64 Bit sind die Interface ID, z.B. kann hier die MAC-Adresse des Adapters verwendet werden.
+		\subsubsection{Wie lange ist ein IPv6\- Header?}
+		40 Byte
 		\subsubsection{Wie groß ist ein 6LoWPAN Paket?}
 		\subsubsection{Wie groß ist ein 801.15.4 Frame?}
 		
@@ -166,11 +230,30 @@
 			Neun, nur wenn das System alle Sequenznummern erhalten hat. Fehlet eine Sequenznummer, so wird diese erstmal mit einem NACK an alle Nachbarn angefragt. Nachbarn warten zufällige Zeit pro Sequenznummer und verschicken das Paket nur nochmal, falls nicht schon ein anderes System auf das NACK reagiert hat.
 			\subparagraph{Wann und wie werden NACKs verbreitet?} 1Hop Umgebung (semi-bc)
 			\subparagraph{Wann werden Daten gepumpt?} Probalistisches Multicast bis zu gewissen grenzen, kein Fluten
+			\subparagraph{Wenn ein Knoten anhand der Sequenznummer feststellt, dass ihm ein Paket fehlt, muss er dann seine Nachbarn kennen um das NACK zu senden?}
+			Nein, das NACK wird per Broadcast mit TTL=1 gesendet.
+			\subparagraph{Haben wir damit jetzt 100\% zuverlässigkeit?}
+			Nein, kommt keine Dateneinheit mit falscher Sequenznummer, so sieht auch kein Knoten die Notwendigkeit ein NACK zu senden.
+			\subparagraph{Wie addressiert der Sender die Empfänger?}
+			Wenn alle erreicht werden sollen, wird per Broadcast transmittet, soll nur eine Teilgruppe der Teilnehmer erreicht werden, so wird per Multicast addressiert %TODO ähm?
+			\subparagraph{Kann ich bei einem Broadcast die Adresse einfach weglassen?}
+			Nein man benutzt eine Broadcastadresse.
+			
 		\paragraph{Was ist ESRT und wie funktioniert es?}
 		Senke broadcastet gewünschte Rate über starke Sendeleistung, da es meistens am Stromnetz hängt.
 			
-		\subsubsection{Was ist Concast?}
 		
+		\subsubsection{Was ist Concast?}
+		Viele Sender senden zu einem Empfänger(Senke)
+		\paragraph{Welches Protokoll haben wir hier erwähnt?}
+			ESRT 
+			\subparagraph{Was ist ESRT?}
+			
+			\subparagraph{Wie funktioniert ESRT?}
+			
+			\subparagraph{Wie wird die neue Senderate publiziert?}
+			Broadcast von der Senke an alle Quellen. Dafür muss sie aber auch alle mit ihrer Senderstärke erreichen können.
+			
 		\subsubsection{Was ist ein Semi\- Broadcast Medium?}
 		Funk, nur eine Teilmenge aller Empfänger liegt in der Sendereichweite
 		
@@ -189,6 +272,16 @@
 	\subsection{Was ist CoAP}
 	CoAP ist eine leichtgewichtige Variante von HTTP(kompaktes binäres Protokoll, dass auf UDP aufbaut).
 	Anfragetypen, zwei Schichten, Pakettypen.
+	
+	\subsection{Mac-Protokolle? Was anstatt WLAN?}
+	IEEE 802.15.4, B-MAC, S-MAC
+	
+\section{802.15.4}
+	\subsection{Was ist 802.15.4}
+	PHY + MAC Protokoll im IoE
+	Soll WLAN/Bluetooth ersetzen.
+	
+\section{Recht}
 	
 	
 						
