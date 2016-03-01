@@ -409,11 +409,87 @@
 		\item Häufig keine zentrale Infrastruktur nutzbar, kein Public Key, kein zentraler Vertrauensanker.
 		\item unklares Vertrauensmodell: Gegen wen schützen? wer ist mein Vertrauensanker?
 		\item Kein klassisches Angreifermodell
+		\item Es werden viel mehr Daten erfasst, zusammenführung beim Dienstanbieter?
+		\item Kontinuierliche Datenerfassung
+		\item Sensible Daten, aus dem persönlichen Umfeld/Wohnraum
+		\item Veilfalt von gemessenen Phänomenen, die Verkettbarkeit erlaubt detailliere Profilbildung.
 	\end{itemize}
 	\subsubsection{Wo ist das Angreifermodell anders?}
 	Im IoE sind die Geräte meist öffentlich zugänglich wodurch ein Angreifer physisch Zugang zu dem Gerät erhalten kann. Er kann den Speicher auslesen oder die Programmierung verändern.
+	Hier wird von einem Insider Angriff ausgegangen.
+	
+	\subsection{Wie sieht es mit der Privatheit bei Smart\- Metering aus?}
+	Das periodische Senden von Messwerten lieftert detailiertes Verbrauchsprofil und damit Einblicke in die Privatsphäre.
+	
+	\subsubsection{Was kann man dagegen tun?}
+	Der einfachste Ansatz wäre Messdaten mittels "falscher" Identitäten oder Pseudonymen zu übertragen jedoch ist dies sehr aufwendig, so ist bei einem neuen Kunden eine komplette Neuvergabe der Pseudonyme notwendig da dieser sonst direkt zugeordnet werden könnte. Desweiteren wird eine Trusted-Third-Party zur Vergabe der Pseudonyme gebraucht, welche nicht vertrauenswürdiger sein muss als das Energieunternehmen.
+	Außerdem kann das Profil des Pseudonyms über externe Daten zugeordnet werden, z.B. über Kenntnis von Arbeitszeit etc..
+	
+	Eine weitere Möglichkeit wäre es den Energiebedarf nach aussen über einen Energiespeicher zu maskieren. Dies funktioniert aber auch nur solange der Akku genügend Kapazität besitzt, zumal dieses Verfahren sehr kostspielig ist.
+
+\subsubsection{Gibt es einen inteligenten Ansatz?}
+	Ja, das Ziel von Smart\- Metering ist das aggregieren von Daten, daher wie hoch ist der Energieverbrauch in "Karlsruhe\- Mitte" oder von allen Kunden der EnBW. Von daher die Idee, die Daten zu Aggregieren bevor sie übermittelt werden. Dies kann z.B. über viele Haushalte oder einen langen Zeitraum geschehen. 
+	Über einen langen Zeitraum ist einfach jedoch nicht Ziel von Smart\- Metering über viele Haushalte hinweg ist jedoch schwierig zu realisieren.
+\subsubsection{Hatten wir dazu ein Verfahren?}
+Ja wir hatten SMART\- ER, Smart Meterin Protocoll with Exactness and Robustness.
+Das Grundkonzept ist die Einteilung in Gruppen welche durch den Messdienstleister durchgeführt wird. 
+Innerhalb der Gruppen wird kooperiert so das die Messwerte maskiert aggregiert werden können.
+Pro Messintervall
+\begin{itemize}
+	\item Austausch von Zufallswerten innerhalb der Gruppe 
+	
+	Hierzu werden die Ausgehenden Zufallszahlen von M abgezogen und die eingehenden auf M addiert. 
+	\item Speichern der Kommunikationspartner (Abhängigkeiten)
+	
+	
+	L beinhaltet alle Kommunikationspartner.
+	\item Berechnen maskierter Messwerte
+	
+	Der Messwert wird maskiert indem er auf M addiert wird.
+	\item Senden maskierter Messwerte und Abhängigkeiten an Messdienstleister
+	
+	L und M werden an den Dienstleister übermittelt.
+	\item Eventuelle Bereinigung empfangene Messwerte durch Messdienstleister.
+\end{itemize}
+
+Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornimmt. Sind nun alle bis auf den Eigenen Zähler einer Gruppe korrumpiert so kann genau auf die Werte des eigenen Zählers zurück geschlossen werden.
+
+	\paragraph{Was kann man gegen das Problem bei der Gruppenbildung unternehmen?}
+	Man muss die Gruppenbildung aus der Verantwortung des Messdienstleisters entziehen. Hier gibt es zwei Ansätze:	
+	\begin{itemize}
+		\item Smart Meter Speed Dating: Die Zähler bilden ihre Gruppen selbständig und dezentral. 
+		\item Elderberry: Baumbasierter Ansatz mit strukturiertem P2P-Overlay. Dezentrale Aggregation.
+	\end{itemize}
 	
 \section{Recht}
+	\subsection{Was sind die Funktionen des Datenschutzrechts?}
+	Das Datenschutzrecht dient dem Schutz der inneren und äußeren Freiheit der Persönlichkeitsentfaltung gegen Beeinträchtigung und Gefährdung bei der Verarbeitung personenbezogener Daten
+	
+	\subsection{Was wird vom Datenschutzrecht abgedeckt?}
+	Der Umgang mit personenbezogenen Daten, Einzelangaben über persönliche oder sachliche Verhältnisse eines bestimmten oder bestimmbaren Betroffenen. 
+	
+	\subsection{Was ist vom Datenschutzrecht ausgenommen?}
+	Datenverarbeitung für ausschließlich persönliche und familiäre Zwecke
+	
+	\subsection{Wie wird ein Datenverarbeitungsprozess aufgespaltet?}
+	\begin{itemize}
+		\item Datenerhebung
+		\item Datenverarbeitung: Speicherung, Veränderung, Übermittlung...
+		\item Datennutzung
+	\end{itemize}
+	
+	\subsection{Wer ist Verantwortlich?}
+	Datenschutzrechtlich Verantwortlich ist die Stelle, die über Zwecke und Mittel einer Datenumgangshandlung entscheidet.
+	
+	\subsection{Dürfen einfach so personenbezogene Daten erhoben werden?}
+	Nein, der Erhebung muss zugestimmt werden
+	
+	\subsection{Dürfen die erhobenen Daten beliebig genutzt werden?}
+	Bei der Zustimmung der Erhebung werden die Daten an einen bestimmten Zweck gebunden und dürfen nur für diesen benutzt werden.
+	\subsection{Was sind die Grundbegriffe des Datenschutzrechts?}
+	
+	\subsection{Was sind die Schutzprinzipien des Datenschutzrechtes?}
+	
 	
 	
 						
