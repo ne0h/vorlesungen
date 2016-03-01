@@ -486,9 +486,41 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	
 	\subsection{Dürfen die erhobenen Daten beliebig genutzt werden?}
 	Bei der Zustimmung der Erhebung werden die Daten an einen bestimmten Zweck gebunden und dürfen nur für diesen benutzt werden.
-	\subsection{Was sind die Grundbegriffe des Datenschutzrechts?}
 	
-	\subsection{Was sind die Schutzprinzipien des Datenschutzrechtes?}
+\section{Kommunikation}
+
+	\subsubsection{Was sind Cyber Physical Systems?}
+	Cyber Physical Systems sind vernetzte Komponenten mit Sensoren und Aktoren die physikalische Prozesse steuern. So z.B. eine Heizungssteuerung oder die Steuerung einer Fabrikanlage.
+	Sie werden als Bestandteil des Internet of Everything gesehen und haben teilweise hohe Anforderungen an Safety, somit z.B. geringe Latenzen oder setzten die richtige reihenfolge von Daten vorraus.
+	
+	\subsection{Medienzugriff}
+
+	\subsubsection{Welche Probleme haben wir mit Funk als Medium?}
+	Funk ist sehr unzuverlässig, es kommt zu hohen Fehlerraten. Da es sich um ein geteiltes Medium handelt muss der Zugriff darauf geregelt werden.
+	
+	\subsubsection{Welche Anfoderungen stellen wir an die drahtlose Kommunikation?}
+	\begin{itemize}
+		\item Hohe Lebenszeit der vernetzten Ding: niedriger Energieverbrauch
+		\item Robusheit gegenüber Topologieveränderung, z.B. "schlafende" Systeme
+		\item Skaliebarkeit
+		\item Selbstorganisation
+		\item Sicherheit und Schutz der Privatsphäre
+\end{itemize}
+
+	\subsubsection{Was ist ein Semi\- Broadcast\- Medium?}
+	Drahtlose Netzwerke sind ein Semi\- Broadcast\- Medium da die Reichweite nicht unendlich ist und die Systeme nur die Dateneinheiten in ihrer Reichweite hören können, somit können Sender Kollisionen nicht erkennen denn sie treten beim Empfänger aus.
+	
+	Problem der "versteckten" und "ausgelieferten" Endsysteme
+	
+	\paragraph{Was sind verstecke Endsysteme?}
+	Verstecke Endsysteme sind die Systeme die zwar mit dem Zielendsystem kommunizieren können nicht jedoch mit dem Quellsystem.
+	
+	\paragraph{Was sind ausgelieferte Endsysteme?}
+	Ausgelieferte Endsysteme sind solche die im Bereich einer aktiven Kommunikation zwar im Sendebereich der Quelle aber nicht im Empfangsbereich des Ziels sitzen. Dieses ausgelieferte System will mit einem vierten System kommunizieren das sich nicht im Sendereich des Quellsystems befindet aber da sich das ausgelieferte System in diesem Bereich befindet ist für dieses System das Medium blockiert.  
+	
+	\subsubsection{Was ist das Problem bei nahen und fernen Endsystemen?}
+	Ausgangslage sind drei Endsysteme. Endsystem A ist weit von Endsystem B und C entfernt, B und C jedoch nahe beieinander.
+	Da die Signalstärke quadratisch zur Entfernung abnimmt kann es sein das wenn A und B gleichzeitig senden, A von B "übertönt" wird und C A nicht hören kann.
 	
 	
 	
