@@ -13,8 +13,18 @@
 			\item Sehr beschränkte Rechenleistung
 			\item Kommunikationswege nicht zuverlässig, Semi-Broadcast
 			\item Meist keine Infrastruktur vorhanden, wenig zentrale Infrastruktur
+			\item Geringe Bauform und muss günstig sein
 			\item Greif tief in die Privatsphäre des Menschen ein, Sammelt private Daten.
 			\item Omnipräsenz?
+		\end{itemize}
+		
+	\subsection{Welche Unterschiede und Besonderheiten gibt es?}
+		\begin{itemize}
+			\item Dezentral
+			\item Selbstorganisieren
+			\item Limitierte Ressourcen
+			\item Unzuverlässiger Ressourcenkanal
+			\item Unsicher, knoten können zerstört oder ausgelesen werden.
 		\end{itemize}
 		
 	\subsubsection{Was muss man deswegen besonders beachten?}
@@ -44,7 +54,10 @@
 	\paragraph{Womit lässt sich dieses Problem umgehen?}
 		SMART-ER
 	\subsection{Was ist das Problem bei vielen Geräten auf kleinem Raum, und was macht man dagegen?}
-	Das Problem sind Kollisionen und der damit verbundene Energieverbrauch durch erkennung und retransmission. Das Routing wird komplexer. Die Gegenmaßnahme ist Topologiekontrolle.
+	Das Problem sind Kollisionen und der damit verbundene Energieverbrauch durch Erkennung und Retransmission. Das Routing wird komplexer. Die Gegenmaßnahme ist Topologiekontrolle.
+	
+	\subsection{Was hat bei Sensorknoten den höchsten Energieverbrauch?}
+	Funkschnittstelle und, wenn vorhanden, Display.
 	
 	\subsection{Welche Netztopologien kommen im IoE vor?}
 	\begin{itemize}
@@ -280,6 +293,125 @@
 	\subsection{Was ist 802.15.4}
 	PHY + MAC Protokoll im IoE
 	Soll WLAN/Bluetooth ersetzen.
+	
+\section{Geräteklassen}
+	\subsection{Was sind Nanonetze?}
+	Kleinste vernetzte Nanomaschinen die jeweils nur eine Aufgabe wie Speichern, Messen, Berechnen oder Manipulieren ausführen können. Nanonetze benutzen Molekulare Kommunikation anstatt elektromagnetische.
+	
+	\subsection{Was ist Smart Dust?}
+	Sehr kleine beschänkte Hardware im Nano bis Millimeter Bereich. Die in kooperation zusammen wirken. Bisher nur Forschungsthematik. 
+	
+	\subsection{Was sind klassische Sensornetze?}
+	Sehr viele kleine auf Einzelanwendungen maßgeschneiderte Systeme. Sie sind batteriebetrieben und haben nur geringe Hardwareressourcen.
+	
+	\subsection{Was ist Physical \& Embedded Computing}
+	Flexible Systeme aus Standardhardware, welche kostengünstig ist und eine hohe Energieeffizient aufweist. Im gegensatz zu klassischen Sensornetzen können diese Geräte auch einen ständigen Stromanschluss haben.
+	
+	\subsection{Was ist Smart\- und Submetering}
+	Die zeitnahe Erfassung (und Steuerung) von Energieverbäuchen (~15min). Soll die effizientere Nutzung von Ressourcen ermöglichen. Das deutsche Modell (BSI) sieht viele Zähler und einzellne Gateways vor. 
+	
+	\subsection{Was ist Smart Home?}
+	Hausautomation und monitoring durch Sensornetze. 
+	Z.B. zur Rolladen oder Licht Steuerung.
+	Dabei kommen Probleme wie einfachheit vs. Sicherheit auf. 
+	\subsubsection{Wie sieht es mit Smart Home und Privacy aus?}
+	Die Sensoren sind tief in den Lebensraum verflochten und können höchst private Daten sammeln.
+	\subsection{Wie sieht es mit Robotern und mobilen Plattformen aus?}
+	Hier handelt es sich um eine mobile Plattform mit Sensoren udn Aktoren zur Messung vor Ort.
+	Sie könenn in lebensfeindlichen oder unzugänglichen Umgebungen eingesetzt werden.
+	\subsection{Was sind Wearables?}
+	Am Körper Tragbare Sensoren die das persönliche Verhalten, Aktivitätsdaten und Vitalwerte erfassen.
+	Die Auswertung und Anzeige ist auf diesen Geräten nur rudimentär möglich.
+	\subsection{Was sind Smart Phones?}
+	Sie stellen die heutige Schnittstelle zwischen Mensch und IoE da, sie erlauben die Steuerung von Remote-Geräten.
+	Sie bestehen aus leistungsfähiger Hardware und setzen die Existenz von leistungsfähiger Kommunikationsinfrastruktur voraus.
+	\subsection{Was sind Single\- Board Computer?}
+	Kostengünstige Hardware für die Entwicklungs und Prototypen Umgebung.
+	Sie haben eine große Anzahl an verschiedener Bus Systeme und Anschlussmöglichkeiten.
+	
+	\subsection{Was ist Industrie 4.0 \\ Industrial Internet?}
+	Eine heterogene Umgebung an unterschiedlichsten Sensoren. Beinhaltet Leistungsfähige Steuer\- und Regelsysteme.
+	Drahtlose Sensorik über Batterie oder Energy Harvesting.
+	Anforderungen: Zuverlässigkeit, Robustheit, Langlebigkeit.
+	
+\section{Privatsphäre}
+	\subsection{Was ist RFID und wo liegen die Herausforderungen für den Datenschutz?}
+	RFID steht für Radio Frequency Identification. Drahtloste Übertragung von Informationen zwischen einem Transponder und einer Basistation.
+	Das Problem ist das über diese Transponder eine eindutige Identifikation eines Objekts/Produkts oder einer Person möglich ist. Dieser Transponder kann auch aus großer Entfernung ausgelesen werden.
+	\paragraph{Gibt es Lösungsansätze?}
+	Ein möglicher Lösungsansatz wäre einen RFID Tag in einem Produkt an der Kasse duch einen "Kill" Befehl zu zerstören.
+	Desweiteren könnten Kryptografische Mechanismen zur Authentifizierung genutzt werden.
+	Physikalisch könnte auch einfach die Antenne abgerissen werden.
+	
+	\subsection{Wie sieht es mit dem Schutz der Privatsphäre aus?}
+	Schutz des Persönlichkeitsrechts bei der Verarbeitung personenbezogener Daten 
+	\subsubsection{Welche Daten sind schützenswert?}
+	Laut BDSG sind alle Personenbezogenen Daten schützenswert allerdings sind im Kontext des Internet of Everything auch alle Metadaten schützenswert. Das heißt wer mit wem wann kommuniziert etc..
+	
+	\subsection{Was sind die Säulen zum Schutz der Privatsphäre?}
+	\begin{itemize}
+		\item Regulierung: Bundesdatenschutzgesetz etc..
+		\item Selbstreuglierung: z.B. Gütesigel die den vertraulichen Umgang mit Daten bescheinigen.
+		\item Selbstschutz: Privat Enhancing Technologies z.B. TOR
+	\end{itemize}
+	
+	\subsection{Was sind allgemeine Schutzziele?}
+	Anforderungen die Erfüllt werden müssen um schützenswürdige Güter vor Bedrohung zu schützen
+	\begin{itemize}
+		\item Confidentiality(Vertraulichkeit): Ermöglicht keine unautorisierte Informationsgewinnung
+		\item Integrity(Integrität)
+		\begin{itemize}
+			\item Starke Integrität: Es ist unmöglich Daten unautorisiert zu verändern.
+			\item Schwache Integrität: Es ist unmöglich Daten zu verändern ohne das es bemerkt wird.			
+		\end{itemize}
+		\item Avaliability(Verfügbarkeit): System beleibt Verfügbar und gewährt keine Einschränkung durch unautorisierten Zugriff.
+	\end{itemize}
+
+	\subsection{Spezielle Schutzziele für die Privatsphäre?}
+	\begin{itemize}
+		\item Unverkettbarkeit: Daten aus unterschiedlichen Kontexten sind nicht miteinander in Bezug zu setzen, z.B. durch Datenvermeidung oder Anonymisierung.
+		\item Transparenz: Die Verarbeitung von Daten ist nachvollziehbar und überprüfbar. 
+		\item Intervenierbarkeit: betroffene Personen können über die Erfassung und Verarbeitung ihrer Daten selbst bestimmen.
+		
+\end{itemize}		
+	
+	\subsection{Was ist ein Vertrauensmodell?}
+	Vertrauen: Bewertung wie sich eine Entität in einem konkreten Sacherverhalt verhalten wird, hier die Annahme, dass Entität kein Angreifer ist.
+	\begin{itemize}
+		\item Vollständiges Vertrauen: uneingeschränktes Vertrauen aller Entitäten des Systems
+		\item Keinerlei Vertrauen: Alle Entitäten potentielle Angreifer, PET notwendig
+		\item Vertrauen in zentrale Instanz:Trusted third party
+		\item Verteiltes Vertrauen: Nutzer vertraut lediglich, dass eine Teilmenge der beteiligten Entitäten nicht kooperiert.
+		
+	\end{itemize}
+	\subsubsection{Was sind die Ziele des Angreifers?}
+	\begin{itemize}
+		\item Abhören von Daten
+		\item Modifizieren von Daten
+		\item Maskerade und Erzeugen von Daten
+	\end{itemize}
+	\subsubsection{Was ist das "klassiche" Angeifermodell}
+	Dolec\- Yao, Outsider. Er kann alles mithören, kann Dateneinheiten erzeugen und versenden und fremde Dateneinheiten modifizieren. Er kann jedoch nicht Enschlüsseln oder Verschlüsseln ohne den Schlüssel zu kennen.
+	
+	\subsection{Ansätze zum Schutz der Privatspähre im IoE?}
+	Diensterbringung mit dem Prinzip der Datensparsamkeit, durch Samples mit ausschlieslich benötigten Daten möglichst Anonym.
+	Anonymisierung durch herabsetzen der Präzesion auf ein Minimum, hinzufügen von Störwerten.
+	Zentrale Datensenken sind zu vermeiden. 
+	Identität der Quelle verschleidern, z.B. durch Pseudonyme
+	Unverkettbarkeit von Samples gewährleisten
+	
+	\subsection{Was ist bei der Privatsphäre anders im IoE?}
+	Die Technologie greift viel stärker ind private leben ein und erfasst dort Daten, dadurch ist die Privatsphäre stärker gefährdet als im klassischen Internet.
+	
+	\subsection{Was sind Ioe\- spezifische Heausforderungen für die Privatsphäre?}
+	\begin{itemize}
+		\item Heterogene Geräte: nicht genügen Ressourcen für klassische kryptografie.
+		\item Häufig keine zentrale Infrastruktur nutzbar, kein Public Key, kein zentraler Vertrauensanker.
+		\item unklares Vertrauensmodell: Gegen wen schützen? wer ist mein Vertrauensanker?
+		\item Kein klassisches Angreifermodell
+	\end{itemize}
+	\subsubsection{Wo ist das Angreifermodell anders?}
+	Im IoE sind die Geräte meist öffentlich zugänglich wodurch ein Angreifer physisch Zugang zu dem Gerät erhalten kann. Er kann den Speicher auslesen oder die Programmierung verändern.
 	
 \section{Recht}
 	
