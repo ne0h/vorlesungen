@@ -554,35 +554,36 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	\paragraph{Wie sieht das mit dem ausgelieferten Endsystem in RTS/CTS aus?}
 	B will zu A senden und C will mit D kommunizieren. C empfängt RTS von B muss aber dann nicht warten, da es kein CTS von A empfängt.
 	
-	\subsubsection{Was ist Duty\- Cycling?}
-	Duty\- Cycling ist die Idee den Funktransciever so oft wie möglich zu deaktivieren um Energie zu sparen, was leider die Latenz erhöht.
+	\subsubsection{Was ist Duty-Cycling?}
+	Duty-Cycling ist die Idee den Funktransciever so oft wie möglich zu deaktivieren um Energie zu sparen, was leider die Latenz erhöht.
 	
-	Bei Duty\- Cycling werden die Funktransciever bei Bedarf aktiviert um auf Aktivität zu prüfen oder zu Senden.
-	Es wird zwischen synchronem und asynchronem Duty\- Cycling unterschieden.
-	\paragraph{Was ist synchrones Duty\- Cycling?}
-	Synchrones Duty\- Cycling bezeichnet das koordinierte aufwecken der Funktransciever nach einem vorgegeben Plan.
-	\paragraph{Was ist asynchrones Duty\- Cycling?}
-	Asynchrones Duty\- Cycling bezeichnet das aufwecken der Funktransciever ohne Koordination.
+	Bei Duty-Cycling werden die Funktransciever bei Bedarf aktiviert um auf Aktivität zu prüfen oder zu Senden.
+	Es wird zwischen synchronem und asynchronem Duty-Cycling unterschieden.
+	\paragraph{Was ist synchrones Duty-Cycling?}
+	Synchrones Duty-Cycling bezeichnet das koordinierte aufwecken der Funktransciever nach einem vorgegeben Plan.
+	\paragraph{Was ist asynchrones Duty-Cycling?}
+	Asynchrones Duty-Cycling bezeichnet das aufwecken der Funktransciever ohne Koordination.
 	
-	\subsubsection{Was ist S\- MAC?}
+	\subsubsection{Was ist S-MAC?}
 	Sensor MAC ist ein Medienzugriffsprotokoll welches die Knoten zeitlich Synchronisiert.
-	\paragraph{Wie funktioniert S\- MAC?} 
+	\paragraph{Wie funktioniert S-MAC?} 
 	Die Idee hinter S-MAC ist das durch koordiniertes Schlafen idle listening verhindert wird, dazu erwachen die System gemeinsam an einem "rendezvous-point", also eine zeitliche Synchronisation.
 	Hierzu wird ein Rahmen fester Länge genutzt der in 2 Phasen aufgeteilt wird.
 	\begin{enumerate}
 		\item Listen Phase: In dieser Phase findet eine Synchronisation statt und sofern gewünscht wird der Datenaustausch angestoßen. Diese Phase ist nocheinmal in 2 Phasen unterteilt, wobei pro Zeitschlitz nur maximal eine Dateneinheit(SYNC, RTS, CTS) vorkommen darf.
 		\begin{itemize}
-			\item Sync\- Phase: Synchronisation durch SYNC Dateneinheit, welche die Zeitspanne bis zum Beginn der nächsten Sleep Phase beinhaltet.
+			\item Sync-Phase: Synchronisation durch SYNC Dateneinheit, welche die Zeitspanne bis zum Beginn der nächsten Sleep Phase beinhaltet.
 			\item RTS/CTS Phase: In dieser Phase wir über einen zufällig gewählten Zeitschlitz über RTS ein Datenaustausch angestoßen, dannach folgt Carrier Sense + RTS/CTS 
 		\end{itemize}
-		\item Sleep Phase: Sollte in der Listne Phase ein Datenaustausch angestoßen worden sein, so entfällt diese Phase, ansonsten wird für die Dauer dieser Phase die Funkschnittstelle temporär deaktiviert.
+		\item Sleep Phase: Sollte in der Listen Phase ein Datenaustausch angestoßen worden sein, so entfällt diese Phase, ansonsten wird für die Dauer dieser Phase die Funkschnittstelle temporär deaktiviert.
 	\end{enumerate}
 	
-	\paragraph{Wie sieht so ein S\- MAC Rahmen aus?}
-	
+	\paragraph{Wie sieht so ein S-MAC Rahmen aus?}
+	Ein S-MAC Rahmen hat eine feste Länge.
 	
 	\begin{figure}[H]
-	\includegraphics[scale=0.4]{internetOfEverything/smac-rahmen}
+	\centering
+	\includegraphics[scale=0.3]{internetOfEverything/smac-rahmen}
 	\end{figure}
 	
 	\paragraph{Wie lange muss die Listenphase sein?}
