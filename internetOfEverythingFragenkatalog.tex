@@ -643,7 +643,16 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 		\item Clear Channel Assesment(CCA): Der Zustand in dem ein System etwas Senden möchte. Hierzu wird überprüft ob der Kanal frei ist, wenn frei dann wird erst eine Präambel gefolgt von den eigentlichen Daten übertragen.
 	\end{itemize}
 	
-	\paragraph{Welchen Nachteil hat B\- MAC?}
-	Das Problem der Versteckten Endgeräte wird nicht behandelt und es findet bei großen Nachrichten keine Fragmentierung statt.
+	\paragraph{Wozu dient die Präambel des CCA?}
+	Sie stellt sicher, dass der Empfänger die Übertragung nicht verpasst. Daher das Intervall zwischen aufeinanderfolgenden Kanalüberprüfungen legt die Präambel Mindestdauer fest.
 	
+	\paragraph{Welchen Nachteil hat B\- MAC?}
+	Das Problem der Versteckten Endgeräte wird nicht behandelt und es findet bei großen Nachrichten keine Fragmentierung statt. Auch nicht beteiligte Empfänger wachen durch die Präambel auf(Idle Listening).
+	
+	\paragraph{Gibt es bei B\- MAC Erweiterungen?}
+	Ja es gibt X\- MAC, es geht das Problem der langen Präambel des Clear Channel Assesments an, welches beim Sender einen hohen Energieverbrauch darstellt. Die Idee bei X\- MAC ist statt einer großen langen Präambel viele kleine Präambelpakete zu senden.
+	
+	
+	\subsubsection{Wie stehen die beiden Zugriffsverfahren im Vergleich da?}
+	B\- MAC erreicht fast das 4,5 fache des Durchsatzes von S\- MAC Unicast durch gerichgen Rechenaufwand pro Dateneinheit und Effektivität des Clear Channel Assesmensts.
 						
