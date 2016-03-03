@@ -289,10 +289,6 @@
 	\subsection{Mac-Protokolle? Was anstatt WLAN?}
 	IEEE 802.15.4, B-MAC, S-MAC
 	
-\section{802.15.4}
-	\subsection{Was ist 802.15.4}
-	PHY + MAC Protokoll im IoE
-	Soll WLAN/Bluetooth ersetzen.
 	
 \section{Geräteklassen}
 	\subsection{Was sind Nanonetze?}
@@ -401,9 +397,9 @@
 	Unverkettbarkeit von Samples gewährleisten
 	
 	\subsection{Was ist bei der Privatsphäre anders im IoE?}
-	Die Technologie greift viel stärker ind private leben ein und erfasst dort Daten, dadurch ist die Privatsphäre stärker gefährdet als im klassischen Internet.
+	Die Technologie greift viel stärker in das private leben ein und erfasst dort Daten, dadurch ist die Privatsphäre stärker gefährdet als im klassischen Internet.
 	
-	\subsection{Was sind Ioe\- spezifische Heausforderungen für die Privatsphäre?}
+	\subsection{Was sind IoE-spezifische Heausforderungen für die Privatsphäre?}
 	\begin{itemize}
 		\item Heterogene Geräte: nicht genügen Ressourcen für klassische kryptografie.
 		\item Häufig keine zentrale Infrastruktur nutzbar, kein Public Key, kein zentraler Vertrauensanker.
@@ -418,7 +414,7 @@
 	Im IoE sind die Geräte meist öffentlich zugänglich wodurch ein Angreifer physisch Zugang zu dem Gerät erhalten kann. Er kann den Speicher auslesen oder die Programmierung verändern.
 	Hier wird von einem Insider Angriff ausgegangen.
 	
-	\subsection{Wie sieht es mit der Privatheit bei Smart\- Metering aus?}
+	\subsection{Wie sieht es mit der Privatheit bei Smart-Metering aus?}
 	Das periodische Senden von Messwerten lieftert detailiertes Verbrauchsprofil und damit Einblicke in die Privatsphäre.
 	
 	\subsubsection{Was kann man dagegen tun?}
@@ -507,8 +503,8 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 		\item Sicherheit und Schutz der Privatsphäre
 \end{itemize}
 
-	\subsubsection{Was ist ein Semi\- Broadcast\- Medium?}
-	Drahtlose Netzwerke sind ein Semi\- Broadcast\- Medium da die Reichweite nicht unendlich ist und die Systeme nur die Dateneinheiten in ihrer Reichweite hören können, somit können Sender Kollisionen nicht erkennen denn sie treten beim Empfänger aus.
+	\subsubsection{Was ist ein Semi-Broadcast-Medium?}
+	Drahtlose Netzwerke sind ein Semi-Broadcast-Medium da die Reichweite nicht unendlich ist und die Systeme nur die Dateneinheiten in ihrer Reichweite hören können, somit können Sender Kollisionen nicht erkennen denn sie treten beim Empfänger aus.
 	
 	Problem der "versteckten" und "ausgelieferten" Endsysteme
 	
@@ -541,8 +537,8 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	Gegen Kollisionen hilft Kollisionsvermeidung und gegen unnötiges Lauschen als auch Mithören hilft Duty-Cycling.
 	
 	\subsubsection{Wie funktioniert Kollisionsvermeidung?}
-	Zur Kollisionsvermeidung wird eine seperate Signalisierung verwendet. Entweder über einen seperaten Kanal(Out\- of\- Band Signalisierung) oder über den gleichen Kanal(In\- Band\- Signalisierung). 
-	Als Beispiel für die In\- Band\- Signalisierung: Multiple access with collison avoidance (MACA):
+	Zur Kollisionsvermeidung wird eine seperate Signalisierung verwendet. Entweder über einen seperaten Kanal(Out-of-Band Signalisierung) oder über den gleichen Kanal(In-Band-Signalisierung). 
+	Als Beispiel für die In-Band-Signalisierung: Multiple access with collison avoidance (MACA):
 	\begin{itemize}
 		\item Sender sendet kurze Request to Send (RTS) Dateneinheit
 		\item Empfänger antwortet mit Clear to Send (CLS) Dateneinheit
@@ -571,7 +567,7 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	\subsubsection{Was ist S\- MAC?}
 	Sensor MAC ist ein Medienzugriffsprotokoll welches die Knoten zeitlich Synchronisiert.
 	\paragraph{Wie funktioniert S\- MAC?} 
-	Die Idee hinter S\- MAC ist das durch koordiniertes Schlafen idle listening verhindert wird, dazu erwachen die System gemeinsam an einem "rendezvous\- point", also eine zeitliche Synchronisation.
+	Die Idee hinter S-MAC ist das durch koordiniertes Schlafen idle listening verhindert wird, dazu erwachen die System gemeinsam an einem "rendezvous-point", also eine zeitliche Synchronisation.
 	Hierzu wird ein Rahmen fester Länge genutzt der in 2 Phasen aufgeteilt wird.
 	\begin{enumerate}
 		\item Listen Phase: In dieser Phase findet eine Synchronisation statt und sofern gewünscht wird der Datenaustausch angestoßen. Diese Phase ist nocheinmal in 2 Phasen unterteilt, wobei pro Zeitschlitz nur maximal eine Dateneinheit(SYNC, RTS, CTS) vorkommen darf.
@@ -598,14 +594,14 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	\paragraph{Wie berechnet man den Duty Cycle?}
 	$\text{Duty Cycle} = \frac{t_{Rahmen}}{t_{Listen}}$
 	
-	\paragraph{Wie berechnet sich die S\- MAC Rahmenlänge?}
+	\paragraph{Wie berechnet sich die S-MAC Rahmenlänge?}
 	Die Rahmenlänge ist von Listen Phase und dem Duty Cycle abhängig. Daher ergibt sich $t_{Rahmen}=t_{Listen}+t_{Sleep}$
 	
 	\paragraph{Wozu dient die Synchronisation?}
 	Die Synchronisation soll dem System den Anfang der nächsten Sleep Phase vermitteln
 	
 	\paragraph{Wie funktioniert die Synchronisation?}
-	Die SYNC\- Dateneinheit enhält die verbleibende Zeit bis zum Beginn der nächsten Sleep Phase, dabei lernt das System den Zeitplan von Nachbarn durch regelmässigen Austausch von SYNC Dateneinheiten. 
+	Die SYNC-Dateneinheit enhält die verbleibende Zeit bis zum Beginn der nächsten Sleep Phase, dabei lernt das System den Zeitplan von Nachbarn durch regelmässigen Austausch von SYNC Dateneinheiten. 
 	Falls es noch kein Nachbar bekannt ist wird ein eigener Zeitplan gewählt. Hierdurch entstehen zeitlich synchronisierte "Inseln" welche jedoch durch die SYNC Dateneinheiten den Zeitplan benachbarter Inseln lernen und so die Grenzen überbrücken können.
 	
 	\paragraph{Was passiert mit Systemen die an Grenzen liegen?}
@@ -631,12 +627,12 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	\paragraph{Wie berechnet sich der Ende zu Ende Goodput?}
 		Gesamzahl von der Senke empfangener Bytes geteilt durch die Zeitspanne zwischen Versenden der ersten Dateneinheit bis zum Empfang der letzten Dateneinheit an der Senke.
 		
-	\paragraph{Was sind die Nachteile von S\- MAC?}
+	\paragraph{Was sind die Nachteile von S-MAC?}
 	Geringer Durchsatz, hohe Latenz durch lange Wartezeiten auf nächsten freien Rahmen
 	
 	
 	
-	\subsubsection{Was ist B\- MAC?}
+	\subsubsection{Was ist B-MAC?}
 	Berkley Media Access Control ist ein Medienzugriffsprotokoll welches keine zeitliche Synchronisation der Knoten vorsieht. Es soll durch kollisionsvermeidung und effiziente Kanalnutzung bei hohen und niedrigen Datenraten einen Energieefizienten Betrieb ermöglichen. Dabei wird der Kanal periodisch geprüft anstatt auf eine zeitliche Synchronisation zu setzen. Dazu wird in zwei Zustände unterteilt
 	\begin{itemize}
 		\item Low Power Listening(LPL): Der Ruhezustand in dem das System die überwiegende Zeit befindet. Es wacht gelegentlich nur kurz auf um auf Daten auf dem Kanal zu überprüfen und bleibt dann Wach wenn etwas Empfangen wird, andernfalls geht es wieder schlafen.
@@ -646,13 +642,88 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	\paragraph{Wozu dient die Präambel des CCA?}
 	Sie stellt sicher, dass der Empfänger die Übertragung nicht verpasst. Daher das Intervall zwischen aufeinanderfolgenden Kanalüberprüfungen legt die Präambel Mindestdauer fest.
 	
-	\paragraph{Welchen Nachteil hat B\- MAC?}
-	Das Problem der Versteckten Endgeräte wird nicht behandelt und es findet bei großen Nachrichten keine Fragmentierung statt. Auch nicht beteiligte Empfänger wachen durch die Präambel auf(Idle Listening).
+	\paragraph{Was ist der Vorteil von B-MAC?}
+	\begin{itemize}
+		\item Keine Synchronisation der Systeme notwendig
+		\item Das Protokoll ist einfach und kompakt implementierbar
+		\item Geringe Ende zu Ende Latenz
+	\end{itemize}
+	\paragraph{Welchen Nachteil hat B-MAC?}
+	Das Problem der Versteckten Endgeräte wird nicht behandelt und es findet bei großen Nachrichten keine Fragmentierung statt. Auch nicht beteiligte Empfänger wachen durch die Präambel auf(Idle Listening). 
 	
-	\paragraph{Gibt es bei B\- MAC Erweiterungen?}
-	Ja es gibt X\- MAC, es geht das Problem der langen Präambel des Clear Channel Assesments an, welches beim Sender einen hohen Energieverbrauch darstellt. Die Idee bei X\- MAC ist statt einer großen langen Präambel viele kleine Präambelpakete zu senden.
+	\paragraph{Gibt es bei B-MAC Erweiterungen?}
+	Ja es gibt X-MAC, es geht das Problem der langen Präambel des Clear Channel Assesments an, welches beim Sender einen hohen Energieverbrauch darstellt. Die Idee bei X-MAC ist statt einer großen langen Präambel viele kleine Präambelpakete zu senden. 
+	Für Unicast wird hier die Zieladresse in die Präambelpakete integriert wodurch der Empfänger den Empfang quitieren kann und die Präambelphase verkürzt werden kann.
 	
 	
 	\subsubsection{Wie stehen die beiden Zugriffsverfahren im Vergleich da?}
-	B\- MAC erreicht fast das 4,5 fache des Durchsatzes von S\- MAC Unicast durch gerichgen Rechenaufwand pro Dateneinheit und Effektivität des Clear Channel Assesmensts.
-						
+	B-MAC erreicht fast das 4,5 fache des Durchsatzes von S-MAC Unicast durch gerichgen Rechenaufwand pro Dateneinheit und Effektivität des Clear Channel Assesmensts.
+	
+	\subsubsection{Welchen Einfluss haben MAC-Prokolle auf den Energiebedarf von Kommunikationsvorgängn?}
+	Die häufigste Annahme ist, das eine höhere Anzahl an Datenpaketen  , also mehr Datenvolumen, einen höheren Energiebedarf mit sich bringt. Aber das stimmt so nicht, auch häufige CCA Phasen können zu einem erhöhten Energiebedarf führen. Wohingegen lange Schlafphasen den Energiebedarf auch nicht zwangsweise reduzieren, es gibt einen anwensundsabhängigen "optimal" Wert.
+	
+\subsubsection{802.15.4}
+	\paragraph{Was ist 802.15.4}
+	IEEE 802.15.4 ist der IEEE Standard für WPAN Anwendungen. Er wird z.B. von 6LoWPAN genutzt.
+	802.15.4 ist für kleine bis mittlere Datenraten und moderate Verzögerungen Ausgelegt. Es wurde so gebaut das es den Batteriebetrieb über Monate und Jahre übersteht (geringer Energiebedarf)
+	
+	
+	PHY + MAC Protokoll im IoE
+	Soll WLAN/Bluetooth ersetzen.
+	
+	\paragraph{Welche Eigenschaften hat es?}
+	\begin{itemize}
+		\item Frequenzbänder: 868/914/2450 MHz
+		\item Datenrate max. 250 kbit/s
+		\item Reichweite 10m
+	\end{itemize}
+
+	\paragraph{Wie groß ist eine 802.15.4 Dateneinheit?}
+	Maximal 127 Byte
+	
+	\paragraph{Was für ein Einteilungsverfahren kommt bei 802.15.4 zum Einsatz?}
+	Ein kombiniertes Zeitplan-basiertes und Konkurrenz-basiertes Verfahren.
+	
+	\paragraph{Ist 802.15.4 Echtzeitfähig?}
+	Ja es gibt garantierte Zeitschlitze
+	
+	\paragraph{Auf welchem Medienzugriffsverfahren beruht 802.15.4}
+	CSMA/CD, wie auch WLAN
+	
+	\paragraph{Welche Typen von Netzen sind möglich?}
+	Es sind Peer-to-Peer-Netze (Mesh) und Stern-Netze (Star) möglich.
+	
+	\paragraph{Welche Klassen von Systemen gibt es?}
+	\begin{itemize}
+		\item Vollfunktionsfähige Systeme (Full Function Devices, FFD)
+		\item Eingeschränkte Systeme (Reduced Function Device, RFD, nur in Stern-Netzen)
+	\end{itemize}
+	
+	\paragraph{Gibt es ein spezielles Full Function Device?}
+	Ja es gibt den "Koordinator", dieser Organisiert das Netz mittels periodischer Beacons. z.B. zum Synchronisieren der Systeme, Auffoderung zum Senden, Identifikation des Netzes etc...
+	
+	\paragraph{Welche Betriebsmodi gibt es?}
+	Beacon Modus und Non-Beacon Modus
+	
+	\paragraph{Was ist der Beacon Modus?}
+	Im Beacon Modus sind in einem Stern-Netz die Systeme einem Koordinator zugeordnet und Formieren ein Personal Area Network (PAN), welches durch den PAN-Identifikator identifiziert wird.
+	
+	Der Koordinator führt hierbei Buch über die Systeme und die Vergabe von Adressen, vermittelt zwischen Systemen und Peer Koordinatoren, bearbeitet Anforderungen für garantierte Zeitschlitze und sendet regelmäßig Beacons z.B. mit dem PAN-Identifikator.
+	Hierbei gilt die grundlegende Annahme, dass für den Koordinator Energie keine limitierte Ressource darstellt, deswegen übernehmen sie mehr Aufgaben als andere Systeme.
+	
+	\paragraph{Wie sieht die Rahmenstruktur im Beacon Modus aus?}
+	Der Rahmen hat feste Länge und ist unterteilt in eine inaktive und eine aktive Phase. In der inaktiven Phase können alle Systeme ihre Transciever ausschalten. Die aktive Phase dauert 16 Zeitschlitze, währen dessen der Koordinator aktive sein muss. 
+	Die Zeitschlitze sind in 2 Teile aufgeteilt.
+	\begin{enumerate}
+		\item Contention Acces Period(CAP): Konkurrierender Zugriff durch Slotted CSMA/CA
+		\item Guaranteed Time Slots(GTS): Vom System beim Koordinator reservierte Zeitschlitze, max. sieben aufeinanderfolgende. Solange bis freigegeben
+	\end{enumerate}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.3]{internetOfEverything/802154-beacon-rahmen}
+\end{figure}			
+
+	\paragraph{Wie funktioniert der konkurrierende Zugriff während CAP?}
+	Der Zugriff ist über Slotted CSMA/CA.
+	Bei Carrier Sense Multiple Access wird der Kanal abgehört(CS), bevor gesendet wird. Dies bietet keinen Schutz vor versteckten Endsystemen. Bei Collision Avoidance kommt ein exponentieller Backoff zur Kollisionsvermeidung zum Einsatz.  		
