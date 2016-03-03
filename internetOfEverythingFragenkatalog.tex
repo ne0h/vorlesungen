@@ -726,4 +726,27 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 
 	\paragraph{Wie funktioniert der konkurrierende Zugriff während CAP?}
 	Der Zugriff ist über Slotted CSMA/CA.
-	Bei Carrier Sense Multiple Access wird der Kanal abgehört(CS), bevor gesendet wird. Dies bietet keinen Schutz vor versteckten Endsystemen. Bei Collision Avoidance kommt ein exponentieller Backoff zur Kollisionsvermeidung zum Einsatz.  		
+	Bei Carrier Sense Multiple Access wird der Kanal abgehört(CS), bevor gesendet wird. Dies bietet keinen Schutz vor versteckten Endsystemen. Bei Collision Avoidance kommt ein exponentieller Backoff zur Kollisionsvermeidung zum Einsatz.  
+	
+	\paragraph{Wie funktioniert die Vergabe von garantierten Zeitschlitzen?}
+	Das System frägt während CAP einen Zeitschlitz beim Koordinator an, wobei hier zwischen einem Sende und Empfangsschlitz unterschieden wird. Der Koordinator quittiert diese Anfrage mit einem ACK, wobei das noch keine Zuweisung eines Zeitschlitzes darstellt. Bekommt das System vom Koordinator einen Zeitschlitz zugeteilt, so steht dieser im nächsten Beacon.
+	
+	\paragraph{Wie lange ist ein garantierter Zeitschlitz reserviert?}
+	Solange bis das System ihn explizit freigibt oder der Koordinator feststellt, dass die Zeitschlitze eine gewisse dauer nicht genutzt wurden.
+	
+	\paragraph{Wie sieht eine Datenübertragung aus?}
+	Bei der Datenübertagung muss zwischen den Wegen vom Koordinator zum System und umgekehrt unterschieden werden.
+	\begin{itemize}
+		\item System -> Koordinator: Falls das System einen Zeitschlitz zum senden reserviert hat kann es diesen Zeitschlitz direkt nutzen, wobei Dateneinheit + Inter Frame Space(IFS) + ACK  in den Zeitschlitz passen müssen. Hat das System keinen Zeitschlitz muss es während CAP mittels CSMA/CA senden.
+		
+		\item Koordinator -> System: Falls das System einen reservierten Zeitschlitz zum empfangen hat, nutzt der Koordinator diesen, wobei Nachricht + ACK vom System in den Zeitschlitz passen müssen. Hat das System keinen Zeitschlitz zum empfangen reserviert so kündigt der Koordinator seinen Sendewunsch im Beacon an. Er setzt die Adresse des Systems im "pending address" Feld. Das System antwortet mit Daten Anfrage, was vom Koordinator mit ACK quittiert wird. Daraufhin sendet der Koordinator die Daten und das System Quitiert den Empfang.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.3]{internetOfEverything/802154-data-koordinator-system}	
+	\end{figure}
+	
+	\paragraph{Was ist der Non-Beacon Modus?}
+	Im Non-Beacon Modus gibt es keine feste Rahmenstruktur und damit auch keine garantierten Zeitschlitze. Der Zugriff auf das Medium ist duch unslotted CSMA/CA geregelt, es wird nicht Koordiniert oder Synchronisiert.
+	 
+	 In Peer-to-Peer Netzen können Systeme frei untereinander kommunizieren. Sie formieren ein PAN, welches durch den PAN-Identifikator identifiziert wird. Hierbei wird ein PAN Koordinator frei gewählt, dieser muss immer aktiv sein.
