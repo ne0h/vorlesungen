@@ -223,6 +223,7 @@
 		\subsubsection{Wie groß ist ein 801.15.4 Frame?}
 		
 		\subsubsection{Wie funktioniert das Routing bei 6LoWPAN?}
+		
 		RPL???? DAG? NodeRank? Wurzel? RootRank??
 		\subsubsection{Wie funktioniert Address Autoconfig?}
 		\subsubsection{Wie funktioniert Fragmentierung?}
@@ -272,7 +273,7 @@
 		
 	\subsection{Wie funktioniert LEACH?}
 	Zeit wird in Runden diskreditiert, in jeder Runde werden zufällig $N \times P$ Cluster\- Heads bestimmt.
-	Es gibt jeweils $\frac{1}{P}$ Runden zusammengefasst, innerhalb dieser Runden wächst die Wahrscheinlichkeit, dass sich ein Knoden als Cluster\- Head definiert, bis auf 1 an. 
+	Es gibt jeweils $\frac{1}{P}$ Runden zusammengefasst, innerhalb dieser Runden wächst die Wahrscheinlichkeit, dass sich ein Knoten als Cluster\- Head definiert, bis auf 1 an. 
 	
 	Nach der Wahl der Cluster\- Heads: Andere Knoten wählen ein Cluster
 	
@@ -751,3 +752,140 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	Im Non-Beacon Modus gibt es keine feste Rahmenstruktur und damit auch keine garantierten Zeitschlitze. Der Zugriff auf das Medium ist duch unslotted CSMA/CA geregelt, es wird nicht Koordiniert oder Synchronisiert.
 	 
 	 In Peer-to-Peer Netzen können Systeme frei untereinander kommunizieren. Sie formieren ein PAN, welches durch den PAN-Identifikator identifiziert wird. Hierbei wird ein PAN Koordinator frei gewählt, dieser muss immer aktiv sein.
+
+\section{Routing}
+\subsection{Was für Verfahren haben wir behandelt?}
+\begin{itemize}
+	\item Probalistische Verfahren
+	\item Inhaltsbasierte Verfahren
+	\item Lokationsbasierte Verfahren
+	\item Distanzvektorbasierte Verfahren
+\end{itemize}
+\subsection{Probalistische Verfahren}
+\paragraph{Was für Verfahren hatten wir im Probalistischen Bereich?}
+	Fluten und Gossiping
+	
+\paragraph{Wie funktioniert Fluten?}
+	Der Knoten sendet jede Dateneinheit per Broadcast, über eine Broadcast-MAC-Adresse, an alle Nachbarn. Die Empfangenen Knoten leiten die Dateineinheit ihrerseit wieder per Broadcast an alle ihre Nachbarn weiter. Diese Methode ist dezental und selbstorganisierend sorgt aber für eine hohe Netzbelastung.
+	\subparagraph{Was für Vorteile hat Fluten?}
+	Es benötigt keine Routenfindung und keine Wartung der Topologie. Ebenfalls ist keine Routingtabelle, d.h. keine Zustandshaltung bzw. wartung notwendig.
+	\subparagraph{Welche Nachteile hat Fluten?}
+	Fluten erzeugt Dateneinheiten die unendlich lange im Netz kreisen und sich duplizieren, daher zu einer hohen Netzbelastung führen. Es bietet keine Zuverlässigkeit.
+	\subparagraph{Wie kann man dieses Verfahren verbessern?}
+	Z.B. durch Vermeidung der Duplikatbildung oder der Begrenzung der Reichweite.
+	\subparagraph{Wie kann man die Duplikatbildung vermeiden?}
+	Indem man jede empfangene Dateneinheit nur genau einmal weiterleitet. Hierzu müssen sich die Sensorknoten allerdings merken, welche Dateneinheiten sie bereits weitergeleitet haben und diese müssen auch eindeutig identifizierbar sein.
+	\subparagraph{Wie beschränkt man die Reichweite?}
+	Man führt eine Time-to-Live (TTL) ein, welche bei jedem Hop dekrementiert wird und bei 0 verworfen wird.
+	Dies sorgt für eine geringere Netzlast bietet aber keine Zuverlässigkeit.
+
+\paragraph{Was ist Gossiping?}
+	Gossiping ist angelehnt an das Verbreiten von Gerüchten, Dateneinheiten werden an zufällige ausgewählte Knoten weitergeleitet, bis "ausreichen viele" Knoten die Dateneinheit erhalten haben
+	\subparagraph{Wie geht man da vor?}
+	Ein Knoten leitet eine Dateneinheit mit Wahrscheinlichkeit $p$ an Nachbarn weiter, hierbei wird wenn weitergeleitet wird per Broadcast an alle 1-Hop-Nachbarn weitergeleitet.
+	\subparagraph{Was sind typische Werte für p?}
+	Zwischen 65\% bis 75\%, bei $p<65\%$ ist die Wahscheinlichkeit hoch, dass eine Dateneinheit verworfen wird, bevor sie ihr Ziel erreicht. 
+	\subparagraph{Was für Vorteile hat Gossiping?}
+	Es hat einen geringeren Overhead als Fluten und es werden keine duplizierten Dateneinheiten versendet.
+	\subparagraph{Welche Nachteile hat Gossiping?}
+	Keine Zuverlässigkeit, da nicht alle Knoten im Netz die Dateneinheit erhalten und die Dateneinheiten sind eventuel lange unterwegs.
+\paragraph{Kann man das kombinieren?}
+Ja man kann auf den $k$ ersten Hops fluten und dann Gossiping mit Wahrscheinlichkeit $p$ betreiben. Dies Bezeichnet man als $GOSSIP(p,k)$, hier wären $GOSSIP(1,k)$ normales Fluten und $GOSSIP(p,0)$ normales Gossiping. Erfahrungswerte zeigen das mit $p=0,72$ und $k=4$ nahezu alle Knoten die Dateneinheiten erhalten.
+
+\paragraph{Kann man Gossiping verbessern?}
+	Ja, man kann die Wahrscheinlichkeit $p$  erhöhen, desto näher eine Dateneinheit ihrem Ziel kommt. Dazu muss natürlich jeder Knoten die Distanz zum Ziel kennen. Dies kann z.B. über Quittungen von erfolgreich empfangenen Einheiten passieren.
+	
+	\subsubsection{Inhaltsbasierte Verfahren}
+	\paragraph{Was für inhaltsbasierte Verfahren haben wir behandelt?}
+	Directed Diffusion und Rumor Routing.
+	
+	\paragraph{Was ist Directed Diffusion?}
+	Directed Diffusion ist ein Datenzentrisches Verfahren bei dem klassiche Adressen keine Rolle spielen, hier stehen die Daten im Mittelpunkt. Das System basiert auf Fluten und ist selbst organisierend.
+	Die grundlegende Idee ist das Daten durch Attribut-Wert-Paare benannt werden und eine Beobachtungsaufgabe als Interesse im Netz verbreitet wird(Diffusion). Hierdurch wird ein Gradient in den Knoten im Netz etabliert und gemessene Ereignisse folgen mehreren Pfaden zum Interessenten (Senke)(directed) wodurch sich einei Pfade verstärken. Hierbei sind die Sensorkonoten, welche die Datenanfrage beantworten können jedoch unbekannt und es können auch antworten von mehreren Sensorknoten kommen.
+	\subparagraph{Wozu ist Directed Diffusion besonders geeignet?}
+	Es eignet sich besonders wenn eine Datenanfrage mehrere oder regelmäßige Antworten erhalten soll, z.B. regelmäßige Temperaturmessungen.
+	
+	\subparagraph{Wie wird Directed Diffusion ausgeführt?}
+	\begin{itemize}
+		\item Senke äußert ihr Interesse an Daten, das Interesse wird im Netz geflutet.
+		\item Ein Pfad zu Datenquelle wird aufgebaut. Der Gradient, also die Richtung aus der das Interesse kam wird im Knoten gespeichert.
+		\item Daten werden auf dem Rückwärtspfad gesendet. Über alle verfügbaren Gradienten.
+		\item Ist die Ereignie-Quelle gefunden startet die Senke die Reinforment-Phase, die Datenrate zu diesem Interesse wird erhöht der Gradient also Verstärkt. Es werden einige Pfade zwischen Quelle und Senke etabliert und nur noch diese Pfade mit geringer Verzögerung gewählt.
+	\end{itemize}
+	
+	\paragraph{Was ist Rumor Routing?}
+	Rumor Routing ist ein Datenzentrisches Routingverfahren bei dem die Initiative von der Ereignis-Quelle und der Ereignis-Senke ausgeht. Hier wird ein Kompromiss zwischen Fluten von Anfragen und Fluten von Ereignissen eingesetzt.
+	Rumor Routing setzt einen Agentbasierten Ansatz ein, bei dem ein Ergeignis-Agent den Pfad zu Ereignissen etabliert. Er besitzt Informationen über Ereignisse und werden bei neuen Ereignissen mit eine gewissen Wahrscheinlichkeit erzeugt. Sie Wandern als langlebige Dateneinheit(max. Lebensauer als TTL) durch das Netz und können auf ihrem Weg informationen lernen. Auf ihrem Weg hinterlassen sie Pfadinformationen in den Knoten, als Anlehnung an Ameisen.
+	\subparagraph{Welche Informationen müssen die Sensorknoten halten?}
+	Die Sensorknoten müssen Weiterleitungsinformation zu bekannten Ereignissen speichern, welche sich durch ankommende Ereignis-Agenten aktualisieren. Die Einträge sollten eine limitierte Lebensdauer haben. Ebenso müssen sie ihre Nachbarschaftsinformationen speichern, diese werden z.B. durch periodische Hello-Dateneinheiten ausgetauscht.
+	\subparagraph{Wie bewegen sich die Agenten durch das Netz?}
+	Die Agenten werden per "Random Walk" von einem Knoten entweder per Unicast-MAC-Adresse an einen zufällig gewählten Nachbar weitergegeben oder alternativ werden mehrere Kopien an unterschiedliche Nachbarn weiteregeben, ähnlich Gossiping.
+	
+	\paragraph{Wo liegt der Nachteil bei Daten und Adressorientieren Routingverfahren?}
+	Bei Adressorientierten Roting Verfahren sind Global eindeutige Adressen erfoderlich, bei Datenorientieten Verfahren ist der Aufwand für eine einzelne Übertraguen höher.
+	
+	\subsubsection{Lokationsbasierte Verfahren}
+	
+	\paragraph{Was will man mit lokationsbasierten Verfahren erreichen?}
+	Mit lokationsbasierten Verfahren will man von klassischen Adressen abstrahieren und nur Informationen von einem System erhalten das in einer bestimmten Richtung in einer bestimmten Entfernung liegt.
+	
+	\paragraph{Was ist das distanzbasierte Greedy Verfahren?}
+	Bei dem distanzbasiertem Greedy Verfahren geht man davon aus, dass jedes System seine eigene Position kennt. So wird die Strategie " most forward withing r " angewendet was so viel bedeutet wie das die Dateneinheit an das Nachbar-System weitergeleitet wird, das sich am nächsten am Ziel befindet.
+	\subparagraph{Was für Vorteile hat dieses Verfahren?}
+	Es ist garantiert frei von Schleifen
+	\subparagraph{Welche Nachteile hat dieses Verfahren?}
+	Da die Topologie nicht bekannt ist, wird nicht immer der kürzeste Pfad gefunden. Da als nächste Hop die Systeme mit potentiell größter Entfernung gewählt werden kann es mit steigender Wahrscheinlichkeit zu Fehlübertragungen kommen.
+	
+	\subparagraph{Wie kann man das Verbessern?}
+	Verbessert wird dieses Verfahren durch das richtungsbasierte Greedy Verfahren. Hier ist die Idee das man als Next-Hop das System möglichst nahe an der idealen Richtung zum Ziel wählt. Als 
+ideale Richtung wird hierbei die Verbindungsgerade zwischen aktuellem System und Ziel angesehen. Zwei sinnvolle Metriken sind hierbei einmal der minimale Abstand zur Verbindungsgeraden und einmal der minimale Winkel zur Verbindungsgeraden. Allerdings ist dieses Verfahren nicht garantiert Schleifenfrei.
+	\subparagraph{Wo haben diese Verfahren Probleme?}
+	Distan und richtungsbasiertes Greedy Verfahren haben Probleme mit Sackgassen (lokale Etremstellen)	
+	\subparagraph{Wie kann man aus einer Sackgasse entkommen?}
+	Mit dem Greedy Perimeter Stateless Routing bzw. der Rechte Hand Regel.
+	
+	\paragraph{Was ist Greedy Perimeter Stateless Routing?}
+		GPSR ist eine Erweiterung des distanzbasieten Greedy Verfahrens. Es teil sich in zwei modi auf
+		\begin{itemize}
+			\item Greedy-Modus: Schnelle Weiterleitung von Dateneinheiten per distanzbasiertem Gerry Verfahren
+			\item Perimeter-Modus: Modus zum Entkommen aus Sackgassen per Perimeter-Routing bzw. " Rechte Hand Regel ".
+		\end{itemize}
+		GPSR wechselt zwischen den Modi hin und her.
+	\subparagraph{Wie läuft GPSR ab?}
+	Es wird im Greedy Modus gestartet. Im Greedy Modus wird solange per distanzbasiertem Greedy Verfahren Weitergeleitet bis eine Sackgasse vorliegt, dann wird in den Perimeter Modus gewechselt.
+	
+	Perimeter Modus
+	\begin{itemize}
+		\item Die Position des Eintrittspunktes in den Perimeter Modus wird in der Dateneinheit vermerkt
+		\item Weiterleitung um Face, welche von der Verbindungsgeraden zwischen aktuellem System und Ziel geschnitten werden
+		\item Leite Dateneinheit gemäß der Rechte Hand Regel entlang des entsprechenden Perimter weiter, also um die Face Fläche herum
+		\item Wechsel in den Greedy Modus, sobald das weiterleitende System dem Ziel näher ist als der Eintrittspunkt.
+	\end{itemize}
+	
+	\subsubsection{Distanzvektorbasierte Verfahren}
+	
+	\paragraph{Was sind die Anforderungen für distanzvektorbasierte Verfahren?}
+	Neben den üblichen Anforderungen wie geringer Energieverbrauch, geringe Datenrate etc.  sollte es für den Betrieb oberhalb eine Low-Power Medienzugriffsprotokolls  unabhängig vom MAC-Protokoll sein und u.a. über 802.14.5 arbeiten können.
+	\paragraph{Was für ein Routing Protokoll gibt es hier?}
+	Hier gibt es das Distanz-Vektor basierte Routingprotokoll RPL (Ripple) es soll Destination-oriented Distributed Acyclic Graphs (DODAGs) aufbauen. Es nutzt eine Objective Funktion zum Aufbau und basiert auf Metriken und Randbedingungen sogenannten Constraints.
+	\subparagraph{Wie funktioniert das?}
+	Verbindung von Sensor-basierten Zugangsnetzen zum Internet über dedizierte Knoten(Wurzel)
+	\begin{itemize}
+		\item{up} Verkehr in Richtung Internet, Sammeln von Daten (Concast)
+		\item{down} Verkehr in Richtung Knoten, z.B. Code-Updates (Multicast)
+	\end{itemize}
+	
+	Das ganze ist als gerichteter azyklischer Graph aufgebaut, wobei die Wurzel einen dedizierten Knoten darstellt. Die Wurzel ist ein LowPAN Border Router und wurde vom Systemadministrator konfiguriert.
+	
+	\subparagraph{Wie wird ein DODAG konstruiert?}
+	Es wird bei der Wurzel gestartet. Die Knoten in der Nachbarschaft empfangen eine Nachricht und entscheiden ob sie dem Graphen beitreten oder nicht. 
+	Wenn der Knoten beitritt besitzt er nun die Route zur Wurzel, welche sein Elternknoten ist. Falls der Knoten als Router arbeitet, so verbreitet er die Routinginformation in seiner Nachbarschaft, ist er nur ein Blattknoten war es das
+	
+	\subparagraph{Wie vielen DODAGS kann ein Knoten angehören?}
+	Genau einem
+	
+	\subparagraph{Können sich DODAGs anpassen}
+	Ja, DODAGs können sich dynamisch an Änderungen im Netz durch die Wurzel kontrolliert anpassen. Dies kann auch Topologieänderungen zu folge haben.
+	
+	\subparagraph{Was ist der Node Rank?}
+	Der Node Rank ist ein Skalarer Wert der die relative Position eines Knotens im DODAG angibt, sozusagen die tiefe des Knotens.
