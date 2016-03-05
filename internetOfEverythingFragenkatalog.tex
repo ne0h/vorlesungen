@@ -889,3 +889,84 @@ ideale Richtung wird hierbei die Verbindungsgerade zwischen aktuellem System und
 	
 	\subparagraph{Was ist der Node Rank?}
 	Der Node Rank ist ein Skalarer Wert der die relative Position eines Knotens im DODAG angibt, sozusagen die tiefe des Knotens.
+	
+	\subparagraph{Was ist die Objective Funktion?}
+	Die Objective Funktion formuliert ein Pfadkosten Kriterium mit dem Metriken und Constraints in den Node Rank umgewandelt werden.
+	Hiermit können z.B. auch Pfade über Batteriebetriebene Knoten ausgeschlossen werden.
+	Jeder DODAG entspricht der Ausprägung eine Objective Funktion.
+	\subparagraph{Was sind die RPL Kontrollnachrichten?}
+	\begin{itemize}
+		\item{DAG Information Object(DIO): }Enthält Informationen die es dem Knoten ermöglichen RPL instanzen zu entdecken, Konfigurationsparameter zu elrnen und DODAG Eltenr zu wählen. Enthalten den NodeRank des Senders.
+		\item{DAG Infomation Solicitation(DIS): }Gezielte Anforderung eines DIOs von einem Knoten
+		\item{Destination Adertisment Object(DAO): }Kommuniziert Informationen über Routingziele entlang eines DODAGs
+	\end{itemize}
+	
+	\subparagraph{Was für Typen von Knoten gibt es?}
+	Es gibt storing und non-storing Knoten, sie sollen Routinginformationen für die Down Richtung etablieren, hierzu senden die Blattknoten DAO Nachrichten in Richtung Wurzel. Das Problem hierbei ist der Speicheraufwand in den Knoten, daher wird zwischen storing und non-storing Knoten unterschieden. Die non-storing Knoten halten keine Routinginformationen sondern die Wurzel fügt Source-Routing-Informationen in die Dateneinheit ein. Storing nodes halten die Routinginformation selbstängit. Hierbei ist kein Mischbetrieb zulässig.
+	
+	\subparagraph{Wie sieht es mit RPL und Sicherheit aus?}
+	Sie ist wichtig aber aufgrund der ressourcenknappheit oft problematisch. RPL bietet 3 Optionen.
+	\begin{itemize}
+		\item Unsecured: keine Sicherheitsmaßnamehn für Kontrollnachrichten
+		\item Pre-installed: Über vorinstalliertes gemeinsames Geheimniss gesicherte RPK Nachrichten
+		\item Authentifiziert: Router müssen Schlüssel von Authentication Authority erwärben, Blattknoten können über vorinstallierten Schlüssel beitreten.
+	\end{itemize}
+	
+	\subparagraph{Welche Schutzziele gibt es in RPL?}
+	Integrität, Vertraulichkeit, Schutz vor Wiedereinspielen, Schutz vor Verzögerungen
+	
+	\subparagraph{Wie wird ein DODAG konstruiert?}
+	\begin{itemize}
+		\item Knoten schicken periodisch link-lokale Multicast DIO-Nachrichten
+		\item Knoten hören auf DIO-Nachrichten und verwenden die Informationen um DODAG beizutreten oder zu verwalten.
+		\item Elternwahl aufgrund von DIO Informationen(z.B: Node Rank) über die Objective Function
+	\end{itemize}
+	Dasraus entstehen Upward Routden in Richtugn DODAG Wurzel. Wurzel muss nicht bekannt sein, Node Rank reicht aus. Aufgrund der strengen Monotonie des Baumes wird automatisch richtig geroutet.
+	
+	\subparagraph{Wie sieht die DOGAG Konstruktion Distanzvektorbasiert aus?}
+	Es werden Pfadkosten für den günstigsten Pfad zur Wurzel bekanntgegeben. Elternknoten werden solche, die die Pfadkosten minimiere. Hierzu wird eine Elternmenge und ein bevorzugter Elternknoten gewählt. Je nach Objective Funktion können auch mehrere bevorzugte Eltern gewählt werden.
+	\subparagraph{Welche Probleme können bei distanzvektorbasiertem DODAG auftreten?}
+	Schleifen und Count-to-infinity.
+	
+	\subparagraph{Kann es günstig sein, einen hohen Node Rank zu haben?}
+	Ja so stehen einem eine größere Anzahl potentieller Elternknoten zur Verfügung und man selbst wird seltener mit der Weiterleitung von Daten beauftragt, spart als Energie und vermeidet Schleifenbildung.
+	
+	\subparagraph{Was ist die max\_depth rule?}
+	Schleifenbildung ist unvermeidbar, deswegen schränkt die max\_depth rule die Elternwahl ein. Demnach sind alle Knoten erlaubt deren Node Rank kleiner ist als der eigene bzw. den eigenen Node Rank nicht mehr als einen bestimmten Wert überschreitet. Hierdurch werden Schleifen nicht verhindert schränken aber deren Größe ein. Damit kann man Erreichen das sich ein Knoten beim Ausfall eines Links einen neuen Elternknoten mit höherem Node Rank wählt.
+	Hierzu überprüft man $NewRank \leq oldRank + DAGMaxRankIncrease$
+	
+	\subparagraph{Wie erkennt man Schleifen bei der Datenübertragung?}
+	Bei RPl benutzt man Piggybacking von Routing-Kontrollinformationen um Schleifen zu erkennen. Diese werden in Feldern im Kopf der Dateneinheit gesetzt, dies nennt man auch datapath validation.
+	Hierzu benötigt man den Node Rank des Absenders und die Richtung der Dateneinheit. Als Beispielt eine Dateneinheit hat sich verirrt und up als Richtung markiert. Nun hat der Sender einen geringeren NodeRank als der Empfänger, daher erkennt man das sich die Nachricht in die falsche Richtung bewegt hat und der DODAG inkonsistent ist, er muss repariert werden.
+	
+	\subparagraph{Wie repariert man einen DODAG?}
+	Bei der Reperatur von DODAG unterscheidet man zwischen lokalen und globalen Strategien.
+	\begin{itemize}
+		\item Lokale Strategie: 
+			\begin{itemize}
+				\item Wenn ein Link-Ausfall oder eine Inkonsistenz erkannt wurde wird versucht einen neuen Elternknoten zu wählen und daraufhin den Node Rank anzupassen. 
+				\item Konnte kein neuer Elternknoten gewählt werden kommt es zu dem sogenannten \textbf{Poison-and-Wait} hier wird der Knoten aus allen Eltern-Sets und allen potentiellen Kindern gelöscht. An allen notwendigen Stellen werden neue Eltern gewählt(falls nicht möglich rekursiv poison and wait). Nach eine gewissen Zeit darf sich der Knoten neu in den DODAG einbinden.
+				\end{itemize}
+				
+		\item Globale Strategie: Bei der globalen Strategie wird der DODAG von der Wurzel ausgehen komplett neu aufgebaut. Dies ist deutlich teurer als eine lokale Reperatur findet aber bessere Pfade.
+		\end{itemize}
+		\subparagraph{Welche Annahmen können über Verkehrsmuster getroffen werden?}
+		Multipoint to Point also Concast stellt den Löwenanteil des Verkehrs da und hier findet RPL redundante und optimierte Pfade.
+		
+		Point to Multipoint also Multicast ist selten und aktives Auslesen (s. Directed Diffuison) wird als sekundär betrachtet.
+		
+		Point to Point also Unicast wird so gut wie nie genutzt, hier müsste im non storing mode immer über die Wurzel kommuniziert werden.
+		
+		\subparagraph{Wie viele Nutzdaten bleiben bei RPL?}
+		vom den 128Byte des 802.15.4 Rahmen bleiben 79 Byte.
+		\subparagraph{Reicht die Nutzdatenlänge oder muss fragmentiert werden?}
+		DIOs werden nicht selten über 80 Byte lang, also ja es muss fragmentiert werden.
+		
+		\subparagraph{Was bedeutet der Verlust eines Fragments?}
+		Ein verlorenes Fragment bedeutet Paketverlust, das Netz ist hoch verlustbehaftet.
+		
+				
+	
+	
+	
+	
