@@ -965,7 +965,84 @@ ideale Richtung wird hierbei die Verbindungsgerade zwischen aktuellem System und
 		\subparagraph{Was bedeutet der Verlust eines Fragments?}
 		Ein verlorenes Fragment bedeutet Paketverlust, das Netz ist hoch verlustbehaftet.
 		
-				
+\subsection{Topologiekontrolle}
+
+	\paragraph{Was ist Topologiekontrolle?}
+	Jede direkte Kommunikationsverbindung zwischen zwei Systemen ist Teil einer Topologie. Ein dichtes Netz führt zu einer komplexen Topologie. Die Topologiekontrolle dient daher dazu diese Komplexität zu reduzieren ohne die Konnektivität zu beeinflussen.
+	
+	
+	\paragraph{Wie teilt man die Topologiekontrolle ein?}
+	In der Topologiekontrolle unterscheidet man zwischen 
+	\begin{itemize}
+		\item Flachen Netzen: hier sind die Systeme gleichberechtigt.
+		\item Hierachsiche Netze: hier haben die Systeme unterschiedliche Aufgaben und Fähigkeiten.
+	\end{itemize}
+	
+	\paragraph{Wie kontrolliert man in Flachen Netzen?}
+	Entweder durch Regulierung der Sendeleistung oder durch Regulierung der Zahl der Nachbarn.
+	
+	\subparagraph{Wie reguliert man die Sendeleistung?}
+	Die Sendeleistung und die Zahl der direkten Nachbarsysteme hängen unmittelbar zusammen, also ist das Problem die richtige Sendeleistung zu finden. Eine geringere Sendeleistung spart Energie also will man eine möglichst geringe Sendeleistung mit guter Konnektivität und hohem Durchsatz. Hierzu gibt benötigt man die Position aller Systeme und kann mit Hilfe von \textbf{Minimale maximale Sendeleistung (MMS)} die Sendeleistung regulieren:
+		\begin{itemize}
+			\item Für jedes System $i$, setze Sendeleistung $P_i=0$
+			\item Zwei Teilnetze $T_1, T_2$ mit geringstem Abstand verbinden
+			\item Sendeleistung $P_i, P_j$ der zwei Systeme $i \in T_1, j \in T_2$, die am dichtesten zusammen liegen so erhöhen, dass diese miteinander kommunizieren können
+			\item Abschließend Verbindungen, welche die Konnektivität nicht beeinflussen entfernen.
+\end{itemize}	
+Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
+
+	\paragraph{Wie kann man Hierachische Netze unterteilen?}
+	In Backbone-Netze und in Cluste-Netze.
+	
+	\subparagraph{Was machen Backbone Netze?}
+	Backbone Netze teilen die Systeme in zwei Klassen. Einige der Systeme bilden das Backbone und Systeme außerhalb des Backbones dürfen nicht miteinander kommunizieren. Dabei gilt für jedes System es ist entweder Teil des Backbones oder besitzt ein Backbonemitglied als direkten Nachbarn.
+	
+	\subparagraph{Was machen Cluster Netze?}
+		Cluster Netze unterteilen die Sensoren in Gruppen wobei jedes System genau in einer Gruppe ist bis auf Systeme die zwei oder mehr Gruppen verbinden.
+		
+	\subparagraph{Wie funktioniert die Clusterbildung}
+	Es werden Vertreter der Gruppe gewählt, die sogenannten Cluster-Heads. Sie bilden eine unabhängige Mänge bei der zwei Cluster-Heads nicht benachbart sein dürfen. Hier wird eine maximal unabhängige Menge gesucht. Hierzu tauschen die Knoten Attribute wir z.B. Knoten-ID oder Energiereserven lokal aus.  Derjenige mit dem größten Atrributwer wird Cluster-Head. Die direkten Nachbarn werden dann aus der Betrachtugn ausgeschlossen 
+	
+	\subparagraph{Wie bestimmt man das Gateway?}
+	Um die einzellnen Cluster zu Verbinden müssen sich Gateways finden. Hierzu benötigt jeder Cluster-Head Verbindung zu allen anderen Cluster-Heads die maximal 3 Schritte entfernt sind, wodurch die Backbone konnektivität sichergestellt ist.
+	
+	\subparagraph{Was ist das Problem mit den Cluster-Heads?}
+	Sie fallen schneller aus, da sie höher belastet werden.
+	
+	\subparagraph{Wie kann man dieses Problem lösen?}
+	Durch LEACH
+	
+	\subparagraph{Was macht LEACH?}
+	Es rotiert die Cluster-Heads und sorft so für eine Verteilung der Last.
+	
+	\subparagraph{Wie funktioniert LEACH?}
+	Die Knoten bestimmen sich selbständig mit bestimmter Wahrscheinlicheit zu einem Cluster-Head und teilen dies den benachbarten Knoten mit und alle anderen Knoten ordnen sich dem nächsten in Reichweite befindlichen Cluster-Head zu. Hierzu ist LEACH in Runden unterteilt welche 3 Phasen durchlaufen.
+	\begin{itemize}
+		\item Advertisment Phase: Jeder Knoten entscheidet ob er Cluster-Head der aktuellen Runde sein wird.
+		\begin{itemize}
+			\item $P = $ Anteil Cluster-Heads im Netz
+			\item $G = $ Menge der Knoten die in den letzten $\frac{1}{P}$ Runden nicht Cluster-Head waren
+			\item $T(n) =$ Jeder Knoten $n$ bestimmt Zufallszahl $z$ zwischen 0 und 1 und wird Cluster-Head falls $z < T(n)$ \\
+			$T(n)= \begin{cases}
+			\frac{P}{1-P(r \mod \frac{1}{P})} & n \in G \\
+			0 & n \notin G
+			\end{cases}
+			$
+			\item Jeder Knoten wird einmal innerhalb von $\frac{1}{P}$ Runden Cluster-Head
+		\end{itemize}
+		Cluster-Heads broadcasten ihre Entscheidung in Form von Advertismen Nachrichten an die Nachbarknoten.
+		
+		\item Cluster-Setup-Phase: Aufgrund erhaltener Advertismens entscheiden sich die Knoten für ein Cluster und teilen dies dem Cluster-Head mit. Der Cluster-Head sammelt eingehende Meldungen, erstellt einen Zeitplan und teil diesen den Knoten mit.
+		
+		\item Steady-State-Phase: Knoten kommunizierne Gemäß erhaltenem Zeitplan oder schlafen, der Cluster-Head muss ständig aktiv sein.
+	\end{itemize}
+	Nach einem festen Zeitintervall wiederholt sich der Vorgang.
+	
+	
+	 
+	
+	
+			
 	
 	
 	
