@@ -1055,16 +1055,45 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 	\paragraph{Was ist probalistische Zuverlässigkeit?}
 	Nur ein Teil(\%) aller Dateneinheiten erreicht die Senke, dies verbraucht weniger Energie, als alle Dateneinheiten zu transportieren und reicht bei redundanten Informationen aus, z.B. bei periodischem Messen. Hierbei simmen die Informationen welche die Senke erreichen nicht exakt mit den erfassten Informationen überein, z.B. da Informationen im Netz aggregiert werden. Die Information die ankommen sind auch aufgrund langer Verzögerungen bei schlechten Funkverbindungen veraltet.
 	
-	\paragraph{Was sind Pro Hop Quittungen}
+	\paragraph{Was sind pro Hop Quittungen}
+	 Bei pro Hop Quittungen quittiert jeder Hop die Dateneinheit. Bei einer notwendigen Wiederholung kann das direkte Vorgängersystem das Paket erneut übertragen, hierzu ist allerdings eine Zustandshaltung auf den Zwischensysteme und viele Quittungen zwischen Nachbarn nötig. Sehr teuer, braucht Speicher und Energie.
+	 \subparagraph{Was sind die Vorteile von pro Hop Quittungen?}
+	 Der Energieverbrauch wird im Netz verteilt und der Sender ist nicht in jede Senderwiederholung involviert.
 	 
+	 \paragraph{Was sind Ende zu Ende Quittungen?}
+	 Bei Ende zu Ende Quittungen gibt es auf dem Weg keine Quittungen zwischen den Zwischensystemen lediglich das Ziel quittiert den Empfang. Wird die Quittung nicht innerhalb eines festen Zeitrahmens empfangen wird die Dateneinheit über den kompletten Pfad erneut übertragen.
+	 
+	 \paragraph{Was ist besser?}
+	 Ende zu Ende Quittungen sind immer nötig aber pro Hop Sendewiederholungen sind bei hohen Bitfehlerraten oder langen Routen sinnvoll.
+	 
+	 \paragraph{Kann man das besser machen?}
+	 Ja durch Hop-by-Hop Reliability(HHR). Es soll die Zuverlässigkeit ohne den Einsatz von Quittungen erhöhen.
+	 Hierbei wird auf Quittungen und Sendewiederholungen verzichtet, dafür wird eine Dateneinheit sofort $k$ mal gesendet. $k$ ist so zu wählen, dass Dateneinheiten mit Wahrscheinlichkeit $r$ von Senke korrekt empfangen wird $r_i=1-p_i^{k_i}$ wobei $k_i$ mit Kenntnis der Paketfehlerrate $p_i$ eines Systems $i$ zum Nachbarsystem berechnet wird.
+	 
+	Außerdem gibt es noch HHR mit Acknoledments, hier wird bis zu $k_i$ mal gesendet aber jedes mal auf Quittung gewartet. Es wird aufgehört zu senden, sobald die erste Quittung empfangen oder $k_i$ erreicht ist.
+	
+	\subparagraph{Was hat das für Vor und Nachteile?}
+	HHR hat den Vorteil das Übertragungen durch den Verzicht auf Quittungen eingespart werden können, denn bei niedrigen Paketfehlerraten werden Dateneineheiten seltener übertragen. Es hat allerdings auch den Nachteil, dass die Paketwiederholung nicht Stopt, sobald die Dateneinheit empfangen wurde.
+	
+	HHRA hat den Vorteil das bei hohen Paketfehlerraten auf Sendewiederholungen verzichtet wird, wenn eine Dateneinheit erfolgreich quittiert wurde und den Nachteil das der Overhead der Quittungen sich bei geringen Paketfehlerraten nicht lohnt.
+	
 	
 	
 	
 	\paragraph{Was ist Multicast}
 	Die Senke kommuniziert mit mehreren Sensorknoten/Aktoren. z.B. für Kontroll oder Steuerungsinformationen oder Code-Updates. Hier liegt die Herausforderung in der Zuverlässigkeit.
 	
+	\subparagraph{Pump Slowly Fetch Quickly (PSFQ)}
+	Ziel von PSFQ ist es Daten von einer Basisstation zu einer Menge an Sensoren zu transportieren, hierbei ist Datenverlust inakzeptabel, Latenz aber nicht kritisch.
+	\subparagraph{Wie funktioniert PSFQ?}
+	Die Basisstation pumpt Dateneinheiten ins Sensornetz und wartet zwischen dem Versand von zwei Dateneineheiten. Die Systeme speichern Dateneineheiten, fall es neue sind. Die Systeme leiten die Dateneinheiten nur weiter(pumpen) falls die Sequenznummern konsistent sind, also keine Dateneinheit fehlt.
+	
+	Sollte eine Sequenznummer fehlen wird nach der verlorenen Dateneinheit gefragt. Die geschieht über eine Fetch Operation, dass ist ein NACK mit der fehlenden Sequenznummer. Daraufhin versenden die Vorgängersysteme die verlorene Dateneineheit neu, weshalb empfangene Dateneineheiten immer gepuffert werden müssen.
+	
+	
+	Es wird langsam gepumpt um Fetchen zu ermöglichen und schnell gefetcht.
 	\paragraph{Was ist Concast?}
-	Concast bezeichnet eine Kommunikationsform bei der viele Quellen mit einer Senke kommunizieren, als beispiel viele Sensoren liefern Daten an eine Senke. Hier liegt die Herausforderung neben der Zuverlässigkeit auch in der Staukontrollen.
+	Concast bezeichnet eine Kommunikationsform bei der viele Quellen mit einer Senke kommunizieren, als Beispiel viele Sensoren liefern Daten an eine Senke. Hier liegt die Herausforderung neben der Zuverlässigkeit auch in der Staukontrollen.
 	
 	
 	
