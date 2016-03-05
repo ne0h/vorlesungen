@@ -753,15 +753,15 @@ Hier bleibt das Problem bestehen das der Dienstleister die Gruppenbildung vornim
 	 
 	 In Peer-to-Peer Netzen können Systeme frei untereinander kommunizieren. Sie formieren ein PAN, welches durch den PAN-Identifikator identifiziert wird. Hierbei wird ein PAN Koordinator frei gewählt, dieser muss immer aktiv sein.
 
-\section{Routing}
-\subsection{Was für Verfahren haben wir behandelt?}
+\subsection{Routing}
+\subsubsection{Was für Verfahren haben wir behandelt?}
 \begin{itemize}
 	\item Probalistische Verfahren
 	\item Inhaltsbasierte Verfahren
 	\item Lokationsbasierte Verfahren
 	\item Distanzvektorbasierte Verfahren
 \end{itemize}
-\subsection{Probalistische Verfahren}
+\subsubsection{Probalistische Verfahren}
 \paragraph{Was für Verfahren hatten wir im Probalistischen Bereich?}
 	Fluten und Gossiping
 	
@@ -1038,8 +1038,35 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 	\end{itemize}
 	Nach einem festen Zeitintervall wiederholt sich der Vorgang.
 	
+\subsection{Datentransport}
+	\paragraph{Welche Arten von Datentransport haben wir behandelt?}
+	Unicast, Multicast und Concast.
 	
+	\paragraph{Was ist Unicast?}
+	Einfache direkte kommunikation zwischen zwei Endsystemen. Hier liegt die Herausforderung in der Zuverlässigkeit und einer minimierung der Verzögerung. Eine Typische Komminikationsform wäre Sensor nach Aktor. Z.B. ein Lichtschalter steuert eine Lichtquelle.
+	
+	\paragraph{Was bedeutet Zuverlässigkeit im traditionellen?}
+	Alle Dateneinheiten kommen unveränder, in der richtigen Reihenfolge und Duplikatfrei an. Es gibt keine Phantom Dateneinheiten.
+	
+	\paragraph{Warum nicht einfach TCP?}
+	TCP erkennt die Ursache für den Paketverlust nicht und nimmt an das eine Stausituation existiert was zu schlechter Performance führt.
+	TCP liefert eine 100\% Zuverlässigkeit was viele Wiederholungen und damit einen hohen Energiebedarf zur folge hat. TCP ist Verbindungsorientiert und setzt einen 3 Wege Handshake voraus was zu einer hohen Latenz beim Verbindungsaufbau führt was für spontane Übertragung von Ereignissen eher ungeeignet ist. TCP ist für Unicast ausgelegt.
+	
+	\paragraph{Was ist probalistische Zuverlässigkeit?}
+	Nur ein Teil(\%) aller Dateneinheiten erreicht die Senke, dies verbraucht weniger Energie, als alle Dateneinheiten zu transportieren und reicht bei redundanten Informationen aus, z.B. bei periodischem Messen. Hierbei simmen die Informationen welche die Senke erreichen nicht exakt mit den erfassten Informationen überein, z.B. da Informationen im Netz aggregiert werden. Die Information die ankommen sind auch aufgrund langer Verzögerungen bei schlechten Funkverbindungen veraltet.
+	
+	\paragraph{Was sind Pro Hop Quittungen}
 	 
+	
+	
+	
+	\paragraph{Was ist Multicast}
+	Die Senke kommuniziert mit mehreren Sensorknoten/Aktoren. z.B. für Kontroll oder Steuerungsinformationen oder Code-Updates. Hier liegt die Herausforderung in der Zuverlässigkeit.
+	
+	\paragraph{Was ist Concast?}
+	Concast bezeichnet eine Kommunikationsform bei der viele Quellen mit einer Senke kommunizieren, als beispiel viele Sensoren liefern Daten an eine Senke. Hier liegt die Herausforderung neben der Zuverlässigkeit auch in der Staukontrollen.
+	
+	
 	
 	
 			
