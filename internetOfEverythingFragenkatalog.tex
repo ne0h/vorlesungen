@@ -1154,6 +1154,47 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 	\subparagraph{Was für Datenmengen senden Anwendungen Typischerweise?}
 	<100 Byte
 	
+	\subparagraph{Wie sieht es mit der Adressierung in 6LowPAN aus?}
+	6LowPAN bildet IPv6 Adressen auf IEEE 802.15.4 Adressen ab. Hierbei haben alle Knoten eines LoWPANs den gleichen Adresspräfix. 
+	
+	\subparagraph{Was für Typen von Adressen sind bei IPv6 möglich?}
+	\begin{itemize}
+		\item Unicast: Identifikator für ein einzelnes Interface
+		\item Anycast: Identifikator für eine Menge von Interfaces, Dateneinheiten mit einer solchen Adresse werden an \textbf{ein} Interface aus dieser Menge ausgeliefert, meist das " nächstgelegende "
+		\item Multicast: Identifikator für eine Menge von Interfaces, Dateneinheiten werden an \textbf{alle} Interfaces ausgeliefert
+	\end{itemize}
+	
+	
+	\subparagraph{Wie wird die IPv6 Adresse in einem 6LowPAN berechnet?}
+	64 Bit Präfix des LowPan + 64 Bit Interface Identifier(MAC-Adresse)
+	
+	\subparagraph{Wie viele Nutzdaten bleiben in einem 802.15.4 Paket in 6LowPan?}
+	Maximal 102 Byte, Rest von Header benötigt. Im schlechtesten Fall 32Byte.
+	
+	\subparagraph{Wie groß ist ein IPv6 Kopf?} 
+	40 Byte
+	
+	\subparagraph{Wie groß ist ein UDP Kopf?}
+	8 Byte
+	
+	\subparagraph{Was ist Header Compression}
+	Bei Header Compression werden unnütze, redundante Informationen aus dem Header entfernt um Daten zu sparen. 
+	Hierbei wird unterschieden zwischen der Komprimierung des IPv6 Kopfes und des UDP Kopfes.
+	Header Compression ist hierbei eine Zustandslose Komprimierung, daher es werden nur Datenkomprimiert die sich aus der Übertragung selbst herleiten lassen.
+	Hierzu wird im Dispatch Header die LOWPAN_HC1 angegeben darauf folgt der LOWPAN_HC1 Header der angibt welche Teile des IPv6 Kopfes komprimiert wurden.
+	
+	\subparagraph{Was ist der Dispatch Header?}
+	Der Dispatch Header gibt den nachfolgenden Paketkopftyp an, wobei nach dem Dispatch Byte unterschieden wird.
+	
+	
+	\subparagraph{Was kann im IPv6 Kopf komprimiert werden?}
+		\begin{itemize}
+			\item Die Versionsnummer, sie ist immer 6
+			\item IPv6 Ursprung und Zieladresse bei lokaler kommunikation aus Schicht-2 Adressen ableitbar
+			\item Payload Lenght, kann u.U aus Schicht 2 Payload Length oder aus Datagram_size im Fragmentierungskopf berechnet werden
+			\item Traffic Class und Flow Label sind meist 0
+			\item Next Header ist UDP, ICMP oder TCP
+		\end{itemize}
 	
 	
 	
