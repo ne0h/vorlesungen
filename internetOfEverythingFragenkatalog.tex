@@ -220,11 +220,10 @@
 		\subsubsection{Wie lange ist ein IPv6\- Header?}
 		40 Byte
 		\subsubsection{Wie groß ist ein 6LoWPAN Paket?}
-		\subsubsection{Wie groß ist ein 801.15.4 Frame?}
+		\subsubsection{Wie groß ist ein 802.15.4 Frame?}
 		
 		\subsubsection{Wie funktioniert das Routing bei 6LoWPAN?}
-		
-		RPL???? DAG? NodeRank? Wurzel? RootRank??
+		6LowPan nutzt RPL
 		\subsubsection{Wie funktioniert Address Autoconfig?}
 		\subsubsection{Wie funktioniert Fragmentierung?}
 	
@@ -1195,7 +1194,48 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 			\item Traffic Class und Flow Label sind meist 0
 			\item Next Header ist UDP, ICMP oder TCP
 		\end{itemize}
+			
+		
+		\subparagraph{Auf welche Größe lässt sich der IPv6 Kopf komprimieren}
+		2 Byte + 1 Byte Hop-Limit Feld
+		
+	\subparagraph{Was kann im UDP-Kopf komprimiert werden}
+	Port Nummer, da keine $2^{16}$ Ports benötigt werden können weniger ausreichen. UDP Payload length lässt sich unter Umständen aus Schicht 4 Payload Length berechnen.
 	
+	\subparagraph{Auf welche Länge  lassen sich IPv6 Kopf + UDP-Kopf komprimieren?}
+	6 Byte
+	
+	\paragraph{Was ist CoAP?}
+	Constrained Application Protocol(CoAP) ist ein Transfer-Protokoll für ressourcenbeschränkte Kommunikation. Es ist sozusagen die leichtgewichtige Alternative zu HTTP auf UDP Basis. Sie besitzt ein kompaktes Format und unterstützt Representational State Transfer(RESTful) per GET, PUT, POST und DELETE Nachricht. Ebenso unterstützt es URIs.
+	
+	CoAP kann am Border Router einfach in HTTP umgesetzt werden.
+	
+	CoAP unterstützt DTLS, die TLS Variante für UDP.
+	
+	\subparagraph{Was für Schichten hat CoAP?}
+	\begin{itemize}
+		\item Message-Schicht: Mechanismen zur zuverlässigen Nachrichtenübertragung. 4 Nachrichtentypen: Confirmable, Non-confirmable, Acknoledgement, Reset. Übertragung von Request/Responses
+		\item Request/Responses: Enthalten Methodenaufrug auf ein Objekt. 4 Methoden: GET, PUT, POST, DELETE
+	\end{itemize}
+	
+	\subparagraph{Wie kommen Antworten auf eine CoAP Nachricht?}
+	Entweder Piggy-backed im ACK oder als seperate Nachricht.
+	
+	\subparagraph{Was für Sicherheitsmodi gibt es für CoAP?}
+	\begin{itemize}
+		\item NoSec: DTLS wird nicht genutzt
+		\item PreSharedKex: DTLS mit vorverteilten Schlüsseln
+		\item RawPublicKex: DTLS mit asymmetrischen Schlüsselpaaren
+		\item Certificate: DTLS mit X.509 Zertifikat
+	\end{itemize}
+	
+\subsubsection{ZigBee}
+	\paragraph{Was ist ZigBee?}
+	ZigBee ist der von der ZigBee Alliance vorangetriebene Standard für das Internet der Dinge. ZigBee ist stark anwendungsorientiert und es stehen kleine autonome Netze im Mittelpunkt welche keine Interoperabilität mit bestehender Infrastruktur bieten.
+	Als Beispiele wären hier Haus und Gebäudeautomation oder Beleuchtungssteuerung zu nennen.
+	
+	\paragraph{Wie sieht das Schichtenmodell von ZigBee aus?}
+	Zigbee nutzt 802.15.4 als Medienzugriffsprotokoll.
 	
 	
 	
