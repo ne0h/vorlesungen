@@ -1180,7 +1180,7 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 	Bei Header Compression werden unnütze, redundante Informationen aus dem Header entfernt um Daten zu sparen. 
 	Hierbei wird unterschieden zwischen der Komprimierung des IPv6 Kopfes und des UDP Kopfes.
 	Header Compression ist hierbei eine Zustandslose Komprimierung, daher es werden nur Datenkomprimiert die sich aus der Übertragung selbst herleiten lassen.
-	Hierzu wird im Dispatch Header die LOWPAN_HC1 angegeben darauf folgt der LOWPAN_HC1 Header der angibt welche Teile des IPv6 Kopfes komprimiert wurden.
+	Hierzu wird im Dispatch Header die LOWPAN\_ HC1 angegeben darauf folgt der LOWPAN\_ HC1 Header der angibt welche Teile des IPv6 Kopfes komprimiert wurden.
 	
 	\subparagraph{Was ist der Dispatch Header?}
 	Der Dispatch Header gibt den nachfolgenden Paketkopftyp an, wobei nach dem Dispatch Byte unterschieden wird.
@@ -1190,7 +1190,7 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 		\begin{itemize}
 			\item Die Versionsnummer, sie ist immer 6
 			\item IPv6 Ursprung und Zieladresse bei lokaler kommunikation aus Schicht-2 Adressen ableitbar
-			\item Payload Lenght, kann u.U aus Schicht 2 Payload Length oder aus Datagram_size im Fragmentierungskopf berechnet werden
+			\item Payload Lenght, kann u.U aus Schicht 2 Payload Length oder aus Datagram\_ size im Fragmentierungskopf berechnet werden
 			\item Traffic Class und Flow Label sind meist 0
 			\item Next Header ist UDP, ICMP oder TCP
 		\end{itemize}
