@@ -1088,12 +1088,77 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 	\subparagraph{Wie funktioniert PSFQ?}
 	Die Basisstation pumpt Dateneinheiten ins Sensornetz und wartet zwischen dem Versand von zwei Dateneineheiten. Die Systeme speichern Dateneineheiten, fall es neue sind. Die Systeme leiten die Dateneinheiten nur weiter(pumpen) falls die Sequenznummern konsistent sind, also keine Dateneinheit fehlt.
 	
-	Sollte eine Sequenznummer fehlen wird nach der verlorenen Dateneinheit gefragt. Die geschieht über eine Fetch Operation, dass ist ein NACK mit der fehlenden Sequenznummer. Daraufhin versenden die Vorgängersysteme die verlorene Dateneineheit neu, weshalb empfangene Dateneineheiten immer gepuffert werden müssen.
+	Sollte eine Sequenznummer fehlen wird nach der verlorenen Dateneinheit gefragt. Die geschieht über eine Fetch Operation, dass ist ein NACK mit einer Liste der fehlenden Sequenznummern. Daraufhin versenden die Vorgängersysteme die verlorene Dateneineheit neu, weshalb empfangene Dateneineheiten immer gepuffert werden müssen.
 	
+	\subparagraph{Wie Antworten die Nachbarsysteme auf ein NACK?}
+	Sie starten einen Timer und hören innerhalb dieser Zeit ob ein anderes Nachbarsystem auf das NACK antwortet, ansonsten senden sie nach ablauf des Timers das NACK.
+	
+	\subparagraph{Ist der NACK ein Broadcast?}
+	Ja er erreicht mehrere Nachbarsysteme.
 	
 	Es wird langsam gepumpt um Fetchen zu ermöglichen und schnell gefetcht.
 	\paragraph{Was ist Concast?}
-	Concast bezeichnet eine Kommunikationsform bei der viele Quellen mit einer Senke kommunizieren, als Beispiel viele Sensoren liefern Daten an eine Senke. Hier liegt die Herausforderung neben der Zuverlässigkeit auch in der Staukontrollen.
+	Concast bezeichnet eine Kommunikationsform bei der viele Quellen mit einer Senke kommunizieren, als Beispiel viele Sensoren liefern Daten an eine Senke. Hier liegt die Herausforderung neben der Zuverlässigkeit auch in der Staukontrollen und der Energie-Effizient, vor allem im periodischen Fall.
+	\subparagraph{Wieso ist Stau ein Problem bei Concast?}
+	Wenn einige Sensoren ein Ereignis beobachten und dieses an die Senke senden wollen kann es bei einer hohen Systemdichte zu einem Engpass kommen.
+	\subparagraph{Welche Auswirkungen hat ein Stau?}
+	Einmal Datenverluste, diese könnte man durch erneute Übertragung korrigieren dies kostet jedoch zusätzliche Energie und zum anderen können Daten verzögert ankommen, dagegen hilft nur weniger Daten zu senden.
+		
+	\subparagraph{Was ist ESRT?}
+	Event-to-Sink Reliable Transport (ESRT) hat das Ziel in jeder Periode $i$ mit der Länge $\tau$ sollen ca. $R$ Dateneinheiten zugestellt werden. Hierzu wird die Senderate $f_i$ zum Zeitpunkt $i$ angepasst, indem die Senke in Periode $i$ die Anzahl $r_i$ der empfangenen Dateneinheiten misst und die Zuverlässigkeit $\eta_i=\frac{r_i}{R}$ m wobei $\eta_i \in [1-\epsilon, 1+\epsilon].$ Die Senke berechnet $f_{i+1}$ basierend auf $f_i$ und $\eta_i$ und sendet ihn per Broadcast an alle Systeme.
+	\subparagraph{Wie bestimmt man $R$?}
+	Durch Abschätzen, $R$ muss groß genug sein, damit Informationen an der Senke genau genug sind.
+	\subparagraph{Wann wird bei ESRT ein Stau erkannt?}
+	Wenn weniger Daten als gewünscht $R$ die Senke erreichen.
+	
+	\subparagraph{Gibt es noch ein anderes Verfahren für Concast?}
+	Ja die Aggregation.
+	
+	\subparagraph{Was ist Aggregation}
+	Ziel der Aggregation ist es Daten zusammenzufassen um weniger Dateneinheiten verschicken zu müssen.
+	
+	\subparagraph{Welche Formen der Aggregation gibt es?}
+	\begin{itemize}
+		\item Keine Aggregation: Direkte Weiterleitung
+		\item Paketaggregation: Eingehende Daten werden zwischengespeichert und in einem großen Paket gesammelt weitergeleitet
+		\item Datenaggregation: Eingehende Daten werden zwischengespeichert und mit Aggegationsfunktiontn zu einem Aggregat zusammengefasst und weitergeleitet.
+\end{itemize}	 
+
+	\subparagraph{Was ist besser Paket oder Datenaggregation?}
+	Es gibt keinen signifikanten Unterschied, deswegen ist die Paketaggregation vorzuziehen denn hier liegen alle Quelldaten vor.
+	
+\subsection{Systeme}
+\subsubsection{IETF}
+	\paragraph{Was ist 6LoWPAN?}
+	Das ist IPv6 over Low-Power Wirelles Personal Area Networks, also die Nutzung von IPv6 in Umgebungen mit stark eingeschränkten Ressourcen.
+	Hierdurch erhalten die Knoten eine global eindeutige IPv6 Adresse und es sind alle Knoten global erreichbar. 
+	Man kann die IPv6 Autokonfigurationsmechanismen benutzen und erspart sich so Konfigurationsoverhead.
+	Hierbei ist jedes LoWPAN über einen Edge Router mit dem eigentlichen Internet verbunden. Auf dem Edge Router findet die Umsetzung von 6LoWPAN in IPv6 statt.
+	
+	\subparagraph{Wie sieht 6LoWPAN im Schichtenmodell aus?}
+	802.15.4  regelt den Medienzugriff. Hier wären auch andere Protokolle wie BTLE oder NFC möglich.
+	6LowPAN ist für die Komprimierung der Paketgröße und der Fragmentierung zuständig.
+	RPL kommt zum routing zum einsatz. Der Fokus liegt auch Concast und Multicast aber auch Unicast ist möglich.
+	CoAP kommt als Transferprotokoll für Umgebungen mit stark limitierten Ressourcen zum einsatz.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.25]{internetOfEverything/6lowpan_schichtenmodell}
+		
+		
+	\end{figure}
+	
+	\subparagraph{Welche Aufgabe hat 6LowPan?}
+	Die Aufgaben von 6LowPAN sind IP Konnektivität über IPv6 herstellen. Dies bringt einen großen Adressraum und Autokonfigurationlösungen von IPv6. Eine Inter-Konnektivität mit anderen IP-Netzen wird möglich.
+	6LowPAN muss für eine geringe Paketgröße sorgen, hierzu wird Header Compression eingesetzt damit die Daten möglichst in eine 802.15.4 Dateneinheit passen, ansonsten muss Fragmentiert und Reassembliert werden.
+	
+	\subparagraph{Was für Datenmengen senden Anwendungen Typischerweise?}
+	<100 Byte
+	
+	
+	
+	
+	
+	
 	
 	
 	
