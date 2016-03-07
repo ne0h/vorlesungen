@@ -1232,10 +1232,55 @@ Dieser Zentralisierte Ansatz ist in Sensornetzen so nicht praktikabel.
 \subsubsection{ZigBee}
 	\paragraph{Was ist ZigBee?}
 	ZigBee ist der von der ZigBee Alliance vorangetriebene Standard für das Internet der Dinge. ZigBee ist stark anwendungsorientiert und es stehen kleine autonome Netze im Mittelpunkt welche keine Interoperabilität mit bestehender Infrastruktur bieten.
-	Als Beispiele wären hier Haus und Gebäudeautomation oder Beleuchtungssteuerung zu nennen.
+	Als Beispiele wären hier Haus und Gebäudeautomation oder Beleuchtungssteuerung zu nennen. Es baut auf einem Server/Client Modell auf, hierbei sind dem Server Attribute zugeordnet welche vom Client über standadisierte Cluster-Befehle genutzt werden. Anstelle von Ports werden sogenannte Endpunkte benutzt, wobei ein Gerät über mehrere Endpunkte verfügen kann. Die Verknüpfung zweier Endpunkte wird in einer sogenannten Binding-Tabelle netzweit gespeichert.
 	
-	\paragraph{Wie sieht das Schichtenmodell von ZigBee aus?}
-	Zigbee nutzt 802.15.4 als Medienzugriffsprotokoll.
+	\subparagraph{Wie viele Endpunkte sind möglich?}
+	256 Endpunkte sind möglich wobei 255 den Broadcast darstellt, 0 Verwaltungsfunktion besitzt und 241-254 für zukünftige Anwendungen reserviert ist.
+	
+	\paragraph{Welches Medienzugriffsprotokoll nutzt ZigBee?}
+	ZigBee nutzt 802.15.4 als Medienzugriffsprotokoll.
+	Der Datentransport stellt in ZigBee keine eigene Schicht da, ist Verbindungslos und sorgt für die Fragmentierung großer Dateneinheiten. Ende zu Ende Quittungen sind nur bei Fragmentierung verpflichtend und es gibt eine Dupplikaterkennung über Sequenznummern. Es gibt jedoch keine Fehlererkennung, Reihenfolgetreue(außer bei Fragementierung), Staukontrolle oder Flusskontrolle(außer bei Fragmentierung).
+	
+	\paragraph{Wie erfolgt die Quittung bei Fragmentierung}
+	Es werden nicht die einzellnen Fragemente sondern ganze Fenster (1-8 Fragmente) Quittiert und zum Quittieren werden spezielle Dateneinheiten übertragen.
+	Wird eine Quittung nicht vor Ablauf eines Timers empfangen oder es wird eine unerwartete Quittung empfangen, so wird die Dateneinheit bis zu drei mal erneut übertragen.
+	
+	\paragraph{Wie sieht es mit Multicast aus}
+	Für Multicast werden Gruppen gebildet wobei es eine Gruppentabelle gibt die GruppenIP -> Endpunkte zuordnet. Endpunkte können mehreren Gruppen angehören.
+	
+	\paragraph{Wie wird Adressiert}
+	Nicht über IP Adressen sondern über 16-Bit Kurzadressen
+	
+	\paragraph{Was für Rollen gibt es?}
+	\begin{itemize}
+		\item Koordinator(FFD): Übernimmt Verwaltung des Netzer, beeinflusst Topologie, Funkkanal etc.
+		\item 	Router (FFD): Kann Dateneinheiten im Netz weiterleiten
+		\item Endgerät (FFD oder RFD): Gerät ohne Weiterleitungsfunktion
+	
+	\end{itemize}
+	
+	\paragraph{Was für Topologien gibt es in Zigbee?}
+	Stern, Baum und Mesh
+	
+\subsubsection{Industiral Internet}
+	\paragraph{Was sind die Anforderungen}
+	Harte Echtzeit und Verfügbarkeit, deterministischer Verhalten und geringe Latenz. Isolierung des Verkehrs unterschiedlicher Kunden.
+	
+	\paragraph{Time Slotted Channel Hopping(TSCH)}
+	Medienzugriffsverfahren basierend auf synchronem Zeitmultiplexing und Channel Hoppint. 
+	Durch das synchrone Zeitmultiplexing wird das Medium in feste Zeitschlitze eingeteilt	mit synchronisierten Schlaf und Wachzeiten und festgelegte Zeitschlitze zur Synchronisierung.
+	Durch das Channel Hopping wird die Frequenz für jede übertragene Dateneinheit gewechselt, eine Sendewiederholung findet auf einer anderen Frequenz statt, dadurch geringere Wahrscheinlichkeit auf eine Kollision.
+	
+	\paragraph{Was ist 802.15.4e}
+	Erweiterung für Industrial Internet. Es wird Time-Slotted Channel Hopping als Betriebsmodus eingeführt.
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
