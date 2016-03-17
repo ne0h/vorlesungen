@@ -1014,9 +1014,9 @@ val futuresResult ) awaitAll(20000L, tasks: _*);
 	\item Erkennen der hierarchischen Struktur der Eingabe
 	\item \textbf{\texttt{First}- und \texttt{Follow}-Mengen (S364)}
 	\begin{itemize}
-		\item First: Die Menge der ersten Zeichen einer Ableitung innerhalb eines Oder-Blockes
-		\item Follow: Über welche Ableitungsschritte kann das Wortende erreicht werden? 
-		\item Beispiele auf S365
+		\item First: Die Menge aller Symbole, mit denen ein durch Nichtterminalsymbole abgeleitetes Wort beginnen kann. Leeres Wort (\(\epsilon\)) ggf. nicht vergessen und \texttt{\#} hinzufügen. Wird das erste Element zum leeren Wort abgeleitet, kann auch zu weiteren Terminalen abgeleitet werden (siehe \texttt{PD} in Klausur SS2014, Aufgabe 10)
+		\item Follow: Die Menge aller Terminale, die auf das entsprechende Nichtterminal in einem Wort der Sprache folgen können. Über welche Ableitungsschritte kann das Wortende \texttt{\#} erreicht werden? 
+		\item Beispiele auf S365, ausführliches Beispiel mit den FOLLOW-Schritten auf Übungsblatt 13
 	\end{itemize}
 \end{itemize}
 
@@ -1111,7 +1111,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{itemize}
 	\item Schreibweise für Ausdrücke, bei der zuerst die Operanden und dann die auszuführende Operation angegeben wird
 	\item Eindeutig, auch ohne Präzedenzen und Klammern
-	\item Natürliche Darstellung für Stackmaschinen
+	\item Natürliche Darstellung für Stackmaschinen. Ermöglicht einfache Übersetzung von Ausdrücken in Byte-Code
 	\item Beispiele auf der Folie
 	\item \textbf{Erzeugung von UPNs}
 	\begin{itemize}
@@ -1287,7 +1287,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\item Lesen/Schreiben von lokalen Variablen: \texttt{?load, ?store <x>, ...}
 	\item Lesen/Schreiben von Feldern: \texttt{getfield, putfield, ...}
 	\item Sprungbefehle: \texttt{ifeq, ifnull, tableswitch, ...}
-	\item Methodenaufrufe: \texttt{invokevirtual, invokestatic, ...}
+	\item Methodenaufrufe mit Funktionen aus dem Konstantenpool: \texttt{invokevirtual \#N, invokestatic \#N, ...}
 	\item Objekterzeugung: \texttt{new, newarray, ...}
 	\item Arithmetische Berechnung: \texttt{?mul, ?add, ...}
 \end{itemize}
@@ -1296,4 +1296,11 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{itemize}
 	\item Laden von Konstanten: \texttt{ldc}
 	\item Laden von Variablen: \texttt{iload}
+	\item Laden von lokalen Variablen: \texttt{iload\_N}
+\end{itemize}
+
+\subsection{Kontrollstrukturen}
+\begin{itemize}
+	\item Bedingter Sprung: \texttt{if\_icmpgt [Sprungziel]}
+	\item Unbedingter Sprung: \texttt{goto [Sprungziel]}
 \end{itemize}
