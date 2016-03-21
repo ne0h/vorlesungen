@@ -25,3 +25,6 @@ netzsicherheitonly:
 ioeonly:
 	pdflatex internetOfEverythingOnly.tex
 	pdflatex internetOfEverythingOnly.tex
+cgonly:
+	pdflatex cgonly.tex
+	pdflatex cgonly.tex
