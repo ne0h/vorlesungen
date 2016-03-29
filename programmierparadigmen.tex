@@ -889,11 +889,16 @@ class MyActor extends Actor {
 \subsubsection{Code-Beispiel: Future}
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[frame=single,numbers=left,mathescape,language=Scala]
+val i = 10;
 val tasks = for (d <- 0 until b.length()) yield future {
 	// do something fancy and return
+	// can access elements defined out of the future
+	val x = 1000 * i;
+
+	x;
 }
 
-val futuresResult ) awaitAll(20000L, tasks: _*);
+val futuresResult = awaitAll(20000L, tasks: _*);
 \end{lstlisting}
 \end{minipage}
 
