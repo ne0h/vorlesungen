@@ -877,8 +877,8 @@ class MyActor extends Actor {
 	def act() {
 		loop {
 			receive {
-				// do something fancy
-				// sender ! "stuff"
+				// do something fancy and answer to sender
+				sender ! "stuff"
 			}
 		}
 	}
