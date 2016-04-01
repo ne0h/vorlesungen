@@ -319,13 +319,18 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsubsection{Dynamische Methoden zur Erkennung und Auflösung von Datenkonflikten am Beispiel Tomasulo (IBM 360/91)}
 \begin{itemize}
-	\item Konfliktauflösung und Ablaufsteuerung verteilt: Jede Funktionseinheit verfügt über eine Reservierungstabelle (Umordnungspuffer und Reservation Station) mit möglicherweise mehreren Zeilen
+	\item Ziel: Fortsetzung der Ausführung von Befehlen, auch wenn Datenabhängigkeiten vorliegen
+	\item \textbf{Vorgehen zum Verhindern von Konflikten}
 	\begin{itemize}
-		\item Übernimmt die Kontrolle über die Abarbeitung eines Maschinenbefehls, wenn dieser von der Decodereinheit zur Ausführung angestoßen wird
-		\item Ein von einer Funktionseinheit produziertes Ergebnis wird direkt an eine andere Funktionseinheit weitergegeben, wenn diese das Ergebnis als Operand benötigt
+		\item Read-after-Write: Der Prozessor verfolgt, wann Operanden zur Verfügung stehen
+		\item Write-after-Read und Write-after-Write: Nutzung von \textit{Reservation Stations}, die Registerinhalte zwischenspeichert und so vor vorzeitigem Überschreiben schützt
 	\end{itemize}
-	\item Ergebnisbus: Alle Funktionseinheiten, die auf einen Operanden warten, werden gleichzeitig bedient
-	\item Ausführliches Beispiel ab Folie 70
+	\item \textbf{Funktionsweise\footnote{\url{https://de.wikipedia.org/wiki/Tomasulo-Algorithmus\#Funktionsweise}}}
+	\begin{itemize}
+		\item Issue: Der Befehl an der aktuellen Position in der Operation Queue wird dekodiert und entsprechend seiner auszuführenden Operation in eine passende Reservation Station eingetragen. Operanden werden direkt aus der Registerdatei übernommen, wenn sie gültig sind. Dieser Vorgang wird als Registerumbenennung bezeichnet. Steht ein Operand noch nicht zur Verfügung, wird stattdessen die Adresse der RS eingetragen, die den Wert gerade berechnet. Ist keine passende RS frei, verbleibt der Befeht in der Operation Queue und die Zuweisung wird im nächsten Takt erneut versucht
+		\item Execute: Sobald alle Operanden in der Reservation Station zur Verfügung stehen, wird die Operation an die FU weiter gegeben und ausgeführt. Andernfalls wird der Common Data Bus auf eingehende Werte beobachtet und fehlende Operanden übernommen, wenn die Adresse der Quell-RS mit der benötigten Adresse übereinstimmt
+		\item Write Result: Sobald das Ergebnis der Operation berechnet wurde, wird es mitsamt der Adresse der ausgeführten RS auf den Common Data Bus gelegt und somit für die RS sichtbar, welche auf das Ergebnis warten
+	\end{itemize}
 \end{itemize}
 
 \subsubsection{Vergleich Hardware- vs Software-Scheduling}
