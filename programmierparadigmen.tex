@@ -688,22 +688,15 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 	\item Klammersetzung beachten!
 \end{itemize}
 
-\subsubsection{Elemente}
-\begin{table}[H]
-\begin{tabularx}{\textwidth}{l|X|X|X}
-	Typterme \(\tau\) & Basistypen: \texttt{int, bool} & Variablen: \(\alpha,~\alpha_2,~\beta\) & Typkonstruktor: \(\tau_1 \rightarrow \tau_2\) \\
-	Prologterme \(\theta\) & Atome: \texttt{f, g, a, hans, ...} & Variablen: \texttt{X, Y, \_Y, ...} & Funktor: Atom\((\theta_1,...,\theta_2)\) \\
-\end{tabularx}
-\end{table}
-
 \subsubsection{Der Algorithmus}
 \begin{itemize}
 	\item Eingabe: Eine Liste von Gleichungen
 	\item Wiederhole, solange Gleichungen in der Liste
 	\begin{enumerate}
-		\item Nehme die erste Gleichung und versuche die Variable, die alleine steht, in den anderen Gleichungen zu ersetzen
-		\item Füge die Gleichung einer invertierten Ergebnisliste hinzu
+		\item Nehme die erste Gleichung und versuche die Variable, die alleine steht, in den anderen Gleichungen zu ersetzen. Steht auf beiden Seiten eine Funktion kann gleichgesetzt werden (Beispiel: \texttt{f(X1, X2) = f(X3, X4) \(\rightarrow\) X1 = X2, X3 = X4}). Beide Gleichungen werden anschließend hinten an der Liste der zu bearbeitenden Gleichungen angefügt
+		\item Falls eingesetzt werden konnte, füge die Gleichung einer invertierten Ergebnisliste hinzu. NICHT hinzufügen bei Gleichsetzungen
 	\end{enumerate}
+	\item Anschließend: Ersetzen der Nichtterminale durch Terminale
 \end{itemize}
 
 
