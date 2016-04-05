@@ -905,7 +905,8 @@ val futuresResult = awaitAll(20000L, tasks: _*);
 	\item Parallele Berechnung ist von der Unterstützung der Programmiersprache abhängig
 	\item Automatisierte Parallelprogrammierung durch den Compiler funktioniert nicht
 	\item Existierende Programmiersprache sind weitestgehend auf Threads limitiert
-	\item Programmiersprachen mit direkter Integration benötigt
+	\item Programmiersprachen mit direkter Integration 
+	\item Anwendungsbeispiel auf Blatt 12, Aufgabe 3
 \end{itemize}
 
 \subsubsection{Design}
@@ -1016,9 +1017,10 @@ val futuresResult = awaitAll(20000L, tasks: _*);
 	\item \textbf{\texttt{First}- und \texttt{Follow}-Mengen (S364)}
 	\begin{itemize}
 		\item First: Die Menge aller Symbole, mit denen ein durch Nichtterminalsymbole abgeleitetes Wort beginnen kann. Leeres Wort (\(\epsilon\)) ggf. nicht vergessen und \texttt{\#} hinzufügen. Wird das erste Element zum leeren Wort abgeleitet, kann auch zu weiteren Terminalen abgeleitet werden (siehe \texttt{PD} in Klausur SS2014, Aufgabe 10)
-		\item Follow: Die Menge aller Terminale, die auf das entsprechende Nichtterminal in einem Wort der Sprache folgen können. Über welche Ableitungsschritte kann das Wortende \texttt{\#} erreicht werden? 
+		\item Follow: Die Menge aller Terminale, die auf das entsprechende Nichtterminal in einem Wort der Sprache folgen können. Wortende nicht vergessen!
 		\item Beispiele auf S365, ausführliches Beispiel mit den FOLLOW-Schritten auf Übungsblatt 13
 	\end{itemize}
+	\item \(SLL_1\)-Bedingung: Die Grammatik muss linksfaktorisiert sein und die Elemente der \(First_1\)-Mengen dürfen exklusiv nur in jeweils einer \(First_1\)-Menge auftreten
 \end{itemize}
 
 \subsection{Semantische Analyse (S335)}
@@ -1144,7 +1146,8 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{table}[H]
 \begin{tabularx}{\textwidth}{l|X|X}
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} Elemente zurück \\
-	\textbf{elem} & \(Eq~a \Rightarrow a \rightarrow [a] \rightarrow Bool\) & Prüft, ob ein Element in einer Liste vorhanden ist \\
+	\textbf{\textit{elem}} & \(Eq~a \Rightarrow a \rightarrow [a] \rightarrow Bool\) & Prüft, ob ein Element in einer Liste vorhanden ist \\
+	\textbf{\textit{filter}} & \((a \rightarrow Bool) \rightarrow [a] \rightarrow [a]\) & Filtert die Eingabeliste anhand einer Funktion \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
 	\textbf{\textit{isDigit}} & \(Char \rightarrow Bool\) & Erkennt eine Zahl \\
 	\textbf{\textit{iterate}} & \((a \rightarrow a) \rightarrow [a] \rightarrow [a]\) & Gibt eine unendliche Liste durch mehrfachausführung einer Funktion zurück \\
@@ -1168,7 +1171,8 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{itemize}
 	\item \texttt{(x:xs)}: Trennt die übergebene Liste in einen Listenkopf \texttt{x} (einelementig) und einen Listenrest \texttt{xs} (kann mehrelementig oder auch leer sein)
 	\item \texttt{l ++ x}: Konkateniert die Listen \texttt{l} und \texttt{x}
-	\item \texttt{l !! n}: Gibt das \texttt{n}-te Element der Liste \texttt{l} zurück 
+	\item \texttt{l !! n}: Gibt das \texttt{n}-te Element der Liste \texttt{l} zurück
+	\item \texttt{/=}: Ungleich
 \end{itemize}
 
 
@@ -1306,7 +1310,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 	\item Lesen/Schreiben von lokalen Variablen: \texttt{?load, ?store <x>, ...}
 	\item Lesen/Schreiben von Feldern: \texttt{getfield, putfield, ...}
 	\item Sprungbefehle: \texttt{ifeq, ifnull, tableswitch, ...}
-	\item Methodenaufrufe mit Funktionen aus dem Konstantenpool: \texttt{invokevirtual \#N, invokestatic \#N, ...}
+	\item Methodenaufrufe mit Funktionen aus dem Konstantenpool an Stelle \texttt{n}: \texttt{invokevirtual \#N, invokestatic \#N, ...}
 	\item Objekterzeugung: \texttt{new, newarray, ...}
 	\item Arithmetische Berechnung: \texttt{?mul, ?add, ...}
 \end{itemize}
@@ -1314,12 +1318,12 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \subsection{Ladebefehle}
 \begin{itemize}
 	\item Laden von Konstanten: \texttt{ldc}
-	\item Laden von Variablen: \texttt{iload}
 	\item Laden von lokalen Variablen: \texttt{iload\_N}
+	\item Laden vom \texttt{this}-Pointer: \texttt{aload\_N}. Steht meist an nullter Stelle
 \end{itemize}
 
 \subsection{Kontrollstrukturen}
 \begin{itemize}
-	\item Bedingter Sprung: \texttt{if\_icmpgt [Sprungziel]}
+	\item Bedingter Sprung: \texttt{if\_icmpgt [Sprungziel], if\_icmplt [Sprungziel]}
 	\item Unbedingter Sprung: \texttt{goto [Sprungziel]}
 \end{itemize}
