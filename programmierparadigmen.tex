@@ -749,7 +749,8 @@ Idealerweise lassen sich Probleme für Parallelverarbeitung so zerlegen, dass si
 \subsubsection{Mögliche Beschleunigung (RE17)}
 \begin{itemize}
 	\item Speedup: \(S(p) = \frac{T(n,1)}{T(n,p)} = \frac{Aufwand~mit~einem~Prozessor}{Aufwand~mit~p~Prozessoren}\)
-	\item Amdahls Gesetz berechnet die maximale Beschleunigung, die durch Parallelverarbeitung erreicht werden kann: \(\frac{1}{(1-P)+\frac{P}{N}}\)
+	\item Amdahls Gesetz berechnet die maximale Beschleunigung, die durch Parallelverarbeitung erreicht werden kann: \(\frac{1}{(1-P)+\frac{P}{N}}\). \(P\) beziffert den Anteil des Programms, der parallel ausgeführt werden kann
+	\item Beispiele in Klausur vom WS2014 und auf Übungsblatt 11
 \end{itemize}
 
 
@@ -792,6 +793,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 	\item \texttt{MPI\_Send} blockiert bis der Nachrichtenpuffer wiederverwendet werden kann
 	\item \texttt{MPI\_Recv} blockiert bis die Nachricht komplett gelesen worden ist
 	\item Non-blocking ebenfalls möglich, allerdings muss dann zusätzlich überprüft werden, ob die Nachricht vollständig übertragen worden ist (RM18)
+	\item Scatter/Gather schicken eine immer gleich große Datenmenge. Die vektorbasierten Funktionen können unterschiedlich große Mengen schicken
 \end{itemize}
 
 \subsubsection{Data Distribution (RM19)}
@@ -1142,19 +1144,19 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 \begin{table}[H]
 \begin{tabularx}{\textwidth}{l|X|X}
 	\textbf{\textit{drop}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die Liste ohne die ersten \textit{n} Elemente zurück \\
-	\textbf{elem} & & Prüft, ob ein Element in einer Liste vorhanden ist \\
+	\textbf{elem} & \(Eq~a \Rightarrow a \rightarrow [a] \rightarrow Bool\) & Prüft, ob ein Element in einer Liste vorhanden ist \\
 	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer nicht-leeren Liste zurück \\
-	\textbf{\textit{inits}} & & \\
-	\textbf{\textit{isDigit}} & & Erkennt eine Zahl \\
+	\textbf{\textit{isDigit}} & \(Char \rightarrow Bool\) & Erkennt eine Zahl \\
 	\textbf{\textit{iterate}} & \((a \rightarrow a) \rightarrow [a] \rightarrow [a]\) & Gibt eine unendliche Liste durch mehrfachausführung einer Funktion zurück \\
-	\textbf{\textit{head}} &  & Gibt das erste Element einer Liste zurück \\
+	\textbf{\textit{head}} & \([a] \rightarrow a\) & Gibt das erste Element einer Liste zurück \\
 	\textbf{\textit{last}} & \([a] \rightarrow a\) & Gibt das letzte Element einer Liste zurück \\
 	\textbf{\textit{length}} & \([a] \rightarrow Int\) & Gibt die Länge einer Liste oder eines Texts zurück \\
 	\textbf{\textit{map}} & \((a \rightarrow b) \rightarrow [a] \rightarrow [b]\) & Führt eine gegebene Operation auf allen Elementen einer Liste aus \\
-	\textbf{\textit{max}} & & Vergleicht zwei Elemente und gibt das größere zurück \\
-	\textbf{\textit{null}} & & Prüft, ob eine Liste leer ist \\
+	\textbf{\textit{null}} & \([a] \rightarrow Bool\) & Prüft, ob eine Liste leer ist \\
+	\textbf{\textit{repeat}} & \(a -> [a]\) & Erzeugt eine unendliche Liste durch Wiederholen des selben Elements \\
 	\textbf{\textit{reverse}} & \([a] \rightarrow [a]\) & Gibt eine invertierte Form der Eingabeliste zurück \\
 	\textbf{\textit{sort}} & \(Ord~a \Rightarrow [a] \rightarrow [a]\) & Gibt eine sortierte Form der Eingabeliste zurück \\
+	\textbf{\textit{sortBy}} & \((a \rightarrow a \rightarrow Ordering) \rightarrow [a] \rightarrow [a]\) & Sortiert anhand einer gegebenen Vergleichsfunktion \\
 	\textbf{\textit{tail}} & \([a] \rightarrow [a]\) & Gibt eine Liste ohne Kopfelemente der Eingabeliste (Listenrest) zurück \\
 	\textbf{\textit{take}} & \(Int \rightarrow [a] \rightarrow [a]\) & Gibt die ersten \textit{n} Elemente einer Liste zurück \\
 	\textbf{\textit{zipWith}} & \((a \rightarrow b \rightarrow c) \rightarrow [a] \rightarrow [b] \rightarrow [c]\) & Kombiniert jeweils die Elemente zweier Listen über eine beliebige Funktion, beispielsweise \textit{(*)} \\
@@ -1223,7 +1225,22 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 
 
 
-\section{Appendix D: MPI}
+\section{Appendix D: Prolog-Funktionen}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{l|X|X}
+	\textbf{\textit{append}} & \texttt{append(L1, L2, R)} & Konkateniert zwei Listen \\
+	\textbf{\textit{even}} & \texttt{even(X)} & Prüft, ob \texttt{X} gerade ist \\
+	\textbf{\textit{member}} & \texttt{member(X, L)} & Prüft ob \texttt{X} in \texttt{L} enthalten ist \\
+	\textbf{\textit{mod}} & \texttt{X is mod(Y, Z)} & Berechnet \texttt{Y mod Z} \\
+	\textbf{\textit{not}} & \texttt{not()} & Invertiert den Eingabeausdruck \\
+	\textbf{\textit{odd}} & \texttt{odd(X)} & Prüft, ob \texttt{X} ungerade ist \\
+	\textbf{\textit{rev}} & \texttt{rev(L, R)} & Invertiert die Eingabeliste \\
+\end{tabularx}
+\end{table}
+
+
+
+\section{Appendix E: MPI}
 \begin{itemize}
 	\item \textbf{\texttt{MPI\_Send} (RM11)}
 	\begin{itemize}
@@ -1282,7 +1299,7 @@ Namen von Klassen, Felder und Methoden müssen einem festgelegten Schema entspre
 
 
 
-\section{Appendix E: Bytecode}
+\section{Appendix F: Bytecode}
 
 \subsection{Instruktionsklassen (S395)}
 \begin{itemize}
