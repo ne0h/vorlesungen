@@ -24,7 +24,7 @@ Zusammenfassung der Vorlesung "`Programmierparadigmen"' aus dem Wintersemester 2
 
 \subsubsection{Endrekursion (S30)}
 \begin{itemize}
-	\item Linearität: Eine Funktion heißt \textit{linear rekursiv}, wenn in jedem Defitionszweig nur ein rekursiver Aufruf vorkommt.
+	\item Linearität: Eine Funktion heißt \textit{linear rekursiv}, wenn in jedem Definitionszweig nur ein rekursiver Aufruf vorkommt.
 	\item Endrekursion: Eine linear rekursive Funktion heißt \textit{endrekursiv}, wenn in jedem Zweig der rekursive Aufruf nicht in andere Aufrufe eingebettet ist.
 \end{itemize}
 
@@ -107,7 +107,7 @@ energy m = m * c * c
 		\item Berechnung mittels \texttt{foldr}: \texttt{(1 + (2 + (3 + (4 + 0))))} (rechts-geklammert)
 		\item Berechnung mittels \texttt{foldl}: \texttt{((((1 + 0) + 2) + 3) + 4)} (links-geklammert)
 	\end{itemize}
-	\item Anwendung: Koplexe Funktionen als Kombination einfacher Funktionen
+	\item Anwendung: Komplexe Funktionen als Kombination einfacher Funktionen
 \end{itemize}
 
 \subsubsection{Kombination von Listen (S67)}
@@ -122,7 +122,7 @@ energy m = m * c * c
 	\item Automatisiertes Erzeugen von Listen, basierend auf bereits existierenden Listen
 	\item Inspiriert durch die mathematische Mengenschreibweise: \texttt{s = {[} 2 * x {|} x <- {[}0..{]}, x\textasciicircum 2 > 3 {]} } \footnote{\url{https://en.wikipedia.org/wiki/List_comprehension\#Haskell}}
 	\item Multidimensionale Liste: \texttt{s = {[} 2*x*y {|} x <- {[}0..{]}, x\textasciicircum2 > 3, y <- {[}1,3..x{]}, y\textasciicircum2 < 100-x\textasciicircum2 {]}}
-	\item Bei mehrdimensionaler Eingabe: Nur die erste Liste gegen Unendlich laufen lassen (siehe Klausur WS1314, Aufgabe 1)
+	\item Bei mehrdimensionaler Eingabe: Nur die erste Liste gegen Unendlich laufen lassen (siehe Klausur WS2014, Aufgabe 1)
 \end{itemize}
 
 
@@ -130,7 +130,7 @@ energy m = m * c * c
 
 \subsubsection{Auswertung (S73)}
 \begin{itemize}
-	\item Struturierte Daten: Nur auswerten, falls wirklich benötigt wird
+	\item Strukturierte Daten: Nur auswerten, falls wirklich benötigt wird
 	\item Duplizierte Argumente: Auswertung maximal einmal (\textit{sharing})
 	\item Pattern-Matching: So weit wie nötig, bis passendes Muster gematched
 	\item Boolsche Operatoren: Auswertung bis zum ersten \textit{false} (\textit{short-circuit-Auswertung})
@@ -156,7 +156,6 @@ energy m = m * c * c
 	\item Der Listen-Typ sind polymorph, die Typvariable \texttt{{[}t{]}} steht auch für Nicht-Basistypen
 	\item Typvariablen parametrisieren polymorphe Typen
 	\item Typkonstruktoren wie \texttt{{[} {]}} erzeugen neue Typen aus bestehenden
-	\item \textbf{Funktionstypen}
 	\item Funktionstypen sind ebenfalls polymorph
 \end{itemize}
 
@@ -232,7 +231,11 @@ area (Rectangle a b) = a*b
 area (Square a)      = a*a
 	\end{lstlisting}
 	\end{minipage}
-	\item Polymorphe Datentypen\\\\ % TODO
+	\item Optionale Werte
+	\begin{itemize}
+		\item Anwendung: Funktionen, die bei bestimmten Eingaben fehlschlagen können (Vgl. \texttt{null} in Java)
+		\item Auswertung/Abfangen über Pattern-Matching
+	\end{itemize}
 	\begin{minipage}{\linewidth}
 	\begin{lstlisting}[frame=single,numbers=left,mathescape,language=Haskell]
 data Maybe t = Nothing | Just t
@@ -359,8 +362,8 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 
 \subsection{Der untypisierte $\lambda$-Kalkül (S159)}
 \begin{itemize}
-	\item Turing-mächtiges Modell funktionaler Programme zur Beschreibung sqeuentieller imperativer Konstrukte
-	\item Linkassoziative Funktionsanwendung
+	\item Turing-mächtiges Modell funktionaler Programme zur Beschreibung sequentieller imperativer Konstrukte
+	\item Linksassoziative Funktionsanwendung
 	\item \(\lambda\)-Term: Ein Term der Form \texttt{(\(\lambda\)x.\(t_1\))\(t_2\)}
 	\item \textbf{\(\alpha\)-Äquivalenz}
 	\begin{itemize}
@@ -389,7 +392,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 	\item \textbf{Braucht man primitive Operationen?}
 	\begin{itemize}
 		\item Nein, nicht unbedingt. Beispiel: \texttt{let}
-		\item \texttt{let x = \(t_1\) in \(t_2\)} wird zu \texttt{(\(\lambda\)x.\(t_2\)) \(t_1\))}
+		\item \texttt{let x = \(t_1\) in \(t_2\)} wird zu \texttt{(\(\lambda\)x.\(t_2\)) \(t_1\)}
 		\item \texttt{let x = g y in f x = (\(\lambda\)x.f x)(g y) \(\Rightarrow\) f(g y)}
 	\end{itemize}
 \end{itemize}
@@ -411,7 +414,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \subsubsection{Kodierung boolscher Werte (S174)}
 \begin{itemize}
 	\item \texttt{True} und \texttt{False} wird zu \texttt{\(c_{true}\) = \(\lambda\)t. \(\lambda\)f. t} und \texttt{\(c_{false}\) = \(\lambda\)t. \(\lambda\)f. f}
-	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten
+	\item \texttt{True} gibt den ersten Wert zurück, \texttt{false} den zweiten \(\rightarrow\) ermöglicht Entscheidungen
 	\item \texttt{if \_ then \_ else \_} wird zu \texttt{\(\lambda\)a. a}. Beispielsweise wird aus \texttt{if True then x else y}: \texttt{(\(\lambda\)a. a) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)t. \(\lambda\)f. t) x y \(\Rightarrow\) (\(\lambda\)f. x) y}
 	\item \texttt{\(b_1\) \&\& \(b_2\)} wird zu \texttt{if \(b_1\) then \(b_2\) else False}
 	\item \texttt{True \&\& True} ergibt: \texttt{(\(\lambda\)a. a) \(c_{true}\) \(c_{true}\) (\(\lambda\)t. \(\lambda\)f. t)}
@@ -420,7 +423,7 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \subsubsection{Divergenz (S175)}
 \begin{itemize}
 	\item Terme, die nicht zu einer Normalform auswerten, divergieren. Diese modellieren unendliche Ausführungen
-	\item Beispiel: \texttt{\(\lambda\)x. x x} wendet sein Argument auf das Argument selbst an und reprodiziert sich selbst. \texttt{\(\omega\) = (\(\lambda\)x. x x)(\(\lambda\)x. x x) \(\Rightarrow\) (\(\lambda\)x. x x)(\(\lambda\)x. x x)}
+	\item Beispiel: \texttt{\(\lambda\)x. x x} wendet sein Argument auf das Argument selbst an und reproduziert sich selbst. \texttt{\(\omega\) = (\(\lambda\)x. x x)(\(\lambda\)x. x x) \(\Rightarrow\) (\(\lambda\)x. x x)(\(\lambda\)x. x x)}
 \end{itemize}
 
 \subsubsection{Rekursionsoperator (S177)} % TODO
@@ -504,11 +507,11 @@ Kalküle sind minimalistische Programmiersprachen zur Beschreibung von Berechnun
 \begin{itemize}
 	\item Beispielprogramm P: \texttt{let f = \(\lambda\)x. 2 in f (f true)}
 	\item \texttt{f} ist eine polymorphe Hilfsfunktion: Anwendung erst auf \texttt{true}, dann auf \texttt{2}
-	\item Typisierung auf so nicht möglich. Daher: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
+	\item Typisierung so nicht möglich. Daher: \texttt{let x = \(t_1\) in \(t_2\)} als neues Konstrukt im \(\lambda\)-Kalkül. Neue Typregeln mit \textit{Typschemata}
 	\item \textbf{Typschemata (S202)}
 	\begin{itemize}
 		\item Ein Typ der Gestalt \(\forall\alpha_1.\forall\alpha_2.~...~\forall\alpha_n.~\tau\) heißt Typschema
-		\item Es bindet freie Typvariablen \(alpha_1,...,\alpha_n\) in \(\tau\)
+		\item Es bindet freie Typvariablen \(\alpha_1,...,\alpha_n\) in \(\tau\)
 		\item Beispiel: \(\forall\alpha.~\alpha\rightarrow\alpha\) steht für unendlich viele Typen
 		\item Ausführliches Ableitungsbeispiel auf Folie S205 % TODO
 	\end{itemize}
@@ -528,7 +531,7 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 \subsubsection{Abfragen (S217)}
 \begin{itemize}
 	\item Alle Fakten werden zur Laufzeit in einer Datenbank gehalten
-	\item Einleitung per \texttt{?}: z.B. \texttt{?liebt(fritz,fisch)}
+	\item Abfragen per \texttt{?}: z.B. \texttt{?liebt(fritz,fisch)}
 	\item \textbf{Mehrfachlösungen}
 	\begin{itemize}
 		\item Durchsuche Datenbank von vorne nach hinten
@@ -618,8 +621,8 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 
 \subsubsection{Arithmetik (S238)}
 \begin{itemize}
-	\item Reines Prolog kann alle berechnebaren Funktionen verarbeiten, Prädikate werden über Atome dargestellt. In der Praxis können Arithmetik/Datentypen trotzdem nützlich sein
-	\item Zuweisung per Teilziel \texttt{is}
+	\item Reines Prolog kann alle berechenbaren Funktionen verarbeiten, Prädikate werden über Atome dargestellt. In der Praxis können Arithmetik/Datentypen trotzdem nützlich sein
+	\item Zuweisung per Teilziel: \texttt{is}
 	\item Unterschied zur normalen Resolution: Variablen im \textit{rechten} Term müssen instanziiert sein \(\rightarrow\) nur vorwärts anwendbar
 \end{itemize}
 
@@ -633,10 +636,9 @@ Prolog-Programme bestehen aus einer Datenbasis, deren Einträge sich Fakten und 
 \subsubsection{Generate und Test (S241)}
 Prolog ist besonders gut:
 \begin{itemize}
-	\item Für systematisches Durchprobieren
-	\item Mittels mehrfach reerfüllbarer Prädikate
+	\item Für systematisches Durchprobieren mittels mehrfach reerfüllbarer Prädikate
 	\item Erzeugen von Lösungskandidaten, welche danach getestet werden
-	\item Häufiges Entwurfsmuster in Prolog. Zur Vermeidung vonkominatorischen Explosionen: Generator möglichst intelligent machen
+	\item Häufiges Entwurfsmuster in Prolog. Zur Vermeidung von kombinatorischen Explosionen: Generator möglichst intelligent machen
 	\item Beispiel: \texttt{nat(X) :- nat(Y), X is Y+1.}
 \end{itemize}
 
@@ -696,7 +698,7 @@ In der nichtfunktionalen Welt kann Nichtdeterminismus nur behandelt werden, inde
 		\item Nehme die erste Gleichung und versuche die Variable, die alleine steht, in den anderen Gleichungen zu ersetzen. Steht auf beiden Seiten eine Funktion kann gleichgesetzt werden (Beispiel: \texttt{f(X1, X2) = f(X3, X4) \(\rightarrow\) X1 = X2, X3 = X4}). Beide Gleichungen werden anschließend hinten an der Liste der zu bearbeitenden Gleichungen angefügt
 		\item Falls eingesetzt werden konnte, füge die Gleichung einer invertierten Ergebnisliste hinzu. NICHT hinzufügen bei Gleichsetzungen
 	\end{enumerate}
-	\item Anschließend: Ersetzen der Nichtterminale durch Terminale
+	\item Anschließend: Ersetzen der Nichtterminale durch Terminale sowie Zusammenfassen zu einem Ausdruck
 \end{itemize}
 
 
@@ -789,7 +791,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 
 \subsubsection{Übertragen von Nachrichten (RM11)}
 \begin{itemize}
-	\item Asynchrone Übertragung und erst einmal blocking
+	\item Asynchrone oder synchrone Übertragung möglich
 	\item \texttt{MPI\_Send} blockiert bis der Nachrichtenpuffer wiederverwendet werden kann
 	\item \texttt{MPI\_Recv} blockiert bis die Nachricht komplett gelesen worden ist
 	\item Non-blocking ebenfalls möglich, allerdings muss dann zusätzlich überprüft werden, ob die Nachricht vollständig übertragen worden ist (RM18)
@@ -857,6 +859,7 @@ Beispiele befinden sich jeweils bei den entsprechenden Folien.
 		\item Implementierung ähnlich wie bei einem Java-Thread (Erweitern einer Klasse oder per Factory)
 		\item Nachrichtenbasierte Kommunikation mit asynchroner, race-freier und non-blocking Warteschlange (RS48)
 		\item Implementierung vergleichsweise schwergewichtig, beispielsweise blockiert ein \texttt{receive} den kompletten Thread
+		\item Shared-Nothing-Prinzip
 	\end{itemize}
 	\item \textbf{Futures in Scala (RS52)}
 	\begin{itemize}
