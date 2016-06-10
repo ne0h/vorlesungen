@@ -2,7 +2,7 @@
 
 Zusammenfassung der Vorlesung "`Derivate"' aus dem Sommersemester 2016.\footnote{\url{https://derivate.fbv.kit.edu/943.php}}
 
-\section{Einführung}
+\section{Teil I - Einführung}
 
 \subsection{Begriffliche Grundlagen}
 \begin{itemize}
@@ -63,4 +63,48 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 		\item Reine Relativbewertung, führt zu praktikablen Bewertungsmodellen, deren Eingangsgrößen weitgehend objektiv ermittelbar sind
 		\item Funktioniert nicht, wenn Werte beispielsweise im wesentlichen von nichthandelbaren Absatzrisikien abhängen (Bsp.: Wetterderivat)
 	\end{itemize}
+\end{itemize}
+
+
+
+\section{Teil II - Forwards und Futures}
+
+\subsection{Arbitragefreie Terminpreise}
+\begin{itemize}
+	\item Annahmen: Keine Transaktionskosten oder Steuern oder Informationskosten oder Leerverkaufsbeschränkungen, beliebige Teilbarkeit der Wertpapiere, risikolose Mittelanlage, lagerfähiger Basiswert (perfekter Markt)
+	\item \textbf{Ermittlung des fairen (arbitragefreien) Terminpreises \(f(t,T))\): Cash und Carry Arbitrage}
+	\begin{itemize}
+		\item Forward löst bei Abschluss keine Zahlung aus und besitzt einen Wert von \(0\), d.h. der Terminpreis \(f(t,T)\) ist gerade so festgelegt, dass das Geschäft für beide Parteien fair ist
+		\item Prinzip: Synthetisches Erzeugen des Forwards durch soforten Kauf des lagerfähigen Basiswerts sowie Kreditaufnahme in Höhe des aktuellen Preises
+		\item Im einfachsten Fall entspricht der faire Terminpreis dem aufgezinsten Kassapreis (ohne Haltekosten etc.)
+		\item Basis konvergiert am Ende immer gegen \(0\), da zu diesem Zeitpunkt das Termingeschäft einem Kassageschäft entspricht
+	\end{itemize}
+	\item \textbf{Beispiele für Terminpreise}
+	\begin{itemize}
+		\item Ertragloser Basiswert: \(f(0,T) = S(0)\cdot(1+r)^t \approx S(0) \cdot e^{rT}\)
+		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung): \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{Appendix A: Exkurse}
+
+\subsection{Stetige Zinsrechnung}
+
+Die stetige Verzinsung ist ein Sonderfall der unterjährigen Verzinsung mit Zinseszinsen, bei der die Anzahl der Zinsperioden gegen unendlich strebt. Der Zeitraum der einzelnen Zinsperiode geht also gegen \(0\).\footnote{\url{https://de.wikipedia.org/wiki/Zinsrechnung\#Stetige_Verzinsung}}
+
+Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsperioden pro Jahr, lineare Umrechung von Jahreszinssatz in Periodenzinssatz
+
+\[\Big(1+\frac{r_m}{m}\Big)^{mT} \longrightarrow e^{rT}\]
+
+
+\section{Appendix B: Bezeichnungen und Formeln}
+
+\begin{itemize}
+	\item Kassepreis des Basiswerts zum Zeitpunkt \(t\): \(S(t)\)
+	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(0)\cdot e^{rT}\)
+	\item Terminpreis = Kassapreis + Haltekosten (Kreditzinsen, Lagerkosten, etc.) - Halteerträge (Dividenden, Zinserträge, etc.)
+	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T)\)
+	\item Terminpreis in \(t=0\) für den Kauf des Basiswerts in \(T\) mit Halteertrag: \(f(0,T) = (S(0)-X(0))\cdot e^{rT}\)
 \end{itemize}
