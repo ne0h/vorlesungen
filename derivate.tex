@@ -8,4 +8,59 @@ Zusammenfassung der Vorlesung "`Derivate"' aus dem Sommersemester 2016.\footnote
 \begin{itemize}
 	\item Derivate Finanzinstrumente: Finanzkontrakte, deren Wert durch andere, grundlegendere Größen (Basiswert, Underlying) bestimmt wird
 	\item Beispiele: Optionen (aktiver Börsenhandel), Forwards oder Swaps (over-the-Counter)
+	\item Basiswerte: Grundsätzliche jede beliebige Größe möglich, häufig jedoch Preise börsengehandelter Wertpapiere, bzw. davon abgeleitete Größen. Beispiele: Aktien, Aktienindizes, Anleihen, Zinssätze, Wechselkurse, andere Derivate
+	\item \textbf{Kassageschäft versus Termingeschäft}
+	\begin{itemize}
+		\item Kassageschäft: Sofortiger Kauf der Aktie A zum aktuellen Kassapreis. Vertragsabschluss und -erfüllung zugleich
+		\item Termingeschäft: Vereinbarung, die Aktie A in einem zukünftigen Zeitpunkt zu kaufen. Vertragsabschluss und -erfüllung zu unterschiedlichen Zeitpunkten
+		\begin{itemize}
+			\item Forward auf Aktie A: Erfüllung verpflichtend (\textit{unbedingtes Termingeschäft})
+			\item Option auf Aktie A: Erfüllung für den Optionskäufer nicht verpflichtend (\textit{bedingtes Termingeschäft})
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Typische Handelsmotive}
+	\begin{itemize}
+		\item Hedging: Reduktion des Risikos einer bestehenden der zukünftig aufzubauenden Kassaposition
+		\item Spekulation: Aufbau einer Position zur Umsetzung von Erwartungen
+		\item Arbitrage: Ausnutzung von Preisunterschieden auf verschiedenen Märkten
+	\end{itemize}
+\end{itemize}
+
+\subsection{Optionskontrakte}
+Inhaber (Verkäufer, long) besitzt das Recht, aber nicht die Pflicht, vom Vertragspartner (Verkäufer, Stillhalter, short) in einem oder mehreren zukünftigen Zeitpunkten die Erfüllung der eingegangen Verpflichtung zu verlangen. Beispielsweise bei Finanztiteln die Lieferung zu einem festgelegten Preis.
+
+\subsection{Forward- und Future-Kontrakte}
+\begin{itemize}
+	\item Forward: Vereinbarung zweier Vertragspartner, den Kontraktgegenstand (Basiswert) in einem zukünftigen Zeitpunkt zu einem festgelegten Preis (Forwardpreis) zu kaufen oder zu verkaufen
+	\item Future: Vereinbarung analog zu Forward, i.d.R. börsengehandelter Kontrakt, daher standardisiert. Wesentliche Unterschiede: Täglicher Gewinn- und Verlustausgleich (marking to market) sowie häufig Lieferoption für den Verkäufer
+\end{itemize}
+
+
+\subsection{Grundidee der Derivatebewertung}
+Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (Arbitrage) möglich sind. Bei dauerhafter Verletzung dieser Forderung würde jeder nicht-gesättigte Investor Arbitragmöglichkeiten ausnutzen und beliebig reich werden können.
+
+\subsubsection{No-Arbitrage-Definitionen}
+\begin{itemize}
+	\item \textbf{Typ 1:} Es gibt kein geschenktes Lotterielos mit positiver Gewinnchance
+	\begin{itemize}
+		\item Kein Kapitaleinsatz in \(t=0\)
+		\item Wert der Position \(\ge 0\) mit Wahrscheinlichkeit \(1\)
+		\item Wert der Position \(> 0\) mit positiver Wahrscheinlichkeit
+	\end{itemize}
+	\item \textbf{Typ 2:} Ex gibt kein Geschenk ohne zukünftige Verpflichtung - \textit{No-Free-Lunch}
+	\begin{itemize}
+		\item Mittelzufluss in \(t=0\)
+		\item Für einen zukünftigen Zeitpunkt \(t>0\) gilt: Wert der Position \(\ge 0\) mit Wahrscheinlichkeit \(1\)
+	\end{itemize}
+	\item Gesetz des einen Preises: Identische zukünftige Zahlungsströme bedeuten identische Werte heute
+\end{itemize}
+
+\subsubsection{Arbitrage- und gleichgewichtsorientierte Bewertung}
+\begin{itemize}
+	\item \textbf{Gleichgewichtsorientiert:} Explizite Modellierung des individuellen Risikos und Nutzenkalküls sowie Markträumung \(\rightarrow\) abhängig von beobachtbaren Größen wie Risikopräferenzen, Aussattungen, Planugshorizonten etc.
+	\item \textbf{Arbitrageorientiert:} Replikation der zukünftigen Zahlungen durch Basiswertpapiere sowie Arbitragefreiheit \(\rightarrow\) Ergebnisse bei gegebener Dynamik der Preise der Basiswertpapiere präferenzfrei. Spezialfall des allgemeinen gleichgewichtsorientierten Ansatzes und funktioniert daher nicht immer (s.u.)
+	\begin{itemize}
+		\item Reine Relativbewertung, führt zu praktikablen Bewertungsmodellen, deren Eingangsgrößen weitgehend objektiv ermittelbar sind
+		\item Funktioniert nicht, wenn Werte beispielsweise im wesentlichen von nichthandelbaren Absatzrisikien abhängen (Bsp.: Wetterderivat)
+	\end{itemize}
 \end{itemize}
