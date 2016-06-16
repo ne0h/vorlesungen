@@ -26,10 +26,10 @@ Zusammenfassung der Vorlesung "`Derivate"' aus dem Sommersemester 2016.\footnote
 	\end{itemize}
 \end{itemize}
 
-\subsection{Optionskontrakte}
+\subsubsection{Optionskontrakte}
 Inhaber (Verkäufer, long) besitzt das Recht, aber nicht die Pflicht, vom Vertragspartner (Verkäufer, Stillhalter, short) in einem oder mehreren zukünftigen Zeitpunkten die Erfüllung der eingegangen Verpflichtung zu verlangen. Beispielsweise bei Finanztiteln die Lieferung zu einem festgelegten Preis.
 
-\subsection{Forward- und Future-Kontrakte}
+\subsubsection{Forward- und Future-Kontrakte}
 \begin{itemize}
 	\item Forward: Vereinbarung zweier Vertragspartner, den Kontraktgegenstand (Basiswert) in einem zukünftigen Zeitpunkt zu einem festgelegten Preis (Forwardpreis) zu kaufen oder zu verkaufen
 	\item Future: Vereinbarung analog zu Forward, i.d.R. börsengehandelter Kontrakt, daher standardisiert. Wesentliche Unterschiede: Täglicher Gewinn- und Verlustausgleich (marking to market) sowie häufig Lieferoption für den Verkäufer
@@ -82,7 +82,8 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\item \textbf{Beispiele für Terminpreise}
 	\begin{itemize}
 		\item Ertragloser Basiswert: \(f(0,T) = S(0)\cdot(1+r)^t \approx S(0) \cdot e^{rT}\)
-		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung): \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
+		\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(0,T) = S(0) \cdot e^{(r-q)\cdot T}\)
+		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung). Alle Erträge werden entsprechend Diskontiert: \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
 	\end{itemize}
 \end{itemize}
 
@@ -101,10 +102,19 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 
 \section{Appendix B: Bezeichnungen und Formeln}
 
+\subsection{Bezeichnungen}
 \begin{itemize}
-	\item Kassepreis des Basiswerts zum Zeitpunkt \(t\): \(S(t)\)
-	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(0)\cdot e^{rT}\)
-	\item Terminpreis = Kassapreis + Haltekosten (Kreditzinsen, Lagerkosten, etc.) - Halteerträge (Dividenden, Zinserträge, etc.)
+	\item Kassapreis des Basiswerts zum Zeitpunkt \(t\): \(S(t)\)
 	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T)\)
+\end{itemize}
+
+
+\subsection{Formeln}
+\begin{itemize}
+	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(t)\cdot e^{r\cdot (T-t)}\)
+	\item Terminpreis = Kassapreis + Haltekosten (Kreditzinsen, Lagerkosten, etc.) - Halteerträge (Dividenden, Zinserträge, etc.)
+	\item Basis = Forwardpreis - Kassapreis
 	\item Terminpreis in \(t=0\) für den Kauf des Basiswerts in \(T\) mit Halteertrag: \(f(0,T) = (S(0)-X(0))\cdot e^{rT}\)
+	\item Kontinuierlicher Zins vs. Zins p.a.: \(r_c = m \cdot ln\Big(1+\frac{r_m}{m}\Big)\), \(r_m\) bereits auf das komplette Jahr hochgerechnet
+	\item Wert eines Forward: \(W_K(t,T) = \Big(f(t,T)-f(0,T)\Big) \cdot e^{r\cdot (T-t)}\)
 \end{itemize}
