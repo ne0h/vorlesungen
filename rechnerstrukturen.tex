@@ -5,61 +5,270 @@ Zusammenfassung der Vorlesung "`Rechnerstrukturen"' aus dem Sommersemester 2016.
 \section{Grundlagen}
 
 \subsection{Einführung}
+Entwurf einer Rechneranlage: Ingenieurmäßige Aufgabe der Kompromissfindung zwischen Zielsetzung, Randbedingungen, Gestaltungsgrundsätzen und Anforderungen.
 
 
-\subsection{Allgemeine Grundlagen des Entwurfs von Rechenanlagen}
+\subsection{Entwurf von Rechneranlagen - Entwurfsfragen}
+
+\begin{itemize}
+	\item \textbf{Zielsetzung}
+	\begin{itemize}
+		\item Einsatzgebiet
+		\begin{itemize}
+			\item \textbf{Desktop Computing}
+			\begin{itemize}
+				\item PCs bis Workstations (\$1000 - \$10.000)
+				\item Günstiges Preis-/Leistungsverhältnis
+				\item Ausgewogene Rechenleistung für ein breites Spektrum von (interaktiven) Anwendungen
+			\end{itemize}
+			\item \textbf{Server}
+			\begin{itemize}
+				\item Rechen- und datenintensive Anwendungen
+				\item Hohe Anforderungen an die Verfügbarkeit und Zuverlässigkeit
+				\item Skalierbarkeit
+				\item Große Dateisysteme und Ein-/Ausgabesysteme
+			\end{itemize}
+			\item \textbf{Eingebettete Systeme}
+			\begin{itemize}
+				\item Mikroprozessorsysteme, eingebettet in Geräte und daher nicht unbedingt sichtbar
+				\item Sind auf spezielle Aufgaben zugeschnitten (hohe Leistungsfähigkeit, Spezialprozessoren)
+				\item Breites Preis-/Leistungsspektrum
+				\item Echtzeitanforderungen
+				\item Abwägung der Anforderungen an Rechenleistung, Speicherbedarf, Kosten, Energieverbrauch, etc.
+			\end{itemize}
+		\end{itemize}
+		\item Anwendungsbereich
+		\begin{itemize}
+			\item Technisch-wissenschaftlicher Bereich: Hohe Anforderungen an die Rechenleistung, insbesondere Gleitkommaverarbeitung
+			\item Kommerzieller Bereich: Datenbanken, WEB, Suchmaschinen, Optimierung von Geschäftsprozessen, etc.
+			\item Eingebettete Systeme: Verarbeitung digitaler Medien, Automatisierung, Telekommunikation, etc.
+		\end{itemize}
+		\item Rechenleistung
+		\begin{itemize}
+			\item Ermittlung über Benchmarks
+			\item Maßzahlen für die Operationsleistung: \textit{MIPS} oder \textit{MFLOPS}
+			\item \(MFLOPS = \frac{Anzahl~ausgefuehrter~Gleitkommainstruktionen}{10^6 \cdot Ausfuehrungszeit}\)
+		\end{itemize}
+		\item Verfügbarkeit
+		\item Zuverlässigkeit
+		\begin{itemize}
+			\item Bei Ausfällen von Komponenten muss ein betriebsfähiger Kern bereit sein
+			\item Verwendung redundanter Komponenten
+			\item Bewertung der Ausfallwahrscheinlichkeit mittels stochastischer Verfahren
+			\item Definition Verfügbarkeit: Wahrscheinlichkeit, ein System zu einem beliebigen Zeitpunkt fehlerfrei anzutreffen
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Randbedingungen}
+	\begin{itemize}
+		\item Technologische Entwicklung: Mikrominiaturisierung setzt sich fort, beispielsweise Verkleinerung der Strukturbreiten sowie Erhöhung der Integrationsdichte (Anzahl der Transistoren verdoppelt sich alle 18 Monate)
+		\item Größe
+		\item Geld
+		\item Energieverbrauch, Leistungsaufnahme
+		\begin{itemize}
+			\item Mobile Geräte
+			\begin{itemize}
+				\item Verfügbare Energiemenge durch Batterien und Akkumulatoren ist begrenzt \(\rightarrow\) möglichst lange mit der vorhandenen Energie auskommen
+				\item Vermeiden von Überhitzungen
+			\end{itemize}
+			\item Green IT: Niedriger Energieverbrauch, ökologische Produktion, einfaches Recycling
+		\end{itemize}
+		\item Umwelt
+	\end{itemize}
+	\item Gestaltungsgrundsätze: Modularität, Sparsamkeit, Fehlertoleranz, etc.
+	\item Anforderungen: Kompatibilität, Betriebssystemanforderungen, Standards, etc.
+\end{itemize}
+
+\subsubsection{Trends in der Rechnerarchitektur: Herausforderungen}
+Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
+\begin{itemize}
+	\item Verlustleistung: Überträgt man heutige (Stand 2010) Höchstleistungsrechner in den Exascale-Bereich, hätte man eine Verlustleistung von etwa 40 GW (diese kann allerdings höchstens 20-40 MW betragen)
+	\item Hauptspeicher (DRAM), permanenter Speicher: Kapazität und Zugriffsgeschwindigkeit muss mit der Rechengeschwindigkeit mithalten
+	\item Zuverlässigkeit und Verfügbarkeit
+	\item Parallelität und Lokalität
+\end{itemize}
 
 
-\subsection{Formen des Parallelismus und Klassifizierung von Rechnerarchitekturen}
+\subsection{Einführung in den Entwurf eingebetteter Systeme}
 
-
-\subsection{Bewertung von Rechensystemen}
-
-
-\subsection{Zuverlässigkeit, Verfügbarkeit und Fehlertoleranz}
-
-
-
-\section{Prozessortechnik}
-
-\subsection{Von-Neumann-Architektur}
-
-
-\subsection{Von RISC zu Superskalar, Superskalartechnik}
-
-
-\subsection{VLIW, EPIC}
-
-
-\subsection{Multithreading}
+\subsubsection{Die Hardware-Beschreibungssprache VHDL}
+\begin{itemize}
+	\item Standardisierte Hardware-Beschreibungssprache: Die verschiedenen Schaltungsbeschreibungen des gesamten Entwurfsablaufs können dargestellt werden - von der algorithmischen Spezifikation bis hin zu realisierungsnahen Strukturen
+	\item Eingesetzt zum ASIC- und FPGA-Entwurf
+	\item Chip-Entwurf mit VHDL
+	\begin{itemize}
+		\item Grundlage des Entwurfs ist die Spezifikation der Schaltung: Gewünschtes Verhalten; Schnittstellen; Vorgaben bzwgl. Geschwindigkeit, Kosten, Fläche oder Leistungsverbrauch
+		\item Entwurfsschritte
+		\begin{itemize}
+			\item 
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 
-\section{Multiprozessoren}
+\section{Parallelismus auf Machinenbefehlsebene}
 
-\subsection{Allgemeine Grundlagen, Verbindungsnetze, Leistungsfähigkeit}
+\subsection{Pipelining}
+\begin{itemize}
+	\item RISC (Reduced Instruction Set Computers): Einfache, einzyklische Maschinenbefehle; Load/Store-Architektur; optimierende Compiler
+	\item Zerlegung der Ausführung einer Maschinenoperation in Teilphasen, die dann von hintereinander geschalteten Verarbeitungseinheiten taktsynchron ausgeführt werden, wobei jede Einheit genau eine spezielle Teiloperation ausführt
+	\item Stufen einer Standard-RISC-Pipeline (DLX-Pipeline): \texttt{Instruction Fetch (IF)}, \texttt{Instruction Decode (ID)}, \texttt{Execution (EX)}, \texttt{Memory Access (MA)} und \texttt{Writeback (WB)}, wobei alle Stufen unterschiedliche Ressourcen benutzen
+	\item Idealerweise wird mit jedem Takt ein Befehl beendet
+	\item Zykluszeit abhängig von der langsamsten Pipelinestufe
+	\item Gleitkommeverarbeitung und Integer-Division: Einführung spezieller Rechenwerke, um die Berechnung innerhalb eines Schrittes ausführen zu können
+	\item \textbf{Verfeinerung der Pipeline-Stufen ("`Superpipelining"')}
+	\begin{itemize}
+		\item Weitere Unterteilung der Pipeline-Stufen
+		\item Weniger Logik-Ebenen pro Pipeline-Stufe % TODO
+		\item Erhöhung der Taktrate
+		\item Führt aber auch zu einer Erhöhung der Ausführungszeit pro Instruktion
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Datenabhängigkeiten und Konflikte}
+\begin{itemize}
+	\item Situationen, die verhindern, dass die nächste Instruktion im Befehlsstrom im zugewiesenen Taktzyklus ausgeführt wird
+	\item Verursachen Leistungseinbußen und erfordern ein Anhalten der Pipeline ("`Leerlaufen lassen"' der Pipeline)
+	\item \textbf{Strukturkonflikte}
+	\begin{itemize}
+		\item Ergeben sich aus Ressourcenkonflikten: Die Hardware kann nicht alle möglichen Kombinationen von Befehlen unterstützen, die sich in der Pipeline befinden
+		\item Beispiel: Gleichzeitiger Schreibzugriff zweier Befehle auf einer Registerdatei mit nur einem Schreibeingang
+	\end{itemize}
+	\item \textbf{Datenkonflikte}
+	\begin{itemize}
+		\item Ergeben sich aus Datenabhängigkeiten zwischen Befehlen im Programm (und sind damit Eigenschaften des Programms)
+		\item Instruktion benötigt das Ergebnis einer vorangehenden und noch nicht abgeschlossenen Instruktion in der Pipeline
+		\item Verschiedene Datenkonflikte\footnote{\url{https://de.wikipedia.org/wiki/Pipeline-Hazard}}
+		\begin{itemize}
+			\item Echte Datenabhängigkeiten (Read-after-Write): Ein Operand wurde verändert und kurz darauf gelesen. Da der erste Befehl den Operanden evtl. noch nicht fertiggeschrieben hat (Pipeline-Stufe "`store"' ist weit hinten), würde der zweite Befehl falsche Daten verwenden. Ein "`Shortcut"' im Datenweg der Pipeline kann den Hazard vermeiden. Bei problematischeren Situationen, wenn beispielsweise ein Rechenergebnis zur Adressierung verwendet wird oder bei berechneten und bedingten Sprüngen, ist ein Anhalten der Pipeline aber unumgänglich.
+			\item Gegenabhängigkeit (Write-after-Read): Ein Operand wird gelesen und kurz danach überschrieben. Da das Schreiben bereits vor dem Lesen vollendet sein könnte, könnte der Lese-Befehl die neu geschriebenen Werte erhalten. In der normalen Pipeline eher kein Problem.
+			\item Ausgabeabhängigkeit (Write-after-Write): Zwei Befehle schreiben auf denselben Operanden. Der zweite könnte vor dem ersten Befehl beendet werden und somit den Operanden mit einem falschen Wert belassen.
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Steuerkonflikte}
+	\begin{itemize}
+		\item Treten bei Verzweigungsbefehlen und anderen Instruktionen auf, die den Befehlszähler verändern
+	\end{itemize}
+	\item \textbf{Auflösen von Konflikten}
+	\begin{itemize}
+		\item Anhalten der Pipeline (pipeline stall)
+		\item Einfügen von Leerzyklen (pipeline bibble)
+		\item Führt zu Leistungseinbußen, daher verschiedene Maßnahmen (in Hardware und Software), um die Auswirkungen auf die Leistungsfähigkeit zu reduzieren/vermeiden
+	\end{itemize}
+\end{itemize}
 
 
-\subsection{Speichergekoppelte Multiprozessoren}
+\subsection{Nebenläufigkeit}
 
+\subsubsection{Superskalartechnik}
+\begin{itemize}
+	\item Mehrfachzuweisung: Pro Takt können mehrere Befehle den Ausführungseinheiten zugeordnet und die gleiche Anzahl von Befehlsausführungen pro Takt beendet werden
+	\item RISC-Eigenschaften bleiben weitestgehend erhalten: LS-Architektur sowie festes Befehlsformat
+	\item Entwurfsziel: Erhöhung des IPC (Instruction per Cycle)
+	\begin{itemize}
+		\item \textbf{1. In-order-Abschnitt}
+		\begin{itemize}
+			\item Befehle werden entsprechend ihrer Programmordnung bearbeitet
+			\item Umfasst: Befehlsholphase (IF), Dekodierphase (ID) und Dispatch
+			\item Dynamische Zuordnung der Befehle an die Ausführungseinheiten. Der Scheduler bestimmt die Anzahl der Befehle, die im nächsten Takt zugeordnet werden können
+		\end{itemize}
+		\item \textbf{Out-of-order-Abschnitt}
+		\begin{itemize}
+			\item Ausführungsphase
+		\end{itemize}
+		\item \textbf{2. In-order-Phase}
+		\begin{itemize}
+			\item Gültigmachen der Ergebnisse entsprechend der ursprünglichen Programmordnung
+			\item Einhalten der korrekten Programmsemantik (Ausnahmeverarbeitung, Spekulation)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
-\subsection{Nachrichtengekoppelte Muktiprozessoren}
+\subsubsection{Spekulative Ausführung}
+In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritten innerhalb einer Verarbeitungskette (Pipeline) ausgeführt. Um die Leistungsfähigkeit des Prozessors zu maximieren, wird, nachdem ein Befehl in die Pipeline geladen wurde und z. B. im nächsten Schritt mit der Analyse des Befehls fortgefahren werden soll, gleichzeitig mit dem Laden des nächsten Befehles begonnen. Es befinden sich also (meistens) eine ganze Reihe von Befehlen zur sequentiellen Abarbeitung in der Pipeline. Wird jetzt am Ende der Pipeline festgestellt, dass ein bedingter Sprung ausgeführt wird, so sind alle in der Pipeline anstehenden und teilabgearbeiteten Befehle ungültig. Der Prozessor löscht jetzt die Pipeline und lädt diese dann von der neuen Programmcodeadresse neu. Je mehr Stufen die Pipeline hat, desto mehr schon berechnete Zwischenergebnisse müssen verworfen werden und um so mehr Takte wird die Pipeline nur partiell genutzt. Das reduziert die Abarbeitungsgeschwindigkeit von Programmen und reduziert die Energieeffizienz.\footnote{\url{https://de.wikipedia.org/wiki/Sprungvorhersage\#.C3.9Cbersicht}}
+\begin{itemize}
+	\item Ziel: Möglichst frühes Erkennen eines Sprungbefehls und Erkennen seiner Sprungzieladresse, damit die Befehle am Sprungziel möglichst ohne NOPs in die Pipeline gegeben werden können
+	\item Beinhaltet die Vorhersage, ob ein Sprung ausgeführt wird und berechnet die Zieladresse des Sprungs
+	\item \textbf{Statische Sprungvorhersage}
+	\begin{itemize}
+		\item Vorhersage wird beim Compilieren eingebaut und ändert sich während des Programmablaufs nicht. Genauigkeit etwa bei 55 bis 80 \% (Quelle: Wikipedia)
+		\item Geht bei Schleifen davon aus, dass Sprünge häufig ausgeführt werden, während dies bei Auswahlverfahren seltener vorkommt
+		\item Sprungvorhersagetechniken
+		\begin{itemize}
+			\item \texttt{Stall/Freeze}: Wird während der ID-Phase ein Sprungbefehl festgestellt, wird die Pipeline angehalten bis in der EX-Phase bekannt ist, ob der Sprung ausgeführt wird
+			\item \texttt{Predict taken}: Geht immer davon aus, dass ein Sprung ausgeführt wird (verwendet bei Schleifen)
+			\item \texttt{Predict not taken}: Geht immer davon aus, dass ein Sprung nicht ausgeführt wird (verwendet bei Auswahlverfahren)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Dynamische Sprungvorhersage}
+	\begin{itemize}
+		\item Sprungvorhersage wird zur Laufzeit von der CPU ausgeführt. Genauigkeit bei etwa 98\% (Quelle: Wikipedia)
+		\item Sprungvorhersagetechniken
+		\begin{itemize}
+			\item Der \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
+			\item \texttt{1-Bit-Prädikator}: Zu jedem Sprung wird ein Bit gespeichert. Ist es gesetzt, dann wird ein gespeicherter Sprung genommen. Bei Falschannahme wird dessen Bit invertiert. Problem: Alternierende Sprünge werden nicht berücksichtigt \(\rightarrow\) \texttt{n-Bit-Prädikator}
+			\item \texttt{2-Bit-Prädikator}: Speichert vier Zustände und setzt das Korrektheitsbit erst nach \texttt{2} Fehlschlägen neu. Zustände sind \texttt{Predict strongly taken (11)}, \texttt{Predict weakly taken (10)}, \texttt{Predict weakly not taken (01)} und \texttt{Predict stronly not taken (00)}. In der Praxis bringen Prädikatoren mit mehr als 2 Bit kaum Vorteile.
+		\end{itemize}
+		\item Sprungzielvorhersagetechniken
+		\begin{itemize}
+			\item Erweitert die Sprungvorhersage um eine Sprungzielvorhersage. Somit kann der Programmzähler sofort auf dieses Sprungziel gesetzt werden und die dortigen Instruktionen können in die Pipeline laden werden
+			\item Sprungzielcache: \texttt{Branch Target Address Cache} (Tabelle: Adresse der Verzweigung \(\rightarrow\) Sprungzieladresse) und \texttt{Branch Target Buffer} (Direct-mapped-Cache) speichern die Adresse der Verzweigung und das entsprechende Sprungziel
+			\item \texttt{Branch Prediction Buffer}: Paralleler Zugriff auf den Befehlsspeicher und den BPB in der Befehlsholphase. Falls die Instruktion eine Verzweigung ist, bestimmt die Vorhersage die nächste zu holende Instruktion und berechnet die Adresse des Befehls. Nach Ausführung der Verzweigung wird die Sprungsvorhersage verifiziert und der Eintrag im BPB ggf. aktualisiert
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
-
-\subsection{Höchleistungsrechner und Grid-Computing}
-
-
-\subsection{Chip-Multiprozessoren, Multi-Core, Many-Core}
-
-
-
-\section{Weitere Rechnerstrukturen}
-
-\subsection{Vektorrechner und Feldrechnerprinzip}
-
-
-\subsection{SIMD-Verarbeitung in Mikroprozessoren}
-
-
-
-\section{Ausblick: Aktuelle Forschungsthemen}
+\subsubsection{Superskalare Prozessorpipeline}
+\begin{itemize}
+	\item \textbf{Befehlsholphase (IF-Phase)}
+	\begin{itemize}
+		\item Befehlsbereitstellung
+		\begin{itemize}
+			\item Holen mehrerer Befehle aus dem Befehlscache in der Befehlsholpuffer (Anzahl entspricht typischerweise der Zuordnungsbreite)
+			\item Welche Befehle geholt werden hängt von der Sprungvorhersage ab
+		\end{itemize}
+		\item Verzweigungseinheit
+		\begin{itemize}
+			\item Überwacht die Ausführung von Sprungbefehlen
+			\item Spekulatives Holen von Befehlen und Spekulation über den weiteren Programmverlauf (Verwendung hierzu der Vorgeschichte)
+			\item Gewährleistet im Falle einer Fehlspekulation die Abänderung der Tabellen sowie das Rückholen der fälschlicherweise ausgeführten Befehle
+		\end{itemize}
+		\item Befehlsholpuffer: Entkoppelt die IF-Phase von der ID-Phase
+	\end{itemize}
+	\item \textbf{Dekodierphase (ID-Phase)}
+	\begin{itemize}
+		\item Dekodierung der im Befehlspuffer abgelegten Befehle. Die Anzahl entspricht typischerweise der Befehlsbereitstellungsbandbreite
+		\item Bei CISC-Architekturen (z.B. IA-32): Mehrere Schritte zur Dokodierung notwendig. Bestimmung der Grenzen der geholten Befehle sowie Generierung einer Folge von RISC-ähnlichen Befehlen % TODO: CISC
+		\item Registerumbenennung: Dynamische Umbenennung der Operanden- und Resultatsregister. Zur Laufzeit wird für jeden Befehl das jeweils spezifizierte Zielregister auf ein unbelegtes physikalisches Register abgebildet. Automatische Auflösung von Namensabhängigkeitskonflikten
+		\item Befehlsfenster (instruction window): Durch das Schreiben der Befehle in ein Befehlsfenster sind diese durch die Sprungvorhersage frei von Steuerflussabhängigkeiten und aufgrund der Registerumbenennung frei von Namensabhängigkeiten
+	\end{itemize}
+	\item \textbf{Zuordnungsphase (Dispatch)}
+	\begin{itemize}
+		\item Zuführung der im Befehlsfenster wartenden Befehle zu den Ausführungseinheiten sowie dynamischer Auflösung von echten Datenabhängigkeiten und Ressourcenkonflikten
+		\item Zuordnung bis zur maximalen Zuordnungsbandbreite pro Takt
+		\item Rückordnungspuffer (Reorder buffer): Festhalten der ursprünglichen Befehlsanordnung sowie Protokollierung der Ausführungszustände der Befehle in den folgenden Phasen
+		\item Zweistufige Zuweisung: Jeder Ausführungseinheit ist ein Umordnungspuffer (den sie sich ggf. mit anderen Ausführungseinheiten teilt) vorgelagert. Zuordnung eines Befehls an einen Umordnungspruffer kann nur erfolgen, wenn dieser einen freien Platz hat, ansonsten müssen die nachfolgenden Befehle warten (Auflösung von Ressourcenkonflikten)
+	\end{itemize}
+	\item \textbf{Befehlsausführung}
+	\begin{itemize}
+		\item Ausführung der im Opcode spezifizierten Operation und Speichern des Ergebnisses im Zielregister (Umbenennungsregister)
+		\item Completion: Eine Instruktion beendet ihre Ausführung, unabhängig von der Programmordnung, wenn das Ergebnis bereitsteht. Danach: Bereinigung der Reservierungstabellen und Aktualisieren des Rückordnungspuffer
+	\end{itemize}
+	\item \textbf{Rückordnungsstufe (Retire)}
+	\begin{itemize}
+		\item Commitment: Nach Vervollständigung beenden die Befehle ihr Bearbeitung (Commitment) und werden in der Programmreihenfolge gültig gemacht. Ggf. werden Ergebnisse aus Umbenennungsregistern gültig gemacht
+		\item Bedingungen für Commitment
+		\begin{itemize}
+			\item Die Befehlsausführung ist vollständig
+			\item Alle Befehle, die in der Programmordnung vor dem Befehl stehen, haben bereits ihre Bearbeitung beendet oder beenden diese im selben Takt
+			\item Der Befehl hängt von keiner Spekulation ab
+			\item Vor oder während der Bearbeitung ist keine Unterbrechung aufgetreten
+		\end{itemize}
+		\item Bei Aufreten einer Unterbrechung
+		\begin{itemize}
+			\item Alle Resultate, die in der Programmausführung vor dem Befehl stehen, werden gültig gemacht; die Ergebnisse aller nachfolgenden werden verworfen
+			\item Das Ergebnisse des Befehls, der die Unterbrechung verursacht hat, wird in Abhängigkeit der Unterbrechung und der Architektur gültig gemacht oder verworfen
+			\item Komplexe Hardware notwendig
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
