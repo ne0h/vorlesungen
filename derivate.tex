@@ -101,10 +101,30 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 		\item Europäische Option: Die Option kann nur am Fälligkeitsdatum ausgeübt werden
 		\item Amerikanische Option: Die Option kann an jedem Handelstag vor der Fälligkeit ausgeübt werden
 	\end{itemize}
+	\item \textbf{Arten von Optionen}
+	\begin{itemize}
+		\item Call long
+		\begin{itemize}
+			\item Motivation: Käufer erwartet einen Preisanstieg bei einem Finanzprodukt und hofft dieses günstig er erwerben
+			\item Ausübungswert: \(C(T) = max(S(T)-X,0)\)
+			\item Gewinn/Verlust: \(GV(T)=C(T)-C(0) = max(S(T)-X,0)-C(0)\)
+			\item Gewinn/Verlust, inklusive Zinsen: \(GV(T)=C(T)-C(0) = max(S(T)-X,0)-C(0) \cdot (1+r)^T\)
+		\end{itemize}
+		\item Put long
+		\begin{itemize}
+			\item Motivation: Käufer erwartet einen Preisverfall bei einem Finanzprodukt und hofft dieses teuer verkaufen zu können
+			\item Ausübungswert: \(P(T)=max(X-S(T),0)\)
+			\item Gewinn/Verlust: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(T)\)
+			\item Gewinn/Verlust, inklusive Zinsen: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(T) \cdot (1+r)^T\)
+		\end{itemize}
+	\end{itemize}
 \end{itemize}
 
 
 \subsubsection{Ausübungsdiagramme}
+\begin{itemize}
+	\item Klassische Analyse von Optionspositionen anhand von Gewinn- und Verlust-Diagrammen
+\end{itemize}
 
 \subsubsection{Klassische Beurteilungskriterien}
 
@@ -129,7 +149,10 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T)\)
 	\item Absicherungsniveau: Zukünftiger Kaufkurs, also \(f(0,T)\)
 	\item Glattstellen: Neutralisieren einer Transaktion durch Einnehmen der Gegenposition zur Risikominimierung
-	\item Stückzinsen: Zinsausgleichszahlung an bisherigen Inhaber der Anleihe, wenn Kauf zwischen Kuponterminen. Kupon wird dabei anteilig nach Besitzzeit zwischen Neu- und Altbesitzer geteilt 
+	\item Stückzinsen: Zinsausgleichszahlung an bisherigen Inhaber der Anleihe, wenn Kauf zwischen Kuponterminen. Kupon wird dabei anteilig nach Besitzzeit zwischen Neu- und Altbesitzer geteilt
+	\item Callwert zum Zeitpunkt \(t\): \(C(t)\)
+	\item Putwert zum Zeitpunkt \(t\): \(P(t)\)
+	\item Basispreis, Strike price: \(X\)
 \end{itemize}
 
 
