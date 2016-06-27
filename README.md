@@ -6,18 +6,9 @@ notwendig:
 
 `$ make`
 
-Um lediglich den Teil zu Algorithmen 2 zu bauen:
+Die meisten Kapitel können separat gebaut werden (siehe das `Makefile`). Um beispielsweise lediglich den Teil zu Algorithmen 2 zu bauen:
 
 `$ make algo2only`
-
-Um lediglich den Teil zu Programmierparadigmen zu bauen:
-
-`$ make propaonly`
-
-Um den Fragenkatalog zu Netzsicherheit: Architekturen und Protokolle zu 
-bauen:
-
-`$ make netzsicherheitonly`
 
 Aktuell enthalten
 -----------------
@@ -36,4 +27,7 @@ Aktuell enthalten
 
 ### Master
 
+* BWL: Derivate
 * Mikroprozessoren 2
+* Netzsicherheit
+* Rechnerstrukturen
