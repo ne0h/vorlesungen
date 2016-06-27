@@ -96,6 +96,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\item Standardoptionen: Kaufoptionen (Calls) und Verkaufsoptionen (Puts)\footnote{\url{https://de.wikipedia.org/wiki/Option_(Wirtschaft)\#.C3.9Cbersicht}}
 	\item Der Käufer hat das Recht – nicht jedoch die Pflicht – zu bestimmten Ausübungszeitpunkten eine bestimmte Menge des Bezugswerts zu einem zuvor festgelegten Ausübungspreis (oder englisch strike) zu kaufen oder zu verkaufen
 	\item Der Verkäufer der Option (auch Stillhalter, Schreiber, Zeichner) erhält den Kaufpreis der Option. Er ist im Falle der Ausübung verpflichtet, den Basiswert zum vorher bestimmten Preis zu verkaufen bzw. zu kaufen
+	\item Klassische Analyse von Optionspositionen anhand von Gewinn- und Verlust-Diagrammen. Ableitbarkeit des maximaler Gewinn/Verlust in \(T\)
 	\item \textbf{Ausübungsarten}
 	\begin{itemize}
 		\item Europäische Option: Die Option kann nur am Fälligkeitsdatum ausgeübt werden
@@ -114,19 +115,63 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 		\begin{itemize}
 			\item Motivation: Käufer erwartet einen Preisverfall bei einem Finanzprodukt und hofft dieses teuer verkaufen zu können
 			\item Ausübungswert: \(P(T)=max(X-S(T),0)\)
-			\item Gewinn/Verlust: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(T)\)
-			\item Gewinn/Verlust, inklusive Zinsen: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(T) \cdot (1+r)^T\)
+			\item Gewinn/Verlust: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(0)\)
+			\item Gewinn/Verlust, inklusive Zinsen: \(GV(T)=P(T)-P(0) = max(X-S(T),0)-P(0) \cdot (1+r)^T\)
 		\end{itemize}
+	\end{itemize}
+	\item \textbf{Zusammengesetzte Positionen}
+	\begin{itemize}
+		\item Hedge
+		\begin{itemize}
+			\item Kombination von Wertpapieren mit Optionen
+			\item 1:1 Hedge: Gleiche Anzahl von Wertpapieren und Optionen, Ratio Hedge: Jeweils flexible, ungleiche Anzahl
+			\item Covered Call (1:1 Hedge): Bei einem Covered Call erwirbt man einen Basiswert und verkauft gleichzeitig eine Call-Option auf diesen. Dadurch ist die offene Position im Call durch den Basiswert "`gedeckt"'. Der Ertrag der Strategie stammt allein aus dem Verkauf der Option. Dafür darf der Basiswert zum Ausübungsdatum nicht unter den Ausübungspreis der Kaufoption abzüglich dessen Wert zum Zeitpunkt des Verkaufs fallen (Break-Even-Kurs). Aus diesem Grund bildet man Covered Calls eher dann, wenn man von einem etwa unveränderten Kurs zum Ende der Laufzeit ausgeht, d. h. nur leicht steigender oder fallender Kurs des Basiswerts. Gewinne sind grundsätzlich auf den Ausübungspreis des Calls beschränkt, wohingegen Kursverluste im Basiswert, ab dem Break-Even-Kurs, in voller Höhe mitgetragen werden.\footnote{\url{https://de.wikipedia.org/wiki/Covered_Call}}
+			\item Protective Put (1:1 Hedge): Bei einem Protective Put erwirbt man das Underlying und eine Put-Option dazu. Der Sinn ist, sich mit der Put-Option gegen ein Kursverfallsrisiko zu versichern. Ein Protective Put sichert sich einen Mindestverkaufspreis und zahlt dafür einen Aufschlag.\footnote{\url{https://de.wikipedia.org/wiki/Protective_Put}}
+		\end{itemize}
+		\item Spread
+		\begin{itemize}
+			\item Position aus ge- und verkauften Optionen derselben Klasse (nur Calls oder nur Puts)
+			\item 1:1 Spreads: Anzahl der Calls (bzw. Puts) long entspricht der Anzahl an Calls (Puts) short)
+			\begin{itemize}
+				\item Money Spread: Verschiedene Basispreise, gleiche Optionsfristen
+				\item Time Spread: Verschiedene Optionsfristen, gleiche Basispreise
+				\item Diagonal Spread: Verschiedenen Basispreise, verschiedene Optionsfristen
+			\end{itemize}
+			\item Ratio Spread: Anzahl der Calls (bzw. Puts) long entspricht nicht der Anzahl an Calls (Puts) short)
+			\item Beispiel Butterfly Spread: Bei dem Long Butterfly Spread werden zwei Calls gekauft und zwei Calls verkauft. Der erste gekaufte Call wird zu einem niedrigeren Kurs des Underlyings gekauft (in-the-money) und der zweite gekaufte Call wird zu einem höheren Kurs des Underlyings (out-of-the-money) erworben. Zusätzlich werden noch zwei Calls verkauft zum aktuellen Kurs des Underlyings (at-the-money)\footnote{\url{https://de.wikipedia.org/wiki/Optionsstrategie\#Butterfly_Spread}}
+		\end{itemize}
+		\item Combinations
+			\begin{itemize}
+				\item Position aus ge- und verkauften Optionsn verschiedener Klassen
+				\item Straddle: Gleiche Basispreise, gleiche Optionsfristen
+				\item Strangle: Verschiedene Basispreise, gleiche Optionsfristen
+				\item Horizontal Strangle: Verschiedene Basispreise, verschiedene Optionsfristen
+			\end{itemize}
 	\end{itemize}
 \end{itemize}
 
 
-\subsubsection{Ausübungsdiagramme}
-\begin{itemize}
-	\item Klassische Analyse von Optionspositionen anhand von Gewinn- und Verlust-Diagrammen
-\end{itemize}
 
 \subsubsection{Klassische Beurteilungskriterien}
+Qualitative Abwägung er Chancen und Risiken anhand von Ausübungsdiagrammen.
+\newline
+
+\begin{tabularx}{\columnwidth}{|X|X|X|X|X|}
+	\hline
+	\textbf{Chancen/Risiken} & \textbf{keine} & \textbf{begrenzt} & \textbf{fast unbegrenzt} & \textbf{unbegrenzt} \\
+	\hline
+	\textbf{keine} \newline sicheres Ergebnis & Zero-Bon (ohne Bonitätsrisiko) & - & - & - \\
+	\hline
+	\textbf{begrenzt} \newline begrenzt auf Zahlung in \(t=0\) & - & Money Spread: Butterflies & Put short & Call short \\
+	\hline
+	\textbf{fast begrenzt} \newline Vielfaches der Zahlung in \(t=0\) & - & Put long & Put short (X)\newline Call long (X)\newline Call short (2X) & Put long + Call short = Aktie short \\
+	\hline
+	\textbf{unbegrenzt} & geschenktes, heutiges Lotterielos & Call long & Put short + Call long \(\hat{=}\) Aktie & Call long + Call short auf nicht identisches Underlying \\
+	\hline
+\end{tabularx}
+
+
+\subsection{Verteilungsfreie Wertgrenzen}
 
 
 
