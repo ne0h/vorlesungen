@@ -335,3 +335,69 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Simultaneous Multithreading: Die Ausführungseinheiten werden über eine Zuordnungseinheit aus mehreren Befehlspuffern versorgt. Jeder Befehlspuffer stellt einen anderen Befehlsstrom dar und hat einen eigenen Registersatz zugeordnet
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Multiprozessoren - Parallelismus auf Prozess-/Blockebene}
+
+\subsection{Allgemeine Grundlagen}
+
+\subsubsection{Parallele Architekturmodelle}
+\begin{itemize}
+	\item \textbf{Multiprozessor mit gemeinsamem Speicher: Uniform Memory Access (UMA)}
+	\begin{itemize}
+		\item Gleichberechtigter Zugriff der Prozessoren auf die Betriebsmittel
+		\item Gemeinsamer Adressraum, Austausch von Daten über gemeinsamen Speicher durch LS-Operationen
+		\item Beispiele: Symmetrischer Multiprozessor (SMP), Multicore-Prozessor
+	\end{itemize}
+	\item \textbf{Multiprozessor mit verteiltem Speicher: No Remote Memory Access (NORMA)}
+	\begin{itemize}
+		\item Jeder Knoten mit einem privaten Adressraum
+		\item Kommunikation durch Nachrichtenaustausch über ein Interconnect Network
+		\item Beispiel: Cluster
+	\end{itemize}
+	\item \textbf{Multiprozessor mit verteiltem gemeinsamen Speicher: Non-Uniform Memory Access (NUMA)}
+	\begin{itemize}
+		\item Beispiel: Cache-Coherent Non-Uniform Memory Access
+		\item Globaler Adressraum über mehreren, exklusiv jeweils einem Prozessor zugeordneten Speichereinheiten
+		\item Zugriff auf entfernten Speicher über LS-Operationen (über ein Interconnect Network)
+	\end{itemize}
+\end{itemize}
+
+\subsection{Parallele Programmiermodelle}
+\begin{itemize}
+	\item Programmiermodell: Abstraktion einer parallelen Maschine, die spezifiziert, wie Teile des Programms parallel abgearbeitet werden und wie Informationen ausgetauscht werden können
+	\item \textbf{Parallele Programmierung}
+	\begin{itemize}
+		\item Aufteilung der Arbeit (work partitioning): Identifizieren der Teilaufgaben, die parallel ausgeführt und auf mehrere Prozessoren verteilt werden können (Programmsegmente müssen unabhängig von einander sein)
+		\item Koordination (coordination): Koordination/Synchronisierung/Kommunikation (zwischen) den/der Prozesse
+		\item Sychronisation und Koordination: Austausch von Informationen über gemeinsamen Speicher oder über explizite Nachrichten. Zusätzlicher Zeitaufwand hat Auswirkung auf die Ausführungszeit des parallelen Programms
+		\item \textbf{Gemeinsamer Speicher (Shared Memory)}
+		\begin{itemize}
+			\item Verwendung konventioneller Speicheroperationen für die Kommunikation über gemeinsame Adressen
+			\item Atomare Synchronisationsoperationen
+		\end{itemize}
+		\item \textbf{Nachrichten (Message Passing)}
+		\begin{itemize}
+			\item Kein gemeinsamer Adressbereich, Kommunikation der Prozesse (Threads) mit Hilfe von Nachrichten
+			\item Kommunikationsarchitektur: Verwendung von korrespondierenden Send- und Receive-Operationen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Quantitative Maßzahlen}
+
+\subsubsection{Parallelitätsprofil}
+\begin{itemize}
+	\item Misst die entstehende Parallelität in einem Programm oder bei der Ausführung auf einem Parallelrechner und lieferrt so eine Vorstellung von der inhärenten Parallelität eines Algorithmus/Programms
+	\item Grafische Darstellung: XY-Diagramm mit Anzahl der parallelen Aktivitäten in zeitlicher Abhängigkeit \(\rightarrow\) Perioden von Berechnungs- Kommunikations- und Untätigkeitszeiten sind erkennbar
+	\item Der Parallelitätsgrad \(PG(t)\) gibt die Anzahl der Tasks an, die zu e9nem Zeitpunkt parallel bearbeitet werden können
+	\item Leistungsangaben zu Multiprozessorsystemen werden mit Leistungsangaben zu Einprozessorsystemen in Beziehung gesetzt
+	\item \textbf{Parallelindex I (Mittlerer Grad des Parallelismus)}
+	\begin{itemize}
+		\item Durchschnittliche Parallelität pro Zeiteinheit
+		\item Kontinuierlich: \(I = \frac{1}{t_2-t_1}\int_{t_1}^{t_2}PG(t)dt\)
+		\item Diskret: \(\Big(\sum_{i=1}^m i\cdot ti\Big)~/~\Big(\sum_{t=1}^mt_i\Big)\)
+	\end{itemize}
+\end{itemize}
