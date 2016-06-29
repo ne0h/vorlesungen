@@ -388,9 +388,15 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsection{Quantitative Maßzahlen}
 
+\subsubsection{Definitionen}
+\begin{itemize}
+	\item \(P(1)\) bzw. \(P(n)\): Anzahl der auszuführenden Operationen/Tasks auf einem Einprozessor- bzw. Multiprozessorsystem
+	\item \(T(1)\) bzw. \(T(n)\): Ausführungszeit auf einem Einprozessor- bzw. Multiprozessorsystem in Schritten oder Takten
+\end{itemize}
+
 \subsubsection{Parallelitätsprofil}
 \begin{itemize}
-	\item Misst die entstehende Parallelität in einem Programm oder bei der Ausführung auf einem Parallelrechner und lieferrt so eine Vorstellung von der inhärenten Parallelität eines Algorithmus/Programms
+	\item Misst die entstehende Parallelität in einem Programm oder bei der Ausführung auf einem Parallelrechner und liefert so eine Vorstellung von der inhärenten Parallelität eines Algorithmus/Programms
 	\item Grafische Darstellung: XY-Diagramm mit Anzahl der parallelen Aktivitäten in zeitlicher Abhängigkeit \(\rightarrow\) Perioden von Berechnungs- Kommunikations- und Untätigkeitszeiten sind erkennbar
 	\item Der Parallelitätsgrad \(PG(t)\) gibt die Anzahl der Tasks an, die zu e9nem Zeitpunkt parallel bearbeitet werden können
 	\item Leistungsangaben zu Multiprozessorsystemen werden mit Leistungsangaben zu Einprozessorsystemen in Beziehung gesetzt
@@ -399,5 +405,89 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Durchschnittliche Parallelität pro Zeiteinheit
 		\item Kontinuierlich: \(I = \frac{1}{t_2-t_1}\int_{t_1}^{t_2}PG(t)dt\)
 		\item Diskret: \(\Big(\sum_{i=1}^m i\cdot ti\Big)~/~\Big(\sum_{t=1}^mt_i\Big)\)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Speedup/Effizenz/Parallelisierungsmehraufwand}
+\begin{itemize}
+	\item Gibt die Verbesserung der Verarbeitungsgeschwindigkeit an (Vergleich Einprozessor- und Multiprozessorsystem)
+	\item Speedup: \(S(n)=\frac{T(1)}{T(n)}\)
+	\item Effizienz: \(E(n)=\frac{S(n)}{n}\)
+	\item Mehraufwand für die Parallelisierung: \(R(n)=\frac{P(n)}{P(1)}\)
+\end{itemize}
+
+\subsubsection{Auslastung}
+\begin{itemize}
+	\item Entspricht dem normierten Parallelindex
+	\item Gibt an, wie viele Operationen/Tasks jeder Prozessor im Durchschnott pro Zeiteinheit ausgeführt hat
+	\item \(U(n) = \frac{I(n)}{n} = R(n) \cdot E(n) = \frac{P(n)}{n \cdot T(n)}\)
+\end{itemize}
+
+\subsubsection{Skalierbarkeit eines Parallelrechners}
+\begin{itemize}
+	\item Das Hinzufügen von weiteren Verarbeitungselementen führt zu einer kürzeren Gesamtausführungszeit, ohne dass das Programm geändert werden muss
+	\item Bei fester Problemgröße und steigender Prozessorzahl wird eine Sättigung eintreten
+\end{itemize}
+
+\subsubsection{Gesetz von Amdahl}
+\begin{itemize}
+	\item Ein Programm kann nie vollständig parallel ausgeführt werden, da einige Teile wie Prozess-Initialisierung oder Speicherverwaltung nur einmalig auf einem Prozessor ablaufen oder der Ablauf von bestimmten Ergebnissen abhängig ist\(\rightarrow\) Zerlegung des Programmlaufs in Abschnitte, die entweder vollständig sequentiell oder vollständig parallel ablaufen und fasst sie zu jeweils einer Gruppe zusammen\footnote{\url{https://de.wikipedia.org/wiki/Amdahlsches_Gesetz\#Beschreibung}}
+	\item Gesamtausführungzeit: \(T(n) = T_{parallel}(1) \cdot \frac{1-a}{n} + T_{sequentiell}(1) \cdot a\), \(a\): Anteil des Programms, der nur sequentiell ausgeführt werden kann
+	\item \(S(n) = \frac{T(1)}{T(n)} = \frac{T(1)}{T(1) \cdot \frac{1-a}{n}+T(1) \cdot a} = \frac{1}{\frac{1-a}{n}+1}\)
+	\item Für \(n \rightarrow \infty:S(n)=\frac{1}{a}\)
+\end{itemize}
+
+
+\subsection{Verbindungsnetzwerke}
+
+\subsubsection{Verbindungsstrukturen}
+\begin{itemize}
+	\item \textbf{Verbindungsnetzwerke in Multiprozessoren}
+	\begin{itemize}
+		\item Ermöglichen die Kommunikation und Kooperation zwischen den Verarbeitungselementen
+		\item Einsatz: Chip-Multiprozessor (NoC, beispielsweise Verbinden des gemeinsamen L2-Cache), Multiprozessor mit gemeinsamem oder verteilten Speicher
+	\end{itemize}
+	\item \textbf{Charakterisierung von Verbindungsnetzwerken}
+	\begin{itemize}
+		\item Latenz
+		\begin{itemize}
+			\item Übertragungszeit einer Nachricht \(T_{msg}=t_{\text{message startup time}}+t_{\text{message transfer time}}\), Vorraussetzung: Das Netzwerk ist konfliktfrei
+			\item Kanalverzögerung (channel delay): Dauer für die Belegung eines Kommunikationskanals durch eine Nachricht
+			\item Schaltverzögerung: Zeit, die benötigt wird um einen Weg zwischen zwei Knoten aufzubauen. Pfadberechnung oder Wegfindung
+			\item Blockierungszeit: Wird verursacht, wenn zu einem Zeitpunkt mehr als eine Nachricht auf eine Netzwerkressource zugreifen will
+		\end{itemize}
+		\item Durchsatz/Übertragungsbandbreite
+		\item Bisektionsbandbreite: Maximale Bandbreite, die das Netzwerk über die Bisektionslinie (teilt das Netzwerk in zwei Hälften) transportiert werden kann
+		\item Diameter/Durchmesser: Maximale Distanz zwischen zwei Prozessoren/Knoten
+		\item Verbindungsgrad: Anzahl der Direktverbindungen pro Knoten
+		\item Mittlere Distanz: Durchschnittlicher Abstand zwischen zwei Knoten
+		\item Komplexität/Erweiterbarkeit/Skalierbarkeit
+		\item Ausfalltoleranz/Redundanz
+		\item \textbf{Art des Transfers}
+		\begin{itemize}
+			\item Durchschalte- oder Leistungsvermittlung: Schalten einer Direktverbindung zwischen zwei Knoten, blockierungsfrei, kurze Latenz, gut geeignet für lange Nachrichten
+			\item Paketvermittlung: Datenpakete fester länge werden entsprechend einem Wegfindealgorithmus übertragen, geeignet für kurze Nachrichten
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Verbindungsnetze}
+	\begin{itemize}
+		\item Statische Verbindungsnetze
+		\begin{itemize}
+			\item Nach Aufbau des Verbindungsnetzes bleiben die Strukturen fest
+			\item Vorhersagbare Kommunikationsmuster zwischen Knoten
+			\item Vollständige Verbindung: Alle Knoten sind miteinander verbunden. Höchste Leistungsfähigkeit aber nicht praktikabel bei hoher Prozessorzahl (Aufwand steigt qudratisch mit der Prozessorzahl)
+			\item Gitterstrukturen: Verbinden benachbarter Knoten. Disjunkte Bereiche können parallel genutzt werden, allerdings oft mehrere Schritte notwendig (bei unbenachbarten Knoten)
+			\item Unidirektionaler Ring: Nachrichten werden vom Quellknoten zum Zielknoten geschickt. Bei Ausfall bricht die Kommunikation zusammen
+			\item Bidirektionaler Ring: Übertragung kann die kürzeren der beiden Wege wählen. Bei einer Unterbrechung bleibt die Kommunikation bestehen
+			\item Chordaler Ring: Hinzufügen weiterer Direktverbindungen zur Erhöhung der Fehlertoleranz
+			\item Baumstruktur: Teilweise mit steigender Anzahl an Kommunikationskanälen in Richtung Wurzel
+			\item Diverse Kubusstrukturen, beispielsweise Hyperkubus: Binäre Bezeichnung der Knoten ermöglicht Routenbestimmung (benachbarte Knoten unterscheiden sich um genau eine Stelle, Start- und Zieladresse werden per XOR verknüpft)
+		\end{itemize}
+		\item Dynamische Verbindungsnetze
+		\begin{itemize}
+			\item Geeignet für dynamische Anwendungen mit variablen und nicht regulären Kommunikationsmustern
+			\item Bus: Wird von allen an den Bus angeschlossenen Prozessoren gemeinsam genutzt. Verwendung von Cache-Speichern (mit Cache-Kohärenz-Protokollen zur Synchronisiation) zur Reduzierung des Busverkehrs. Synchronisation durch Split-Phase Busprotokollen erforderlich
+			\item Kreuzschienenverteiler (Crossbar): Hardwaresystem, das aus einer Menge an Prozessoren zwischen allen disjunkten Paaren von Prozessoren blockierungsfreie Direktverbindungen zur Kommunikation aufbauen kann
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
