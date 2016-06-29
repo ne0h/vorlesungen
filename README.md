@@ -16,11 +16,11 @@ Aktuell enthalten
 ### Bachelor
 
 * Algorithmen 2
-* BWL C/FR
+* BWL: BWL C/FR
+* BWL: Financial Management
+* BWL: Investments
 * Computergrafik
 * Echtzeitsysteme
-* Financial Management
-* Investments
 * IT-Sicherheitsmanagement für vernetzte Systeme
 * Programmierparadigmen
 * Fragenkatalog: Netzsicherheit: Architekturen und Protokolle
