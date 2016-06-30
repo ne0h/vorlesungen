@@ -42,13 +42,59 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Ein System bewahrt Vertraulichkeit, wenn es keine unautorisierte Informationsgewinnung ermöglicht
 		\item Bausteine: Symmetrische oder asymmetrische Verschlüsselung
 	\end{itemize}
+	\item \textbf{Integrität}
+	\begin{itemize}
+		\item Starke Integrität: Es ist nicht möglich, Daten unautorisiert zu manipulieren
+		\item Schwache Integrität: Es ist nicht möglich, Daten unautorisiert \textit{unbemerkt} zu manipulieren. Manipulation ist in vielen Fällen nicht verhinderbar, sollte dann aber nicht unbemerkt bleiben
+		\item Bausteine: Tamper proof Module, Message Authentication Codes (MAC)
+	\end{itemize}
+	\item \textbf{Authentizität}
+	\begin{itemize}
+		\item Echtheit von Subjekten und/oder Daten
+		\item Bausteine: Zertifikate, Signaturen, gemeinsames Geheimnis
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{Typische Angriffe}
+\begin{itemize}
+	\item \textbf{Angreifermodell}
+	\begin{itemize}
+		\item Idee: Klassifikation von Angreifern nach Ressourcen/Motivation/Fähigkeiten zur Bestimmung des Sicherheitsniveaus (Gegen welche Art von Angreifer will/kann ich mich schützen?)
+		\item Dolev-Yao-Angreifer: Angreifer ist omnipräsent, kann Dateneinheiten erzeugen/versenden/modifizieren, kann allerdings nicht ver- oder entschlüsseln ohne den Schlüssel zu kennen (Angreifer einspricht "`Outsider"')
+	\end{itemize}
+	\item \textbf{Systematische Einordnung von Angriffen}
+	\begin{itemize}
+		\item Passiv: Unautorisierte Informationsgewinnung \(\rightarrow\) Vertraulichkeit
+		\item Aktiv: Unautorisierte Manipulation \(\rightarrow\) Integrität/Verfügbarkeit
+		\item Typische Angriffstechniken: Abhören/Zwischenschalten (beispielsweise MitM)/Manipulieren/Unterdrücken/Einfügen (beispielsweise DoS)/Replay
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Schutzmechanismen und Bausteine}
+\begin{itemize}
+	\item \textbf{Kryptografische Bausteine}
+	\begin{itemize}
+		\item Symmetrische oder asymmetrische Verschlüsselung
+		\item Integritätssicherung durch kryptografische Hashfunktion oder digitale Signatur
+	\end{itemize}
+	\item \textbf{Zertifikate}
+	\begin{itemize}
+		\item Authentifizierung eines Sachverhalts, den man nicht selbst überprüfen kann durch vertrauenswürdige Dritte (CA)
+		\item Digitales Dokument, in dem eine Instanz einen bestimmten Sachverhalt mittels digitaler Signatur bestätigt
+	\end{itemize}
+	\item \textbf{Authentifizierung}
+	\begin{itemize}
+		\item Dient der Überprüfung, ob ein Kommunikationspartner tatsächlich derjenige ist, der er vorgibt zu sein
+		\item Möglichkeiten: (Kombination aus) Besitz/Wissen/Biometrisches Merkmal
+		\item Mechanismen und Bausteine
+		\begin{itemize}
+			\item Passwörter oder Passwort-Hashes: Authentifikation durch Nachweis eines Geheimnissen. Nachteile u.a.: Passwortliste notwendig (Ziel für Angreifer), Passwort muss übertragen werden (Vertraulichkeit eventuell gefährdet)m oft schlechte Wahl der Passwörter
+			\item Challenge-Response-Authentifizierung: Vergleichbare Probleme wie bei Passwörtern
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 

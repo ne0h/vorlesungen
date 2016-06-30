@@ -23,11 +23,11 @@ Aktuell enthalten
 * Echtzeitsysteme
 * IT-Sicherheitsmanagement für vernetzte Systeme
 * Programmierparadigmen
-* Fragenkatalog: Netzsicherheit: Architekturen und Protokolle
 
 ### Master
 
 * BWL: Derivate
 * Mikroprozessoren 2
 * Netzsicherheit
+* Fragenkatalog: Netzsicherheit: Architekturen und Protokolle
 * Rechnerstrukturen
