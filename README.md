@@ -29,5 +29,5 @@ Aktuell enthalten
 * BWL: Derivate
 * Mikroprozessoren 2
 * Netzsicherheit
-* Fragenkatalog: Netzsicherheit: Architekturen und Protokolle
+* Netzsicherheit - Fragenkatalog
 * Rechnerstrukturen

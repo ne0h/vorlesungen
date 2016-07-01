@@ -100,6 +100,105 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \section{Schlüsselaustausch}
 
+\subsection{Problemstellung}
+\begin{itemize}
+	\item Wie können Schlüssel sicher über einen ungesicherten Kanal ausgetauscht werden?
+	\item \textbf{Statische Ansätze}
+	\begin{itemize}
+		\item Persönliche Übergabe: Sehr einfach und mit automatischer Authentifizierung, allerdings persönliches Treffen notwendig und schlechte Skalierung
+		\item Hinterlegen des Schlüsselmaterials bei einer vertrauenswürdigen Instanz
+		\begin{itemize}
+			\item Vorteile: Einfaches Verfahren, kein persönliches Treffen notwendig, weniger Schlüssel bei den Kommunikationspartnern zu speichern
+			\item Nachteile: Sicherer Kanal erforderlich, Schlüssel nur indirekt authentifiziert, zentrale Infrastuktur notwendig (Gefahr durch Ausfälle oder Korruptions)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Dynamische Ansätze}
+	\begin{itemize}
+		\item Nutzung asymmetrischer Verfahren (beispielsweise RSA)
+		\item Austausch eines geheimen, symmetrischen Sitzungsschlüssels über einen nicht vertrauenswürdigen Kanal
+		\begin{itemize}
+			\item Verschlüsselung des Sitzungsschlüssel mit öffentlichem Schlüssel des Kommunikationspartners
+			\item Vorteile: Kein persönliches Treffen oder zentrale Infrastruktur notwendig, Sitzungsschlüssel sind nach Prüfung der öffentlichen Schlüssel authentifiziert
+			\item Nachteile: Sitzungsschlüssel an langlebiges Geheimnis gebunden (keine Perfect Forward Secrecy), rechenintensiv
+		\end{itemize}
+		\item Diffie-Hellman-Verfahren
+		\begin{itemize}
+			\item Vorteile: Kein persönliches Treffen oder zentrale Infrastruktur notwendig, dynamische Aushandlung \(\rightarrow\) Perfect Forward Secrecy
+			\item Nachteile: Schlüssel nicht authentifiziert, sehr rechenintensiv
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Diffie-Hellman}
+\begin{itemize}
+	\item Problemstellung: Wie können Schlüssel sicher über einen ungesicherten Kanal ausgetauscht werden?
+	\item Vorgehen: A und B einigen sich auf gemeinsame Zufalls(prim)zahlen und leiten daraus per Einwegfunktion individuelle Geheimnissen ab, die zur gegenseitigen Echtheitsprüfung verwendet werden. Die Sicherheit beruht auf der "`schwierigen"' Rückberechnung durch die Einwegfunktion
+	\item Vorteile: Keine Infrastruktur notwendig, geheime Zufallszahlen werden nach dem Schlüsselaustausch gelöscht \(\rightarrow\) Perfect Forward Secrecy
+	\item Nachteile: Anonymer Schlüsselaustausch \(\rightarrow\) keine Authentifizierung der Teilnehmer, MitM-Angriffe möglich, rechenintensiv (und damit anfällig für DoS-Angriffe)
+\end{itemize}
+
+
+\subsection{Bausteine des Schlüsselaustauschs}
+
+\subsubsection{Schlüsselaustauschprotokolle: Bedrohungen}
+\begin{itemize}
+	\item Man-in-the-Middle-Angriffe: Schlüsselaustausch wird unwissentlich mit dem Angreifer ausgeführt
+	\item Replay-Attacken: Wiedereinspielungsangriff von zuvor aufgezeichneten Nachrichten
+	\item Denial-of-Service-Angriffen
+	\item Downgrade-Attacken: Löschen von starken Algorithmen aus Liste der unterstützten Verfahren zugunsten von veralteten (potentiell schwächeren) Verfahren
+	\item Missbräuchliche Schlüsselhinterlegung bei einer vertrauenswürdigen Organisation
+\end{itemize}
+
+\subsubsection{Bausteine}
+\begin{itemize}
+	\item \textbf{Perfect Forward Secrecy}
+	\begin{itemize}
+		\item Bedingung: Angreifer kann die Kommunikation auch dann nicht entschlüsseln, wenn er die komplette Kommunikation aufgezeichnet hat und das langlebige Geheimnis entwedet (Einbruch in Endsysteme)
+		\item Maßnahmen: Sitzungsschlüssel muss von langlebigem Geheimnis unabhängig sein, alle Sitzungsinformationen müssen nach Beendigung der Sitzung gelöscht werden, langlebiges Geheimnis muss periodisch erneuert werden
+		\item Beispiel: DH-Austausch mit Authentifizierung
+	\end{itemize}
+	\item \textbf{Schutz der Identitäten}
+	\begin{itemize}
+		\item Problem: Passiver Angreifer kann Identitäten der Kommunikationspartner abhören
+		\item Lösung: Zunächst anonymer DH-Schlüsselaustauch, danach Übertragung der Identität
+	\end{itemize}
+	\item \textbf{Dynamische Wahl der Verfahren}
+	\begin{itemize}
+		\item Dynamische Wahl der genutzten Sicherheitsmechanismn zur Verbesserung der Interoperabilität
+		\item Vorteile: Einfache Migration zu kryptographisch stärkeren Verfahren sowie Ausschluss gebrochener Verfahren
+		\item Probleme: Komplexität des Protokolls (Wie werden Sicherheitsmechanismen beschrieben und welche Kombinationen sind zulässig?), Downgrade-Angriff
+	\end{itemize}
+	\item \textbf{Verhinderung von Downgrade-Angriffen\footnote{\url{http://www.golem.de/news/browser-downgrade-angriffe-auf-tls-1309-101305.html}}}
+	\begin{itemize}
+		\item Ziel des Angreifers: Durch gezielte Verbindungsstörungen dafür sorgen, dass der Client eine Verbindung mit einer älteren Protokollversion durchführt
+		\item Anfällig sind beispielsweise Browser, die ältere Protokollversionen als Fallback nutzen: Fast alle gängigen Browser - Firefox, Chrome, Safari und der Internet Explorer - führen bei Verbindungsabbrüchen ein Downgrade auf SSLv3 durch
+		Lösungsansatz: Erkennen von Manipulationsversuchen durch Integritätsschutz (beispielsweise HMAC) aller gesendeten Nachrichten
+	\end{itemize}
+	\item \textbf{Einschränkung von DoS-Angriffen}
+	\begin{itemize}
+		\item Ziel: Keine Durchführung von rechenintensiven Operationen, solange nicht klar ist, dass die Absenderadresse nicht gefälscht ist
+		\item Möglichkeiten zur Echtheitsprüfung des Anfragenden
+		\begin{itemize}
+			\item Token/Cookie: Enthält zufällige Informationen des Angefragten. Wird es zurückgesendet, ist mit oher Wahrscheinlichkeit die Absenderadresse nicht gefälscht (beispielsweise durch IP-Spoofing)
+			\item Puzzle: Stellen einer rechenintensiven Aufgabe an den Anfragenden. Keine lokale Zustandshaltung beim Angefragten
+		\end{itemize}
+		\item Anforderungen an Tokens/Cookies: Aktualität, Eindeutigkeit, Unverhersagbarkeit, einfache Erzeugung (hoher Aufwand würde DoS-Angriff begünstigen), leichte Verifikation
+		\item Sitzungswiederaufnahme
+		\begin{itemize}
+			\item Problem: Initialer Schlüsselaufwand häufig teuer, Verbindungsabbruch bedingt erneuten Schlüsselaustausch
+			\item Zustandsbehafteter Ansatz: Zustand nach Schlüsselaustausch wird bei einem Kommunikationspartner gespeichert und kann wiederhergestellt werden (Vgl. TLS-Session-Resumption)
+			\item Zustandslos: Zustand wird komplett in geschütztes Ticket kodiert und ausgelagert. Kann bei Wiederaufnahme der Sitzung vorgelegt werden (Vgl. Tickets bei Kerberos)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Digitale Zertifikate}
+\begin{itemize}
+	\item Sichere Zuordnung von öffentlichen Schlüsseln und Identität der Kommunikationspartner
+	\item Lösung: Verwendung von Zertifikaten. Authentifizierung hier durch vertrauenswürdige Dritte und Bestätigung durch digitale Signatur (Vgl. Personalauswand/Reisepass)
+\end{itemize}
 
 
 \section{Vertrauensmodelle}
