@@ -201,7 +201,125 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \end{itemize}
 
 
+
 \section{Vertrauensmodelle}
+
+\subsection{Motivation}
+\begin{itemize}
+	\item Idee: Absichern von asymmetrisch verschlüsselter Kommunikation mit Hilfe von digitalen Zertifikaten. Zentrale Frage: Wer erstellt die vertrauenswürdige Instanz?
+	\item \textbf{Neue Probleme}
+	\begin{itemize}
+		\item Vertrauen in die CA, bzw. deren Integrität
+		\item Gültigkeit der Zertifikate
+		\item Authentizität des öffentlichen Schlüssels der CA
+		\item Konflikte, wenn mehrere CAs die selbe Entität signieren
+		\item Wer steht an der Spitze der CA(-Kette)?
+	\end{itemize}
+	\item \textbf{Widerruf digitaler Zertifikate}
+	\begin{itemize}
+		\item Widerruf manchmal notwendig, beispielsweise wenn der private Schlüssel verloren oder korrumpiert worden ist
+		\item CA stellt signierte \textit{Certificate Revocation List} zur Verfügung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Infrastrukturen}
+
+\subsubsection{Public Key Infrastructure (PKI)}
+\begin{itemize}
+	\item Zentrale Infrastructur zum Management von ID-Zertifikaten. Ermöglicht somit Authentifizierung öffentlicher Schlüssel
+	\item \textbf{Anforderungen}
+	\begin{itemize}
+		\item Vertrauenswürdigkeit
+		\item Sicherheit interner Abläufe und der Signaturschlüssel der CA
+		\item Effiziens, Skalierbarkeit, Komfort für den Benutzer
+	\end{itemize}
+	\item \textbf{Elemente}
+	\begin{itemize}
+		\item Benutzer: Person oder Serverinstanz
+		\item Registration Authority (RA): Implementiert die administrativen Aspekte der PKI, Schnittstelle zwischen Benutzer und CA
+		\item Certification Authority (CA): Führt die Zertifizierungen durch und ist für den Schutz der eigenen privaten Schlüssel zuständig
+		\item Verzeichnisdienst (Directory): Verwaltet die Zertifikate (beispielsweise LDAP) und publiziert die Widerrufslisten
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Privilege Management Infrastructure (PMI)}
+\begin{itemize}
+	\item \textbf{Methoden zur Autorisierung}
+	\begin{itemize}
+		\item Access Control List (ACL): Definiert, wer auf eine Ressource zugreifen kann
+		\item Discretionary Access Control: Individuelle, feingranulare pro Benutzer
+		\item Mandantory Access Control: Benutzer werden klassifiziert und bekommen klassenbezogene Zugirffsrechte
+		\item (Hierachical) Role-based Access Control: Benutzer werden Rollen zugewiesen, die über entsprechende Rollen verfügen. Ggf. vererbt
+		\item Attributzertifikat: Attestieren Identitäten ein bestimmtes Privileg (als Attribut implementiert). Zeitlich beschränkt und kann per CRL zurückgerufen werden
+	\end{itemize}
+	\item PMIs realisieren Autorisierung auf Basis von Attributzertifikaten. Aufbau mit PKI vergleichbar
+	\item \textbf{Aufbau einer PMI}
+	\begin{itemize}
+		\item Attribute Authority (AA, vgl. CA): vergibt Zugriffsrechte und zertifiziert diese
+		\item Source of Authority (SOA, vgl. Root CA): Oberste Attribute Autority, zertifiziert alle weiteren Privilegien
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Vertrauen/Vertrauensmodelle}
+\begin{itemize}
+	\item Vertrauen: Normal im Alltagsleben, subjektiv, unscharf, gerichten, kontextgebunden, risikoabhängig, etc.
+	\item \textbf{Vertrauensmodell (Trust Model)}
+	\begin{itemize}
+		\item Beschreibt, welchen Zertifikaten ein Benutzer trauen kann, wie Vertrauen hergestellt wird und dieses Verhalten eingeschränkt/kontrolliert werden kann
+		\item Vertrauensanker (Trust Anchor): Ausgangspunkt einer Zertifizierungskette (beispielsweise eine Root CA)
+		\item Modelle
+		\begin{itemize}
+			\item Single-CA
+			\begin{itemize}
+				\item Eine CA erstellt alle Zertifikate
+				\item Vorteil: Nur ein Vertrauensanker erleicht die Validierung
+				\item Nachteile: Globales Vertrauen notwendig, Monopolstellung, Kompromittierung des CA-Schlüssels hat globale Konsquenzen, Skalierung, Single-Point-of-Failure
+			\end{itemize}
+			\item Oligarchie von CAs
+			\begin{itemize}
+				\item Zertifizierung durch mehrere CAs (Distributed Trust Architecture)
+				\item Vorteile: Keine Monopolstellung, Kompromittierung hat begrenzte Auwirkung
+				\item Nachteile: Initiale Prüfung sowie Validierung durch mehrere CAs, mehrere CA-Schlüssel müssen geschützt werden
+			\end{itemize}
+		\end{itemize}
+		\item Transitivität von Vertrauen
+		\begin{itemize}
+			\item Transitives Vertrauen für komplexere Vertrauensmodelle notwendig
+			\item Mathematische Definition: Wenn \(A\) Vertrauen in \(B\) (und dessen Zertifizierungen) hat und \(B\) Vertrauen in \(C\) (und dessen Zertifizierungen), so kann \(A\) auch Vertrauen in \(C\) (und dessen Zertifizierungen) haben
+			\item Anstatt einem einzigen Zertifikat zu vertrauen werden jetzt Zertifikatsketten zwischen Vertrauensanker und Endpunkt aufgebaut und jede Stufe separat validiert
+		\end{itemize}
+		\item Transitive Modelle
+		\begin{itemize}
+			\item Oligarchie von CAs mit Delegierung
+			\begin{itemize}
+				\item CAs können untergeordnete CAs (Sub-CAs) einsetzen. Dadurch ergeben sich Zertifikatsketten
+				\item Vorteile: Kompromittierung von CA-Schlüsseln hat begrenzten Wirkungsbereich, Skalierung
+				\item Nachteile: Höhere CA-Schlüsselzahl notwendig, Validierung aufwendiger
+			\end{itemize}
+			\item Top-Down
+			\begin{itemize}
+				\item Single-CA mit Delegation und Einschränkunge der Delegation auf Teilbereiche eines hierarchischen Namensraums (beispielsweise DNS oder X.500)
+				\item Vorteile: Kompromittierung von CA-Schlüsseln hat begrenzten Wirkungsbereich, Skalierung, kontrollierte Delegation
+				\item Nachteile: Höhere CA-Schlüsselzahl notwendig, Validierung aufwendiger, immer Validierung des ganzen Pfades
+			\end{itemize}
+			\item Anarchie
+			\begin{itemize}
+				\item Jeder Benutzer fungiert als CA und je nach Bedarf (transitiv) eingesetzt werden (beispielsweise PGP)
+				\item Vorteil: Auswirkung bei Kompromittierung beschränkt
+				\item Nachteile: Alle Schlüssel sind CA-Schlüssel, Skalierbarkeit (hohe Anzahl Schlüssel \(\rightarrow\) Pfadfindung schwer, da nicht eindeutig), keine einheitliche Zertifizierungspolitik (Transitivität von Vertrauen problematisch), Zertifizierungen schwer kontrollierbar/einschränkbar
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Beispielprotokolle}
+
+\subsubsection{X.509}
+
+\subsubsection{OCSP/SCVP}
 
 
 
