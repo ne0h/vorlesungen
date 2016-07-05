@@ -318,8 +318,59 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \subsection{Beispielprotokolle}
 
 \subsubsection{X.509}
+\begin{itemize}
+	\item Bekannster und verbreitetster Standard für Zertifikate
+	\item Erweiterungsmöglichkeit duch optionale Parameter
+	\item Aktive Nutzung: SSL/TLS, S/MIME, IPsec, etc.
+	\item \textbf{Aufbau}
+	\begin{itemize}
+		\item Subject: Besitzer des Zertifikats
+		\item Issuer: ID des Erzeugers des Zertifikats, nächster Schritt in der Zertifikatskette
+		\item Version/Seriennummer/Signaturalgorithmus/Gültigkeit
+		\item Erweiterungen
+	\end{itemize}
+	\item \textbf{Wichtige Erweiterungen}
+	\begin{itemize}
+		\item Verwendung mehrerer Schlüssel: Mehrere Erweiterungsmöglichkeiten zur Verwendung weiterer Schlüssel
+		\item Alternativnamen für Subjekte: X.500-Namen wenig verbreitet. So können auch beispielsweise IP-Adressen, E-Mail-Adressen, Domains, etc. verwendet werden
+	\end{itemize}
+	\item \textbf{PKI-Unfälle}
+	\begin{itemize}
+		\item Immer wieder Einbrüche bei bekannten PKI-Betreibern
+		\item Microsoft Windows prüft nicht, ob eigene Zertifikate zurückgezogen worden sind \(\rightarrow\) schwächstes Glied in der Kette bestimmt die Gesamtsicherheit
+	\end{itemize}
+\end{itemize}
 
 \subsubsection{OCSP/SCVP}
+\begin{itemize}
+	\item \textbf{Online Certificate Status protocol (OCSP)}
+	\begin{itemize}
+		\item Erster Ansatz zur Onlineprüfung von zertifikaten auf Widerruf
+		\item Einfaches Frage-Antwort-Schema
+		\item Erweiterung im Zertifikat zur Spezifizierung von Respondern und das zu verwendende Protokoll (beispielsweise LDAP/HTTP). Responder wird ebenfalls signiert
+		\item Einschränkungen
+		\begin{itemize}
+			\item Antwortet nur in Bezug auf Widerruf. Keine prüfung von Verwendungszweck oder zeitliche Gültigkeit
+			\item Schlechte Skalierung beim Responder
+			\item Verringert Clientaufwand zur Zertifikatsprüfung kaum
+			\item Angreifer kann OSCP-Anfrage eventuell blockieren
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Server-based Certificate Validation Protocol (SCVP)}
+	\begin{itemize}
+		\item Soll Clients ein partielles bis vollständiges Auslagern der Zertifikatsprüfung ermöglichen
+		\item Teilweise Auslagerung
+		\begin{itemize}
+			\item Auslagerung des Aufbaus der Zertifikatskette (Delegated Path Discovery)
+			\item Client führt die Püfung der Zertifikatskette selbst durch \(\rightarrow\) kein vertrauenswürdiger Server erforderlich
+		\end{itemize}
+		\item Vollständige Auslagerung
+		\begin{itemize}
+			\item Auslagerung der kompletten Zertifikatsprüfung (Delegated Path Validation)
+			\item Vertrauenswürdiger Server erforderlich
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 
