@@ -376,6 +376,63 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \section{Authentifizierung}
 
+\subsection{Authentifizierung von Nutzern}
+
+\subsubsection{Password Authentication Protocol (PAP)}
+\begin{itemize}
+	\item Idee: Nutzer authentifiziert sich mittels Netzerkennung und dazugehörigem Passwort bei Ressource
+	\item Schwächen: Übertragung im Klartext (MitM- oder Replay-Angriff möglich), Client ist Initiator (DoS-Angriff möglich), Ressource hat Zugriff auf das Klartext-Kennwort
+	\item Praktikabel über zuvor aufgebauten sicheren Kanal mit authentifizierung der Ressource
+\end{itemize}
+
+\subsubsection{Challenge Handshake Authentication Protocol (CHAP)}
+\begin{itemize}
+	\item Client schickt einen gehashte Kombination aus Passwort und zuvor angefragter und erhaltener Challenge an den Server
+	\item Vorteile gegenüber PAP: Passwort wird nicht im Klartext übertragen, bei guter Challenge kein Replay-Angriff möglich, Hash-Algorithmus frei wählbar
+	\item Nachteil: Passwort weiterhin im Klartext gespeichert
+	\item Paxisbeispiel MS-CHAPv2 von Microsoft: Client schickt DES-verschlüsselte Kombination aus Challenge und gehashtem Passwort an den Server. DES allerdings gebrochen, daher MS-CHAPv2 nur noch über gesicherten Kanal verwendbar
+\end{itemize}
+
+\subsubsection{S/Key}
+\begin{itemize}
+	\item Ziel: Verhinderung von Replay-Angriffen, Vermeidung von Passwörtern auf Ressource
+	\item Idee: Hashkette
+	\item \textbf{Vorbereitungen}
+	\begin{itemize}
+		\item Client generiert Einmal-Kennwörter nach dem Schema: \(S_0=H(Passwort+Seed),S_1=H(S_0),...,S_n=H(S_{n-1})\)
+		\item Ressource speichert das Paar \(\{n,S_n\}\), Client speichert alle Einmalkennwörter \(S_1,...S_n\)
+	\end{itemize}
+	\item \textbf{Ablauf}
+	\begin{itemize}
+		\item Server schickt Challenge \(n\) an den Client
+		\item Client sendet \(S_{n-1}\) an den Server
+		\item Server verifiziert mittels \(H(S_{n-1})=S_n\), bestätigt/lehnt ab und speichert \(\{n-1,S_{n-1}\}\) für die nächste Authentifizierung
+		\item Wiederhole bis alle Passwörter aufgebraucht sind, danach Neugeneration
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Extensible Authentication Protocol (EAP)}
+\begin{itemize}
+	\item Idee: Generisches Protokoll mit Unterstützung beliebiger Module zur Authentifizierung
+	\item \textbf{Ablauf (dynamisch anpassbar)}
+	\begin{itemize}
+		\item Ressource sendet nach client-initiierter Authentifizierungsanfrage mehrere Anfragen an den Client: Frage nach ID/Angebot von Modulen/Challenge
+		\item Client lehnt ab oder sendet die angeforderten Daten zurück
+		\item Ressource anwortet mit (Miss-)Erfolg oder stellt weitere Fragen
+	\end{itemize}
+	\item Beispielmodule: MD5-Challenge, Generic Token Card (hardware-basiert, sonst wie CHAP), One-Time Passwort
+	\item Verpflichtende Module: Identity (ermittelt die ID des zu authentifizierdenden Clients), Notification (übertragen einer Nachricht an den CLient, welche dieser bestätigen muss), NAK (Ablehnung einer Antwort)
+	\item Viele (auch kommerzielle) Module standardisiert
+\end{itemize}
+
+
+\subsection{Authentifizierungsdienste}
+
+\subsubsection{RADIUS}
+
+\subsubsection{Diamter}
+
+\subsubsection{Kerberos}
 
 
 \section{Kerberos}
