@@ -158,7 +158,7 @@ Qualitative Abwägung er Chancen und Risiken anhand von Ausübungsdiagrammen.
 
 \begin{tabularx}{\columnwidth}{|X|X|X|X|X|}
 	\hline
-	\textbf{Chancen/Risiken} & \textbf{keine} & \textbf{begrenzt} & \textbf{fast unbegrenzt} & \textbf{unbegrenzt} \\
+	\textbf{\(\downarrow\)Chancen|Risiken\(\rightarrow\)} & \textbf{keine} & \textbf{begrenzt} & \textbf{fast unbegrenzt} & \textbf{unbegrenzt} \\
 	\hline
 	\textbf{keine} \newline sicheres Ergebnis & Zero-Bon (ohne Bonitätsrisiko) & - & - & - \\
 	\hline
@@ -172,6 +172,37 @@ Qualitative Abwägung er Chancen und Risiken anhand von Ausübungsdiagrammen.
 
 
 \subsection{Verteilungsfreie Wertgrenzen}
+Idee: Ableitung von Preisbeziehungen zwischen verschiedenen Instrumenten (Calls, Puts, Basiswert, risikoloses Instrument, etc.) ohne explizite Annahmen bzgl. zukünftiger Kursentwicklung des Basiswertes.
+
+\paragraph{Annahmen}
+\begin{itemize}
+	\item Basiswert \(S(T) \ge 0\) (beschränkte Haftung des Basiswertes)
+	\item Einmalige, sichere Dividendenzahlung in \(t_1\), \(0 < t_1 < T\), in Höhe von \(D\)
+	\item Beliebige nicht-dividendengeschützte Calls und Puts auf Basiswert verfügbar
+\end{itemize}
+
+\subsubsection{Untere und obere Wertgrenzen für Calls und Puts}
+\begin{itemize}
+	\item \textbf{Obere Wertgrenzen für Calls}
+	\begin{itemize}
+		\item W1) \(C^e \le C^a \le S(0)\)
+	\end{itemize}
+	\item \textbf{Obere Wertgrenzen für Puts}
+	\begin{itemize}
+		\item W2) \(P^e \le X(1+r)^{-T}\)
+		\item W3) \(P^a \le X\)
+	\end{itemize}
+	\item \textbf{Untere Wertgrenzen für Calls}
+	\begin{itemize}
+		\item W4) \(C^e \ge max\big(0, S(0)-X(1+r)^{-T}-D(1+r)^{-t_1}\big)\)
+		\item W5) \(C^a \ge max\big(C^e, S(0)-X\big)\)
+	\end{itemize}
+	\item \textbf{Untere Wertgrenzen für Puts}
+	\begin{itemize}
+		\item W6) \(P^e \ge max\big(0, X(1+r)^{-T}+D(1+r)^{-t_1}-S(0)\big)\)
+		\item W7) \(P^a \ge max\big(P^e, X-S(0)\big)\)
+	\end{itemize}
+\end{itemize}
 
 
 
@@ -198,6 +229,8 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 	\item Callwert zum Zeitpunkt \(t\): \(C(t)\)
 	\item Putwert zum Zeitpunkt \(t\): \(P(t)\)
 	\item Basispreis, Strike price: \(X\)
+	\item Europäischer Call- bzw. Put-Wert: \(C^e, P^e\)
+	\item Amerikanischer Call- bzw. Put-Wert: \(C^a, P^a\)
 \end{itemize}
 
 
