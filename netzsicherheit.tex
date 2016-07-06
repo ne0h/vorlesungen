@@ -427,12 +427,59 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 
 \subsection{Authentifizierungsdienste}
+Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfachpflege von Benutzeraccounts zu vermeiden.
 
 \subsubsection{RADIUS}
+\begin{itemize}
+	\item Aufgaben: Transport von Authentifizierungsdaten, Proxyfunktion zum Weiterleiten an anderen AS (Roaming)
+	\item Ursprünglich nur Unterstützung von PAP und CHAP, mittlerweile auch von EAP
+	\item Klassisches Client-Server-Protokoll, arbeitet zwischen Ressource und AS in Anwendungungsschicht oberhalb von UDP
+	\item \textbf{Rollen}
+	\begin{itemize}
+		\item Client (Supplicant): Initiiert die Authentifizierung bei der Ressource
+		\item Ressource (RADIUS-Client): Handelt Authentifizierungsverfahren mit Client aus und kommuniziert mit AS
+		\item AS (RADIUS-Server): Nimmt die Authentifizierungsanfrage entgegen, authentifiziert und autorisiert den Benutzer und gibt die Antwort zurück. Leitet die Anfrage ggf. zu betreffendem AS weiter (Roaming)
+	\end{itemize}
+	\item \textbf{Authentifizierung mit EAP}
+	\begin{itemize}
+		\item Problemstellung: Ressource authentifiziert Client meist über EAP (beispielsweise PPP, PPPoE, 802.1X). Dazu müssen allerdings Daten aufwendig zwischen EAP-Paketen und RADIUS-Attributen kopiert/umgesetzt werden
+		\item Idee/Lösungsansatz: Verwenden von RADIUS-Attribut "`EAP-Mesage"' zur Übersetzungsvermeidung in einzelne RADIUS-Attribute
+	\end{itemize}
+	\item \textbf{Roaming}
+	\begin{itemize}
+		\item Betrieb von mehreren RADIUS-Servern
+		\item Erster AS fungiert als Proxy für weitere AS und leitet alle Nachrichten weiter
+	\end{itemize}
+	\item \textbf{Sicherheitsbetrachtungen}
+	\begin{itemize}
+		\item Schutzziele (Ressource \(\leftrightarrow\) AS): Vertraulichkeit/Integrität der Nachrichten sowie Authentizität der Kommunikationspartner
+		\item Umsetzung bei RADIUS: Gemeinsames (16 Byte langes) Geheimnis zwischen Ressource und AS
+		\item Fazit
+		\begin{itemize}
+			\item Sicherheit steht und fällt mit dem Shared Secret. Dieses muss manuell verteilt werden und fehlt beim Roaming \(\rightarrow\) nicht alle Daten sind auf dem Kommunikationsweg geschützt
+			\item Sicherheit allgemein unzureichend, schwache Sicherung der Schutzziele sowie schwacher Schutz gegen Wiederholungsangriffe
+			\item Lösung: Verwenung von TLS (oberhalb von TCP) zur Sicherstellung der Schutzziele
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 \subsubsection{Diamter}
+\begin{itemize}
+	\item Nachfolger von RADIUS, allerdings nicht vollständig abwärtskompatibel
+	\item Vorteile gegenüber RADIUS: Verlässliche Transportprotokolle (TCP oder SCTP), Fokus auf Sicherheit (Verpflichtender Einsatz von IPsec oder TLS), bessere Roaming-Unterstützung, leichte Erweiterbarkeit, Basisunterstützung für Accounting
+	\item \textbf{Diameter Application}
+	\begin{itemize}
+		\item Spezifiziert Framework für Anwendungen: Dienste/Protokolle/Mobile IP/Accounting sowie Ressourcen und AS-Funktionalität
+		\item Applikationen können Diamter-Funktionalität nutzen, beispielsweise Server-/Proxykomponenten, Verbindungsaufbau, Sitzngsmanagement, Kommunikationssicherheit
+	\end{itemize}
+	\item \textbf{Sicherheitsbetrachtung}
+	\begin{itemize}
+		\item Sicherheit von Anfang an im Fokus: verwendung von IPsec vorgschrieben, Server muss zusätzlich TLS unterstützen
+		\item Hoher Schutz der Kommunikation zwischen Ressource und AS
+		\item Kommunikation zwischen Client und Ressource muss weiterhin zusätzlich gesichert werden
+	\end{itemize}
+\end{itemize}
 
-\subsubsection{Kerberos}
 
 
 \section{Kerberos}
