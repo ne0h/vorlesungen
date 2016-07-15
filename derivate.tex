@@ -82,7 +82,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\item \textbf{Beispiele für Terminpreise}
 	\begin{itemize}
 		\item Ertragloser Basiswert: \(f(0,T) = S(0)\cdot(1+r)^t \approx S(0) \cdot e^{rT}\)
-		\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(0,T) = S(0) \cdot e^{(r-q)\cdot T}\)
+		\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(t,T) = S(t) \cdot e^{(r-q)\cdot (T-t)}\)
 		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung). Alle Erträge werden entsprechend Diskontiert: \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
 	\end{itemize}
 \end{itemize}
@@ -204,6 +204,100 @@ Idee: Ableitung von Preisbeziehungen zwischen verschiedenen Instrumenten (Calls,
 	\end{itemize}
 \end{itemize}
 
+\subsubsection{Put-Call-Parität}
+\begin{itemize}
+	\item Intuitiv konstruiert: Risikolose Position aus Put long, Call short und Aktie short mit gleichem Basispreis und gleicher Fälligkeit
+	\item Arbitragemöglichkeit, wenn die Beziehung verletzt ist
+	\item Put-Call-Parität für europäische Optionen: \(C^e = P^e + S(0) - X(1+r)^{-T} - D(1+r)^{-t_1}\)
+	\item Put-Call-Ungleichung für amerikanische Optionen: \(C^a - S(0) + D + X \ge P^a \ge C^a - S(0) + X(1+r)^{-T}\)
+\end{itemize}
+
+
+\subsection{Arbitrageorientierte Bewertung}
+Ziel im Folgenden:
+\begin{itemize}
+	\item Quantiatives Modell zur Ermittlung von (fairen) Optionspreisen,
+	\item relativ zu gegebenem Preis des Basiswertes und dessen Dynamik.
+\end{itemize}
+
+\subsubsection{Einperiodige Ökonomie}
+\begin{itemize}
+	\item Zwei Zeitpunkte \(t=\{0,1\}\) mit entsprechenden Umweltzuständen sowie zwei Basiswertpapiere (ein risikoloses und ein riskantes)
+	\item \textbf{Basiswertpapiere}
+	\begin{itemize}
+		\item Risikoloses: \(P_0(0)=1\), \(P_0(1)=1+r\)
+		\item Riskantes: \(P_1(0)=S\), \(P_1(1)=\begin{cases}Su& \text{falls up-Zustand} \\Sd&\text{falls down-Zustand}\end{cases}\)
+		\item Ausschluss von Arbitrage: \(u>1+r>d\)
+	\end{itemize}
+	\item Idee: Bewertung einer Option \(P_x\) auf risikantes Wertpapier mit Ausübungswerten \(P_x(1)=\begin{cases}a^u& \text{falls up-Zustand} \\a^d&\text{falls down-Zustand}\end{cases}\)
+	\item \textbf{Äquivalente Bewertungszugänge}
+	\begin{enumerate}
+		\item Duplikationsprinzip
+		\begin{itemize}
+			\item Konstruktion eines Portefeuilles aus riskantem Wertpapier (Underlying der Option) und risikolosesm Wertpapier, das Ausübungswerte der Option repliziert
+			\item Aus dem Gesetz des einen Preises folgt der Wert des Duplikationsportefeuille, welches dem gesuchten Optionswert entspricht
+		\end{itemize}
+		\item Hedgingprinzip
+		\begin{itemize}
+			\item Konstruktion eines risikolosen Portefeuilles aus riskantem Wertpapier (Underlying der Option) und der Option
+			\item Aus dem Gesetz des einen Preises folgt, dass das Hedgeportefeuille eine risikolose Rendite erzielen muss, welchem dem gesuchten Optionswert entspricht
+		\end{itemize}
+		\item Duplikation durch Arrow-Debreu-Wertpapiere und risikoneutrale Bewertung
+		\begin{itemize}
+			\item Arrow-Debreu-Wertpapiere: Zustandspreise und risikoadjustierte (risikoneutrale) Wahrscheinlichkeiten
+			\item Risikoneutrale Bewertung unter Verwendung risikoadjustierter Wahrscheinlichkeiten (Normierung der Zustandspreise)
+		\end{itemize}
+	\end{enumerate}
+	\item Verallgemeinerung auf \(m\) Zustände mit weiterhin zwei Zeitpunkten möglich
+\end{itemize}
+
+\subsubsection{Binomialmodell}
+\begin{itemize}
+	\item Grundmodell: Diskrete Handelszeitpunkte sowie Zustandsraum mit zugehörigen Wahrscheinlichkeiten
+	\item Zwei Basiswertpapiere: Risikoloses Geldmarktkonto (Money Market Account) und riskantes Wertpapier ohne zwischenzeitliche Auszahlungen
+	\item Bezeichnung im Folgenden: \(P_x(t)^i\) (Preis des Wertpapiers \(P_x\) im Zeitpunkt \(t\) bei \(i\) Aufwärtsschritten)
+\end{itemize}
+
+\subsubsection{Zeitstetige Bewertung und das Black und Scholes Modell}
+\begin{itemize}
+	\item Black-Scholes-Formel als Grenzwert des Binomialmodells
+	\item Modellökonomie, die jederzeit Wertpapierhandel zulässt, wobei Wertpapiere beliebige Werte annehmen können. Wertpapierpreise folgen zeit- und zustandsstetigen stochastischen Prozessen
+	\item \textbf{Wichtige Eigenschaften stochastischer Prozesse}
+	\begin{itemize}
+		\item Martingaleigenschaft: Stochastischer Prozess, der über einen bedingten Erwartungswert definiert wird und im Mittel fair ist\footnote{\url{https://de.wikipedia.org/wiki/Martingal}}
+		\item Markoveigenschaft: Eine Markow-Kette ist darüber definiert, dass auch durch Kenntnis einer nur begrenzten Vorgeschichte ebenso gute Prognosen über die zukünftige Entwicklung möglich sind wie bei Kenntnis der gesamten Vorgeschichte des Prozesses\footnote{\url{https://de.wikipedia.org/wiki/Markow-Kette}}
+	\end{itemize}
+	\item \textbf{Fundamentale Bausteine zur Modellierung von Wertpapierpreisen}
+	\begin{itemize}
+		\item Normale Kursänderung: Mit kürzerem Beobachtungszeitraum werden Kursveränderungen kleiner (Wiener Prozess, im Folgenden verwendet)
+		\item Seltene Kursänderung: Mit kürzerem Beobachtungszeitraum wird Wahrscheinlichkeit der Veränderung kleiner, Größe der Veränderung ist fest (Poisson Prozess)
+	\end{itemize}
+	\item \textbf{Wiener Prozess}
+	\begin{itemize}
+		\item Definition: \(w(0)=0\), \(w(t)\) hat unabhängige Zustände, \(w(t)-w(s),t>s\) ist normalverteilt mit \(w(t)-w(s)\sim\mathcal{N}(0,t-s)\)
+		\item Lässt sich als Grenzwert einer Summe diskreter Zufallsvariablen mit gleichem Wert und gleicher Wahrscheinlichkeit auffassen (siehe Random Walk\footnote{\url{https://de.wikipedia.org/wiki/Random_Walk}}, da Martingal)
+		\item Verallgemeinert mit Aktienkurs \(x(t)\)
+		\begin{itemize}
+			\item Stochastische Differentialgleichung, welche die zeitliche Entwicklung von \(x\) beschreibt
+			\item Deterministische Entwicklung (Drift \(\alpha\)) wird von stochastischem Term (Volatilität \(\sigma\)) überlagert
+			\item \(dx(t) = \alpha(x,t)\cdot dt + \sigma(x,t)\cdot dw\)
+			\item Berechnung mit Hilfe von Itô's Lemma
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Die Black-Scholes-Bewertungsgleichung}
+	\begin{itemize}
+		\item Annahmen: Zeitstetiger Handel im Intervall \(\lbrack 0,T\rbrack\), vollkommener Kapitalmarkt, ein risikoloses Papier und eine dividendenlose Aktie mit Kursprozess, Arbitragefreiheit
+		\item Kursprozess der dividendenlosen Aktie: \(d(S) = \mu \cdot S \cdot dt + \sigma \cdot S \cdot dw\), wobei \(\mu,\sigma > 0\)
+		\item Ableitung der Bewertungsgleichung durch zeitstetige Replikation
+		\begin{itemize}
+			\item Grundüberlegung: Option wird durch die selbe Unsicherheit getrieben wie die Aktie \(\rightarrow\) durch geeignete Portefeuillebildung kann lokal risikoloses Portefeuille erzeugt werden
+			\item \(P\) selbstfinanzierendes Portefeuille mit \(\theta_1\) Aktien und \(\theta_2\) Optionen. Portefeuillewert entspricht \(\theta_1 \cdot S + \theta_2 \cdot C\)
+			\item Löst man den Preisprozess des Portefeuilles \(dP = \theta_1dS + \theta_2dC\) mit Hilfe von Itô's Lemma und setzt \(\theta_1 = -\theta_2C_s\) kann man mit Hilfe von No-Arbitrage (gleichsetzen) ein lokal risikoloses Protefeuille erzeugen
+			\item Daraus ergibt sich die undamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{Appendix A: Exkurse}
@@ -237,9 +331,49 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 \subsection{Formeln}
 \begin{itemize}
 	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(t)\cdot e^{r\cdot (T-t)}\)
+	\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(t,T) = S(0) \cdot e^{(r-q)\cdot T-t}\)
 	\item Terminpreis = Kassapreis + Haltekosten (Kreditzinsen, Lagerkosten, etc.) - Halteerträge (Dividenden, Zinserträge, etc.)
 	\item Basis = Forwardpreis - Kassapreis
 	\item Terminpreis in \(t=0\) für den Kauf des Basiswerts in \(T\) mit Halteertrag: \(f(0,T) = (S(0)-X(0))\cdot e^{rT}\)
 	\item Kontinuierlicher Zins vs. Zins p.a.: \(r_c = m \cdot ln\Big(1+\frac{r_m}{m}\Big)\), \(r_m\) bereits auf das komplette Jahr hochgerechnet
 	\item Wert eines Forward: \(W_K(t,T) = \Big(f(t,T)-f(0,T)\Big) \cdot e^{r\cdot (T-t)}\)
+	\item \textbf{Arbitragefreie Bewertung von Optionen}
+	\begin{itemize}
+		\item Einperiodige Ökonomie
+		\begin{enumerate}
+			\item Duplikationsprinzip
+			\begin{itemize}
+				\item Anzahl der riskanten Wetpapiere: \(\Delta=\frac{a^u-a^d}{S^u-S^d}\)
+				\item Anzahl der risikolosen Wertpapiere: \(B=\frac{ua^d-da^u}{(u-d)\cdot(1+r)}\)
+				\item Gesetz des einen Preises: \(P_x(0)=\Delta S+B=\Big(\frac{1+r-d}{u-d}\cdot a^u + \frac{u-(1+r)}{u-d}\cdot a^d\Big)\cdot\frac{1}{1+r}\)
+			\end{itemize}
+			\item Hedging-Prinzip
+			\begin{itemize}
+				\item Da risikolos gilt immer: \(\Delta S^u - a^u = \Delta S^d - a^d\)
+				\item \(P_x(0) = \Delta S - \frac{S^d - a^d}{1+r}\)
+			\end{itemize}
+			\item Duplikation durch Arrow-Debreu-Wertpapiere (Einperiodige Ökonomie)
+			\begin{itemize}
+				\item \(q=\frac{S(0)\cdot(1+r)-S_d(1)}{S_u(1)-S_d(1)}\)
+				\item \(C^a=C^e=\frac{1}{1+r}\cdot\Big(q\cdot W_c^u(1)+(1-q)\cdot W_c^d(1)\Big)\)
+				\item \(P^e=\frac{1}{1+r}\cdot\Big(q\cdot W_p^u(1)+(1-q)\cdot W_p^d(1)\Big)\)
+				\item \(P^a=max\Big\{P^e,X-S(0)\Big\}\)
+			\end{itemize}
+		\end{enumerate}
+		\item Binomialmodell
+		\begin{itemize}
+			\item Rückwärtsrechnung, beginnend bei \(t=T\)
+			\item \(q=\frac{S(t)\cdot(1+r)-S_d(t)}{S_u(t)-S_d(t)}\)
+			\item \(C^a=C^e=\frac{1}{1+r}\cdot\Big(q\cdot W_c^u(t)+(1-q)\cdot W_c^d(t)\Big)\)
+			\item \(P^e=\frac{1}{1+r}\cdot\Big(q\cdot W_p^u(t)+(1-q)\cdot W_p^d(t)\Big)\)
+			\item \(P^a=max\Big\{P^e,X-S(t)\Big\}\)
+			\item \(u=e^{\sigma\cdot\sqrt{\frac{T}{n}}}\), \(d=\frac{1}{u}\)
+		\end{itemize}
+		\item Black-Scholes-Modell
+		\begin{itemize}
+			\item Aktienkurs als Wiener Prozess: \(dx(t) = \alpha(x,t)\cdot dt + \sigma(x,t)\cdot dw\)
+			\item Deterministischer Prozess (\(\sigma(x,t) \equiv 0\)): \(df=f_t\cdot dt + f_x\cdot dx\)
+			\item Erweiterung auf Itô Prozess: \(df=f_t\cdot dt + f_x\cdot dx + \frac{1}{2} f_{xx}(dx)^2\)
+		\end{itemize}
+	\end{itemize}
 \end{itemize}
