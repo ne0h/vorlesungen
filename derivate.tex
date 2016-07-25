@@ -142,8 +142,8 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 		\end{itemize}
 		\item Combinations
 			\begin{itemize}
-				\item Position aus ge- und verkauften Optionsn verschiedener Klassen
-				\item Straddle: Gleiche Basispreise, gleiche Optionsfristen
+				\item Position aus ge- und verkauften Optionen verschiedener Klassen
+				\item Straddle: Gleiche Basispreise, gleiche Optionsfristen, beispielsweise ein Put long und ein Call long
 				\item Strangle: Verschiedene Basispreise, gleiche Optionsfristen
 				\item Horizontal Strangle: Verschiedene Basispreise, verschiedene Optionsfristen
 			\end{itemize}
@@ -367,7 +367,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 			\item \(C^a=C^e=\frac{1}{1+r}\cdot\Big(q\cdot W_c^u(t)+(1-q)\cdot W_c^d(t)\Big)\)
 			\item \(P^e=\frac{1}{1+r}\cdot\Big(q\cdot W_p^u(t)+(1-q)\cdot W_p^d(t)\Big)\)
 			\item \(P^a=max\Big\{P^e,X-S(t)\Big\}\)
-			\item \(u=e^{\sigma\cdot\sqrt{\frac{T}{n}}}\), \(d=\frac{1}{u}\)
+			\item \(u=e^{\sigma\cdot\sqrt{\frac{T}{n}}}\), \(d=\frac{1}{u}\). Bei nicht-homogenen Baumparametern: \(u_t=\frac{S_{t+1}}{S_t}\)
 		\end{itemize}
 		\item Black-Scholes-Modell
 		\begin{itemize}
