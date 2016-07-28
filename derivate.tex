@@ -288,12 +288,14 @@ Ziel im Folgenden:
 	\begin{itemize}
 		\item Annahmen: Zeitstetiger Handel im Intervall \(\lbrack 0,T\rbrack\), vollkommener Kapitalmarkt, ein risikoloses Papier und eine dividendenlose Aktie mit Kursprozess, Arbitragefreiheit
 		\item Kursprozess der dividendenlosen Aktie: \(d(S) = \mu \cdot S \cdot dt + \sigma \cdot S \cdot dw\), wobei \(\mu,\sigma > 0\)
+		\item Kann nur bei bekanntem, festen Basiswert herangezogen werden
 		\item Ableitung der Bewertungsgleichung durch zeitstetige Replikation
 		\begin{itemize}
 			\item Grundüberlegung: Option wird durch die selbe Unsicherheit getrieben wie die Aktie \(\rightarrow\) durch geeignete Portefeuillebildung kann lokal risikoloses Portefeuille erzeugt werden
 			\item \(P\) selbstfinanzierendes Portefeuille mit \(\theta_1\) Aktien und \(\theta_2\) Optionen. Portefeuillewert entspricht \(\theta_1 \cdot S + \theta_2 \cdot C\)
 			\item Löst man den Preisprozess des Portefeuilles \(dP = \theta_1dS + \theta_2dC\) mit Hilfe von Itô's Lemma und setzt \(\theta_1 = -\theta_2C_s\) kann man mit Hilfe von No-Arbitrage (gleichsetzen) ein lokal risikoloses Protefeuille erzeugen
-			\item Daraus ergibt sich die undamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
+			\item Daraus ergibt sich die fundamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
+			\item Sowie weitere Gleichungen zur Bestimmung geschlossener Lösungen für europäische Puts und Calls (s.u.)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -313,7 +315,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 
 \section{Appendix B: Bezeichnungen und Formeln}
 
-\subsection{Bezeichnungen}
+\subsection{Bezeichnungen und Definitionen}
 \begin{itemize}
 	\item Kassapreis des Basiswerts zum Zeitpunkt \(t\): \(S(t)\)
 	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T)\)
@@ -325,6 +327,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 	\item Basispreis, Strike price: \(X\)
 	\item Europäischer Call- bzw. Put-Wert: \(C^e, P^e\)
 	\item Amerikanischer Call- bzw. Put-Wert: \(C^a, P^a\)
+	\item Convenience Yield (verfügbarkeitsprämie): Beschreibt die Vorteile, die aus dem Besitz eines Gutes im Vergleich zum Besitz eines Derivates auf dieses Gut entstehen (beispielsweise in Zeiten drohender oder tatsächlicher Lagerengpässe\footnote{\url{https://de.wikipedia.org/wiki/Verf\%C3\%BCgbarkeitspr\%C3\%A4mie}}). Beim Vorliegen einer Convience Yield sind Terminpreise geringer
 \end{itemize}
 
 
@@ -368,12 +371,65 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 			\item \(P^e=\frac{1}{1+r}\cdot\Big(q\cdot W_p^u(t)+(1-q)\cdot W_p^d(t)\Big)\)
 			\item \(P^a=max\Big\{P^e,X-S(t)\Big\}\)
 			\item \(u=e^{\sigma\cdot\sqrt{\frac{T}{n}}}\), \(d=\frac{1}{u}\). Bei nicht-homogenen Baumparametern: \(u_t=\frac{S_{t+1}}{S_t}\)
+			\item Ein Baum ist arbitragefrei, falls: \(d<1+r<u\)
 		\end{itemize}
 		\item Black-Scholes-Modell
 		\begin{itemize}
 			\item Aktienkurs als Wiener Prozess: \(dx(t) = \alpha(x,t)\cdot dt + \sigma(x,t)\cdot dw\)
 			\item Deterministischer Prozess (\(\sigma(x,t) \equiv 0\)): \(df=f_t\cdot dt + f_x\cdot dx\)
 			\item Erweiterung auf Itô Prozess: \(df=f_t\cdot dt + f_x\cdot dx + \frac{1}{2} f_{xx}(dx)^2\)
+			\item Für zwei unabhängige Wiener-Prozesse gilt: \(\sigma_1dW_t^{(1)} \pm \sigma_2dW_t^{(2)} = \sqrt{\sigma_1^2+\sigma_2^2 \pm 2\sigma_1\sigma_2\rho}dW_t\) (bei unkorrelierten Prozessen gilt \(\rho=0\))
+			\item Fundamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
+			\item Geschlossene Lösung für europäische Calls: \(C^e(t) = S(t)N(d_1) - Xe^{-r(T-t)}N(d_1-\sigma\sqrt{T-t})\) mit \(d_1 = \frac{ln(\frac{S}{X})+(r+\frac{\sigma^2}{2})(T-t)}{\sigma\sqrt{T-t}}\)
+			\item Geschlossene Lösung für europäische Puts: \(P^e(t) = Xe^{-r(T-t)}N(-d_1+\sigma\sqrt{T-t}-S(t)N(-d_1)\) mit \(d_1 = \frac{ln(\frac{S}{X})+(r+\frac{\sigma^2}{2})(T-t)}{\sigma\sqrt{T-t}}\)
+			\item Risikoloses Portefeuille: \(P=C-C_{S_1}S_1-C_{S_2}S_2\) mit \(dP=dC-C_{S_1}dS_1-C_{S_2}dS_2\)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Lösungsansätze Klausuraufgaben}
+
+\subsection{Binomialmodell}
+
+\subsubsection{Bewertung eines Derivates}
+\begin{enumerate}
+	\item Aufstellen des Binomialbaums
+	\item Rückwärtsberechnung der Werte
+	\begin{itemize}
+		\item Bei Dividendenzahlungen werden für die Berechnung der \(q\)s die Werte vor Abzug der Dividende genommen
+		\item Bei amerikanischen Optionen kann (unmittelbar vor Auszahlung der Dividende) vorzeitig ausgeübt werden. Wert trotzdem "`fertigberechnen"'
+		\item Amerikanische Calls ohne Dividende werden nie vorzeitig ausgeübt: \(P^a=P^e\)
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Bestimmung einer Hedging-Strategie}
+\begin{enumerate}
+	\item Berechnung der \(\Delta\)s. Bei amerikanischen Optionen wird immer der Wert der amerikanischen Option gewählt
+	\item Vorwärtsberechnung der Aktionen pro Knoten. Jeweils Anpassen der Menge an Wertpapieren, der Mittelaufnahme sowie eventuelle Tilgung der Mittel der vorhergehenden Periode
+	\begin{itemize}
+		\item Nach vorzeitiger Ausübung sowie bei \(\Delta=0\) ist die Berechnung zu Ende. Hier: Kauf der Option, Rückkauf der Aktionen, Rückfluss der Mittelanlage (bzw. umgekehrt)
+		\item Dividenden werden in der entsprechenden Periode \(\Delta\)-anteilsmäßig ausgezahlt
+	\end{itemize}
+	\item Letzte Periode: Glattstellen der Portefeuilles
+\end{enumerate}
+
+
+\subsection{Black-Scholes-Modell}
+
+\subsubsection{Ableiten einer fundamentalen Bewertungsgleichung}
+Gegeben: Die Dynamik zweier Wertpapiere \(dF = (\mu_A-r)Fdt+\sigma_AFdW^{(A)}\) und \(dG = (\mu_B-r)Gdt+\sigma_BGdW^{(B)}\)
+\begin{enumerate}
+	\item Berechne Dynamik des Projekts
+	\begin{enumerate}
+		\item Einsetzen in 2-dimensonale Itô-Formel: \(dC = C_tdt + C_FdF + C_GdG + \frac{1}{2}C_{FF}(dF)^2 + \frac{1}{2}C_{GG}(dG)^2 + C_{FG}dFdG\)
+		\item Einsetzen der Dynamiken der Wertpapiere und ausmultiplizieren: \(dC = C_tdt + ... + C_{FG}\sigma_A\sigma_BFG\rho dt\) (\(\rho=0\), falls Papiere unkorreliert)
+	\end{enumerate}
+	\item Berechnen des Portefeuilles
+	\begin{enumerate}
+		\item Bestimmen der Zusammensetzung des Portefeuilles und bilden des Portefeuilles
+		\item Ableiten und einsetzen: \(dP = \Big(C_t + \frac{1}{2}C_{FF}(dF)^2 + \frac{1}{2}C_{GG}(dG)^2 + C_{FG}dFdG\Big)dt \stackrel{!}{=} Crdt\)
+		\item Auflösen
+	\end{enumerate}
+\end{enumerate}
