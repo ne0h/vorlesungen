@@ -138,7 +138,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 				\item Diagonal Spread: Verschiedenen Basispreise, verschiedene Optionsfristen
 			\end{itemize}
 			\item Ratio Spread: Anzahl der Calls (bzw. Puts) long entspricht nicht der Anzahl an Calls (Puts) short)
-			\item Beispiel Butterfly Spread: Bei dem Long Butterfly Spread werden zwei Calls gekauft und zwei Calls verkauft. Der erste gekaufte Call wird zu einem niedrigeren Kurs des Underlyings gekauft (in-the-money) und der zweite gekaufte Call wird zu einem höheren Kurs des Underlyings (out-of-the-money) erworben. Zusätzlich werden noch zwei Calls verkauft zum aktuellen Kurs des Underlyings (at-the-money)\footnote{\url{https://de.wikipedia.org/wiki/Optionsstrategie\#Butterfly_Spread}}
+			\item Beispiel Butterfly Spread: Bei dem Long Butterfly Spread werden zwei Calls gekauft und zwei Calls verkauft. Der erste gekaufte Call wird zu einem niedrigeren Kurs des Underlyings gekauft (in-the-money) und der zweite gekaufte Call wird zu einem höheren Kurs des Underlyings (out-of-the-money) erworben. Zusätzlich werden noch zwei Calls verkauft zum aktuellen Kurs des Underlyings (at-the-money). Analog invertiert auch mit Puts möglich\footnote{\url{https://de.wikipedia.org/wiki/Optionsstrategie\#Butterfly_Spread}}
 		\end{itemize}
 		\item Combinations
 			\begin{itemize}
@@ -162,7 +162,7 @@ Qualitative Abwägung er Chancen und Risiken anhand von Ausübungsdiagrammen.
 	\hline
 	\textbf{keine} \newline sicheres Ergebnis & Zero-Bon (ohne Bonitätsrisiko) & - & - & - \\
 	\hline
-	\textbf{begrenzt} \newline begrenzt auf Zahlung in \(t=0\) & - & Money Spread: Butterflies & Put short & Call short \\
+	\textbf{begrenzt} \newline begrenzt auf Zahlung in \(t=0\) & - & Money Spread: Butterfly & Put short & Call short \\
 	\hline
 	\textbf{fast begrenzt} \newline Vielfaches der Zahlung in \(t=0\) & - & Put long & Put short (X)\newline Call long (X)\newline Call short (2X) & Put long + Call short = Aktie short \\
 	\hline
@@ -292,10 +292,14 @@ Ziel im Folgenden:
 		\item Ableitung der Bewertungsgleichung durch zeitstetige Replikation
 		\begin{itemize}
 			\item Grundüberlegung: Option wird durch die selbe Unsicherheit getrieben wie die Aktie \(\rightarrow\) durch geeignete Portefeuillebildung kann lokal risikoloses Portefeuille erzeugt werden
-			\item \(P\) selbstfinanzierendes Portefeuille mit \(\theta_1\) Aktien und \(\theta_2\) Optionen. Portefeuillewert entspricht \(\theta_1 \cdot S + \theta_2 \cdot C\)
+			\item Sei \(P\) ein selbstfinanzierendes Portefeuille mit \(\theta_1\) Aktien und \(\theta_2\) Optionen. Portefeuillewert entspricht \(\theta_1 \cdot S + \theta_2 \cdot C\)
 			\item Löst man den Preisprozess des Portefeuilles \(dP = \theta_1dS + \theta_2dC\) mit Hilfe von Itô's Lemma und setzt \(\theta_1 = -\theta_2C_s\) kann man mit Hilfe von No-Arbitrage (gleichsetzen) ein lokal risikoloses Protefeuille erzeugen
 			\item Daraus ergibt sich die fundamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
 			\item Sowie weitere Gleichungen zur Bestimmung geschlossener Lösungen für europäische Puts und Calls (s.u.)
+		\end{itemize}
+		\item Ableitung der Bewertungsgleichung durch risikoneutrale Bewertung
+		\begin{itemize}
+			\item 
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -339,7 +343,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 	\item Basis = Forwardpreis - Kassapreis
 	\item Terminpreis in \(t=0\) für den Kauf des Basiswerts in \(T\) mit Halteertrag: \(f(0,T) = (S(0)-X(0))\cdot e^{rT}\)
 	\item Kontinuierlicher Zins vs. Zins p.a.: \(r_c = m \cdot ln\Big(1+\frac{r_m}{m}\Big)\), \(r_m\) bereits auf das komplette Jahr hochgerechnet
-	\item Wert eines Forward: \(W_K(t,T) = \Big(f(t,T)-f(0,T)\Big) \cdot e^{r\cdot (T-t)}\)
+	\item Wert eines Forward: \(W_K(t,T) = \Big(f(t,T)-f(0,T)\Big) \cdot e^{-r\cdot (T-t)}\)
 	\item \textbf{Arbitragefreie Bewertung von Optionen}
 	\begin{itemize}
 		\item Einperiodige Ökonomie
