@@ -20,7 +20,7 @@ Zusammenfassung der Vorlesung "`Derivate"' aus dem Sommersemester 2016.\footnote
 	\end{itemize}
 	\item \textbf{Typische Handelsmotive}
 	\begin{itemize}
-		\item Hedging: Reduktion des Risikos einer bestehenden der zukünftig aufzubauenden Kassaposition
+		\item Hedging: Reduktion des Risikos einer bestehenden oder zukünftig aufzubauenden Kassaposition
 		\item Spekulation: Aufbau einer Position zur Umsetzung von Erwartungen
 		\item Arbitrage: Ausnutzung von Preisunterschieden auf verschiedenen Märkten
 	\end{itemize}
@@ -61,7 +61,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\item \textbf{Arbitrageorientiert:} Replikation der zukünftigen Zahlungen durch Basiswertpapiere sowie Arbitragefreiheit \(\rightarrow\) Ergebnisse bei gegebener Dynamik der Preise der Basiswertpapiere präferenzfrei. Spezialfall des allgemeinen gleichgewichtsorientierten Ansatzes und funktioniert daher nicht immer (s.u.)
 	\begin{itemize}
 		\item Reine Relativbewertung, führt zu praktikablen Bewertungsmodellen, deren Eingangsgrößen weitgehend objektiv ermittelbar sind
-		\item Funktioniert nicht, wenn Werte beispielsweise im wesentlichen von nichthandelbaren Absatzrisikien abhängen (Bsp.: Wetterderivat)
+		\item Funktioniert nicht, wenn Werte beispielsweise im wesentlichen von nichthandelbaren Absatzrisiken abhängen (Bsp.: Wetterderivat)
 	\end{itemize}
 \end{itemize}
 
@@ -75,7 +75,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\item \textbf{Ermittlung des fairen (arbitragefreien) Terminpreises \(f(t,T))\): Cash und Carry Arbitrage}
 	\begin{itemize}
 		\item Forward löst bei Abschluss keine Zahlung aus und besitzt einen Wert von \(0\), d.h. der Terminpreis \(f(t,T)\) ist gerade so festgelegt, dass das Geschäft für beide Parteien fair ist
-		\item Prinzip: Synthetisches Erzeugen des Forwards durch soforten Kauf des lagerfähigen Basiswerts sowie Kreditaufnahme in Höhe des aktuellen Preises
+		\item Prinzip: Synthetisches Erzeugen des Forwards durch sofortigen Kauf des lagerfähigen Basiswerts sowie Kreditaufnahme in Höhe des aktuellen Preises
 		\item Im einfachsten Fall entspricht der faire Terminpreis dem aufgezinsten Kassapreis (ohne Haltekosten etc.)
 		\item Basis konvergiert am Ende immer gegen \(0\), da zu diesem Zeitpunkt das Termingeschäft einem Kassageschäft entspricht
 	\end{itemize}
@@ -83,7 +83,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\begin{itemize}
 		\item Ertragloser Basiswert: \(f(0,T) = S(0)\cdot(1+r)^t \approx S(0) \cdot e^{rT}\)
 		\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(t,T) = S(t) \cdot e^{(r-q)\cdot (T-t)}\)
-		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung). Alle Erträge werden entsprechend Diskontiert: \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
+		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung). Alle Erträge werden entsprechend diskontiert: \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
 	\end{itemize}
 \end{itemize}
 
@@ -333,7 +333,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 
 \subsection{Formeln}
 \begin{itemize}
-	\item Terminpreis in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(t)\cdot e^{r\cdot (T-t)}\)
+	\item Terminpreis (Cash-und-Carry-Preis) in \(t\) für den Kauf des Basiswerts in \(T\): \(f(t,T) = S(t)\cdot e^{r\cdot (T-t)}\)
 	\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(t,T) = S(0) \cdot e^{(r-q)\cdot T-t}\)
 	\item Terminpreis = Kassapreis + Haltekosten (Kreditzinsen, Lagerkosten, etc.) - Halteerträge (Dividenden, Zinserträge, etc.)
 	\item Basis = Forwardpreis - Kassapreis
@@ -346,7 +346,7 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 		\begin{enumerate}
 			\item Duplikationsprinzip
 			\begin{itemize}
-				\item Anzahl der riskanten Wetpapiere: \(\Delta=\frac{a^u-a^d}{S^u-S^d}\)
+				\item Anzahl der riskanten Wertpapiere: \(\Delta = \frac{\text{Up-Down-Differenz des Papiers}}{\text{Up-Down-Differenz des Underlying}}\), beispielsweise \(\Delta=\frac{a^u-a^d}{S^u-S^d}\)
 				\item Anzahl der risikolosen Wertpapiere: \(B=\frac{ua^d-da^u}{(u-d)\cdot(1+r)}\)
 				\item Gesetz des einen Preises: \(P_x(0)=\Delta S+B=\Big(\frac{1+r-d}{u-d}\cdot a^u + \frac{u-(1+r)}{u-d}\cdot a^d\Big)\cdot\frac{1}{1+r}\)
 			\end{itemize}
@@ -357,11 +357,15 @@ Variation der Verzinsungsperiode: \(r_m\) Zinssatz p.a. bei \(m\) Verzinsungsper
 			\end{itemize}
 			\item Duplikation durch Arrow-Debreu-Wertpapiere (Einperiodige Ökonomie)
 			\begin{itemize}
-				\item \(q_{Aktie}=\frac{S(0)\cdot(1+r)-S_d(1)}{S_u(1)-S_d(1)}\)
-				\item \(q_{Future}=\frac{1-d}{u-d}\)
-				\item \(C^a=C^e=\frac{1}{1+r}\cdot\Big(q\cdot W_c^u(1)+(1-q)\cdot W_c^d(1)\Big)\)
+				\item Berechnung der qs
+				\begin{itemize}
+					\item \(q_{Aktie}=\frac{S(0)\cdot(1+r)-S_d(1)}{S_u(1)-S_d(1)}\)
+					\item \(q_{Future}=\frac{1-d}{u-d}\)
+				\end{itemize}
+				\item \(C^e=\frac{1}{1+r}\cdot\Big(q\cdot W_c^u(1)+(1-q)\cdot W_c^d(1)\Big)\)
 				\item \(P^e=\frac{1}{1+r}\cdot\Big(q\cdot W_p^u(1)+(1-q)\cdot W_p^d(1)\Big)\)
-				\item \(P^a=max\Big\{P^e,X-S(0)\Big\}\)
+				\item \(C^a=C^e\), falls Underlying dividendenlos, ansonsten \(C^a=max\Big\{C^e,S(T)-X\Big\}\)
+				\item \(P^a=max\Big\{P^e,X-S(T)\Big\}\)
 			\end{itemize}
 		\end{enumerate}
 		\item Binomialmodell
