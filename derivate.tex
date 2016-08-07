@@ -85,6 +85,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 		\item Ertragsloser Basiswert mit erwarteter Rendite \(q\): \(f(t,T) = S(t) \cdot e^{(r-q)\cdot (T-t)}\)
 		\item Einmalige, sichere Zahlung \(X\) in \(t_1\) (Bsp.: Dividenden- oder Kuponzahlung). Alle Erträge werden entsprechend diskontiert: \(f(0,T) = \big(S(0)-X(0)\big)\cdot (1+r)^T = \big(S(0)-X(0)\big)\cdot e^{rT}\)
 	\end{itemize}
+	\item Bei deterministischen Zinssätzen stimmen die Preise von Forwards und Futures überein, bei stochastischen Zinssätzen sind sie i.d.R. unterschiedlich
 \end{itemize}
 
 
@@ -123,7 +124,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 	\begin{itemize}
 		\item Hedge
 		\begin{itemize}
-			\item Kombination von Wertpapieren mit Optionen
+			\item Kombination von Wertpapieren mit Optionen. Verluste des einen Instruments sollen durch Gewinne des anderen gedeckt werden
 			\item 1:1 Hedge: Gleiche Anzahl von Wertpapieren und Optionen, Ratio Hedge: Jeweils flexible, ungleiche Anzahl
 			\item Covered Call (1:1 Hedge): Bei einem Covered Call erwirbt man einen Basiswert und verkauft gleichzeitig eine Call-Option auf diesen. Dadurch ist die offene Position im Call durch den Basiswert "`gedeckt"'. Der Ertrag der Strategie stammt allein aus dem Verkauf der Option. Dafür darf der Basiswert zum Ausübungsdatum nicht unter den Ausübungspreis der Kaufoption abzüglich dessen Wert zum Zeitpunkt des Verkaufs fallen (Break-Even-Kurs). Aus diesem Grund bildet man Covered Calls eher dann, wenn man von einem etwa unveränderten Kurs zum Ende der Laufzeit ausgeht, d. h. nur leicht steigender oder fallender Kurs des Basiswerts. Gewinne sind grundsätzlich auf den Ausübungspreis des Calls beschränkt, wohingegen Kursverluste im Basiswert, ab dem Break-Even-Kurs, in voller Höhe mitgetragen werden.\footnote{\url{https://de.wikipedia.org/wiki/Covered_Call}}
 			\item Protective Put (1:1 Hedge): Bei einem Protective Put erwirbt man das Underlying und eine Put-Option dazu. Der Sinn ist, sich mit der Put-Option gegen ein Kursverfallsrisiko zu versichern. Ein Protective Put sichert sich einen Mindestverkaufspreis und zahlt dafür einen Aufschlag.\footnote{\url{https://de.wikipedia.org/wiki/Protective_Put}}
@@ -201,6 +202,21 @@ Idee: Ableitung von Preisbeziehungen zwischen verschiedenen Instrumenten (Calls,
 	\begin{itemize}
 		\item W6) \(P^e \ge max\big(0, X(1+r)^{-T}+D(1+r)^{-t_1}-S(0)\big)\)
 		\item W7) \(P^a \ge max\big(P^e, X-S(0)\big)\)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Beziehungen in Abhängigkeit des Basispreises}
+\begin{itemize}
+	\item \textbf{Monotonie im Basispreis}
+	\begin{itemize}
+		\item B1) \(C^{e,a}(X_1) \ge C^{e,a}(X_2)\) falls \(X_1 \le X_2\)
+		\item B2) \(P^{e,a}(X_1) \le P^{e,a}(X_2)\) falls \(X_1 \le X_2\)
+	\end{itemize}
+	\item \textbf{Komplexität im Basispreis}
+	\begin{itemize}
+		\item B3) \(C^{e,a}(X_2) \le \lambda C^{e,a}(X_1) + (1-\lambda C^{e,a}(X_3)\) mit \(X_1 < X_2 < X_3\)
+		\item B4) \(P^{e,a}(X_2) \le \lambda P^{e,a}(X_1) + (1-\lambda P^{e,a}(X_3)\) mit \(X_2 = \lambda X_1 + (1-\lambda) X_3\)
+		\item B5-B8) Betrag der Differenz der Optionswerte \(\le\) Betrag der Differenz der (bei europäischen abgezinsten) Basispreisen
 	\end{itemize}
 \end{itemize}
 
@@ -284,7 +300,7 @@ Ziel im Folgenden:
 			\item Berechnung mit Hilfe von Itô's Lemma
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{Die Black-Scholes-Bewertungsgleichung}
+	\item \textbf{Die Black/Scholes-Bewertungsgleichung}
 	\begin{itemize}
 		\item Annahmen: Zeitstetiger Handel im Intervall \(\lbrack 0,T\rbrack\), vollkommener Kapitalmarkt, ein risikoloses Papier und eine dividendenlose Aktie mit Kursprozess, Arbitragefreiheit
 		\item Kursprozess der dividendenlosen Aktie: \(d(S) = \mu \cdot S \cdot dt + \sigma \cdot S \cdot dw\), wobei \(\mu,\sigma > 0\)
@@ -297,6 +313,47 @@ Ziel im Folgenden:
 			\item Daraus ergibt sich die fundamentale Bewertungsgleichung: \(C_t + C_sSr + \frac{1}{2}C_{SS}\sigma^2S^2 = Cr\)
 			\item Sowie weitere Gleichungen zur Bestimmung geschlossener Lösungen für europäische Puts und Calls (s.u.)
 		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Black/Scholes-Modell mit Dividenden während der Optionsfrist}
+\begin{enumerate}
+	\item Sichere Dividende in Höhe von \(D\) in \(t_1\)
+	\begin{itemize}
+		\item Aktionskurs sinkt in \(t_1\) um \(D\)
+		\item Idee: Zerlegung des Aktienkurses vor \(t_1\) in zwei Komponenten: Wert der sicheren Dividende \(D\cdot e^{-r(t_1-t)}\) und verbliebenen, unsicheren Teil \(S(t)-D\cdot e^{-r(t_1-t)}\)
+		\item Für die Optionsbewertung ist nur der unsichere Teil interessant \(\rightarrow\) ersetze \(S(t)\) durch \(S(t)-D\cdot e^{-r(t_1-t)}\)
+	\end{itemize}
+	\item Stetige Dividendenrendite mit Rate \(\delta\)
+	\begin{itemize}
+		\item Bei Reinvestition der Dividendenzahlung in die Aktie wächst der Aktienbestand mit Rate \(\delta\)
+		\item Aus einer Aktie in \(t\) werden \(e^{\delta(T-t)}\)
+		\item Ersetze in Black/Scholes-Formel \(\S(t)\) durch \(S(t)e^{-\delta(T-t)}\)
+	\end{itemize}
+\end{enumerate}
+Damit bezeichnet \(dS(t) = (\mu - \delta)Sdt + \sigma Sdw\) den Kursprozess der Aktie.
+
+\subsubsection{Amerikanische Optionen im Black/Scholes-Modell}
+\begin{itemize}
+	\item Ohne Dividende gilt \(C^e = C^a\)
+	\item Mit sicherer Dividende: Ausübung nur unmittelbar vor Dividendentermin optiomal. Bestimmung über das Maximum der europäischen Callwerte \(C^a = max\{C^e(t_1),...,C^e(T)\}\) \(\rightarrow\) vorzeitige Ausübung i.d.R. entweder vor letztem Dividendentermin optimal oder gar nicht
+	\item Bei unsicherer Dividende sind numerische Methoden notwendig (keine geschlossene Lösung)
+\end{itemize}
+
+\subsubsection{Historische und implizite Volatilitäten}
+\begin{itemize}
+	\item Umsetzung des BS-Modells erfordert Kenntnis der Input-Parameter: Basispreis, Preis des Underlyings, risikoloser Zinssatz bekannt oder beobachtbar
+	\item Verbleibende unbekannte Größe: Volatilität. Ermittlung durch historische Kurszeitreihen oder implizit in Optionspreisen enthalten
+\end{itemize}
+
+\subsubsection{Volatility Smile bzw. Skew}
+\begin{itemize}
+	\item Beschreibt, dass die implizite Volatilität umso niedriger ist, je mehr die Option im Geld ist
+	\item Erlärungsversuch für Smile: Extreme Änderungen häufiger als durch Log-Normalverteilung unterstellt, aufgrund von nicht-konstanter Volatilität oder von Sprüngen 
+	\item \textbf{Erklärungsversuche für Skew}
+	\begin{itemize}
+		\item Sinkende Aktienkurse führen zu stärker verschuldeten Unternehmen \(\rightarrow\) höheres Risiko \(\rightarrow\) höhere Volatilität
+		\item Crashphobie: Nach Oktober-87-Crash erhöhte Nachfrage nach out-of-the-money Puts (ABsicherungsinstrument)
 	\end{itemize}
 \end{itemize}
 
@@ -439,3 +496,14 @@ Gegeben: Die Dynamik zweier Wertpapiere \(dF = (\mu_A-r)Fdt+\sigma_AFdW^{(A)}\) 
 		\item Auflösen, so dass \(r\cdot C\) alleine auf einer Seite steht
 	\end{enumerate}
 \end{enumerate}
+
+\subsection{Diverses}
+\begin{itemize}
+	\item Duplizierung eines Forwardpreises: Put short und Call long mit gleicher Laufzeit und gleichem Basispreis
+	\item \textbf{Future als Underlying eines Calls}
+	\begin{enumerate}
+		\item Berechne Terminpreise des Future für alle Zustände in \(t_0\) bis \(t_{T-1}\) (hinterste Reihe bleibt unverändert da an dieser Stelle der Kassapreis dem Terminpreis nahezu entspricht)
+		\item Berechne Preis des Calls auf Basis dieser Terminpreise
+		\item Duplikationsportefeuille: Keine Zahlung in \(t=0\), ab \(t=1\) dann jeweils Zahlungen über \(\Delta\cdot(f(t_i,T)-f(t_{i-1},T))\)
+	\end{enumerate}
+\end{itemize}
