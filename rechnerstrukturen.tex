@@ -487,7 +487,20 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\begin{itemize}
 			\item Geeignet für dynamische Anwendungen mit variablen und nicht regulären Kommunikationsmustern
 			\item Bus: Wird von allen an den Bus angeschlossenen Prozessoren gemeinsam genutzt. Verwendung von Cache-Speichern (mit Cache-Kohärenz-Protokollen zur Synchronisiation) zur Reduzierung des Busverkehrs. Synchronisation durch Split-Phase Busprotokollen erforderlich
-			\item Kreuzschienenverteiler (Crossbar): Hardwaresystem, das aus einer Menge an Prozessoren zwischen allen disjunkten Paaren von Prozessoren blockierungsfreie Direktverbindungen zur Kommunikation aufbauen kann
+			\item Kreuzschienenverteiler (Crossbar)
+			\begin{itemize}
+				\item Hardwaresystem, das in einer Menge an Prozessoren zwischen allen disjunkten Paaren von Prozessoren blockierungsfreie Direktverbindungen zur Kommunikation aufbauen kann. Schaltelemente an allen Kreuzungspunkten \(\rightarrow\) hoher Hardwareaufwand
+				\item Schalterelemente (2x2-Kreuzschienenverteiler) bestehen aus Zweierschaltern mit je zwei Ein- und Ausgängen, die entweder durch- oder über kreuz schalten können
+			\end{itemize}
 		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsection{Multiprozessoren mit gemeinsamem Speicher}
+\begin{itemize}
+	\item Gültigkeitsproblem: Paralleler Zugriff mehrere Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
+	\item \textbf{Cache-Kohärenz-Problem}
+	\begin{itemize}
+		\item 1. Fall (IO-Problem):
 	\end{itemize}
 \end{itemize}
