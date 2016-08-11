@@ -496,11 +496,10 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\end{itemize}
 \end{itemize}
 
+
 \subsection{Multiprozessoren mit gemeinsamem Speicher}
 \begin{itemize}
 	\item Gültigkeitsproblem: Paralleler Zugriff mehrere Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
-	\item Ein paralleles Programm, das auf einem Multiprozessor läuft, kann mehrere Kopien eines Datums in mehreren Caches haben
-	\item Vereinfachte Definition "`Cache-Kohärenz"': Ein Speichersystem ist kohärent, wenn jeder Lesezugriff auf ein Datum den aktuellen, geschriebenen Wert dieses Datums liefert
 	\item \textbf{Cache-Kohärenz-Problem}
 	\begin{itemize}
 		\item 1. Fall (IO-Problem): System mit einem Mikroprozessor und weiteren Komponenten mit Master-Funktion (ohne Cache)
@@ -516,6 +515,52 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item 2. Fall: Speichergekoppeltes Multiprozessorsystem
 		\begin{itemize}
 			\item Mehrere Prozessoren mit jeweils eigenem Cache-Speicher sind über einen Systembus an einen gemeinsamen Hauptspeicher angebunden
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Kohärenz}
+	\begin{itemize}
+		\item Vereinfachte Definition "`Cache-Kohärenz"': Ein Speichersystem ist kohärent, wenn jeder Lesezugriff auf ein Datum den aktuellen, geschriebenen Wert dieses Datums liefert
+		\item Ein paralleles Programm, das auf einem Multiprozessor läuft, kann mehrere Kopien eines Datums in mehreren Caches haben
+		\item Möglichkeiten, die Kohärenzanforderungen zu erfüllen
+		\begin{itemize}
+			\item Write-invalidate-Protokoll: Sicherstellen, dass ein Prozessor exklusiven Zugriff auf ein Datum hat, bevor er schreiben darf. Vor dem Verändern einer Kopie in einem Cache-Speicher müssen alle Kopien in anderen Cache-Speichern für ungültig erklärt werden
+			\item Write-update-Protokoll: Beim Verändern einer Kopie in einem Cache-Speicher müssen alle Kopien in anderen Cache-Speichern ebenfalls verändert werden, wobei die Aktualisierung auch verzögert (allerdings spätestens beim Zugriff) erfolgen kann
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Kohärenzprotokolle}
+	\begin{itemize}
+		\item Bus-Snooping: Caches sind an einem gemeinsamen Bus und beobachten diesen, um feststellen zu können, ob sie eine Kopie eines Blocks enthalten, der benötigt wird
+		\item MESI-Kohärenzprotokoll (Hardware)
+		\begin{itemize}
+			\item Jeder Cache verfügt über Snoop-Logik und Steuersignale: Invalidate-Signal (zum Invalidieren von EInträgen in anderen Caches), Shared-Signal (zeigt an, ob ein zu ladender Block bereits als Kopie besteht) und Retry-Signal (Aufforderung für den Prozessor das Laden eines Blocks abzubrechen. Nachdem ein anderer Prozessor aus dem Cache in den Hauptspeicher zurückgeschrieben hat wird das Laden wieder aufgenommen)
+			\item Erweiterung jeder Cache-Zeile um zwei Steuerbits zum Anzeigen der Zustände:
+			\begin{itemize}
+				\item Invalid (I): Die Cache-Zeile ist ungültig. Mittels Shared-Signal zeigen die anderen Steuerungen an, ob sie diesen Block gespeichert haben (shared read hit/miss). Davon abhängig erfolgt der Übergang in \(S\) oder \(E\). Bei einem Write-Miss erfolgt der Übergang in \(M\)
+				\item Shared (S): Der Speicherblock existiert sowohl lokal als auch in anderen Caches. Bei einem Schreibzugriff übergang in Zustand \(M\) und Ausgeben des Invalidate-Signals
+				\item Exclusive (E): Der Speicherblock existiert exklusiv nur in der Zeile dieses Caches. Lese- und Schreibzugriffe möglich, ohne den Bus benutzen zu müssen. Nach Schreibzugriff, Wechsel in \(E\)
+				\item Modified (M): Der Speicherblock existiert nur lokal und ist nach dem Laden verändert worden. Bei einem externen Zugriff durch einen anderen Prozessor muss dieser in den Hauptspeicher zurückkopiert werden. Der externe Prozessor wird über das Retry-Signal informiert, dass zunächst zurückgeschrieben werden muss
+			\end{itemize}
+			\item Zustandsgraphen und Beispiel in den Folien\footnote{VL-07 Folie 2-40 bis 2-47}
+		\end{itemize}
+		\item Distributed Shared Memory
+		\begin{itemize}
+			\item Multiprozessor mit verteiltem, gemeinsamem Speicher ohne Möglichkeit, die Broadcasteigenschaft des Busses zu nutzen
+			\item Verzeichnisbasierte, tabellenartige Cache-Kohärenzprotokolle, die in Hardware oder Software implementiert sein können
+			\item Die Tabelle protokolliert für jeden Block im loken Speicher, ob dieser in den lokalen oder einen entfernten Cache-Speicher übertragen worden ist und hält die Zustände als Kopien
+			\item Zustände werden ähnlich denen des MESI-Protokolls definiert
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Speicherkonsistenz}
+	\begin{itemize}
+		\item Sequentielle Konsistenz: Ein Multiprozessorsystem heißt sequentiell konsistent, wenn das Ergebnis einer beliebigen Berechnung dasselbe ist, als wenn die Operation sequentiell auf einem Einprozessorsystem ausgeführt worden ist
+		\item Atomar Schreibzugriffe
+		\item Programmierer geht von sequentieller Konsistenz aus \(\rightarrow\) sehr starke Leistungseinbußen bzgl. der Implementierung und der Leistung. Verbietet vorgezogene Ladeoperationen und nicht-blockierende Caches
+		\item Schwache Konsistenz (Speicherkonsistenzmodell)
+		\begin{itemize}
+			\item Konkurrierende Zugriffe auf gemeinsame Daten werden durch Sychronisationen geschützt (beispielsweise Semaphoren oder Mutecies)
+			\item Idee: Konsistenz des Speicherzugriffs wird nicht mehr zu allen Zeiten gewährleistet sondern nur zu definierten Synchronisationspunkten. Einführung "`kritischer Bereiche"' innerhalb denen keine Synchronisation gewährleistet sein muss
+			\item Voraussetzung: Hardware oder softwareseitige Unterscheidung der Synchronisationsbefehlen von den LS-Befehlen und eine sequentiell konsistente Implementierung der Synchronisationsbefehle
+			\item Atomare, nicht-unterbrechbare LS-Befehle auf den Speicher. Synchronisation auf Benutzerebene. Häufige Implementierung: Spin Locks oder Barriers
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
