@@ -499,8 +499,23 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \subsection{Multiprozessoren mit gemeinsamem Speicher}
 \begin{itemize}
 	\item Gültigkeitsproblem: Paralleler Zugriff mehrere Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
+	\item Ein paralleles Programm, das auf einem Multiprozessor läuft, kann mehrere Kopien eines Datums in mehreren Caches haben
+	\item Vereinfachte Definition "`Cache-Kohärenz"': Ein Speichersystem ist kohärent, wenn jeder Lesezugriff auf ein Datum den aktuellen, geschriebenen Wert dieses Datums liefert
 	\item \textbf{Cache-Kohärenz-Problem}
 	\begin{itemize}
-		\item 1. Fall (IO-Problem):
+		\item 1. Fall (IO-Problem): System mit einem Mikroprozessor und weiteren Komponenten mit Master-Funktion (ohne Cache)
+		\begin{itemize}
+			\item Zusätzlicher Master (beispielsweise DMA-Controller) kann Kontrolle über den Bus übernehmen und prozessorunabhängig auf den Hauptspeicher zugreifen
+			\item Problem: Prozessor oder DMA-Controller lesen eventuell veraltete Daten (stale data)
+			\item Lösungen des Kohärenzproblems
+			\begin{itemize}
+				\item Non-Cacheable Data: Der gemeinsam genutzte Speicherbereich wird nicht gecacht bzw. mit "`non-cacheable gekennzeichnet"'
+				\item Cache-Clear/Cache-Flush: Nach einem DMA-Vorgang wird der Cache automatisch neu geladen
+			\end{itemize}
+		\end{itemize}
+		\item 2. Fall: Speichergekoppeltes Multiprozessorsystem
+		\begin{itemize}
+			\item Mehrere Prozessoren mit jeweils eigenem Cache-Speicher sind über einen Systembus an einen gemeinsamen Hauptspeicher angebunden
+		\end{itemize}
 	\end{itemize}
 \end{itemize}

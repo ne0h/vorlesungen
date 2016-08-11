@@ -57,7 +57,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 
 \subsubsection{Arbitrage- und gleichgewichtsorientierte Bewertung}
 \begin{itemize}
-	\item \textbf{Gleichgewichtsorientiert:} Explizite Modellierung des individuellen Risikos und Nutzenkalküls sowie Markträumung \(\rightarrow\) abhängig von beobachtbaren Größen wie Risikopräferenzen, Aussattungen, Planugshorizonten etc.
+	\item \textbf{Gleichgewichtsorientiert:} Explizite Modellierung des individuellen Risikos und Nutzenkalküls sowie Markträumung \(\rightarrow\) abhängig von beobachtbaren Größen wie Risikopräferenzen, Aussattungen, Planungshorizonten etc.
 	\item \textbf{Arbitrageorientiert:} Replikation der zukünftigen Zahlungen durch Basiswertpapiere sowie Arbitragefreiheit \(\rightarrow\) Ergebnisse bei gegebener Dynamik der Preise der Basiswertpapiere präferenzfrei. Spezialfall des allgemeinen gleichgewichtsorientierten Ansatzes und funktioniert daher nicht immer (s.u.)
 	\begin{itemize}
 		\item Reine Relativbewertung, führt zu praktikablen Bewertungsmodellen, deren Eingangsgrößen weitgehend objektiv ermittelbar sind
@@ -139,7 +139,7 @@ Annahme: Wertpapierpreise stellen sich so ein, dass keine risikolosen Gewinne (A
 				\item Diagonal Spread: Verschiedenen Basispreise, verschiedene Optionsfristen
 			\end{itemize}
 			\item Ratio Spread: Anzahl der Calls (bzw. Puts) long entspricht nicht der Anzahl an Calls (Puts) short)
-			\item Beispiel Butterfly Spread: Bei dem Long Butterfly Spread werden zwei Calls gekauft und zwei Calls verkauft. Der erste gekaufte Call wird zu einem niedrigeren Kurs des Underlyings gekauft (in-the-money) und der zweite gekaufte Call wird zu einem höheren Kurs des Underlyings (out-of-the-money) erworben. Zusätzlich werden noch zwei Calls verkauft zum aktuellen Kurs des Underlyings (at-the-money). Analog invertiert auch mit Puts möglich\footnote{\url{https://de.wikipedia.org/wiki/Optionsstrategie\#Butterfly_Spread}}
+			\item Beispiel Butterfly Spread: Bei dem Long Butterfly Spread werden zwei Calls gekauft und zwei Calls verkauft. Der erste gekaufte Call wird zu einem niedrigeren Kurs des Underlyings gekauft (in-the-money) und der zweite gekaufte Call wird zu einem höheren Kurs des Underlyings (out-of-the-money) erworben. Zusätzlich werden noch zwei Calls verkauft zum aktuellen Kurs des Underlyings (at-the-money). Analog invertiert auch mit Puts möglich\footnote{\url{https://de.wikipedia.org/wiki/Optionsstrategie\#Butterfly_Spread}} Vorteile: Rendite bei stagnierendem Kurs sowie begrenzes Verlustpotential
 		\end{itemize}
 		\item Combinations
 			\begin{itemize}
@@ -232,7 +232,7 @@ Idee: Ableitung von Preisbeziehungen zwischen verschiedenen Instrumenten (Calls,
 \subsection{Arbitrageorientierte Bewertung}
 Ziel im Folgenden:
 \begin{itemize}
-	\item Quantiatives Modell zur Ermittlung von (fairen) Optionspreisen,
+	\item Quantitives Modell zur Ermittlung von (fairen) Optionspreisen,
 	\item relativ zu gegebenem Preis des Basiswertes und dessen Dynamik.
 \end{itemize}
 
@@ -336,7 +336,7 @@ Damit bezeichnet \(dS(t) = (\mu - \delta)Sdt + \sigma Sdw\) den Kursprozess der 
 \subsubsection{Amerikanische Optionen im Black/Scholes-Modell}
 \begin{itemize}
 	\item Ohne Dividende gilt \(C^e = C^a\)
-	\item Mit sicherer Dividende: Ausübung nur unmittelbar vor Dividendentermin optiomal. Bestimmung über das Maximum der europäischen Callwerte \(C^a = max\{C^e(t_1),...,C^e(T)\}\) \(\rightarrow\) vorzeitige Ausübung i.d.R. entweder vor letztem Dividendentermin optimal oder gar nicht
+	\item Mit sicherer Dividende: Ausübung nur unmittelbar vor Dividendentermin optimal. Bestimmung über das Maximum der europäischen Callwerte \(C^a = max\{C^e(t_1),...,C^e(T)\}\) \(\rightarrow\) vorzeitige Ausübung i.d.R. entweder vor letztem Dividendentermin optimal oder gar nicht
 	\item Bei unsicherer Dividende sind numerische Methoden notwendig (keine geschlossene Lösung)
 \end{itemize}
 
@@ -352,7 +352,7 @@ Damit bezeichnet \(dS(t) = (\mu - \delta)Sdt + \sigma Sdw\) den Kursprozess der 
 	\item Erlärungsversuch für Smile: Extreme Änderungen häufiger als durch Log-Normalverteilung unterstellt, aufgrund von nicht-konstanter Volatilität oder von Sprüngen 
 	\item \textbf{Erklärungsversuche für Skew}
 	\begin{itemize}
-		\item Sinkende Aktienkurse führen zu stärker verschuldeten Unternehmen \(\rightarrow\) höheres Risiko \(\rightarrow\) höhere Volatilität
+		\item Leverage-Effekt: Sinkende Aktienkurse führen zu stärker verschuldeten Unternehmen \(\rightarrow\) höheres Risiko \(\rightarrow\) höhere Volatilität
 		\item Crashphobie: Nach Oktober-87-Crash erhöhte Nachfrage nach out-of-the-money Puts (ABsicherungsinstrument)
 	\end{itemize}
 \end{itemize}
