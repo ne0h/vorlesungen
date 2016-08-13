@@ -564,3 +564,57 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
+
+
+\subsection{Multiprozessoren mit verteiltem Speicher}
+
+\subsubsection{Programmiermodell}
+\begin{itemize}
+	\item Nachrichtenorientiert (message passing)
+	\item \textbf{Synchrones Message Passing}
+	\begin{itemize}
+		\item Sender und Empfänger blockieren bis die Nachricht beim Empfänger angekommen ist und in den gewünschten lokalen Speicher kopiert worden ist. Deadlock-Gefahr!
+		\item Drei-Phasen-Protokoll: \texttt{Request to send}, \texttt{Receiver ready}, \texttt{Message transfer}. Kann Sender- oder Empfer-initiiert worden sein
+	\end{itemize}
+	\item Blockierendes, asynchrones Message Passing: Die Daten werden vor dem Senden in einen Puffer kopiert, so dass sie vom Hauptprogramm nicht mehr verändert werden können. Dieses blockiert so lange. Receive analog
+	\item Nicht-blockierendes, asynchrones Message Passing: Die Kontrolle wird sofort an den Hauptprozess zurückgegeben, der Transfer läuft im Hintergrund. Zusätzliche Probe-Funktionen um zu prüfen, ob die Daten zum Empfänger kopiert worden sind
+	\item \textbf{Hardwareunterstützung für Message passing Protokolle}
+	\begin{itemize}
+		\item Großer Software-Overhead, daher Kopieren via DMA
+		\item Hardwareunterstützung soll die Latenz verringern und den Prozessor entlasten
+		\item Im Allgemeinen bietet das Verbindungsnetzwerke Übertragungsprimitive an
+		\item Hardwaresupport durch Kommunikationsprozessor
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Fallstudien}
+\begin{itemize}
+	\item \textbf{IBM Blue Gene/L}
+	\begin{itemize}
+		\item \(2^16\) Knoten in bis zu 64 Racks, die jeweils auch als Einzelsystem organisiert werden können
+		\item Knoten über ein fünfstufiges Netzwerk verbunden. Unterste Ebene: 64x32x32 3D-Torus
+	\end{itemize}
+	\item \textbf{JUGENE: Juelicher BlueGene/P}
+	\begin{itemize}
+		\item Im Juni 2010 Nummer 5 der Top500
+		\item Gesamtleistung mit der letzten Ausgbaustufe bei über einem PF/s
+		\item Aufbau: System mit jeweils 72 Racks mit jeweils 32 NodeCards, die etwa 13,9 TF erreichen. NodeCards bestehen aus jeweils 32 ComputerCards mit je einem Quadcore-Chip (Leistung etwa 13,6GF/s)
+		\item Verbindungsnetze
+		\begin{itemize}
+			\item 3D-Torus, der alle 73728 ComputeNodes verbindet mit virtual cut-through hardware routing. 425MB/s auf allen node links (5,1GB/s insgesamt)
+			\item Collective Network (binärbaumartig organisiert) mit 850MB/s, das alle Nodes verbindet
+			\item Low Latency Global Barrier and Interrupt (sternförmig) für extrem niedrige Latenzen
+			\item 10 GBit Ethernet für externe Kommunikation
+			\item Control Network: GBit Ethernet für Managementaufgaben (Boot, Monitoring, Diagnose)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{SuperMUC im Leibnitz Rechenzentrum Garching}
+	\begin{itemize}
+		\item Distributed Memory Architecture mit Sandy-Bridge-Prozessoren mit jeweils acht multithreaded Cores
+		\item Virtual Interface Architecture (VIA) und InfiniBand
+		\begin{itemize}
+			\item Standardisiertes benutzerlevel Interface, das komplett flexibel in Hardware  oder auf dem Hostprozessor implementiert sein kann
+			\item Gegensatz zur klassichen Berkeley Socket API ist der Kernel nicht mehr in jeden Transfer eingebunden, was massiv Performance spart (Kernel als Flaschenhals)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
