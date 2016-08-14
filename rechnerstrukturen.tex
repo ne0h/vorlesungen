@@ -618,3 +618,46 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Vektorverareitung}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Verarbeitungsbeispiel: \(Y = a \cdot X + Y\)
+	\item Bei normalen Prozessoren hoher Aufwand durch viele Schleifendurchläufe, Pipeline-Konflikte oder Mehrzuklusoperationen
+	\item Vektor-Prozessor verwendet SIMD-Verarbeitung (Single Instruction Multiple Data). Verarbeitung in einem Rechenwerk mit pipeline-artig aufgebauten Funktionseinheiten
+	\item \textbf{Aufbau eines Vektorprozessors}
+	\begin{itemize}
+		\item Ladeeinheit für Vektoren direkt am Hauptspeicher
+		\item Vektoreinheit: Ein Satz Vektorregister
+		\item Mindestens eine Skalareinheit zur Ausführung von Befehlen, die nicht auf ganze Vektoren angewendet werden sollen (Skalarbefehle)
+		\item Vektoreinheiten und Skalareinheiten können parallel arbeiten \(\rightarrow\) Vektorbefehle und Skalarbefehle können parallel ausgeführt werden
+	\end{itemize}
+	\item \textbf{Pipeling eines Vektorprozessors}
+	\begin{itemize}
+		\item Berechnung eines Ergebnisses pro Takt bei ununterbrochener Arbeit und einer Füllzeit/Einschwingzeit
+		\item Beispiel einer Gleitkommaoperation
+		\begin{enumerate}
+			\item Laden eines Paars von Gleitkommazahlen aus Vektorregiste
+			\item Vergleich der Exponenten und Verschieben einer Mantisse
+			\item Addition der ausgerichteten Mantisse
+			\item Normalisieren des Ergebnisses und Schreiben in Zielregister
+		\end{enumerate}
+		\item Verkettung von Pipelines: Erweiterung auf eine Folge von Vektoroperationen durch Verkettung der (spezialisierten) Pipelines. So können die Ergebnisse einer Pipline sofort der nächsten Pipeline zur Verfügung gestellt werden. Beispielsweise können Addition, Schieben und UND-Verknüofung unmittelbar hintereinander ausgeführt werden
+		\item Multifunktions- oder spezialisierte Pipelines zur Realisierung arithemtisch-logischer Verknüpfungen
+		\begin{itemize}
+			\item Verwendung eines Multifunktionspipeline oder eine Anzahl von spezialisierten Pipelines
+			\item Multifunkspipeline: Der Aufbau erfordert eine höhere Stufenzahl, wobei aktuell nicht benötigte Stufen oder Pipelines übersprungen werden können
+			\item Spezialisierte Pipelines: Jeweils zur Durchführungs spezieller Funktionen benutzt. Hardware und Steuerung relativ einfach, allerdings werden mehrere unabhängige Pipelibes benötigt, um alle Funktionen abzubilden
+		\end{itemize} 
+	\end{itemize}
+	\item \textbf{Parallelität in einem Vektorrechner}
+	\begin{itemize}
+		\item Vektor-Pipeline-Parllelität durch die Stufenzahl der Vektor-Pipeline
+		\item Mehrere Vektor-Pipelines in einer Vektoreinheit
+		\item Vervielfachen der Pipelines: Pro Takt wird nicht nur ein Operandenpaar sondern ein Vielfaches davon verarbeitet
+		\item Mehrere Vektoreinheiten, die parallel zueinander arbeiten (vgl. speichergekoppelter Multiprozessor)
+	\end{itemize}
+\end{itemize}
