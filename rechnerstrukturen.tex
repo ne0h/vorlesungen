@@ -734,6 +734,34 @@ SV Ra,V1         ; store the result in A
 	\item \textbf{Dünn besetzte Matrizen}
 	\begin{itemize}
 		\item Elemente eines Vektors werden in einer komprimierten Form im Speicher abgelegt
-		\item Indexvektoren zeigen die Elemente an, die nicht \(0\) sind
+		\item Indexvektoren zeigen die Elemente an, die nicht \(0\) sind\\\\
+			\begin{minipage}{\linewidth}
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+; Berechnet die Summe der duenn besetzten Vektoren A und C.
+; Die Indexvektoren K und M zeigen jeweils die Elemente von A und C an,
+; die nicht 0 sind
+do 	 100 i = 1,n
+100  A(K(i)) = A(K(i)) + C(M(i))
+			\end{lstlisting}
+			\end{minipage}
+		\item SCATTER-GATHER-Operationen mit Index-Vektoren: Unterstützen den Transport zwischen gepackter (SCATTER) und normaler (GATHER) Darstellung dünn besetzter Matrizen. Probleme für vektorisierenden Compiler: Konservative Annahmen bzgl. Speicherreferenzen\\\\
+			\begin{minipage}{\linewidth}
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+LV 	Vk,Rk 		; load K
+LVI 	Va,(Ra+Vk) 	; load A(K(I))
+LV 	Vm,Rm 		; load M
+LVI 	Vc,(Rc+Vm) 	; load C(M(I))
+ADDV.D 	Va,Va,Vc 	; add them
+SVI 	(Ra+Vk),Va 	; store A(K(I))
+			\end{lstlisting}
+			\end{minipage}		
 	\end{itemize}
+\end{itemize}
+
+\subsubsection{SIMD-Verarbeitung in Mikroprozessoren am Beispiel Intel MMX Technologie}
+\begin{itemize}
+	\item Erweiterung für die IA-32-Prozessorarchitektur, die es erlaubt, größere Datenmengen parallelisiert und somit schneller zu verarbeiten\footnote{\url{https://de.wikipedia.org/wiki/Multi_Media_Extension}}
+	\item MMX-Register, die auf FPU-Register abgebildet werden (keine neuen Register eingeführt)
+	\item Verarbeitung: (Mehrfach unterteilbares) 64 Bit Datenformat als Basis. Zwei solche Quellen können über eine Funktion verknüpft werden
+	\item Saturation Arithemtik: Algorithmen in der grafischen Datenverarbeitung vermeiden Über-/Unterlauf bei Addition und Subtraktion nicht-vorzeichenbehafteter Pixel. Übergang zum größten oder kleinsten darstellbaren Wert. Keine Überprüfung der Werte oder Ausnahmebehandlung
 \end{itemize}
