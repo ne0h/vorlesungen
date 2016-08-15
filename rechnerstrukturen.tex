@@ -625,12 +625,37 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Verarbeitungsbeispiel: \(Y = a \cdot X + Y\)
-	\item Bei normalen Prozessoren hoher Aufwand durch viele Schleifendurchläufe, Pipeline-Konflikte oder Mehrzuklusoperationen
-	\item Vektor-Prozessor verwendet SIMD-Verarbeitung (Single Instruction Multiple Data). Verarbeitung in einem Rechenwerk mit pipeline-artig aufgebauten Funktionseinheiten
+	\item Motivation: Gerade in HPC-Anwendungen fallen oft viele gleichartige Daten an, die auf ähnliche Weise verarbeitet werden sollen, so zum Beispiel bei Simulationen in der Meteorologie und Geologie (Single Instruction Multiple Data)\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#Funktionsweise_und_Anwendungsfelder}}
+	\item Verarbeitungsbeispiel: \(Y = a \cdot X + Y\). \(X\) und \(Y\) sind zwei Vektoren gleicher Länge und a ist eine skalare Größe. Dieses Problem wird auf Skalarprozessoren durch eine Schleife gelöst\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}, dadurch hoher Aufwand durch viele Schleifendurchläufe, Pipeline-Konflikte oder Mehrzyklusoperationen
+	\item Verarbeitung in einem Rechenwerk mit pipeline-artig aufgebauten Funktionseinheiten
+	\item \textbf{Code-Beispiel: Berechnung von \(Y = a \cdot X + Y\)}\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}\\\\
+	\begin{minipage}{\linewidth}
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+; MIPS
+	L.D 	 F0, a          ; Skalar a laden
+	DADDIU	 R4, Rx, #512   ; letzte Adresse 512/8 = 64
+Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
+	MUL.D    F2, F2, F0     ; a * X(i)
+	L.D      F4, 0(Ry)      ; Y(i) laden
+	ADD.D    F4, F4, F2     ; a * X(i) + Y(i)
+	S.D      0(Ry), F4      ; Y(i) speichern
+	DADDIU   Rx, Rx, #8     ; Index (i) von X inkrementieren
+	DADDIU   Ry, Ry, #8     ; Index (i) von Y inkrementieren
+	DSUBU    R20, R4, Rx    ; Rand berechnen
+	BNEZ     R20, Loop      ; wenn 0, dann fertig
+
+; VMIPS
+	L.D      F0, a       	; Skalar a laden
+	LV       V1, Rx      	; Vector X laden
+	MULVS.D  V2, V1, F0  	; Vector-Skalar Multiplikation
+	LV       V3, Ry      	; Vector Y laden
+	ADDV.D   V4, V2, V3  	; Vektor Addition
+	SV       Ry, V4      	; Resultat speichern
+	\end{lstlisting}
+	\end{minipage}
 	\item \textbf{Aufbau eines Vektorprozessors}
 	\begin{itemize}
-		\item Ladeeinheit für Vektoren direkt am Hauptspeicher
+		\item Einheit um Vektoren direkt aus Hauptspeicher zu laden
 		\item Vektoreinheit: Ein Satz Vektorregister
 		\item Mindestens eine Skalareinheit zur Ausführung von Befehlen, die nicht auf ganze Vektoren angewendet werden sollen (Skalarbefehle)
 		\item Vektoreinheiten und Skalareinheiten können parallel arbeiten \(\rightarrow\) Vektorbefehle und Skalarbefehle können parallel ausgeführt werden
@@ -659,5 +684,56 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Mehrere Vektor-Pipelines in einer Vektoreinheit
 		\item Vervielfachen der Pipelines: Pro Takt wird nicht nur ein Operandenpaar sondern ein Vielfaches davon verarbeitet
 		\item Mehrere Vektoreinheiten, die parallel zueinander arbeiten (vgl. speichergekoppelter Multiprozessor)
+	\end{itemize}
+	\item \textbf{Parallelarbeit in der Software}
+	\begin{itemize}
+		\item Vektorisierung der innersten Schleife mittels vektorisierendem Compiler
+		\item Vektorverbundbefehle zur Verkettung von Vektorbefehlen (beispielsweise Vector-Multiply-Add)
+		\item Die Verteilung einer Berechnung auf mehrere, gleiche Pipelines geschieht durch den Compiler (Vektorisierung der innersten Schleife)
+	\end{itemize}
+	\item \textbf{Memory Interleaving (Speicherverschränkung)}
+	\begin{itemize}
+		\item Anpassen der Zugriffsgeschwindigkeit an die Verarbeitungsgeschwindigkeit der CPU
+		\item Der Speicher wird in gleich große, voneinander unabhängige Bereiche (Module, Speicherbänke) unterteilt, die zeitlich verschränkt gelesen oder beschrieben werden können. Aufeinander folgende Speicherworte werden zyklisch in aufeinander folgenden Speicherbänken abgespeichert\footnote{\url{https://de.wikipedia.org/wiki/Speicherverschränkung}}
+		\item Hat der Speicher eine geringere Taktrate als der Prozessor, verringern sich durch den abwechselnden Zugriff die Wartezeiten für Speicheroperationen \(\rightarrow\) mehr Zeit für langsamere Speicherbausteine
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Vektorverarbeitung}
+
+\subsubsection{Eigenschaften}
+\begin{itemize}
+	\item \textbf{Vektor Stride}
+	\begin{itemize}
+		\item Problem: Die Elemente eines Vektors liegen nicht immer so wie sie gebraucht werden in aufeinander folgend Speicherzellen. Beispielsweise ändert sich die Reihenfolge bei Matrizenmultiplikationen (Spaltenelemente \(\times\) Zeilenelemente)
+		\item Stride-Wert bezeichnet den Abstand zwischen den Elementen. Dieser kann sich allerdings zur Laufzeit ändern oder ist dann erst bekannt. Lösung: Ablegen in Allzweckregister
+		\item In heutigen Vektorrechnern werden die Zugriffe von jedem Prozessor auf über mehrere Hundert Speicherbänke verteilt 
+	\end{itemize}
+	\item \textbf{Bedingte Ausführung}
+	\begin{itemize}
+		\item Problem: Programme mit if-Anweisungen in Schleifen können nicht vektorisiert werden (Kontrollflussabhängigkeiten)
+		\item Lösung: Bedingt ausgeführte Anweisungen \(\rightarrow\) Umwandlung von Kontrollflussabhängigkeiten in Datenabhängigkeiten
+		\item Bedingt ausgeführte Anweisungen
+		\begin{itemize}
+			\item Vektor-Maskierungssteuerung: Verwendet einen zusätzlichen, boolschen Vektor, um die Ausführung eines Vektorbefehls zu steuern\\\\
+				\begin{minipage}{\linewidth}
+				\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+LV V1,Ra         ; load vector A into V1
+LV V2,Rb         ; load vector B
+L.D F0,#0        ; load FP zero into F0
+SNEVS.D V1,F0    ; sets VM(i) to 1 if V1(i)!=F0
+SUBV.D V1,V1,V2  ; subtract under vector mask
+CVM              ; set the vector mask to all 1s
+SV Ra,V1         ; store the result in A
+				\end{lstlisting}
+				\end{minipage}
+			\item Vektor-Mask-Register: Jede ausgeführte Vektorinstruktion arbeitet nur auf den Vektorelementen, deren Einträge eine \(1\) haben
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Dünn besetzte Matrizen}
+	\begin{itemize}
+		\item Elemente eines Vektors werden in einer komprimierten Form im Speicher abgelegt
+		\item Indexvektoren zeigen die Elemente an, die nicht \(0\) sind
 	\end{itemize}
 \end{itemize}
