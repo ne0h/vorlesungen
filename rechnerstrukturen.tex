@@ -105,6 +105,103 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 \end{itemize}
 
 
+\subsection{Energieeffizienter Entwurf - Grundlagen}
+\begin{itemize}
+	\item Mobile Geräte: Verfügbare Energiemenge durch Battierien und Akkus begrenzt \(\rightarrow\) vorhandene Energie möglichst lange ausnutzen sowie Vermeidung von Überhitzung
+	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und die beeinflussen die Zuverlässigkeit
+	\item \textbf{CMOS-Schaltung}
+	\begin{itemize}
+		\item MOSFET: Je nach Spannung am Gate und dem daraus resultierenden Feld im Kanal können Ladungsträger den Kanal passieren oder nicht. Extrem niedrige Stromaufnahme im Ruhezustand
+		\item Leistungsaufnahme: \(P_{total} = P_{switching} + P_{shortcircuit} + P_{static} + P_{leakage}\)
+		\item Statischer Leistungsverbrauch: \(P_{static}\) sowie Leistungsverbauch bei Kriechströmen (\(P_{leakage}\))
+		\item Verbrauch bei Zustandsänderung: \(P_{switching}\) sowie Verbrauch während des Übergangs am Ausgang, wenn sich die Eingänge ändern \(P_{shortciruit}\)
+		\item Höhere Frequenzen erfordern steilere Taktflaken \(\rightarrow\) schnelleres Laden von \(C_{eff}\) \(\rightarrow\) höhere Versorgungsspannung (\(P \sim V^2_{dd}\))
+		\item Reduktion der Taktfrequenz bedeutet Reduktion von Leistungsaufnahme und Ausführungsgeschwindigkeit (unter idealen Bedingungen gilt \(P \sim f\))
+		\item Schaltwahrscheinlichkeit
+		\begin{itemize}
+			\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
+			\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Bewertung der Leistungsfähigkeit eines Rechners}
+\begin{itemize}
+	\item \textbf{Definitionen}
+	\begin{itemize}
+		\item Wall-clock time, response time, elapsed time: Globale Latenzzeit für die Ausführung einer Aufgabe
+		\item CPU time (Vgl Unix time Kommando)
+		\begin{itemize}
+			\item CPU time: Zeit, in der die CPU arbeitet
+			\item User CPU time: Zeit, inder die CPU ein Programm ausführt
+			\item System CPU time: Zeit, in der die CPU Betriebssystemaufgaben ausführt, die von einem Programm angefordert werden
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Einfache Hardwaremaße}
+	\begin{itemize}
+		\item Clock cycles per instruction (CPI, mittlere Anzahl Taktzyklen pro Befehl): \(CPI = \frac{\text{CPU time}}{\text{instruction count } \cdot \text{ machine cycle time}} = \frac{T_{exe}}{IC \cdot TC}\)
+		\item Instructions per cycle (IPC): \(IPC = \frac{1}{CPI}\)
+		\item Millions of instructions per second (MIPS): \(MIPS = \frac{\text{Anzahl der ausgeführten Instruktionen}}{10^6 \text{ Ausführungszeit}}\), Flotingpointoperationen (MFLOPS) analog. Niedrigere MIPS-Werte resultieren bei gleicher Laufzeit in kompakterem Code, niedrigerer Schaltfrequenz und damit geringerem Energieverbrauch
+		\item Probleme: Angaben meist theoretische Maximalwerte bzw. abhängig vom konkreten Programm
+	\end{itemize}
+	\item \textbf{Benchmarks}
+	\begin{itemize}
+		\item Bewertung der Leistungsfähigkeit mit Hilfe von einem Programm oder einer Programmsammlung und Messen der Ausführungszeit. Zugriff auf die Maschine notwendig
+		\item Kernels: Rechenintensive Teile reale Programme, vorwiegend numerische Algorithmen (beispielsweise LINPACK Softwarepaket zum Lösen linearer Gleichungen)
+		\item Standardisierung zur Verbesserung der Vergleichbarkeit von Rechnern (inklusive OS und Compiler)
+		\item Standardisierte Benchmarks: SPEC CPU Benchmarks
+		\begin{itemize}
+			\item SPEC: Non-profit Organisation, die Benchmarks zur Leistungsbewertung von Hardware und Software entwickelt. Mit dem Erwerb einer Lizenz verpflichten sich die jeweiligen Unternehmen, immer die kompletten Ergebnisse zu veröffentlichen. So ist gewährleistet, dass nicht nur die jeweils guten Ergebnisse eines Rechners werbewirksam verwendet werden können, sondern ein möglichst breiter Querschnitt entsteht, der auch mögliche Schwächen aufzeigt.\footnote{\url{https://de.wikipedia.org/wiki/Standard_Performance_Evaluation_Corporation}}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Beobachtung des Laufzeitverhaltens}
+\begin{itemize}
+	\item \textbf{Messung während des Betriebs von Anlagen}
+	\begin{itemize}
+		\item Monitore: Aufzeichnungselemente, welche die Verkehrsverhältnisse während des normalen Betriebs beobachten oder untersuchen
+		\item Hardware-Monitor: Unabhängige, physikaleische Geräte, welche die Betriebsverhältnisse nicht beeinflussen
+		\item Software-Monitor: Eingebaut ins OS, beeinträchtigen die normalen Betriebsverhältnisse
+		\item Beispiel: Performance Counter
+		\begin{itemize}
+			\item Misst verschiedene geschwindigkeitsrelevante Vorgänge, die ein Prozessor ausführt. Dabei beeinträchtigt er die Abarbeitung anderer Aufgaben im Prozessor nicht. Heutige Prozessoren erreichen bei den aktuellen Prozessortakten eine Auflösung im Mikro- bis Nanosekundenbereich\footnote{\url{https://de.wikipedia.org/wiki/Performance_Counter_(Mikroprozessor)}}
+			\item Metriken zur Darstellung bestimmter Messgrößen. Beispielsweise Anzahl ausgeführter Befehle, Cache-Treffer oder Fehlzugriffe
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Bewertung der Leistungsfähigkeit}
+\begin{itemize}
+	\item \textbf{Modelltheoretische Verfahren}
+	\begin{itemize}
+		\item Modellbildung: Annahmen über die Struktur und Betrieb eines Rechners sowie Analyse der relevanten Merkmale des Systems mit dem Ziel Beziehungen zwischen Systemparametern aufzudecken und Leistungsgrößen zu ermitteln
+		\item Analytische Methoden versuchen mathematische Beziehungen zwischen Leistungsgrößen herzuleiten. Oft minimaler Aufwand aber auch nur minimal aussagekräftig (beispielsweise Warteschlangenmodelle oder Petrinetze)
+	\end{itemize}
+	\item \textbf{Modelltheoretische Verfahren: Simulationen}
+	\begin{itemize}
+		\item Modelliert Eigenschaften oder Verhalten einer Zielmaschine
+		\item Kompromiss zwischen Simulationsgenauigkeit, Simulationsgeschwindigkeit und Entwicklungsaufwand
+		\item User-Level Simulatoren: Simulation der Mikroarchitektur eines Prozessors ohne Berücksichtigung von Systemressourcen
+		\item Full-System Simulatoren modellieren ein vollständiges Computersystem, einschließlich CPU, IO, Disk und Netzwerk
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Zuverlässigkeit und Fehlertoleranz}
+\begin{itemize}
+	\item Zuverlässigkeit: Bezeichnet die Fähigkeit eines Systems während einer vorgegebenen Zeitdauer bei zulässigen Betriebsbedingungen die spezifizierte Funktion zu erbringen
+	\item Fehlertoleranz: Bezeichnet die Fähigkeit eines Systemes auch mit einer begrenzten Anzahl fehlerhafter Subsysteme die spezifizierte Funktion zu erbringen
+	\item \textbf{Struktur-Funktions-Modell}
+	\begin{itemize}
+		\item Gerichteter Graph, dessen Knoten die Komponenten und dessen Kanten die Funktionen eines Systems repräsentieren. Eine Kante \(K_i \longrightarrow K_j\) bedeutet, dass \(K_i\) eine Funktion erbringt, die von \(K_j\) genutzt wird
+		\item Binäres Fehlermodell gibt für jede Komponente und das Gesamtsystem an ob sie fehlerfrei sind
+		\item Negierter Strukturbaum gibt an, wie sich Fehler des Systems auf Fehler der Komponenten zurückführen lassen
+	\end{itemize}
+\end{itemize}
+
+
 
 \section{Parallelismus auf Machinenbefehlsebene}
 
@@ -492,6 +589,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 				\item Hardwaresystem, das in einer Menge an Prozessoren zwischen allen disjunkten Paaren von Prozessoren blockierungsfreie Direktverbindungen zur Kommunikation aufbauen kann. Schaltelemente an allen Kreuzungspunkten \(\rightarrow\) hoher Hardwareaufwand
 				\item Schalterelemente (2x2-Kreuzschienenverteiler) bestehen aus Zweierschaltern mit je zwei Ein- und Ausgängen, die entweder durch- oder über kreuz schalten können
 			\end{itemize}
+			\item Beispiel: Omega-Netz, bestehend aus \(\frac{N\cdot log_k(N)}{k}\) Crossbars bei \(N\) Knoten mit Switch-Grad \(k\). Nicht blockierungsfrei
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
