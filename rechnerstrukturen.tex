@@ -94,13 +94,61 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 \begin{itemize}
 	\item Standardisierte Hardware-Beschreibungssprache: Die verschiedenen Schaltungsbeschreibungen des gesamten Entwurfsablaufs können dargestellt werden - von der algorithmischen Spezifikation bis hin zu realisierungsnahen Strukturen
 	\item Eingesetzt zum ASIC- und FPGA-Entwurf
+	\item Bei synchroner Zuweisung werden Änderungen abhängig von einem Takt und den Eingangssignalen geändert. Bei asynchroner Zuweisung unabhängig und unmittelbar (nach einer gewissen Schaltzeit)
 	\item Chip-Entwurf mit VHDL
 	\begin{itemize}
 		\item Grundlage des Entwurfs ist die Spezifikation der Schaltung: Gewünschtes Verhalten; Schnittstellen; Vorgaben bzwgl. Geschwindigkeit, Kosten, Fläche oder Leistungsverbrauch
-		\item Entwurfsschritte
-		\begin{itemize}
-			\item 
-		\end{itemize}
+		\item Entwurfsschritte: Verhaltensspezifikation, RT-Beschreibung, Gatterbeschreibung, Geometriegebschreibung
+		\item Hauptbestandteile: Entity, Architecture, Configuration
+		\item Schnittstellendefinition eines MODUL\\\\
+			\begin{minipage}{\linewidth}
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language=VHDL,tabsize=4]
+ENTITY blinklicht IS
+	PORT(
+		clk: IN Std_Logic;
+		reset: IN Std_Logic;
+		led: OUT Std_Logic
+	);
+END blicklicht
+			\end{lstlisting}
+			\end{minipage}
+		\item Schema einer ARCHITECTURE\\\\
+			\begin{minipage}{\linewidth}
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language=VHDL,tabsize=4]
+ARCHITECTURE Structure OF blinklicht IS
+	COMPONENT Counter
+	GENERIC(countMax : positive);
+	PORT(
+		clk: IN Std_Logic;
+		out: OUT Std_Logic
+	);
+	END COMPONENT
+	COMPONENT DCM
+	PORT(
+		clkin_in: IN Std_Logic;
+		rst_in: Std_Logic;
+		clkdv_out: OUT Std_Logic
+	);
+	END COMPONENT
+
+	Signal clk_int: Std_Logic
+
+	BEGIN
+		Inst:DCM: DCM
+		PORT MAP(
+			clkin_in => clk,
+			rst_in => reset,
+			clkdv_out => clk_int,
+		);
+		Inst_counter: counter
+		GENERIC MAP (countMax => 25000000)
+		PORT MAP(
+			clk => clkIn,
+			out => led
+		);
+	END Structure
+			\end{lstlisting}
+			\end{minipage}
 	\end{itemize}
 \end{itemize}
 
@@ -177,7 +225,7 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 	\item \textbf{Modelltheoretische Verfahren}
 	\begin{itemize}
 		\item Modellbildung: Annahmen über die Struktur und Betrieb eines Rechners sowie Analyse der relevanten Merkmale des Systems mit dem Ziel Beziehungen zwischen Systemparametern aufzudecken und Leistungsgrößen zu ermitteln
-		\item Analytische Methoden versuchen mathematische Beziehungen zwischen Leistungsgrößen herzuleiten. Oft minimaler Aufwand aber auch nur minimal aussagekräftig (beispielsweise Warteschlangenmodelle oder Petrinetze)
+		\item Analytische Methoden versuchen mathematische Beziehungen zwischen Leistungsgrößen herzuleiten. Oft minimaler Aufwand aber auch nur minimal aussagekräftig (beispielsweise Warteschlangenmodelle, Petrinetze, Diagnosegraphen, Netzwerkflussmodelle)
 	\end{itemize}
 	\item \textbf{Modelltheoretische Verfahren: Simulationen}
 	\begin{itemize}
@@ -198,6 +246,38 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 		\item Gerichteter Graph, dessen Knoten die Komponenten und dessen Kanten die Funktionen eines Systems repräsentieren. Eine Kante \(K_i \longrightarrow K_j\) bedeutet, dass \(K_i\) eine Funktion erbringt, die von \(K_j\) genutzt wird
 		\item Binäres Fehlermodell gibt für jede Komponente und das Gesamtsystem an ob sie fehlerfrei sind
 		\item Negierter Strukturbaum gibt an, wie sich Fehler des Systems auf Fehler der Komponenten zurückführen lassen
+	\end{itemize}
+	\item \textbf{Darstellung}
+	\begin{itemize}
+		\item Zuverlässigkeitsblockdiagramm: Zeigt mögliche "`Verbindungspfade"' zwischen den Komponenten, von denen mindestens einer in Takt sein muss. Reihenschaltung von AND-Bausteinen, Parallelschaltung von OR-Bausteinen
+		\item Systemfunktion: Äquivalente Darstellung eines Zuverlässigkeitsdiagramm als logische Funktion
+		\item Strukturbaum
+		\begin{enumerate}
+			\item Negieren der Systemfunktion: Alle Blätter werden negiert, alle Verknüpfungen werden vertauscht (\(AND \leftrightarrow OR\))
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{Ausfallverhalten}
+	\begin{itemize}
+		\item Unterlassungsausfall (Fail-silent-System): Keine Ausgabe fehlerhafter Ergebnisse. Wenn ein Ergebnis ausgegeben wird, ist es korrekt
+		\item Anhalteausfall (Fail-stop-System): Keinerlei Ergebnisausgabe mehr
+		\item Unkritische Ausfälle (Fail-safe-System)
+	\end{itemize}
+	\item \textbf{Redundanz}
+	\begin{itemize}
+		\item Statische Redundanz: Vorhandensein redundanter Systeme während des gesamten Einsatzzeitraums (n-von-m-System)
+		\item Dynamische Redundanz: Vorhandensein redundanter Systeme, die erst nach Auftreten eines Fehlers aktiviert werden
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Klassifikation von Rechnerarchitekturen}
+\begin{itemize}
+	\item \textbf{Flynn'sche Taxonomie}
+	\begin{itemize}
+		\item Signle Instruction, Single Data (SISD): Uniprozessor
+		\item Single Instruction, Multiple Data (SIMD): Vektorrechner, Feldrechner
+		\item Multiple Instruction, Single Data (MISD): Zuordnung Umstritten ("`darf es nicht geben"' vs. "`Großrechner oder Supercomputer"')
+		\item Multiple Instruction, Multiple Data (MIMD): Multiprozessor
 	\end{itemize}
 \end{itemize}
 
@@ -529,9 +609,8 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \subsubsection{Gesetz von Amdahl}
 \begin{itemize}
 	\item Ein Programm kann nie vollständig parallel ausgeführt werden, da einige Teile wie Prozess-Initialisierung oder Speicherverwaltung nur einmalig auf einem Prozessor ablaufen oder der Ablauf von bestimmten Ergebnissen abhängig ist\(\rightarrow\) Zerlegung des Programmlaufs in Abschnitte, die entweder vollständig sequentiell oder vollständig parallel ablaufen und fasst sie zu jeweils einer Gruppe zusammen\footnote{\url{https://de.wikipedia.org/wiki/Amdahlsches_Gesetz\#Beschreibung}}
-	\item Gesamtausführungzeit: \(T(n) = T_{parallel}(1) \cdot \frac{1-a}{n} + T_{sequentiell}(1) \cdot a\), \(a\): Anteil des Programms, der nur sequentiell ausgeführt werden kann
-	\item \(S(n) = \frac{T(1)}{T(n)} = \frac{T(1)}{T(1) \cdot \frac{1-a}{n}+T(1) \cdot a} = \frac{1}{\frac{1-a}{n}+1}\)
-	\item Für \(n \rightarrow \infty:S(n)=\frac{1}{a}\)
+	\item Gesamtausführungzeit (Gesetz von Amdahl): \(T(n) = T(1) \cdot \frac{1-a}{n} + T(1) \cdot a\), \(a\): Anteil des Programms, der nur sequentiell ausgeführt werden kann
+	\item Superlinearen Speedup kann es nicht geben, da jeder paralle Algorithmus einen sequentiellen Teil hat, der die Beschleunigung begrenzt: \(1 \le S(n) \le n\). Ursache ist beispielsweise, dass bei einem Mehrprozessorsystem die Daten vollständig in lokale Caches und Hauptspeicher passen (kein Verlust durch häufige Seitenwechsel)
 \end{itemize}
 
 
@@ -563,7 +642,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item \textbf{Art des Transfers}
 		\begin{itemize}
 			\item Durchschalte- oder Leistungsvermittlung: Schalten einer Direktverbindung zwischen zwei Knoten, blockierungsfrei, kurze Latenz, gut geeignet für lange Nachrichten
-			\item Paketvermittlung: Datenpakete fester länge werden entsprechend einem Wegfindealgorithmus übertragen, geeignet für kurze Nachrichten
+			\item Paketvermittlung: Datenpakete fester Länge werden entsprechend einem Wegfindealgorithmus übertragen, geeignet für kurze Nachrichten
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Verbindungsnetze}
@@ -578,7 +657,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Bidirektionaler Ring: Übertragung kann die kürzeren der beiden Wege wählen. Bei einer Unterbrechung bleibt die Kommunikation bestehen
 			\item Chordaler Ring: Hinzufügen weiterer Direktverbindungen zur Erhöhung der Fehlertoleranz
 			\item Baumstruktur: Teilweise mit steigender Anzahl an Kommunikationskanälen in Richtung Wurzel
-			\item Diverse Kubusstrukturen, beispielsweise Hyperkubus: Binäre Bezeichnung der Knoten ermöglicht Routenbestimmung (benachbarte Knoten unterscheiden sich um genau eine Stelle, Start- und Zieladresse werden per XOR verknüpft)
+			\item Diverse Kubusstrukturen, beispielsweise Hyperkubus: Binäre Bezeichnung der Knoten ermöglicht Routenbestimmung (benachbarte Knoten unterscheiden sich um genau eine Stelle, Start- und Zieladresse werden per XOR verknüpft). Allerdings schlechte Skalierbarkeit, da bei jeder Erweiterung der Knotengrad steigt und alle Knoten erweitert werden müssen
 		\end{itemize}
 		\item Dynamische Verbindungsnetze
 		\begin{itemize}
@@ -589,7 +668,9 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 				\item Hardwaresystem, das in einer Menge an Prozessoren zwischen allen disjunkten Paaren von Prozessoren blockierungsfreie Direktverbindungen zur Kommunikation aufbauen kann. Schaltelemente an allen Kreuzungspunkten \(\rightarrow\) hoher Hardwareaufwand
 				\item Schalterelemente (2x2-Kreuzschienenverteiler) bestehen aus Zweierschaltern mit je zwei Ein- und Ausgängen, die entweder durch- oder über kreuz schalten können
 			\end{itemize}
-			\item Beispiel: Omega-Netz, bestehend aus \(\frac{N\cdot log_k(N)}{k}\) Crossbars bei \(N\) Knoten mit Switch-Grad \(k\). Nicht blockierungsfrei
+			\item Omega-Netz: Besteht aus \(\frac{N\cdot log_k(N)}{k}\) Crossbars bei \(N\) Knoten mit Switch-Grad \(k\). Nicht blockierungsfrei
+			\item Mischpermutationnetz: Kreisverschiebung der Adressbits
+			\item Allgemeine Beispiele für dynamische Verbindungsnetzwerke: Bus, Kreuzschiene, Schaltnetzwerk
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -598,6 +679,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \subsection{Multiprozessoren mit gemeinsamem Speicher}
 \begin{itemize}
 	\item Gültigkeitsproblem: Paralleler Zugriff mehrere Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
+	\item Inklusionseigenschaft bei Caches: Der Inhalt des Caches auf der höchsten Stufe ist auch in den Caches niedrigerer Stufen enthalten
 	\item \textbf{Cache-Kohärenz-Problem}
 	\begin{itemize}
 		\item 1. Fall (IO-Problem): System mit einem Mikroprozessor und weiteren Komponenten mit Master-Funktion (ohne Cache)
@@ -728,27 +810,27 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item Verarbeitung in einem Rechenwerk mit pipeline-artig aufgebauten Funktionseinheiten
 	\item \textbf{Code-Beispiel: Berechnung von \(Y = a \cdot X + Y\)}\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}\\\\
 	\begin{minipage}{\linewidth}
-	\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+	\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
 ; MIPS
-	L.D 	 F0, a          ; Skalar a laden
-	DADDIU	 R4, Rx, #512   ; letzte Adresse 512/8 = 64
+		L.D 	 F0, a          ; Skalar a laden
+		DADDIU	 R4, Rx, #512   ; letzte Adresse 512/8 = 64
 Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
-	MUL.D    F2, F2, F0     ; a * X(i)
-	L.D      F4, 0(Ry)      ; Y(i) laden
-	ADD.D    F4, F4, F2     ; a * X(i) + Y(i)
-	S.D      0(Ry), F4      ; Y(i) speichern
-	DADDIU   Rx, Rx, #8     ; Index (i) von X inkrementieren
-	DADDIU   Ry, Ry, #8     ; Index (i) von Y inkrementieren
-	DSUBU    R20, R4, Rx    ; Rand berechnen
-	BNEZ     R20, Loop      ; wenn 0, dann fertig
+		MUL.D    F2, F2, F0     ; a * X(i)
+		L.D      F4, 0(Ry)      ; Y(i) laden
+		ADD.D    F4, F4, F2     ; a * X(i) + Y(i)
+		S.D      0(Ry), F4      ; Y(i) speichern
+		DADDIU   Rx, Rx, #8     ; Index (i) von X inkrementieren
+		DADDIU   Ry, Ry, #8     ; Index (i) von Y inkrementieren
+		DSUBU    R20, R4, Rx    ; Rand berechnen
+		BNEZ     R20, Loop      ; wenn 0, dann fertig
 
 ; VMIPS
-	L.D      F0, a       	; Skalar a laden
-	LV       V1, Rx      	; Vector X laden
-	MULVS.D  V2, V1, F0  	; Vector-Skalar Multiplikation
-	LV       V3, Ry      	; Vector Y laden
-	ADDV.D   V4, V2, V3  	; Vektor Addition
-	SV       Ry, V4      	; Resultat speichern
+		L.D      F0, a       	; Skalar a laden
+		LV       V1, Rx      	; Vector X laden
+		MULVS.D  V2, V1, F0  	; Vector-Skalar Multiplikation
+		LV       V3, Ry      	; Vector Y laden
+		ADDV.D   V4, V2, V3  	; Vektor Addition
+		SV       Ry, V4      	; Resultat speichern
 	\end{lstlisting}
 	\end{minipage}
 	\item \textbf{Aufbau eines Vektorprozessors}
@@ -816,14 +898,14 @@ Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
 		\begin{itemize}
 			\item Vektor-Maskierungssteuerung: Verwendet einen zusätzlichen, boolschen Vektor, um die Ausführung eines Vektorbefehls zu steuern\\\\
 				\begin{minipage}{\linewidth}
-				\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
-LV V1,Ra         ; load vector A into V1
-LV V2,Rb         ; load vector B
-L.D F0,#0        ; load FP zero into F0
-SNEVS.D V1,F0    ; sets VM(i) to 1 if V1(i)!=F0
-SUBV.D V1,V1,V2  ; subtract under vector mask
-CVM              ; set the vector mask to all 1s
-SV Ra,V1         ; store the result in A
+				\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
+LV 		V1,Ra       ; load vector A into V1
+LV 		V2,Rb       ; load vector B
+L.D 	F0,#0       ; load FP zero into F0
+SNEVS.D V1,F0    	; sets VM(i) to 1 if V1(i)!=F0
+SUBV.D 	V1,V1,V2  	; subtract under vector mask
+CVM              	; set the vector mask to all 1s
+SV 		Ra,V1       ; store the result in A
 				\end{lstlisting}
 				\end{minipage}
 			\item Vektor-Mask-Register: Jede ausgeführte Vektorinstruktion arbeitet nur auf den Vektorelementen, deren Einträge eine \(1\) haben
@@ -834,7 +916,7 @@ SV Ra,V1         ; store the result in A
 		\item Elemente eines Vektors werden in einer komprimierten Form im Speicher abgelegt
 		\item Indexvektoren zeigen die Elemente an, die nicht \(0\) sind\\\\
 			\begin{minipage}{\linewidth}
-			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
 ; Berechnet die Summe der duenn besetzten Vektoren A und C.
 ; Die Indexvektoren K und M zeigen jeweils die Elemente von A und C an,
 ; die nicht 0 sind
@@ -844,10 +926,10 @@ do 	 100 i = 1,n
 			\end{minipage}
 		\item SCATTER-GATHER-Operationen mit Index-Vektoren: Unterstützen den Transport zwischen gepackter (SCATTER) und normaler (GATHER) Darstellung dünn besetzter Matrizen. Probleme für vektorisierenden Compiler: Konservative Annahmen bzgl. Speicherreferenzen\\\\
 			\begin{minipage}{\linewidth}
-			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler}]
-LV 	Vk,Rk 		; load K
+			\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
+LV 		Vk,Rk 		; load K
 LVI 	Va,(Ra+Vk) 	; load A(K(I))
-LV 	Vm,Rm 		; load M
+LV 		Vm,Rm 		; load M
 LVI 	Vc,(Rc+Vm) 	; load C(M(I))
 ADDV.D 	Va,Va,Vc 	; add them
 SVI 	(Ra+Vk),Va 	; store A(K(I))
@@ -862,4 +944,71 @@ SVI 	(Ra+Vk),Va 	; store A(K(I))
 	\item MMX-Register, die auf FPU-Register abgebildet werden (keine neuen Register eingeführt)
 	\item Verarbeitung: (Mehrfach unterteilbares) 64 Bit Datenformat als Basis. Zwei solche Quellen können über eine Funktion verknüpft werden
 	\item Saturation Arithemtik: Algorithmen in der grafischen Datenverarbeitung vermeiden Über-/Unterlauf bei Addition und Subtraktion nicht-vorzeichenbehafteter Pixel. Übergang zum größten oder kleinsten darstellbaren Wert. Keine Überprüfung der Werte oder Ausnahmebehandlung
+\end{itemize}
+
+
+
+\section{Appendix: Formelsammlung und Definitionen}
+
+\subsection{Grundlagen}
+
+\subsubsection{Entwurfsfragen}
+\begin{itemize}
+	\item Kosten des Dies: \(cost_{die} = \frac{cost_{wafer}}{\text{Dies pro Wafer} \cdot yield_{die}}\)
+	\item Anzahl der Dies pro Wafer: \(dpw = \frac{\pi \cdot \big(\frac{1}{2} \cdot d_{Wafer}\big)^2}{A_{die}} - \frac{\pi \cdot d_{Wafer}}{\sqrt{2 \cdot A_{die}}}\) (theoretisches Maximum abzüglich Verschnitt)
+	\item Die Yield (Ausbeute): \(yield_{die} = yield_{Wafer} \cdot \Big(1+\frac{\text{Defekte pro Flaecheneinheit} \cdot A_{die}}{\alpha}\Big)^{-\alpha}\)
+\end{itemize}
+
+\subsubsection{Energieeffizienter Entwurf}
+\begin{itemize}
+	\item \textbf{Schaltungswahrscheinlichkeit}
+	\begin{itemize}
+		\item \(\mathbb{P}_A(1) = 1 - \mathbb{P}_{\neg A}(1)\)
+		\item \(\mathbb{P}_A(1) = 1 - \mathbb{P}_A(0)\)
+		\item \(\mathbb{P}_{A \land B}(1) = \mathbb{P}_A(1) \cdot \mathbb{P}_B(1)\)
+		\item \(\mathbb{P}_{A \lor B}(1) = 1 - \mathbb{P}_{A \lor B}(0) = 1 - \mathbb{P}_A(0) \cdot \mathbb{P}_B(0)\)
+		\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
+		\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
+	\end{itemize}
+	\item \textbf{CMOS}
+	\begin{itemize}
+		\item Leistungsaufnahme: \(P_{total} = P_{switching} + P_{shortcircuit} + P_{static} + P_{leakage}\)
+		\item \(P_{switching} = C_{eff} \cdot V_{dd}^2 \cdot f\) (wesentlicher Anteil am Leistungsverbrauch)
+		\item \(P_{shortcircuit} = I_{mean} \cdot V_{dd}\)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Bewertung der Leistungsfähigkeit eines Rechners}
+\begin{itemize}
+	\item Gesamtausführungzeit (Gesetz von Amdahl): \(T(n) = T(1) \cdot a + T(n) \cdot \frac{1-a}{n}\), \(a\): Anteil des Programms, der nur sequentiell ausgeführt werden kann
+	\item Für \(n \rightarrow \infty:S(n)=\frac{1}{a}\)
+	\item Beschleunigung: \(S(n) = \frac{T(1)}{T(n)} = \frac{T(1)}{T(1) \cdot \frac{1-a}{n}+T(1) \cdot a} = \frac{1}{\frac{1-a}{n}+1}\)
+	\item Effiziens: \(E(n) = \frac{\text{Beschleunigung}}{\text{Anzahl der Kerne}} = \frac{S(n)}{n}\), \(E \le 1\)
+	\item Parallelindex: \(I(n) = \frac{\text{Anzahl an Operationen}}{\text{Parallelgesamtausfuehrungszeit}} = \frac{P(n)}{T(n)}\)
+	\item Auslastung: \(U(n) = \frac{I(n)}{n}\)
+	\item Mehraufwand für die Parallelisierung: \(R(n) = \frac{P(n)}{P(1)}\)
+	\item \(MFLOPS = \frac{Anzahl~ausgefuehrter~Gleitkommainstruktionen}{10^6 \cdot Ausfuehrungszeit}\)
+	\item IC (instruction count): Anzahl der ausgeführten Befehle
+	\item C (cyles): Anzahl der ausgeführten Zyklen
+	\item Ausführungszeit: \(T_{exe} = \frac{\text{Anzahl an Zyklen}}{Prozessortakt} = \frac{C}{f}\)
+	\item Clock cycles per instruction (CPI, mittlere Anzahl Taktzyklen pro Befehl): \(CPI = \frac{\text{CPU time}}{\text{instruction count } \cdot \text{ machine cycle time}} = \frac{T_{exe}}{IC \cdot TC}\)
+	\item Instructions per cycle (IPC): \(IPC = \frac{1}{CPI}\)
+	\item \(SPEC_{ratio} = \frac{Referenzsystem}{Testsystem}\), quantifiziert die Geschwindigkeit eines Rechensystems
+	\item \(SPEC_{rate}\) quantifiziert den Durchsatz eines Rechensystems
+\end{itemize}
+
+\subsubsection{Zuverlässigkeit und Fehlertoleranz}
+\begin{itemize}
+	\item Allgemeine Formel zur Berechnung der Zuverlässigkeit: \(\phi^n_m = \sum_{k=n}^m \Big(\begin{array}{c}m\\k\end{array}\Big) \cdot \phi(K)^k \cdot \big(1-\phi(K)\big)^{m-k}\)
+\end{itemize}
+
+
+\subsection{Verbindungsstrukturen}
+\begin{itemize}
+	\item Übertragungszeit = Startzeit + Transferzeit: \(T_{msg} = t_s + t_w\)
+	\item Bisektionslinie: Teilt das Netzwerk in zwei gleiche Hälften
+	\item Bisektionsbandbreite: Maximale Anzahl vom Megabytes pro Sekunde, die das Netzwerk über die Bisektionslinie transportieren kann
+	\item Diameter (Durchmesser): Maximale Distanz zweier Prozessoren oder Anzahl der Verbindugen, die durchlaufen werden müssen oder maximale Pfadlänge zwichen zwei Knoten
+	\item Verbindungsgrad eines Knoten: Anzahl der Direktverbindungen zu anderen Knoten
+	\item Mittlere Distanz zwischen zwei Knoten: Anzahl der Links auf dem kürzesten Pfad zwischen den beiden Knoten
 \end{itemize}
