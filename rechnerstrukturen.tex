@@ -95,11 +95,14 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 	\item Standardisierte Hardware-Beschreibungssprache: Die verschiedenen Schaltungsbeschreibungen des gesamten Entwurfsablaufs können dargestellt werden - von der algorithmischen Spezifikation bis hin zu realisierungsnahen Strukturen
 	\item Eingesetzt zum ASIC- und FPGA-Entwurf
 	\item Bei synchroner Zuweisung werden Änderungen abhängig von einem Takt und den Eingangssignalen geändert. Bei asynchroner Zuweisung unabhängig und unmittelbar (nach einer gewissen Schaltzeit)
+	\item Vorteile automatischer Synthesewerkzeuge: Flexibilität, weniger fehleranfällig
+	\item Nachteile automatischer Synthesewerkzeuge: Randbedingungen schwer einzuhalten, Ergebnisse oft schlechter als bei manuellem Entwurf
 	\item Chip-Entwurf mit VHDL
 	\begin{itemize}
 		\item Grundlage des Entwurfs ist die Spezifikation der Schaltung: Gewünschtes Verhalten; Schnittstellen; Vorgaben bzwgl. Geschwindigkeit, Kosten, Fläche oder Leistungsverbrauch
-		\item Entwurfsschritte: Verhaltensspezifikation, RT-Beschreibung, Gatterbeschreibung, Geometriegebschreibung
+		\item Entwurfsschritte: Verhaltensspezifikation, High-Level-Synthese, RT-Beschreibung, Logik-Synthese, Gatterbeschreibung, Layout-Synthese, Geometriegebschreibung, Fertigung
 		\item Hauptbestandteile: Entity, Architecture, Configuration
+		\item Signale zur Kommunikation zwischen Instanzen untereinander oder mit Schnittstellen der äußeren Hülle (Entity)
 		\item Schnittstellendefinition eines MODUL\\\\
 			\begin{minipage}{\linewidth}
 			\begin{lstlisting}[frame=single,numbers=left,mathescape,language=VHDL,tabsize=4]
@@ -155,7 +158,7 @@ ARCHITECTURE Structure OF blinklicht IS
 
 \subsection{Energieeffizienter Entwurf - Grundlagen}
 \begin{itemize}
-	\item Mobile Geräte: Verfügbare Energiemenge durch Battierien und Akkus begrenzt \(\rightarrow\) vorhandene Energie möglichst lange ausnutzen sowie Vermeidung von Überhitzung
+	\item Mobile Geräte: Verfügbare Energiemenge durch Batterien und Akkus begrenzt \(\rightarrow\) vorhandene Energie möglichst lange ausnutzen sowie Vermeidung von Überhitzung
 	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und die beeinflussen die Zuverlässigkeit
 	\item \textbf{CMOS-Schaltung}
 	\begin{itemize}
@@ -190,7 +193,7 @@ ARCHITECTURE Structure OF blinklicht IS
 	\begin{itemize}
 		\item Clock cycles per instruction (CPI, mittlere Anzahl Taktzyklen pro Befehl): \(CPI = \frac{\text{CPU time}}{\text{instruction count } \cdot \text{ machine cycle time}} = \frac{T_{exe}}{IC \cdot TC}\)
 		\item Instructions per cycle (IPC): \(IPC = \frac{1}{CPI}\)
-		\item Millions of instructions per second (MIPS): \(MIPS = \frac{\text{Anzahl der ausgeführten Instruktionen}}{10^6 \text{ Ausführungszeit}}\), Flotingpointoperationen (MFLOPS) analog. Niedrigere MIPS-Werte resultieren bei gleicher Laufzeit in kompakterem Code, niedrigerer Schaltfrequenz und damit geringerem Energieverbrauch
+		\item Millions of instructions per second (MIPS): \(MIPS = \frac{\text{Anzahl der ausgeführten Instruktionen}}{10^6 \text{ Ausführungszeit}}\), Floatingpointoperationen (MFLOPS) analog. Niedrigere MIPS-Werte resultieren bei gleicher Laufzeit in kompakterem Code, niedrigerer Schaltfrequenz und damit geringerem Energieverbrauch
 		\item Probleme: Angaben meist theoretische Maximalwerte bzw. abhängig vom konkreten Programm
 	\end{itemize}
 	\item \textbf{Benchmarks}
@@ -210,7 +213,7 @@ ARCHITECTURE Structure OF blinklicht IS
 	\item \textbf{Messung während des Betriebs von Anlagen}
 	\begin{itemize}
 		\item Monitore: Aufzeichnungselemente, welche die Verkehrsverhältnisse während des normalen Betriebs beobachten oder untersuchen
-		\item Hardware-Monitor: Unabhängige, physikaleische Geräte, welche die Betriebsverhältnisse nicht beeinflussen
+		\item Hardware-Monitor: Unabhängige physikalische Geräte, welche die Betriebsverhältnisse nicht beeinflussen
 		\item Software-Monitor: Eingebaut ins OS, beeinträchtigen die normalen Betriebsverhältnisse
 		\item Beispiel: Performance Counter
 		\begin{itemize}
@@ -235,6 +238,10 @@ ARCHITECTURE Structure OF blinklicht IS
 		\item Full-System Simulatoren modellieren ein vollständiges Computersystem, einschließlich CPU, IO, Disk und Netzwerk
 	\end{itemize}
 \end{itemize}
+
+\subsubsection{Durchsatz eines Warteschlangenmodells: Gesetz von Little}
+Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in einem Wartesystem, welches sich in einem stabilen Zustand befindet, gleich dem Produkt ihrer durchschnittlichen Ankunftsrate \(\lambda\) und ihrer durchschnittlichen Verweildauer im System \(W\) ist.\footnote{\url{https://de.wikipedia.org/wiki/Littles_Gesetz}}
+\[L=\lambda W\]
 
 
 \subsection{Zuverlässigkeit und Fehlertoleranz}
@@ -265,8 +272,10 @@ ARCHITECTURE Structure OF blinklicht IS
 	\item \textbf{Redundanz}
 	\begin{itemize}
 		\item Statische Redundanz: Vorhandensein redundanter Systeme während des gesamten Einsatzzeitraums (n-von-m-System)
+		\item Zuverlässigkeit von n-von-m-Systemen (3-aus-5 vs. 2-aus-3): Das 3-aus-5-System zeigt in der Anfangszeit eine höhere Funktionswahrscheinlichkeit als das 2-aus-3-System. Nach einiger Zeit (Schnittpunkt der beiden Graphen im Bild) kehrt sich dieser Effekt jedoch um. Anfangs sind die einzelnen Funktionswahrscheinlichkeiten noch hoch und bei einem 3-aus-5-System können bis zu 2 Komponenten ausfallen. Wenn die Funktionswahrscheinlichkeit einen bestimmten Punkt unterschreitet, ist ein 2-aus-3-System sicherer, da nur 2 Komponenten zum Betrieb notwendig sind
 		\item Dynamische Redundanz: Vorhandensein redundanter Systeme, die erst nach Auftreten eines Fehlers aktiviert werden
 	\end{itemize}
+	\item Ausfallverhalten ("`Badewannenkurve"'): Frühphase (hohe Ausfallwahrscheinlichkeit durch Fertigungsfehler oder defekte Bauteile), Betriebsphase, Spätphase (hohe Ausfallwahrscheinlichkeit durch Verschleiß)
 \end{itemize}
 
 
@@ -274,7 +283,7 @@ ARCHITECTURE Structure OF blinklicht IS
 \begin{itemize}
 	\item \textbf{Flynn'sche Taxonomie}
 	\begin{itemize}
-		\item Signle Instruction, Single Data (SISD): Uniprozessor
+		\item Single Instruction, Single Data (SISD): Uniprozessor
 		\item Single Instruction, Multiple Data (SIMD): Vektorrechner, Feldrechner
 		\item Multiple Instruction, Single Data (MISD): Zuordnung Umstritten ("`darf es nicht geben"' vs. "`Großrechner oder Supercomputer"')
 		\item Multiple Instruction, Multiple Data (MIMD): Multiprozessor
@@ -524,20 +533,22 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item \textbf{Multiprozessor mit gemeinsamem Speicher: Uniform Memory Access (UMA)}
 	\begin{itemize}
 		\item Gleichberechtigter Zugriff der Prozessoren auf die Betriebsmittel
-		\item Gemeinsamer Adressraum, Austausch von Daten über gemeinsamen Speicher durch LS-Operationen
+		\item Gemeinsamer Speicher mit globalem Adressraum, Austausch von Daten über gemeinsamen Speicher durch LS-Operationen
 		\item Beispiele: Symmetrischer Multiprozessor (SMP), Multicore-Prozessor
 	\end{itemize}
 	\item \textbf{Multiprozessor mit verteiltem Speicher: No Remote Memory Access (NORMA)}
 	\begin{itemize}
+		\item Physikalisch verteilter Speicher
 		\item Jeder Knoten mit einem privaten Adressraum
 		\item Kommunikation durch Nachrichtenaustausch über ein Interconnect Network
 		\item Beispiel: Cluster
 	\end{itemize}
 	\item \textbf{Multiprozessor mit verteiltem gemeinsamen Speicher: Non-Uniform Memory Access (NUMA)}
 	\begin{itemize}
-		\item Beispiel: Cache-Coherent Non-Uniform Memory Access
 		\item Globaler Adressraum über mehreren, exklusiv jeweils einem Prozessor zugeordneten Speichereinheiten
+		\item Speicher physikalisch verteilt
 		\item Zugriff auf entfernten Speicher über LS-Operationen (über ein Interconnect Network)
+		\item Beispiel: Cache-Coherent Non-Uniform Memory Access oder Distributed shared Memory (DSM)
 	\end{itemize}
 \end{itemize}
 
@@ -559,7 +570,9 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Kein gemeinsamer Adressbereich, Kommunikation der Prozesse (Threads) mit Hilfe von Nachrichten
 			\item Kommunikationsarchitektur: Verwendung von korrespondierenden Send- und Receive-Operationen
 		\end{itemize}
+		\item Beispiel: OpenMP für gemeinsamen Speicher, MPI für verteilten Speicher
 	\end{itemize}
+	\item Durchzuführende Schritte beim Parallelisierungsprozess: Dekomposition, Zuweisung, Festlegung, Abbildung
 \end{itemize}
 
 
@@ -575,7 +588,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \begin{itemize}
 	\item Misst die entstehende Parallelität in einem Programm oder bei der Ausführung auf einem Parallelrechner und liefert so eine Vorstellung von der inhärenten Parallelität eines Algorithmus/Programms
 	\item Grafische Darstellung: XY-Diagramm mit Anzahl der parallelen Aktivitäten in zeitlicher Abhängigkeit \(\rightarrow\) Perioden von Berechnungs- Kommunikations- und Untätigkeitszeiten sind erkennbar
-	\item Der Parallelitätsgrad \(PG(t)\) gibt die Anzahl der Tasks an, die zu e9nem Zeitpunkt parallel bearbeitet werden können
+	\item Der Parallelitätsgrad \(PG(t)\) gibt die Anzahl der Tasks an, die zu einem Zeitpunkt parallel bearbeitet werden können
 	\item Leistungsangaben zu Multiprozessorsystemen werden mit Leistungsangaben zu Einprozessorsystemen in Beziehung gesetzt
 	\item \textbf{Parallelindex I (Mittlerer Grad des Parallelismus)}
 	\begin{itemize}
@@ -583,21 +596,6 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Kontinuierlich: \(I = \frac{1}{t_2-t_1}\int_{t_1}^{t_2}PG(t)dt\)
 		\item Diskret: \(\Big(\sum_{i=1}^m i\cdot ti\Big)~/~\Big(\sum_{t=1}^mt_i\Big)\)
 	\end{itemize}
-\end{itemize}
-
-\subsubsection{Speedup/Effizenz/Parallelisierungsmehraufwand}
-\begin{itemize}
-	\item Gibt die Verbesserung der Verarbeitungsgeschwindigkeit an (Vergleich Einprozessor- und Multiprozessorsystem)
-	\item Speedup: \(S(n)=\frac{T(1)}{T(n)}\)
-	\item Effizienz: \(E(n)=\frac{S(n)}{n}\)
-	\item Mehraufwand für die Parallelisierung: \(R(n)=\frac{P(n)}{P(1)}\)
-\end{itemize}
-
-\subsubsection{Auslastung}
-\begin{itemize}
-	\item Entspricht dem normierten Parallelindex
-	\item Gibt an, wie viele Operationen/Tasks jeder Prozessor im Durchschnott pro Zeiteinheit ausgeführt hat
-	\item \(U(n) = \frac{I(n)}{n} = R(n) \cdot E(n) = \frac{P(n)}{n \cdot T(n)}\)
 \end{itemize}
 
 \subsubsection{Skalierbarkeit eines Parallelrechners}
@@ -652,12 +650,16 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Nach Aufbau des Verbindungsnetzes bleiben die Strukturen fest
 			\item Vorhersagbare Kommunikationsmuster zwischen Knoten
 			\item Vollständige Verbindung: Alle Knoten sind miteinander verbunden. Höchste Leistungsfähigkeit aber nicht praktikabel bei hoher Prozessorzahl (Aufwand steigt qudratisch mit der Prozessorzahl)
-			\item Gitterstrukturen: Verbinden benachbarter Knoten. Disjunkte Bereiche können parallel genutzt werden, allerdings oft mehrere Schritte notwendig (bei unbenachbarten Knoten)
+			\item Gitterstrukturen: Verbinden benachbarte Knoten. Disjunkte Bereiche können parallel genutzt werden, allerdings oft mehrere Schritte notwendig (bei unbenachbarten Knoten)
 			\item Unidirektionaler Ring: Nachrichten werden vom Quellknoten zum Zielknoten geschickt. Bei Ausfall bricht die Kommunikation zusammen
 			\item Bidirektionaler Ring: Übertragung kann die kürzeren der beiden Wege wählen. Bei einer Unterbrechung bleibt die Kommunikation bestehen
 			\item Chordaler Ring: Hinzufügen weiterer Direktverbindungen zur Erhöhung der Fehlertoleranz
 			\item Baumstruktur: Teilweise mit steigender Anzahl an Kommunikationskanälen in Richtung Wurzel
 			\item Diverse Kubusstrukturen, beispielsweise Hyperkubus: Binäre Bezeichnung der Knoten ermöglicht Routenbestimmung (benachbarte Knoten unterscheiden sich um genau eine Stelle, Start- und Zieladresse werden per XOR verknüpft). Allerdings schlechte Skalierbarkeit, da bei jeder Erweiterung der Knotengrad steigt und alle Knoten erweitert werden müssen
+			\begin{itemize}
+				\item Anzahl der Knoten eines \(K\)-nären \(n\)-Kubus: \(N = K^n\)
+				\item Knoten-/Verbindungsgrad: \(2n\)
+			\end{itemize}
 		\end{itemize}
 		\item Dynamische Verbindungsnetze
 		\begin{itemize}
@@ -712,7 +714,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Bus-Snooping: Caches sind an einem gemeinsamen Bus und beobachten diesen, um feststellen zu können, ob sie eine Kopie eines Blocks enthalten, der benötigt wird
 		\item MESI-Kohärenzprotokoll (Hardware)
 		\begin{itemize}
-			\item Jeder Cache verfügt über Snoop-Logik und Steuersignale: Invalidate-Signal (zum Invalidieren von EInträgen in anderen Caches), Shared-Signal (zeigt an, ob ein zu ladender Block bereits als Kopie besteht) und Retry-Signal (Aufforderung für den Prozessor das Laden eines Blocks abzubrechen. Nachdem ein anderer Prozessor aus dem Cache in den Hauptspeicher zurückgeschrieben hat wird das Laden wieder aufgenommen)
+			\item Jeder Cache verfügt über Snoop-Logik und Steuersignale: Invalidate-Signal (zum Invalidieren von Einträgen in anderen Caches), Shared-Signal (zeigt an, ob ein zu ladender Block bereits als Kopie besteht) und Retry-Signal (Aufforderung für den Prozessor das Laden eines Blocks abzubrechen. Nachdem ein anderer Prozessor aus dem Cache in den Hauptspeicher zurückgeschrieben hat wird das Laden wieder aufgenommen)
 			\item Erweiterung jeder Cache-Zeile um zwei Steuerbits zum Anzeigen der Zustände:
 			\begin{itemize}
 				\item Invalid (I): Die Cache-Zeile ist ungültig. Mittels Shared-Signal zeigen die anderen Steuerungen an, ob sie diesen Block gespeichert haben (shared read hit/miss). Davon abhängig erfolgt der Übergang in \(S\) oder \(E\). Bei einem Write-Miss erfolgt der Übergang in \(M\)
@@ -722,6 +724,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\end{itemize}
 			\item Zustandsgraphen und Beispiel in den Folien\footnote{VL-07 Folie 2-40 bis 2-47}
 		\end{itemize}
+		\item MOESI-Kohärenzprotokoll: Erweitert das MESI-Protokoll um den zusätzlichen Zustand \texttt{Owned} (\texttt{O}). Es vermeidet das Zurückschreiben von modifizierten Cache-Lines, wenn andere CPUs diese lesen wollen. Stattdessen wird der aktuelle Wert bei jeder Veränderung zwischen den Caches direkt propagiert\footnote{\url{https://de.wikipedia.org/wiki/MOESI}} (praktisch, wenn ein Prozessor einen Wert in seinen Cache läd, der bereits in einem anderen Cache existiert)
 		\item Distributed Shared Memory
 		\begin{itemize}
 			\item Multiprozessor mit verteiltem, gemeinsamem Speicher ohne Möglichkeit, die Broadcasteigenschaft des Busses zu nutzen
@@ -808,7 +811,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item Motivation: Gerade in HPC-Anwendungen fallen oft viele gleichartige Daten an, die auf ähnliche Weise verarbeitet werden sollen, so zum Beispiel bei Simulationen in der Meteorologie und Geologie (Single Instruction Multiple Data)\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#Funktionsweise_und_Anwendungsfelder}}
 	\item Verarbeitungsbeispiel: \(Y = a \cdot X + Y\). \(X\) und \(Y\) sind zwei Vektoren gleicher Länge und a ist eine skalare Größe. Dieses Problem wird auf Skalarprozessoren durch eine Schleife gelöst\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}, dadurch hoher Aufwand durch viele Schleifendurchläufe, Pipeline-Konflikte oder Mehrzyklusoperationen
 	\item Verarbeitung in einem Rechenwerk mit pipeline-artig aufgebauten Funktionseinheiten
-	\item \textbf{Code-Beispiel: Berechnung von \(Y = a \cdot X + Y\)}\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}\\\\
+	\item \textbf{Code-Beispiel\footnote{\url{https://de.wikipedia.org/wiki/Vektorprozessor\#MIPS-Architekturbeispiel}}: Berechnung von \(Y = a \cdot X + Y\)}\\\\
 	\begin{minipage}{\linewidth}
 	\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
 ; MIPS
@@ -845,7 +848,7 @@ Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
 		\item Berechnung eines Ergebnisses pro Takt bei ununterbrochener Arbeit und einer Füllzeit/Einschwingzeit
 		\item Beispiel einer Gleitkommaoperation
 		\begin{enumerate}
-			\item Laden eines Paars von Gleitkommazahlen aus Vektorregiste
+			\item Laden eines Paars von Gleitkommazahlen aus Vektorregister
 			\item Vergleich der Exponenten und Verschieben einer Mantisse
 			\item Addition der ausgerichteten Mantisse
 			\item Normalisieren des Ergebnisses und Schreiben in Zielregister
@@ -936,6 +939,42 @@ SVI 	(Ra+Vk),Va 	; store A(K(I))
 			\end{lstlisting}
 			\end{minipage}		
 	\end{itemize}
+	\item Beispiel: Realisierung von C-Code in Assembler\\\\
+		\begin{minipage}{\linewidth}
+		\begin{lstlisting}[frame=single,numbers=left,mathescape,language=C,tabsize=4]
+unsigned char i;
+unsigned char a[64], b[64], c[64];
+for (i = 0; i < 64; i++) {
+	c[i] = a[i];
+	if (a[i] == 0xff) {
+		c[i] = b[i];
+	}
+}
+		\end{lstlisting}
+		\end{minipage}
+		\begin{minipage}{\linewidth}
+		\begin{lstlisting}[frame=single,numbers=left,mathescape,language={[mips]Assembler},tabsize=4]
+; Initialisierung
+MOV 	R1, 64
+MTC1	VLR, R1		; Vektorlaenge = 64
+LV 		V1, Ra
+LV 		V2, Rb
+MOV 	R2, 0
+
+; Berechnungen
+ADDVS 	V3, V1, R2 	; c[]=a[]
+MOV 	R1, 0xff
+SEQVS.I	V1, R1		; Vergleich mittels 'equals'
+					; Setze Maske gleich 1 bei true, anderenfalls 0
+SUBV.I 	V3, V3, V3  ; Setze Werte=0, die in der Maske gesetzt sind
+ADDV.I 	V3, V3, V2
+
+; Bereinigen und speichern
+CVM					; Vektormaske loeschen, sonst werden nicht alle
+					; Werte zurueckgeschrieben
+SV 		Rc, V3
+		\end{lstlisting}
+		\end{minipage}
 \end{itemize}
 
 \subsubsection{SIMD-Verarbeitung in Mikroprozessoren am Beispiel Intel MMX Technologie}
@@ -957,16 +996,24 @@ SVI 	(Ra+Vk),Va 	; store A(K(I))
 	\item Kosten des Dies: \(cost_{die} = \frac{cost_{wafer}}{\text{Dies pro Wafer} \cdot yield_{die}}\)
 	\item Anzahl der Dies pro Wafer: \(dpw = \frac{\pi \cdot \big(\frac{1}{2} \cdot d_{Wafer}\big)^2}{A_{die}} - \frac{\pi \cdot d_{Wafer}}{\sqrt{2 \cdot A_{die}}}\) (theoretisches Maximum abzüglich Verschnitt)
 	\item Die Yield (Ausbeute): \(yield_{die} = yield_{Wafer} \cdot \Big(1+\frac{\text{Defekte pro Flaecheneinheit} \cdot A_{die}}{\alpha}\Big)^{-\alpha}\)
+	\item Gesamtkosten eines IC: \(cost_{IC} = \frac{cost_{die}+cost_{die-test}+cost_{packaging}}{yield_{final}}\)
 \end{itemize}
 
 \subsubsection{Energieeffizienter Entwurf}
 \begin{itemize}
-	\item \textbf{Schaltungswahrscheinlichkeit}
+	\item \textbf{Prozessorleistung}
+	\begin{itemize}
+		\item \(P \sim U^2 \cdot f\)
+	\end{itemize}
+	\item \textbf{Wahrscheinlichkeiten}
 	\begin{itemize}
 		\item \(\mathbb{P}_A(1) = 1 - \mathbb{P}_{\neg A}(1)\)
 		\item \(\mathbb{P}_A(1) = 1 - \mathbb{P}_A(0)\)
 		\item \(\mathbb{P}_{A \land B}(1) = \mathbb{P}_A(1) \cdot \mathbb{P}_B(1)\)
-		\item \(\mathbb{P}_{A \lor B}(1) = 1 - \mathbb{P}_{A \lor B}(0) = 1 - \mathbb{P}_A(0) \cdot \mathbb{P}_B(0)\)
+		\item \(\mathbb{P}_{A \lor B}(1) = 1 - \mathbb{P}_{A \land B}(0) = 1 - \mathbb{P}_A(0) \cdot \mathbb{P}_B(0)\)
+	\end{itemize}
+	\item \textbf{Schaltungswahrscheinlichkeit}
+	\begin{itemize}
 		\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
 		\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
 	\end{itemize}
@@ -975,6 +1022,11 @@ SVI 	(Ra+Vk),Va 	; store A(K(I))
 		\item Leistungsaufnahme: \(P_{total} = P_{switching} + P_{shortcircuit} + P_{static} + P_{leakage}\)
 		\item \(P_{switching} = C_{eff} \cdot V_{dd}^2 \cdot f\) (wesentlicher Anteil am Leistungsverbrauch)
 		\item \(P_{shortcircuit} = I_{mean} \cdot V_{dd}\)
+	\end{itemize}
+	\item \textbf{Durchsatz}
+	\begin{itemize}
+		\item Maximaler Durchsatz: \(D_{max} = \frac{1}{Bedienzeit} = \frac{1}{t_{Zugriff} + t_{\text{Übertragung}}}\)
+		\item Übertragungszeit: \(t_{\text{Übertragung}} = \frac{\text{Größe der Übertragung}}{Bandbreite}\)
 	\end{itemize}
 \end{itemize}
 
@@ -993,13 +1045,22 @@ SVI 	(Ra+Vk),Va 	; store A(K(I))
 	\item Ausführungszeit: \(T_{exe} = \frac{\text{Anzahl an Zyklen}}{Prozessortakt} = \frac{C}{f}\)
 	\item Clock cycles per instruction (CPI, mittlere Anzahl Taktzyklen pro Befehl): \(CPI = \frac{\text{CPU time}}{\text{instruction count } \cdot \text{ machine cycle time}} = \frac{T_{exe}}{IC \cdot TC}\)
 	\item Instructions per cycle (IPC): \(IPC = \frac{1}{CPI}\)
+	\item Taktfrequenz: \(f = \frac{IC \cdot IPC}{T}\), niedrigerer Takt bedeutet niedrigere Leistungsaufnahme, da \(P \sim f\)
 	\item \(SPEC_{ratio} = \frac{Referenzsystem}{Testsystem}\), quantifiziert die Geschwindigkeit eines Rechensystems
 	\item \(SPEC_{rate}\) quantifiziert den Durchsatz eines Rechensystems
+	\item Gesetz von Little: \(\text{Mittlere Anzahl an Aufträgen} = \text{Durchsatz} \cdot \text{Antwortzeit}\)
 \end{itemize}
 
 \subsubsection{Zuverlässigkeit und Fehlertoleranz}
 \begin{itemize}
 	\item Allgemeine Formel zur Berechnung der Zuverlässigkeit: \(\phi^n_m = \sum_{k=n}^m \Big(\begin{array}{c}m\\k\end{array}\Big) \cdot \phi(K)^k \cdot \big(1-\phi(K)\big)^{m-k}\)
+	\item Zuverlässigkeitsberechnung mit Mehrheitsentscheider \(V\): \(\phi^n_m = \phi(V) \cdot \sum_{k=n}^m \Big(\begin{array}{c}m\\k\end{array}\Big) \cdot \phi(K)^k \cdot \big(1-\phi(K)\big)^{m-k}\)
+	\item Punktverfügbarkeit: \(V = \frac{\text{Mittlere Funktionszeit}}{\text{Mittlere Funktionszeit} + \text{Mittlere Reparaturzeit}} = \frac{MTTF}{MTTF + MTTR}\)
+	\item \textbf{Berechnen von \(\lambda\) mit gegebener mittlerer Lebensdauer}
+	\begin{itemize}
+		\item Gegeben: Überlebenswahrscheinlichkeit \(R(S,t)\) eines Gesamtsystems, Überlebenswahrscheinlichkeit \(R(t)\) einer Komponente sowie mittlere Lebensdauer
+		\item Berechne \(\int_0^{\infty}R(S,t)dt= \text{mittlere Lebensdauer}\)
+	\end{itemize}
 \end{itemize}
 
 
