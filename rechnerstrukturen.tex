@@ -673,6 +673,8 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Omega-Netz: Besteht aus \(\frac{N\cdot log_k(N)}{k}\) Crossbars bei \(N\) Knoten mit Switch-Grad \(k\). Nicht blockierungsfrei
 			\item Mischpermutationnetz: Kreisverschiebung der Adressbits
 			\item Allgemeine Beispiele für dynamische Verbindungsnetzwerke: Bus, Kreuzschiene, Schaltnetzwerk
+			\item Kreuzpermutation: Abbildung auf invertierte ID. Beispielsweise \(001 \longrightarrow 100\)
+			\item Mischpermutation: Addieren von \(\forall 0..\frac{n-1}{2}:2n\). Beispielsweise \(000 \longrightarrow 000, 001 \longrightarrow 010\). Die obere Hälfte invertiert
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -1014,7 +1016,6 @@ SV 		Rc, V3
 	\end{itemize}
 	\item \textbf{Schaltungswahrscheinlichkeit}
 	\begin{itemize}
-		\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
 		\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
 	\end{itemize}
 	\item \textbf{CMOS}
