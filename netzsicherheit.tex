@@ -483,6 +483,70 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 
 \section{Kerberos}
+\begin{itemize}
+	\item Verteilter Authentifizierungsdienst für Benutzer und Server in (un-)geschützten Netzwerken
+	\item SingleSignOn innerhalb der Domäne
+	\item \textbf{Komponenten}
+	\begin{itemize}
+		\item \textit{Authentication Server} (AS) zur Authentifizierung der Benutzer sowie zur Ausstellung von Authentifizierungstokens (\textit{Ticket-Granting-Ticket}: TGT)
+		\item \textit{Ticket Granting Server} (TGS): Ressourcen-Zugangs-Server zur Autorisierung des Ressourcen-Zugriffs mit gültigem TGT. Ausstellung von Zugangsberechtigungen (\textit{Tickets})
+		\item Benutzerdaten zur Speicherung der \textit{Master-Secrets} aller Benutzer und Ressourcen
+		\item AS und TGS bilden \textit{Kerberos Distribution Center} (KDC)
+	\end{itemize}
+	\item \textbf{Ablauf einer Anmeldung}
+	\begin{enumerate}
+		\item Anmeldung beim AS: Client erhält TGT
+		\item Ressourcenanforderung: Autorisierung durch TGT. Client erhält Ticket für die entsprechende Ressource
+		\item Kommunikation mit der Ressource. Zugriffskontrolle erfolgt durch die Ressource
+	\end{enumerate}
+	\item \textbf{Anmeldung am Netz}
+	\begin{itemize}
+		\item Übertragen des Benutzernames im Klartext zum KDC (Angreifer kann Identität des Benutzers abhören). Nonce zum Schutz vor Replay-Attacken (\texttt{AS\_REQ})
+		\item Antwort vom Server (\texttt{AS\_REP}) mit dem Master-Secret des Benutzers verschlüsselt (verschiedene Verfahren wie beispielsweise AES unterstützt)
+	\end{itemize}
+	\item \textbf{Offline-Password-Guessing-Angriff}
+	\begin{itemize}
+		\item Ziel: Erlangen des Benutzerpassworts
+		\item Vorgehen: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP}, anschließend Wörtbuchangriff zur Ermittlung des Passworts
+		\item Bei (veraltetem) Kerberos v4: Aktiver Angriff durch Generierung von \texttt{AS_REQ}-Anfragen für beliebige Nutzer
+		\item Optionaler Schutz in Kerberos v5 integriert: Zusätzlich aktueller Zeitstempel mit Master-Key des Client verschlüsselt in \texttt{AS\_REQ} enthalten. Brute-Force-Angriffe weiterhin möglich
+	\end{itemize}
+	\item Optional Netzwerkadressen der Clients in jedem Ticket: Keine Weitergabe von Tickets \(\rightarrow\) schützt vor Ticketdiebstahl. IP-Spoofing allerdings unkompliziert möglich, funktioniert nicht bei NAT
+	\item \textbf{Schlüssel-Server für große Netze}
+	\begin{itemize}
+		\item Einzelner KDC ist Single-Point-of-Failure \(\rightarrow\) replizieren des Schlüssel-Servers
+		\item Gliederung des Netzwerk in Domänen (Realms). Einzelner KDC kennt nicht mehr alle Master-Secrets
+		\item Replizierte Schlüssel-Server
+		\begin{itemize}
+			\item Eine Master-Copy der Benutzerdatenbank mit mehreren Read-only-Slave-KDCs. Alle Änderungen nur auf der Master-Copy
+			\item Auch bei Ausfall des Master-KDC ist die Nutzung des Netzes weiterhin möglich, lediglich Änderungen fallen aus
+			\item Periodisches Abfragen der Slaves (oder per Kommando). Updates verschlüsselt und mit MAC versehen
+			\item Passwortänderung problematisch
+			\begin{itemize}
+				\item Passwort muss jederzeit änderbar sein
+				\item Problem (I): Bereits ausgestellte Tickets sind mit dem alten Passwort verschlüsselt
+				\item Lösung (I): Speicherung mehrerer Schlüsselversionen sowie Ergänzen der Tickets um die Version
+				\item Problem (II): Replizieren des KDCs. Bei periodischem Verteilen eventuell noch das alte Kennwort auf dem Slave \(rightarrow\) altes Passwort weiterhin gültig \(\rightarrow\) Verwirrung des Benutzers
+			\end{itemize}
+		\end{itemize}
+		\item Rechteübertragung % TODO!
+		\begin{itemize}
+			\item Erst ab Kerberos v5 möglich
+		\end{itemize}
+		\item Domänen (Realms)
+		\begin{itemize}
+			\item Administrative Aufteilung pro Realm: Eigene Benutzerdatenbank, Replizierung, KDCs einer Domäne beisitzen das selbe KDC-Master-Secret
+			\item Inter-Domänen-Authentifizierung zur Nutzung von Ressourcen einer anderen Domäne. Autorisierung duch den KDC der anderen Domäne. KDC kann hierzu als Client eines anderen KDC registriert sein
+			\item Mehrstufige Domänen durch Verkettung von Inter-Domänen-Tickets möglich. KDC registriert sich hierzu als Client bei KDC der Vaterdomäne
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Zusammenfassung}
+	\begin{itemize}
+		\item SSO-Netzwerk; Tickets mit Cookie-Prinzip; Übertragung von Rechten möglich; KDC als Single-Point-of-Failure (Replizierung, Mehrstufigkeit)
+		\item Vorteile: Nur ein Passwort; sichere, netzwerkweite Authentifizierung; basiert fast ausschließlich auf symmetrische Verfahren
+		\item Nachteile: Kompromittierung des Master-Secrets des KDC legt alle Master-Secrets der Clients offen; alle Ressourcen müssen angepasst sein ("`kerberized"'); enge Synchronisation der Systemuhren notwendig
+	\end{itemize}
+\end{itemize}
 
 
 
