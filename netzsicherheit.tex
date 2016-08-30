@@ -508,7 +508,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 	\begin{itemize}
 		\item Ziel: Erlangen des Benutzerpassworts
 		\item Vorgehen: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP}, anschließend Wörtbuchangriff zur Ermittlung des Passworts
-		\item Bei (veraltetem) Kerberos v4: Aktiver Angriff durch Generierung von \texttt{AS_REQ}-Anfragen für beliebige Nutzer
+		\item Bei (veraltetem) Kerberos v4: Aktiver Angriff durch Generierung von \texttt{AS\_REQ}-Anfragen für beliebige Nutzer
 		\item Optionaler Schutz in Kerberos v5 integriert: Zusätzlich aktueller Zeitstempel mit Master-Key des Client verschlüsselt in \texttt{AS\_REQ} enthalten. Brute-Force-Angriffe weiterhin möglich
 	\end{itemize}
 	\item Optional Netzwerkadressen der Clients in jedem Ticket: Keine Weitergabe von Tickets \(\rightarrow\) schützt vor Ticketdiebstahl. IP-Spoofing allerdings unkompliziert möglich, funktioniert nicht bei NAT
@@ -551,6 +551,109 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 
 \section{Zugangsschutz}
+\begin{itemize}
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Network Access Server (NAS): Einwahl-/Verbindungspunkt für Nutzer. Blockiert zunächst Zugriffe der Nutzer und wartet auf Authentifizierung und Autorisierung
+		\item Authentication Server (AS): Speichert Informationen zum Nutzer und nimmt Authentifizierungsanfragen entgegen
+	\end{itemize}
+	\item \textbf{Netzzugangstechniken}
+	\begin{itemize}
+		\item Dediziertes, physisches Medium: Hier direkte Punkt-zu-Punkt-Verbindungen wie POTS, ISDN oder LAN. Angriffe schwierig, brauchen physischen Zugriff
+		\begin{itemize}
+			\item Einwahlverbindung per Point-to-Point Protokoll (PPP). Unterteilt in:
+			\begin{itemize}
+				\item \textit{Link Configuration Protocol} (LCP) zur Authentifizierung auf Schicht 2
+				\item \textit{Network Configuration Protocol} (NPC) zur Einrichtung von Schicht 3 (beispielsweise IP)
+			\end{itemize}
+			\item Entwickelt für dediziertes, physisches Medium und unterstützt verschiedene Transportptotokolle. Häufiger Einsatz bei ISPs
+			\item Keine Sicherheit auf dem Übertragungsweg zwischen Supplicant und NAS, keine Sicherheit für anschließende Kommunikation
+			\item Annahme: Angriffe schwierig, da direkter Zugriff benötigt (und dieser ist nicht vorhanden)
+			\item PPP und DSL: PPP over Ethernet (PPPoE)
+			\begin{itemize}
+				\item Ethernet als Anschlusstechnologie zur Kosteneinsparung der Provider (geteiltes Medium: Punkt-zu-Multipunkt). Allerdings fehlende Funktionalität in Ethernet wie Authentifizierung, Aushandling von Optionen, Accounting
+				\item \textit{Broadband Remote Access Server} (BRAS) als Gegenstelle der Supplicants (übernimmt die Rolle des NAS)
+				\item Problem: Auffinden der richtigen Gegenstelle (welche MAC hat der BRAS)
+				\item Bei PPPoE werden PPP-Pakete in Ethernet-Dateneinheiten übertragen \(\rightarrow\) Authentifizierung via PPP
+				\item PPPoE-Discovery zum Finden der NAS-Gegenstelle
+				\item Auch PPPoE verwendet keine zusätzlichen Sicherheitsfeatures
+			\end{itemize}
+		\end{itemize}
+		\item Geteiltes Medium: Drahtgebunde Punkt-zu-Mehrpunkt-Verbindungen (Ethernet) wie DSL, DOCSIS (Kabeletz) oder LAN (Bus). Angriffe für Insider leicht (ARP-/IP-Spoofing), externe Angreifer benötigen zunächst Mediumzugriff
+		\begin{itemize}
+			\item Punkt-zu-Punkt-Verbdinung mittels LAN-Kabel zum NAS (Port Access Entity - PAE, hier: Switch) via Ethernet auf Schicht 2 (IEEE 802.3)
+			\item Port-basierte Authentifizierung und Autorisierung zum Schutz vor illegitimer Nutzung des LAN
+			\item EAP zur Authentifizierung (EAP over LAN)
+			\begin{itemize}
+				\item Ethernat zwischen Supplicant und Authenticator/NAS. Transport von EAP über Ethernet
+				\item Netzwerkstack: Ethernet \(\rightarrow\) EAPoL-Dateneinheit \(\rightarrow\) EAP-Dateneinheit
+				\item Sicherheitsbetrachtung: Einmal authentifizierter Port kann mittels Netzwerk-Hub "`entführt"' werden. Keine Sicherheit auf dem Übertragungsweg und während der anschließenden Kommunikation. Annahme: Angreifer hat keinen Zugriff auf das Medium
+			\end{itemize}
+		\end{itemize}
+		\item Broadcast Medium: Hier drahtlose Punkt-zu-Mehrpunktverbindungen für alle in Empfangsreichwerte. Beispielsweise WLAN. Angriffe für Insider einfach, externe Angreifer müssen nur in Empfangsreichweite sein
+		\begin{itemize}
+			\item Boradcast Medium mit Kommunikation über Luftschnittstelle. Jede gesendete Nachricht wird an alle Teilnehmer weitergeleitet \(\rightarrow\) Angriffe leicht möglich
+			\item Zugangsverfahren
+			\begin{enumerate}
+				\item WEP (gebrochen)
+				\begin{itemize}
+					\item Verwendung der Stromchiffre RC4. Wahlweise Open-System oder Authentifizierung via PSK
+					\item Lediglich Gruppenauthentifizierung mit gemeinsamen Schlüssel, keine Authentifizierung einzelner User
+				\end{itemize}
+				\item WPA (gebrochen)
+				\begin{itemize}
+					\item Ab 2003 Alternative zu gebrochenem WEP notwendig
+					\item Temporal Key Integrity Protocal (TKIP) sowie individuelle Sitzungsschlüssel auf Basis von RC4 zur Verschlüsselung und Integrität
+					\item Neben gemeinsamem Sitzungsschlüssel auch pro-Benutzer-Zugänge möglich (802.1X, Authentifizierung via RADIUS-Server)
+					\item Probleme: Keine starken Kryptomechanismen. Verschlüsselung/Authentifizierung/integritätssicherung gilt als gebrochen
+				\end{itemize}
+				\item WPA2 mit PSK (ungebrochen, derzeit bester Angriff: PSK raten)
+				\begin{itemize}
+					\item Vollständige Umsetzung von IEEE 802.11i (Robust Security Network): Authentifizierung via PSK ("`personal"') oder 802.1X ("`enterprise"'), Verschlüsselung zwingend AES-CCMP (Counter-Mode-with-Cypther-Block-Chaining)
+					\item Berwertung WPA2-Personal: Authentifizierung von Nutzern sowie Schutz der Kommunikation zwischen Supplicant und NAS, allerdings Authentifizierung nur auf Basis von Gruppenzugehörigkeit \(\rightarrow\) schwierig einzelne Nutzer zu identifizieren (beispielsweise bei Rechtsstreitigkeiten)
+					\item Bewertung von WPA-Enterprise: Löst die Probleme des Personal-Modus, verwendet etablierte Standards
+				\end{itemize}
+			\end{enumerate}
+		\end{itemize}
+		\item Netzwerkübergreifend (beispielsweise über das Internet): Supplicant ist nicht im gleichen lokalen Netz wie NAS (VPN). Angriffe leicht, da viele weitervermittelnde Netzwerke
+		\begin{itemize}
+			\item Ziel: Gesicherten Zugriff auf Zielnetzwerk mit Zugriffs- und Übertragungsschutz
+			\item Nutzung von PPP-Authentifizierung über IP/UDP
+			\item Implementierungen: Point-to-Point-Protocol von Microsoft (verwendet MS-CHAPv2, gilt als gebrochen) oder Layer-2-Tunneling-Protocol (L2TP)
+			\item Netzwerkstack: IP \(\rightarrow\) UDP \(\rightarrow\) PPP \(\rightarrow\) Schicht 3 \(\rightarrow\) Schicht 4
+			\item L2TP: Virtuelle Punkt-zu-Punkt-Verbindung via UDP. Bietet keine Vertraulichkeit, daher meist in Kombination mit IPsec verwendet. Nutzt PPP zur Einwahl ins Zielnetzwerk und zur Authentifizierung (beispielsweise mittels EAP)
+			\item OpenVPN mit TLS: Betriebssystem-unabhängige VPN-Einwahl mit guter Konnektivität durch Firewalls und NATs. Authentifizierung beispielsweise mittels PSK oder Benutzername und Kennwort. Darüber hinaus Verwendung von Zertifikaten
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Beispielszenario: Eduroam}
+	\begin{itemize}
+		\item Föderativer Ansatz für Internetzugang über Universitäten für globalen Internetzugang von Studenten/Mitarbeitern. Dezentrale Speicherung \(\rightarrow\) Authentifizierung der Nutzer über die jeweilige Universität
+		\item Schutzziele: Schutz auf Schicht 2 sowie gegenseitige Authentifizierung von Supplicant und AS
+		\item Aufbau
+		\begin{itemize}
+			\item Eindeutige, globale Identifikation der Benutzer (beispielsweise \texttt{benutzer@student.kit.edu})
+			\item Aufteilung in Authentifizierungsdomänen (Realms): Jede teilnehmende Universität stellt eigenen AS (Identitätsprovider, RADIUS-Server)
+			\item Hierarchischer Zusammenschluss je Land zu einer Föderation sowie Zusammenschloss der Föderationen zu entsprechenden Konföderationen (Europa, Asien-Pazifik, USA, Kanada, etc.)
+			\item Roaming über hierarchisches RADIUS-Netzwerk
+			\item Probleme bisher:
+			\begin{itemize}
+				\item Schutz nur jeweils zwischen Supplicant/NAS, NAS/AS, AS/AS. Zwischensysteme können Daten abhören/manipulieren \(\rightarrow\) kein Schutz auf dem kompletten Kommunikationsweg zwischen Supplicant und Heimat-AS
+				\item NAS erfährt den konkreten Benutzernamen \(\rightarrow\) kein Schutz der Identität
+				\item Keine Authentifizierung des Heimt-AS
+			\end{itemize}
+			\item Zusätzliche Probleme bei 802.1X und WLAN
+			\begin{itemize}
+				\item Passiver Angriff durch Mitschneiden der initialen Identitätsdaten immer möglich
+				\item Aktive Angriffe wie MitM-Angriffe während der Authentifizierung oder Fälschen von Dateneinheiten möglich
+			\end{itemize}
+			\item Schutz des Authentifizierungsverkehrs
+			\begin{itemize}
+				\item Protected-EAP (PEAP): Proprietäres Protokoll von Microsoft/Cisco
+				\item EAP-Tunneled-TLS (EAP-TTLS): IETF-standardisiert. Zunächst Aufbau einer gesicherten TLS-Verbindung mit anonymem Supplicant, danach Authentifizierung über sicheren Tunnel. Nachteile: Ob AS-Zertifikat validiert wird hängt vom Supplicant ab, problematisch bei zurückgerufenen Zertifikaten 
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 
