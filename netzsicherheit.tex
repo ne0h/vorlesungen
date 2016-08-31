@@ -798,6 +798,84 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 \section{TLS}
 
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Die standardmäßig im Internet eingesetzten Protokolle (TCP und UDP) beinhalten keine Maßnahmen zur Unterstützung von Sicherheit \(\rightarrow\) keine gewährleistung der Schutzziele
+	\end{itemize}
+	\item \textbf{Überblick}
+	\begin{itemize}
+		\item Ziel: Vertrauliche und integere Kommunikation zwischen Anwendungen mit Authentifikation der Kommunikationspartnern
+		\item Einordnung im Protokollstapel: TLS zwischen TCP und Anwendungsschicht (beispielsweise FTP, SMTP, HTTP)
+		\item Im Vergleich zu IPsec nicht so flexibel einsetzbar, da auf höherer Schicht
+	\end{itemize}
+	\item \textbf{Grundlegender Aufbau}
+	\begin{itemize}
+		\item Bestandteile: \textit{TLS Handshake Protocol} und \textit{TLS Record Protocol}
+		\item Protokollstack: TCP \(\rightarrow\) TLS Record Protocol \(\rightarrow\) TLS Handshake Protocol
+		\item Aufbauend auf zuverlässigem Transportdienst wie beispielsweise TCP
+		\item Grundlegende Komponenten: Kryptografische Verarbeitung der zu übertragendenden Daten (Kombination aus symmetrische Verschlüsselung und (H)MAC, Schlüsselmaterial muss durch anderes Protokoll ausgehandelt werden) \(\rightarrow\) anwendungsunabhängig
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Architektur}
+\begin{itemize}
+	\item \textbf{TLS handshake Protocol}
+	\begin{itemize}
+		\item Beinhaltet Aushandlung der verwendeten kryptografischen Algorithmen zur Verschlüsselung/Integritätssicherung sowie Authentifizierung der Kommunikationspartnern und Aushandlung des Schlüsselmaterials
+		\item Vereinfachter Ablauf im Überblick: Client will mit TLS gesicherte Daten versenden. TLS-Verbindung wird dabei neu aufgebaut
+		\begin{enumerate}
+			\item Auswahl der kryptografischen Verfahren (Client \(\rightarrow\) Server)
+			\item Schlüsselaustausch und Authentifizierung (Server \(\rightarrow\) Client \(\rightarrow\) Server). Daraufhin Erzeugung des Schlüsselmaterials (beide Seiten separat)
+			\item Abschluss in Überprüfung mittels MAC (Client \(\rightarrow\) Server \(\rightarrow\) Client)
+		\end{enumerate}
+		\item Sitzungswiederherstellung zur Vermeidung von rechenintensiver Schlüsselaushandlung. Wiederverwendung der gleichen Sitzungs-ID und Überspringen der restlichen Aushandlung
+		\item Neuaushandlung des Schlüsselmaterials (TLS-Rekeying): Kann jederzeit durch Client oder Server initiitiert werden. Die Aushandlung erfolgt unter Schutz der bestehenden Verbindung
+		\item TSL-Alert Protokoll zur Behandlung von Fehlerzuständen: Fatale Fehler (führen zu sofortigem Verbindungsabbruch) oder Heinweise. Beispielsweise zertifikatsfehler oder Fehler beim Datenempfang
+		\item Expliziter Verbindungsabbau notwendig, anonsten \textit{Truncation Agriff} möglich (Angreifer schleust unverschlsseltes TCP-FIN-Paket ein, wodurch ein Auslogversuch des Clients nei beim Server ankommt). Lösung: Beide Kommunikationspartner müssen ein CloseNotify verschicken
+	\end{itemize}
+	\item \textbf{TLS Record Protocol}
+	\begin{itemize}
+		\item Aufgaben: Verwaltung der Sitzung, Fragmentierung (und optional Komprimierung) der Anwendungsdaten sowie kryptografische Verarbeitung der zu übertragenden Anwendungsdaten
+		\item Eine Sitzung speichert Zustandsinformationen und kann mehrere Verbindungen zusammenfassen. Beispielsweise wenn zustandsloses HTTP mit mehreren TCP-Verbindungen auf eine Webseite zugreift (effizientere Verwaltung als bei Einzelverbindungen)
+		\item Sitzungszustand identifiziert durch Identifikator, Zertifikat, Komprimierungsverfahren (Default: Null), CipherSpec, MasterSecret (zwischen Client und Server berechnetes Schlüsselmaterial)
+		\item Verbindungszustand charakterisiert durch Zufallszahlen, Schlüssel jeweils zur MAC-Berechnung und Verschlüsselung, Initialisierungsvektor sowie Sequenznummer
+		\item Ablauf als Sender: Erhalten von Daten beliebiger Länge von der Anwendung; Fragmentieren und ggf. Komprimieren der Daten; Integritätssicherung mittels MAC; Verschlüsselung; Übergabe an Transportschicht
+		\item Ablauf als Empfänger: Erhalten der Datenpakete aus Transportschicht; Entschlüsseln und Verifizieren des MAC; ggf. Dekomprimieren; Defragmentieren und Übergabe an die Anwendung
+		\item Integritätssicherung mittels MAC. Eingabewerte: Client-/Serverschlüssel, Sequenznummer, Fragmentierte und komprimierte Dateneinheit mit entsprechenden Headern
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Bewertung}
+\begin{itemize}
+	\item \textbf{Wie sicher ist TLS}
+	\begin{itemize}
+		\item Historisch bedingt existieren verschiedene Versionen. Neuere sind i.A. sicherer (Angriffe in existierenden versionen haben u.a. erst zu neueren Vesionen geführt)
+		\item Es existieren über 100 unterschiedliche Ciphersuites, die teilweise unsicher geworden sind. Problematisch sind dabei Standartkonfigurationen in Browsern oder Servern
+		\item Es existieren verschiedene Angriffe (entstanden beispielsweise durch Tippfehler/Programmierfehler an kritischen stellen, siehe Heartbleed). Lösung üblicherweise: Verwenden von neueren TLS-/SSL-Versionen und serverseitiges Verbieten von veralteten
+	\end{itemize}
+	\item \textbf{IPsec vs. TLS}
+	\begin{itemize}
+		\item IPsec: Mächtig, flexibel, schützt transparent alle Schicht-4-Protokolle mit möglicher Aggregation von Verbindungen. Allerdings hohe Komplexität
+		\item Geringe Komplexität, anwendungsnah und "`firewallfreundlich"'. Allerdings keine Aggregation von Verbindungen untrschiedlicher Systeme möglich sowie lediglich Schutz von Anwendungsdaten
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{TLS im Internet der Dinge: DTLS}
+\begin{itemize}
+	\item TLS zur Anwendung oberhalb eines zuverlässigen Transportprotokolls (beispielsweise TCP) entworfen. Anwendungen verwenden allerdings vermehrt UDP (beispielsweise VoIP)
+	\item Zuverlässigkeit muss während des Handshakes garantiert sein, da Paketverluste zu einem neuen Handshake führen. Darüber hinaus ist sie für den Integritätsschutz mittels Sequenznummern notwendig
+	\item \textbf{Datagram Transport Layer Security (DTLS)}
+	\begin{itemize}
+		\item Ziel: Zu TLS äquivalente Sicherheit auch für unzuverlässige Transportprotokolle
+		\item Umsetzung durch die Einführung eigener Sequenznummen, keine Verwendung von Stromchiffren (vermeidet Abhängigkeiten zwischen aufeinenderfolgenden Paketen) sowie Einführung von Retransmissiontimern zum Umgang mit verlorenen Paketen während des Handshakes
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{Internetdienste}
