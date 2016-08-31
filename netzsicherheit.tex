@@ -880,6 +880,55 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 \section{Internetdienste}
 
+\subsection{Border Gateway Protocol (BGP)}
+\begin{itemize}
+	\item Aufteilung des Internet in Autonome Systeme (AS). IANA (Internet Assigned Numbers Authority) delegiert die Zuteilung an \(Reginal Internet Registries\) (RIRs), beispielsweise RIPE NCC für Europa, den Nahen Osten und Zentralasien
+	\item RIRs sind verantwortlich für die Zuteilung von global eindeutigen IP-Adressbereichen (Präfixe) sowie das Routing innerhalb des Autonomen Systems und zu anderen Autonomen Systemen
+	\item \textbf{Exterior Gateway Protocol} (EGP)
+	\begin{itemize}
+		\item Meisteingesetztes Protokoll zum Routing zwischen verschiedenen AS. Etablierung einer BGP-Session über TCP zum regelmäßigen Austausch von Routinginformationen
+		\item UPDATE-Nachrichten zum Mitteilen wie Präfixe erreichbar sind. Dient der Verhinderung von Schleifen und zur Bewertung einer Route (enthält Liste von AS)
+		\item Angriffsziele
+		\begin{itemize}
+			\item Unautorisierte Bekanntgabe von Präfixen: Abhören/Manipulieren von Datenverkehr oder DoS-Angriff
+			\item Fälschen von AS-Path-Angaben: Künstliches Verbessern/Verschlechtern von Routen sowie DoS-Angriffe
+			\item Eindringen in BGP-/TCP-Session: Manipulation der Routen sowie DoS-Angriffe
+		\end{itemize}
+		\item Beispiele
+		\begin{itemize}
+			\item Youttube-Ausfall 2008: Landesweite Youtube-Sperre in Pakistan durch entsprechende Manipulation der Route zu Youtube, um dieses landesweit zu sperren
+			\item MitM-Hijacking: Angreifer leitet Verkehr des Opfers über sich um
+		\end{itemize}
+		\item Mögliche Lösung für die Sicherheitsprobleme: Aufbau von krytografischen Vertrauensketten für Routinginformationen
+	\end{itemize}
+	\item \textbf{Mechanismen zum Schutz für BGP}
+	\begin{itemize}
+		\item Probleme bei der Entwicklung sicherer Rputing-Protokolle: Umsetzung in der Praxis schwierig; Abwärtskompatibilität nicht immer gegeben; hohe zusätzliche Last auf den Routern
+		\item Beispiel BGPSec: Einführung einer \textit{Resource Public Key Infrastructure} (RPKI) mit Zertifikaten zur Authentifizierung sowie digitale Signaturen von Routing-Objekten. Dadurch zusätzliches BGP-Attribut zum Transport von Signaturen
+	\end{itemize}
+	\item Zusammenfassung: Internetprotokolle sind auf Vertrauensbasis entwickelt. Dabei ist die Annahme getroffen worden, dass Angreifer keinen Zugang zum Netz haben. Da Angriffe auf BGP gravierende Folgen haben können ist es notwendig, sichere Routing-Protokolle zu entwickeln
+\end{itemize}
+
+
+\subsection{DNS}
+\begin{itemize}
+	\item Verwendung von Namensserver zum Abfragen von Namen statt IP-Adressen, die zur Adressierung von Rechnern genutzt werden können
+	\item Typen von \textit{Resource Records} (RR): \textit{A-Record} zur Abbildung auf IP-Adressen, \textit{MX} für E-Mail-Server, \textit{CNAME} zur Abbildung von Namen auf Namen, \textit{NS} für Nameserver, etc.
+	\item Hierarchische Aufteilung in Zonen
+	\item Angriffsziele: Unautorisierte Bekanntgabe von Records, Manipulation des Caches, Eindringen in den UDP-Datenverkehr
+	\item Schutz gegen Angriffe: Aufbau von kryptografisch sicheren Vertrauensketten zur Authentifizierung von Nameservern und Records
+	\item \textbf{Domain Name System Security Extensions (DNSSEC)}
+	\begin{itemize}
+		\item Verwendung von TLS zum Abfragen von DNS-Servern sowie zusätzliche DNS-Records für öffentliche Schlüssel und Signaturen
+		\item Schützt allerdings gegen MitM-Angreifer oder Angriffe auf das Routing
+	\end{itemize}
+	\item \textit{DNS-based Authentication of Named Entities} (DANE): Bietet Überprüfbarkeit ob ein Server tatsächlich zur Domain gehört. Dazu werden Serverzertifikate per DNSSEC in Zonen hinterlegt
+	\item Zusammenfassung: Auch DNS ist auf Vertrauensbasis entwickelt worden, daher dringend sichere DNS-Protokolle notwendig
+\end{itemize}
+
+
+\subsection{DDoS}
+
 
 
 \section{Privatsphäre}
