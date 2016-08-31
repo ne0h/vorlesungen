@@ -659,6 +659,141 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 \section{IPsec}
 
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Internet-Protocol (IP) bietet einen nur unzuverlässigen Ende-zu-Ende Dienst
+		\item Mögliche Angriffe: Eavesdropping, IP-Spoofing, MitM-Angriffe, Replay-Angriffe \(\rightarrow\) Schutzziele nicht gewährleistet
+	\end{itemize}
+	\item \textbf{Überblick}
+	\begin{itemize}
+		\item Ziel: Umsetzung von Schutzzielen für den Verkehr auf Schicht 3, unabhängig vom Transportprotokoll
+		\item Nutzung durch alle oberhalb von IP angesiedelten Protokolle sowie IP selbst
+	\end{itemize}
+	\item \textbf{Einsatzszenario}
+	\begin{itemize}
+		\item Häufiger Einsatz als VPN, beispielsweise in Unternehmen mit verschiedenen Standorten, die über das Internet kommunizieren
+	\end{itemize}
+	\item \textbf{Grundlegender Aufbau}
+	\begin{itemize}
+		\item Wesentliche Komponenten: Schlüsselaustausch (Internet Key Exchange - IKE) und Protokolle zur sicheren Kommunikation (Authentication Header - AH oder Encapsulating Security Payload - ESP)
+		\item Entwurfsentscheidung: Entkopplung von Schlüsselaustausch und Sicherung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Security Policy}
+\begin{itemize}
+	\item \textbf{Sicherheitsassoziation}
+	\begin{itemize}
+		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strm gestellt werden
+		\item Security-Association (SA): Unidirektionale Verbindung zwischen zwei IP-Instanzen. Generell zwischen allen Verbindungen möglich
+	\end{itemize}
+	\item \textbf{SAD und SPD}
+	\begin{itemize}
+		\item Security Associaten Database (SAD): Hält Parameter aktiver gesicherter IP-Datenströme
+		\item Security Policy Database (SPD): Enthält Richtlinien nach denen der Verkehr zu schützen ist. Zu sendende Dateneinheiten werden gemäß SPD auf SA abgebildet
+	\end{itemize}
+	\item Bearbeiten von Dateneinheiten
+	\begin{itemize}
+		\item Bearbeiten zu sendender IP-Dateneinheiten
+		\begin{itemize}
+			\item Gegeben: Zu sendende Dateneinheit
+			\item Zunächst Suche in der SPD. Wird kein Eintrag gefunden so wird die Dateneinheit verworden. Ansonsten wird die entsprechende Policy bestimmt
+			\item Bypass-Policy: Weiterleiten mittels IP
+			\item Protect-Policy: Suche in der SAD. Bei einem Match AH- oder ESP-Verarbeitung, ansonsten IKE
+		\end{itemize}
+		\item Bearbeiten empfangener IP-Dateneinheiten
+		\begin{itemize}
+			\item Gegeben: Empfangene Dateneinheit
+			\item Zunächst Bestimmung des Types
+			\item Typ IP: Suche in der SPD. Falls \texttt{Bypass} Weitergabe an höhere Schicht, ansonsten Verwerfen der Dateneinheit
+			\item Typ IPsec: Suche in der SAD. Falls enthalten AH- oder ESP-Verarbeitung, ansonsten Verwerfen der Dateneinheit. Danach Weitergabe an höhere Schicht
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Architektur}
+\begin{itemize}
+	\item \textbf{Übertragungsmodi}
+	\begin{itemize}
+		\item Generell Unterscheidung in Kommunikationsendpunkte und kryptografische Endpunkte
+		\item Transport-Modus: Einsatz zwischen Kommunikationsendpunkten, schützt die Nutzdaten. Zusätzlicher IPsec-Kopf im Paket enthalten
+		\item Tunnel-Modus: EInsatz zwischen beliebigen Systemen, oft ist ein Endpunkt kein Kkommunikationsendpunkt. IP-in-IP-Kapselung, schützt die gesamte IP-Dateneinheit, Router auf dem Weg haben keinen Zugriff auf Orginal-IP-Kopf
+	\end{itemize}
+	\item \textbf{Schutz vor Replay-Attacken}
+	\begin{itemize}
+		\item Erster Ansatz: Verwenden von eindeutigen, monoton wachsenden Sequenznummern
+		\item Besser: Verwenden eines Sliding Window mit fester Fenstergröße \(W\). Pakete werden nur dann akzeptiert, wenn die neue Sequenznummer innerhalb des Fensters liegt oder größer ist als die höchste, bisher empfangene und noch nicht verwendet worden ist. Liegt die Sequenznummer außerhalb des Fensters, so wird dieses verschoben. Anonsten wird das Paket verworfen
+		\item Bisherige 32-Bit-Sequenznummer (reicht für etwa 4 Milliarden Dateneinheiten) für schnelle Netze zu wenig (bei ca. 1 Millionen Dateneinheiten pro Sekunde Überlauf nach ca 1,12 Stunden)
+		\item Extendes Sequenz Number (ESN) mit 64 Bit: Zum Erhalten der Abwärtskompatibilität werden nur die unteren 32 Bit übertragen, die oberen 32 Bit lediglich in der SA 
+	\end{itemize}
+	\item \textbf{Schutz vor Verkehrsanalyse}
+	\begin{itemize}
+		\item Ziel: Keine Informationen durch Größe und Frequenz der Dateneinheiten verraten
+		\item Ansatz: Padding auf 64k Größe einer Dateneinheit sowie Einfügen von Dummy-Einheiten (gekennzeichnet durch Protokollnummer 59) zum Erzeugen eines stetigen Stroms an regelmäßigen und gleich großen Dateneinheiten
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Sicherheitsprotokolle}
+\begin{itemize}
+	\item \textbf{AH-Protokoll}
+	\begin{itemize}
+		\item Bietet Integrität, Authentizität, Zgnagskontrolle, Schutz gegen Replay-Angriffen
+		\item Zentrales Ziel: Abwehr von Address-Spoofing-Angriffen durch HMACs
+		\item Berechnung von MAC
+		\begin{itemize}
+			\item Unveränderliche Felder des vorangegangenen IP-Kopf
+			\item Der aktuelle IP-Kopf
+			\item Die Nutzdaten
+			\item Die oberen 32 Bits der erweiterten Sequenznummer
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{ESP-Protokoll}
+	\begin{itemize}
+		\item Bietet Integrität, Authentizität, Zgnagskontrolle, Schutz gegen Replay-Angriffen sowie Vertraulichkeit und Schutz vor Verkehrsanalysen
+		\item Umsetzung der Schutzziele abhängig von den ausgewählten Optionen bei Etablierung der SA sowie Lokation der Implementierung (beispielsweise in Endsystem oder Gateway)
+		\item Verwendung von authentifizierter Verschlüsselung: MACs und entsprechende symmetrische Chiffren wie 3DES-CBC oder AES-128-CBC. Voraussetzung ist ein gemeinsamer, geheimer Schlüssel
+		\item Transportmodus: Dateneinheit der höheren Schicht sowie ESP-Anhang werden verschlüsselt, Authentifizierungsdaten werden ggf. drangehängt (falls ausgewählt). Stellt Vertraulichkeit der übergeordneten Protokolle sicher, verhindert allerdings keine Verkehrsanalyse. DIe Felder im IP-Kopf werden nicht authentifiziert (im Unterschied zu AH)
+		\item Transportmodus: Dateneinheit wird verschlüsselt, ESP-Kopf wird der Dateneinheit vorangestellt sowie ggf. Authentifizierungsdaten angehängt (falls ausgewählt). Schützt Netzwerk vor externen Netzen druch Verschlüsselung zwischen externem Endsystem und Sicherheitsgateway. Keine Verkehrsanalyse möglich
+	\end{itemize}
+	\item \textbf{Kombinationen von SAs}
+	\begin{itemize}
+		\item Entwurfsentscheidung: In welcher Reihenfolge MAC und Verschlüsselung anwenden?
+		\begin{itemize}
+			\item Erst verschlüsseln, dann authentifizieren: Nur authentifizierte Dateneinheiten werden entschlüsselt \(\rightarrow\) DoS-Angriffe eingeschränkt. Nach aktuellem Stand der Forschung in der Theorie besser
+			\item Erst authentifizieren, dann verschlüsseln: Teure Entschlüsselung immer erforderlich, dafür MAC nicht direkt angreifbar. Horton-Prinzip: "`You should authenticate what you mean, not what you say"'
+			\item Kombinationen aus beidem
+		\end{itemize}
+		\item SA Bundle: Sequenz von SAs zur Bereitstellung der ausgewählten Schutzziele. Mögliche Kombinationen:
+		\begin{enumerate}
+			\item Sicherheit zwischen Endsystemen: AH oder ESP jeweils im Transport-Modus oder ESP in AH, auch jeweils im Transportmodus. Alle drei Möglichkeiten innerhalb eines AH- oder ESP-Tunnel. Voraussetzung ist, dass beide Endsysteme über einen gemeinsamen Schlüssel verfügen
+			\item Sicherheit zwischen Gateways: AH, ESP oder ESP mit AH
+			\item Erweiterung von (2) um Ende-zu-Ende Sicherheit: Varianten aus Kombinationen 1 und 2 anwendbar
+			\item Unterstützung von externen Endsystemen: Bietet Ende-zu-Ende Sicherheit beim Zugang über Firewall der Organisation. Wie in Kombination 1 ein oder zwei SAs anwendbar
+		\end{enumerate}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Schlüsseltausch}
+\begin{itemize}
+	\item \textbf{Einführung}
+	\begin{itemize}
+		\item Entwurfsentscheidung: Entkoppeling von Schlüsselaustausch und Sicherung \(\rightarrow\) Schlüsselaustauschprotokoll erforderlich
+		\item Schlüsselaustausch entweder manuell oder automatisch (beispielsweise per DH-Protokoll) möglich
+	\end{itemize}
+	\item \textbf{Internet Key Exchange (IKE), hier IKEv2}
+	\begin{itemize}
+		\item Ziel: Sichere Aushandlung von IPsec-Parametern
+		\item Aufbau eines gesicherten Kanals (IKE-SA): Definition von Formaten der Dateneinheiten, gegenseitige Authentifizierung sowie DH-Austausch zum Erzeugen eines gemeinsamen Geheimnisses
+		\item Aushandlung des IPsec-Schlüsselmaterials pro SA: Wahl der zu verwendenden Verfahren sowie Generierung der Schlüssel
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{TLS}
