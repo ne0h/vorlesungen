@@ -954,3 +954,52 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 
 \section{Privatsphäre}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Motivation: Schutz des Persönlichkeitsrechts bei der Verarbeitung personenbezogender Daten ("`Recht auf informationelle Selbstbestimmung"')
+	\item Säulen zum Schutz der Privatsphäre: Regulierung durch Gesetze, Selbstregulierung, Selbstschutz
+	\item Schutzziele: Unverkettbarkeit (personenbezogene Daten aus verschiedenen Kontexten können nicht in Verbindung gebracht werden), Transparenz, Intervenierbarkeit
+	\item \textbf{Privacy Enhancing Technologies (PET)}
+	\begin{itemize}
+		\item Grundprinzip: Datensparsamkeit
+		\item Schutz der Identität eines Benutzers, Schutz der Herkunft von Daten, Schutz personenbezogener Daten
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Verfahren und Protokolle}
+\begin{enumerate}
+	\item Message Broadcast: Führt zu Empfängeranonymität. Allerdings keine Senderanonymität, benötigt Broadcast Medium, skaliert nicht
+	\item Proxy-Ansatz: Proxy als "`Anonymizer"', der Anfragen weiterleitet und persönliche Daten entfernt. Allerdings Vertrauen in den Anbieter und Schutz der Verbindung zum Proxy notwendig
+	\item Identity Protector: Generiert Pseudonyme \(\rightarrow\) Senderpseudonymität. Allerdings Vertrauen in den Provider notwendig; Wechsel von Pseudonymen darf nicht beobachtbar sein
+	\item Mixes: Mix-Server sammelt/vertauscht/transkodiert eingehende Nachrichten (eventuell mit Kaskadierung). Sicher, sofern nicht alle Mixbetreiber kooperieren. Problem beispielsweise ein \textit{n-1-Angriff}
+	\item \textbf{Onion-Routing}
+	\begin{itemize}
+		\item Weiterleitung durch zufällig gewählte Reihe von Onion Routern mit scheitweiser Verschlüsselung. Im Unterschied zu Mixes erfolgt keine Speicherung der Nachrichten sowie neue Pfadwahl für jede Verbindung
+		\item Vorteile: Unverkettbarkeit, keine Speicherung der Nachrichten notwendig, für viele Anwendungsprotokolle geeignet
+		\item Nachteile: Viele Public-Key-nachrichten notwendig; Unverkettbarkeit wird nur bei hinreichend viel Verkehr pro Router erreicht (sonst beobachtbar); Angriffe durch Beobachten von Paketgröße oder Paketreihenfolge möglich
+		\item Beispiel Tor: Wahl zufälliger Route über drei Knoten. Verschlüsselte Verbindungen zwischen den Knoten mit regelmäßiger Neuwahl der Route
+	\end{itemize}
+	\item Crowds: Menge von Benutzern, die entweder Anfragen verschlüsselt an andere Benutzer weiterleiten oder unverschlüsselt ans Ziel schicken. Senderanonymität, allerdings können Anfragen mitgelesen werden sowie lange Wartezeiten und DDoS-anfällig
+	\item P2P-FIlesharingnetz Freenet: Anfragen über mehrere Knoten zur Gewährleistung von Sender-/Empfängeranonymität, allerdings Verkehrsanalysen möglich und Unverkettbarkeit nicht immer garantiert
+	\item Off-the-Record Messaging: Datenformat zum Verschlüsseln und Signieren mittels OpenPGP zur Gewährleistung von Sicherheit und Datenschutz beim Instant Messaging (funktioniert nicht mit mehreren Geräten des selben Benutzers). Auch bei Kompromittierung des Hosts soll Abstreitbarkeit erhalten bleiben
+	\item Web-Privacy: Tracking Cookies, Browser-Fingerprinting, DNS-Tracking
+\end{enumerate}
+
+
+\subsection{Aktuelle Forschungsarbeiten am Institut}
+\begin{itemize}
+	\item Motivation: "`Kann ich auf Dienstanbieter und Server (wie Google oder Facebook) verzichten?"'
+	\item Ansatz: Direkte Kommunikation zwischen Nutzergeräten durch Etablierung eines dezentralen Overly-Netzes. Dadurch Schutz der persönlichen Daten. Muss allerdings hinsichtlich Ressourcennutzung effizient und skalierbar sein
+	\item Anwendungsszenarien: Soziale Netzwerke, Smart Traffic, Smart Grid
+	\item Anwendungsszenario soziales Netzwerk: Austausch von Daten zwischen Nutzern mit Vertrauensverhältnis. Kein Datenabfluss an Dritte \(\rightarrow\) SociaPath
+	\item \textbf{SociaPath: Selbversorgender Datentransfer}
+	\begin{itemize}
+		\item Idee: Selbstversorgendes Overlay-Netz nur zwischen Geräte von Nutzern mit Vertrauensverhältnis (Datensparksamkeit, Datenlokalität)
+		\item Publish-/Subscribe-Dienst: Kontext der Veröffentlichunf eines Datenobjekts durch \textit{Thema} gebildet
+		\item Herausforderungen: Koordination ohne hochverfügbare Server; heterogene Ressourcen der Nutzergeräte; Inkinsistenzen durch Netzpartitionierung möglich; hohe Dynamik sowie geringe Anzahl an eigenen GEräten (genügend Verfügbarkeit erzielbar?)
+		\item Behandlung von Inkonsistenzen: \texttt{STATE}-Nachricht um Konsistenzen widerherzustellen. Empfänger prüft, ob zusätzliche Objekte vorhanden sind und schickt \texttt{NOTIFY}-Nachricht
+	\end{itemize}
+	\item Weitere Forschungsarbeit zum Thema Privatsphäre im modernen Straßenverkehr (Smart Traffic), zukünftigen Stromnetz (Smart Grid), Haushalt (Smart Home)
+\end{itemize}
