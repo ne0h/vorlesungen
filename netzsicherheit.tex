@@ -928,6 +928,28 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 
 \subsection{DDoS}
+\begin{itemize}
+	\item Angriff auf die Verfügbarkeit eines Dienstes. Anzahl aus Ausmaße steigen in den letzten Jahren deutlich
+	\item \textbf{Arten von Angriffen}
+	\begin{itemize}
+		\item Physischer Angriff: Zerstören des Übertragungsmediums \(\rightarrow\) sicheres Verbauen von Komponenten oder Übertragungsmedien notwendig. Abwehr bei drahtlosen Medien praktisch nicht möglich
+		\item Ausnutzen von Implementierungsschwächen: Gezieltes Ausnutzen eines solchen Fehlers um das Programm/System zum Absturz zu bringen (beispielsweise "`Ping of Death"'). Abwehr durch Verkleinern der Angriffsfläche, Redundanz und filtern von potentiellen Angriffspaketen
+		\item Ausnutzen von Protokollschwächen: Beispielsweise SYN-Flooding-Angriff bei TCP, da Server pro SYN-Paket einen Verbindungskontect anlegt \(\rightarrow\) Erschöpfen der lokalen Kontexte. Abwehr durch Aktualisieren von Protokollspezifikation oder ggf. die Verwendung von Teilen des Protokolls untersagen
+		\item Erzeugen eines Ressourcenmangels: Angreiferziel ist das Erzeugen einer höheren Anfragerate als Bedienrate zur Überlastung des Servers. Abwehr durch Ablehnen unautorisierter Anfragen oder Einsatz von Dienstgütemechanismen/Bereitstellung von mehr Ressourcen
+	\end{itemize}
+	\item \textit{Distributed Denial of Service} (DDoS): Verteilter Angriff durch Bündelung von Ressourcen (beispielsweise einem Botnetz). Häufig zusätzlich Kaskerade durch IP-Spoofing. Rückverfolgen und Einleiten von Gegenmaßnahmen (Blockieren von Adressen) schwierig
+	\item DDoS mit Reflektoren: Hierbei adressiert der Angreifer seine Datenpakete nicht direkt an das Opfer, sondern an regulär arbeitende Internetdienste, trägt jedoch als Absenderadresse die des Opfers ein (IP-Spoofing). Die Antworten auf diese Anfragen stellen dann für das Opfer den eigentlichen DoS-Angriff dar. Durch diese Vorgehensweise ist der Ursprung des Angriffs für den Angegriffenen nicht mehr direkt ermittelbar.\footnote{\url{https://de.wikipedia.org/wiki/Denial_of_Service\#Distributed-Reflected-Denial-of-Service-Angriff}}
+	\item Abwehr von DDoS-Angriffen schwierig, da Anbindung stromaufwärts überlastet. Provider muss Angriffsverkehr filtern
+	\item \textbf{Gegenmaßnahmen}
+	\begin{itemize}
+		\item Filtern des Angriffsverkehr wobei schwierig, den legitimen Verkehr von Angriffsverkehr zu unterscheiden
+		\item Opfersystem wechselt die IP-Adresse \(\rightarrow\) Relokation
+		\item Beseitigen des Ressourcenmangels
+		\item Stoppen der angreifenden Systeme. Rückverfolgung allerdings oft durch Spoofing erschwert \(\rightarrow\) Identifikation der Systeme schwierig. Erfordert Kooperation unter Providern
+		\item Reaktives Filtern: Beispielsweise \textit{Intrusion Detection System} (IDS), das automatisch Filter für vermutete Angriffsquellen erstellt. Kann u.U. selbst für DDoS genutzt werden, wenn Angreifer das IDS dazu bringen das Opfersystem zu filtern
+		\item Benutzen eines vorgeschalteten \textit{Cleaning Centers}, das die Anfragen für den Kunden bereinigt
+	\end{itemize}
+\end{itemize}
 
 
 
