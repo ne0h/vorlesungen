@@ -249,7 +249,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\begin{itemize}
 		\item Access Control List (ACL): Definiert, wer auf eine Ressource zugreifen kann
 		\item Discretionary Access Control: Individuelle, feingranulare pro Benutzer
-		\item Mandantory Access Control: Benutzer werden klassifiziert und bekommen klassenbezogene Zugirffsrechte
+		\item Mandantory Access Control: Benutzer werden klassifiziert und bekommen klassenbezogene Zugriffsrechte
 		\item (Hierachical) Role-based Access Control: Benutzer werden Rollen zugewiesen, die über entsprechende Rollen verfügen. Ggf. vererbt
 		\item Attributzertifikat: Attestieren Identitäten ein bestimmtes Privileg (als Attribut implementiert). Zeitlich beschränkt und kann per CRL zurückgerufen werden
 	\end{itemize}
@@ -345,12 +345,12 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \begin{itemize}
 	\item \textbf{Online Certificate Status protocol (OCSP)}
 	\begin{itemize}
-		\item Erster Ansatz zur Onlineprüfung von zertifikaten auf Widerruf
+		\item Erster Ansatz zur Onlineprüfung von Zertifikaten auf Widerruf
 		\item Einfaches Frage-Antwort-Schema
 		\item Erweiterung im Zertifikat zur Spezifizierung von Respondern und das zu verwendende Protokoll (beispielsweise LDAP/HTTP). Responder wird ebenfalls signiert
 		\item Einschränkungen
 		\begin{itemize}
-			\item Antwortet nur in Bezug auf Widerruf. Keine prüfung von Verwendungszweck oder zeitliche Gültigkeit
+			\item Antwortet nur in Bezug auf Widerruf. Keine Prüfung von Verwendungszweck oder zeitliche Gültigkeit
 			\item Schlechte Skalierung beim Responder
 			\item Verringert Clientaufwand zur Zertifikatsprüfung kaum
 			\item Angreifer kann OSCP-Anfrage eventuell blockieren
@@ -514,7 +514,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 	\item Optional Netzwerkadressen der Clients in jedem Ticket: Keine Weitergabe von Tickets \(\rightarrow\) schützt vor Ticketdiebstahl. IP-Spoofing allerdings unkompliziert möglich, funktioniert nicht bei NAT
 	\item \textbf{Schlüssel-Server für große Netze}
 	\begin{itemize}
-		\item Einzelner KDC ist Single-Point-of-Failure \(\rightarrow\) replizieren des Schlüssel-Servers
+		\item Einzelner KDC ist Single-Point-of-Failure \(\rightarrow\) Replizieren des Schlüssel-Servers
 		\item Gliederung des Netzwerk in Domänen (Realms). Einzelner KDC kennt nicht mehr alle Master-Secrets
 		\item Replizierte Schlüssel-Server
 		\begin{itemize}
@@ -536,7 +536,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 		\item Domänen (Realms)
 		\begin{itemize}
 			\item Administrative Aufteilung pro Realm: Eigene Benutzerdatenbank, Replizierung, KDCs einer Domäne beisitzen das selbe KDC-Master-Secret
-			\item Inter-Domänen-Authentifizierung zur Nutzung von Ressourcen einer anderen Domäne. Autorisierung duch den KDC der anderen Domäne. KDC kann hierzu als Client eines anderen KDC registriert sein
+			\item Inter-Domänen-Authentifizierung zur Nutzung von Ressourcen einer anderen Domäne. Autorisierung durch den KDC der anderen Domäne. KDC kann hierzu als Client eines anderen KDC registriert sein
 			\item Mehrstufige Domänen durch Verkettung von Inter-Domänen-Tickets möglich. KDC registriert sich hierzu als Client bei KDC der Vaterdomäne
 		\end{itemize}
 	\end{itemize}
@@ -579,7 +579,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 				\item Auch PPPoE verwendet keine zusätzlichen Sicherheitsfeatures
 			\end{itemize}
 		\end{itemize}
-		\item Geteiltes Medium: Drahtgebunde Punkt-zu-Mehrpunkt-Verbindungen (Ethernet) wie DSL, DOCSIS (Kabeletz) oder LAN (Bus). Angriffe für Insider leicht (ARP-/IP-Spoofing), externe Angreifer benötigen zunächst Mediumzugriff
+		\item Geteiltes Medium: Drahtgebunde Punkt-zu-Mehrpunkt-Verbindungen (Ethernet) wie DSL, DOCSIS (Kabelnetz) oder LAN (Bus). Angriffe für Insider leicht (ARP-/IP-Spoofing), externe Angreifer benötigen zunächst Mediumzugriff
 		\begin{itemize}
 			\item Punkt-zu-Punkt-Verbdinung mittels LAN-Kabel zum NAS (Port Access Entity - PAE, hier: Switch) via Ethernet auf Schicht 2 (IEEE 802.3)
 			\item Port-basierte Authentifizierung und Autorisierung zum Schutz vor illegitimer Nutzung des LAN
@@ -610,7 +610,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 				\item WPA2 mit PSK (ungebrochen, derzeit bester Angriff: PSK raten)
 				\begin{itemize}
 					\item Vollständige Umsetzung von IEEE 802.11i (Robust Security Network): Authentifizierung via PSK ("`personal"') oder 802.1X ("`enterprise"'), Verschlüsselung zwingend AES-CCMP (Counter-Mode-with-Cypther-Block-Chaining)
-					\item Berwertung WPA2-Personal: Authentifizierung von Nutzern sowie Schutz der Kommunikation zwischen Supplicant und NAS, allerdings Authentifizierung nur auf Basis von Gruppenzugehörigkeit \(\rightarrow\) schwierig einzelne Nutzer zu identifizieren (beispielsweise bei Rechtsstreitigkeiten)
+					\item Bewertung WPA2-Personal: Authentifizierung von Nutzern sowie Schutz der Kommunikation zwischen Supplicant und NAS, allerdings Authentifizierung nur auf Basis von Gruppenzugehörigkeit \(\rightarrow\) schwierig einzelne Nutzer zu identifizieren (beispielsweise bei Rechtsstreitigkeiten)
 					\item Bewertung von WPA-Enterprise: Löst die Probleme des Personal-Modus, verwendet etablierte Standards
 				\end{itemize}
 			\end{enumerate}
@@ -687,7 +687,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 \begin{itemize}
 	\item \textbf{Sicherheitsassoziation}
 	\begin{itemize}
-		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strm gestellt werden
+		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strom gestellt werden
 		\item Security-Association (SA): Unidirektionale Verbindung zwischen zwei IP-Instanzen. Generell zwischen allen Verbindungen möglich
 	\end{itemize}
 	\item \textbf{SAD und SPD}
