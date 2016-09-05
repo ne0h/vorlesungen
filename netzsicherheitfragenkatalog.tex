@@ -831,7 +831,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	Das Feld NextHeader muss geändert werden. Es soll auch das verwendete Protokoll der nächsthöheren Schicht identifizieren, in diesem Fall IPsec.
 	
 	\subsubsection{Wie ist der Schutz gegen Replay-Attacken umgesetzt?}
-	Über Sequenznummern %TODO muss noch ausführlicher werden. Auch aufmalen können. 
+	%Über Sequenznummern %TODO muss noch ausführlicher werden. Auch aufmalen können. 
 	Durch die Verwendung von Sequenznummern welche Monoton wachsen und bei Sequenznummernüberlauf die Neuaushandlung des Schlüsselmaterials verursachen können.
 	\subsubsection{Wie funktioniert das Anti-Replay-Empfangsfenster?}
 	Es wird hierzu ein Sequenznummernfesnter eingesetzt. Das Fenster stellt den akzeptierten Bereich von Sequenznummern da.  Dabei hat das Fenster eine gewisse Fenstergröße W, empfohlen wird eine W=64. Dem oberen Ende, die höchste empfangene Sequenznummer und dem unteren Ende $\text{Obres Ende} -W +1$
@@ -963,7 +963,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	\begin{itemize}
 		\item Statischer Ansatz: z.B. persönliche Übergabe. Verschlüsselung und Authentifizierung der auszutauschenden Daten mit erhaltenem Schlüssel. Einfaches Verfahren benötigt aber reales Treffen bei jeder Erneuerung des Schlüssels.
 		\item Statischer Ansatz ohne Treffen: Hinterlegung des Schlüsselmaterial bei einer vertrauenswürdigen Instanz(Trustes Third Party) welche den Schlüssel auf Anfrage herausgibt.Dies erfordert einen sicheren Kanal zu TTP, der Schlüssel ist nur indirekt authentifiziert und eine Kompromittierung der TTP betrifft alle Kommunikationsteilnehmer.
-		\item Dynamischer Ansatz: Z.B. über Diffie-Hellman, Es ist weder ein treffen noch eine zentrale Instanz notwendig und über die dynamische Aushandlung kann "`Perfect Forward Secrecy"' ermöglicht werden. Dafür sind die Schlüssel nicht authentifiziert und das Verfahren ist sehr rechenintensiv.
+		\item Dynamischer Ansatz: Z.B. über Diffie-Hellman, Es ist weder ein Treffen noch eine zentrale Instanz notwendig und über die dynamische Aushandlung kann "`Perfect Forward Secrecy"' ermöglicht werden. Dafür sind die Schlüssel nicht authentifiziert und das Verfahren ist sehr rechenintensiv.
 	\end{itemize}
 	Perfect Forward Secrecy, Statless Server, Cookies/Puzzle.
 	
@@ -1034,7 +1034,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	\subsubsection{Was ist eine Downgrade Attacke?}
 	Eine Downgrade Attacke ist ein Angriff bei dem versucht wird ein schwächere Verschlüsselung zu erzwingen. Beispiel anhand von TLS und ChipherSuite TLS\textunderscore NULL\textunderscore WITH\textunderscore NULL\textunderscore NULL.	
 	
-	Angreifer fängt ClientHello ab, löscht strake CipherSuites und leitet es dann an den Server weiter. Als Folge wir dann eine schwache CipherSuite ausgehandelt, welche einfacher zu brechen ist.
+	Angreifer fängt ClientHello ab, löscht starke CipherSuites und leitet es dann an den Server weiter. Als Folge wir dann eine schwache CipherSuite ausgehandelt, welche einfacher zu brechen ist.
 	\subsubsection{Wie könnte Client oder Server einen Downgrade Angriff erkennen?}
 	In den Finished-Nachrichten schicken beide einen HMAC, der über alle vorherigen Nachrichten gebildet wird
 	
@@ -1048,7 +1048,8 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 
 	\subsubsection{Gegen welche Angriffe ist TLS anfällig?}
 	Truncate Angriff, Client will TLS-Verbindung schließen jedoch schleust der Angreifer ein unverschlüsseltes TCP-FIN Pakcket ein und der Server bekommt den Auslogversuch nie mit.\newline
-	Das Wird durch die \textbf{CloseNotify} Nachricht verhindert, dazu müssen beide Kommunikationspartner CloeNotify verschicken.
+	Das wird durch die \textbf{CloseNotify} Nachricht verhindert, dazu müssen beide Kommunikationspartner CloseNotify verschicken.
+
 	\subsubsection{Wie schützt man sich gegen einen TCP-SYN-Flood Angriff}
 	
 	\subsubsection{Welche Variante von TLS baut auf UDP auf?}
@@ -1060,7 +1061,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	\subsection{Internetdienste}
 	
 		\subsubsection{Was ist BGP und welche Angriffe wurden dazu besprochen?}
-	BGP ist das Border Gateway Protokol. Ein Routing Protokoll. Es ist anfällig für das unautorisierte bekanntgeben von Präfixen von AS-Pfaden, Fälschen von AS-PATH angaben und Eindringen in BGP-TCP Sessions.
+	BGP ist das Border Gateway Protokol. Ein Routing Protokoll. Es ist anfällig für das unautorisierte Bekanntgeben von Präfixen von AS-Pfaden, Fälschen von AS-PATH angaben und Eindringen in BGP-TCP Sessions.
 	Damit kann ein Angreifer Traffic über sich umleiten. 
 
 	
@@ -1089,10 +1090,10 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	Protokol zur überprüfbarkeit ob Server-Zertifikat tatsächlich zur Domain gehört. Hierbei werden Zertifikate für Server per DNSSEC in gesicherten Zonen hinterlegt. Dadurch kann der Client per DNSSEC überprüfen ob das angebotene Server-Zertifikat mit dem hinterlegtem übereinstimmt.
 	
 	\subsubsection{Was ist DoS?}
-	Denial of Service. Ein Angreifer möchte einen Dienst sabotieren, so das dieser nicht mehr Erreichbar/Benutzbar ist.
+	Denial of Service. Ein Angreifer möchte einen Dienst sabotieren, so das dieser nicht mehr erreichbar/benutzbar ist.
 	
 	\subsubsection{Welche Arten von Denial of Service Attaken hatten wir behandelt?}
-	Physische Angriffe, Ausnutzung von Implementierungsschwächen, Ausnutzung von Protokollschwächen und erzeugung eines Ressourcenmangels.
+	Physische Angriffe, Ausnutzung von Implementierungsschwächen, Ausnutzung von Protokollschwächen und Erzeugung eines Ressourcenmangels.
 	
 	\subsubsection{Was ist ein Physische DoS Angriff und was kann man dagegen unternehmen?}
 	Damit ist das physische Zerstören oder Stören von Übertragungswegen wie Seekabeln oder z.B. Antennen gemeint. Bei Kabelgebundenen Medien hilft es Angreifer fernzuhalten bei drahtlosen Medien ist dies praktisch unmöglich.
@@ -1110,7 +1111,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	Monitoring beim Dienst um ungewöhnliche Netzlast zu detektieren. Filtern durch die Firewall möglichst weit im Upstream, so dass die Netzwerkverbindung nicht überlastet werden kann. 
 	
 	\subsubsection{Was macht ein Cleaning Center?}
-	Dienst als Proxy zwischen Angreifer udn Dienst. Stellt extrem viel Bandbreite udn Ressourcen zur Verfügung, so das es dem Angreifer nicht/schwer möglich ist diese vollständig auszulasten und sortiert unzulässigen Verkehr aus und leitet nur das gefilterte zum Dienst weiter.
+	Dienst als Proxy zwischen Angreifer udn Dienst. Stellt extrem viel Bandbreite und Ressourcen zur Verfügung, so das es dem Angreifer nicht/schwer möglich ist diese vollständig auszulasten und sortiert unzulässigen Verkehr aus und leitet nur das gefilterte zum Dienst weiter.
 	
 	\subsubsection{Was muss der Dienstanbieter ändern um ein Cleaning Center einzusetzen und was ändert sich für den Nutzer?}
 	Der Verkehr muss über das Cleaining Center geroutet werden, für den Nutzer ist dies Transparent.
@@ -1156,7 +1157,7 @@ Zweigeteilter Schlüsselaustausch (z.B. IKE), gesicherter Kanal zwischen zwei En
 	Menge von Nutzern auf deren Knoten "Jondo" läuft. Jeder leitet Anfragen zufällig  entweder verschlüsselt an andere Miglied oder unverschlüsselt an das Ziel weiter. Das bringt Senderanonymität gegenüber dem Ziel aber keine Senderanonymität gegenüber einem netzwerkweiten Lauscher.
 	
 	\subsubsection{Wie Funktioniert Peer-to-Peer-Netz Freenet?}
-	Soll Anonymität, Abstreitbarkeit, Sicherheit vor Zensur, Effizientes Routing und vollständige Deentralisierung liefern.
+	Soll Anonymität, Abstreitbarkeit, Sicherheit vor Zensur, Effizientes Routing und vollständige Dezentralisierung liefern.
 	
 	Anfragen über mehrere Hops wobei jeder nur den direkten Nachbarn kennt, Antwort auf gleichem Weg zurück.
 	Dokumente werden verschlüsselt gespeichert, wobei der speichernde Knoten den Schlüssel nicht kennt.

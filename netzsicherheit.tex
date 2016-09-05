@@ -822,7 +822,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 
 \subsection{Architektur}
 \begin{itemize}
-	\item \textbf{TLS handshake Protocol}
+	\item \textbf{TLS Handshake Protocol}
 	\begin{itemize}
 		\item Beinhaltet Aushandlung der verwendeten kryptografischen Algorithmen zur Verschlüsselung/Integritätssicherung sowie Authentifizierung der Kommunikationspartnern und Aushandlung des Schlüsselmaterials
 		\item Vereinfachter Ablauf im Überblick: Client will mit TLS gesicherte Daten versenden. TLS-Verbindung wird dabei neu aufgebaut
@@ -860,7 +860,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 	\item \textbf{IPsec vs. TLS}
 	\begin{itemize}
 		\item IPsec: Mächtig, flexibel, schützt transparent alle Schicht-4-Protokolle mit möglicher Aggregation von Verbindungen. Allerdings hohe Komplexität
-		\item Geringe Komplexität, anwendungsnah und "`firewallfreundlich"'. Allerdings keine Aggregation von Verbindungen untrschiedlicher Systeme möglich sowie lediglich Schutz von Anwendungsdaten
+		\item Geringe Komplexität, anwendungsnah und "`firewallfreundlich"'. Allerdings keine Aggregation von Verbindungen unterschiedlicher Systeme möglich sowie lediglich Schutz von Anwendungsdaten
 	\end{itemize}
 \end{itemize}
 
@@ -903,7 +903,7 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 	\end{itemize}
 	\item \textbf{Mechanismen zum Schutz für BGP}
 	\begin{itemize}
-		\item Probleme bei der Entwicklung sicherer Rputing-Protokolle: Umsetzung in der Praxis schwierig; Abwärtskompatibilität nicht immer gegeben; hohe zusätzliche Last auf den Routern
+		\item Probleme bei der Entwicklung sicherer Routing-Protokolle: Umsetzung in der Praxis schwierig; Abwärtskompatibilität nicht immer gegeben; hohe zusätzliche Last auf den Routern
 		\item Beispiel BGPSec: Einführung einer \textit{Resource Public Key Infrastructure} (RPKI) mit Zertifikaten zur Authentifizierung sowie digitale Signaturen von Routing-Objekten. Dadurch zusätzliches BGP-Attribut zum Transport von Signaturen
 	\end{itemize}
 	\item Zusammenfassung: Internetprotokolle sind auf Vertrauensbasis entwickelt. Dabei ist die Annahme getroffen worden, dass Angreifer keinen Zugang zum Netz haben. Da Angriffe auf BGP gravierende Folgen haben können ist es notwendig, sichere Routing-Protokolle zu entwickeln
