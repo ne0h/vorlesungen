@@ -3,10 +3,63 @@
 Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 2015.\footnote{\url{http://telematics.tm.kit.edu/ws201617_IoE.php}}
 
 \section{Einführung}
+\begin{itemize}
+	\item Zielvorstellung: Erhöhung der Lebensqualität in einer zunehmend Technik geprägten und vernetzten Umgebung
+	\item Allerdings vebunden mit allgegenwärtigem Sammeln und Auswerten von Daten, meist beim Hersteller, ohne Kontrolle des Eigentümers
+	\item Alltagsbeispiele: Die intelligente Toilette; Lifelogging-Armband; internetfähige Wetterstation (die eine öffentliche Wetterkarte bereitstellt)
+	\item Sensor/Aktor, Anwendungsbeispiel Gewächshaus: Sensoren erfassen Umweltdate, Aktoren setzen Regeln zur Kontrolle um (Wasserzufuhr, Schatten, etc.)
+	\item \textbf{Historische Beispiele}
+	\begin{itemize}
+		\item Great Duck Island (2002): Erforschung des Mikroklimas der unterirdischen Nestern von Sturmschwalben ohne die Tiere zu stören ("`non-intrusive"' und "`non-disruptive"'). Seonsorknoten in den Höhlen der Nestern sowie Basisstation mit direktem Satellitenuplink
+		\item ZebraNet (2003): Langfristige Erforschung des Migrationsverhaltens von Zebras durch kontinuierliche Lokalisation sowie Erfassung der biometrischen Daten. Selbstorganisation der Knoten durch großes zu überwachendes Gebiet notwendig (Verbindung Zebra \(\rightarrow\) Zebra günstig, zu einer Basisstation allerdings teuer)
+	\end{itemize}
+	\item Besonderheiten: Dezentral, selbstorganisierend, limitierte Ressourcen, unzuverlässiger Kommunikationskanal, unsicher (bzgl. IT-Sicherheit)
+\end{itemize}
 
 
 
-\section{Komponenten}
+\section{Geräteklassen und Anwendungen}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Klassifizierung von Geräten. Beispielsweise nach Anwendungsbreich, Leistungsfähigkeit, Energiebedarf, Lebensdauer, Kosten, Größe/Gewicht, etc.
+	\item Auswahl von Geräteklasse und hardwarekomponenten von konkreter Anwendungsanforderung abhängig
+\end{itemize}
+
+
+\subsection{Klassifikationskriterien}
+\begin{itemize}
+	\item Energiebedarf. Grundlegende Problematiken bei Energiebschränkung: bereitstellung durch Batterien oder Kondensatoren, alternativ Umwandlung alternativer Enegieformen aus der Umgebung (\textit{Energie Harvesting})
+	\item Deployment-Model: Klassifikation anhand Aufteilung und Ausbringungsort der Komponenten. Logisch-funtionale Aufteilung mittels Systemmodell/Schnittstellen/HW-Ressourcen/Dienste
+	\item Sonsoren: Kontext/Technik/Funktionsweise/Messgröße
+\end{itemize}
+
+
+\subsection{Hardware und Anwendungen}
+\begin{itemize}
+	\item \textbf{Geräteklassen und Anwendungsbeispiele}
+	\begin{itemize}
+		\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone in Wasser
+		\item Smart Dust: Sehr viele kleine (dumme) Knoten, die unaufdringlich in die Umwelt integriert werden. Sehr beschränkte Hardware und viele Probleme und offene Fragen (Skalierbarkeit/Netzdichte/Energieversorgung/Entsorgung)
+		\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstoranisierend, geringe Leistungsaufnahme, Batteriebetrieb
+		\item Physical & Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte
+		\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
+		\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt
+		\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
+		\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituatione. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
+		\item Smartphones: Heutige Schnittstelle des Menschen zum IoE. Leistungsfähige Hardware, die leistungsfähige Kommunikationsinfrastruktur voraussetzt
+		\item Single-Board Computer: Eingesetzt in Entwicklungs- und Prototypingumgebungen. Anpassbare bzw. vielfältige Betriebssysteme und kostengünstige Herstellungsweise (beispielsweise Raspberry Pi oder BeagleBone)
+		\item Industrie 4.0 / Industrial Internet: Breites Spektrum an unterschiedlicher Hardware. Hohe Anforderungen an Zuverlässigkeit, Robustheit, Langlebigkeit
+	\end{itemize}
+	\item \textbf{Geräteanbindung und Datenmodell}
+	\begin{itemize}
+		\item Betriebssysteme und Programmierung: Große Unterschiede zwischen den Geräteklassen. Hardwarenähe/Abstraktionsebenen/Anzahl Anwendungen pro Gerät/Power- und Speichermanagement. Spezielle (angepasste) Betriebssysteme für die Geräteklassen
+		\item Cloudanbindung: Trend zur Interation von IoE-Kleinstgeräte in Cloud für Datenhaltung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Geräteanbindung und Datenmodell}
 
 
 
