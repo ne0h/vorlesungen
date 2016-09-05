@@ -22,8 +22,12 @@ derivateonly:
 	pdflatex derivateonly.tex
 
 ioeonly:
-	pdflatex internetOfEverythingOnly.tex
-	pdflatex internetOfEverythingOnly.tex
+	pdflatex ioeonly.tex
+	pdflatex ioeonly.tex
+
+ioefragenonly:
+	pdflatex ioefragenonly.tex
+	pdflatex ioefragenonly.tex
 
 mp2only:
 	pdflatex mp2only.tex

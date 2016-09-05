@@ -27,6 +27,8 @@ Aktuell enthalten
 ### Master
 
 * BWL: Derivate
+* Internet of Everything
+* Internet of Everything - Fragenkatalog
 * Mikroprozessoren 2
 * Netzsicherheit
 * Netzsicherheit - Fragenkatalog
