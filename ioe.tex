@@ -37,29 +37,25 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsection{Hardware und Anwendungen}
 \begin{itemize}
-	\item \textbf{Geräteklassen und Anwendungsbeispiele}
-	\begin{itemize}
-		\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone in Wasser
-		\item Smart Dust: Sehr viele kleine (dumme) Knoten, die unaufdringlich in die Umwelt integriert werden. Sehr beschränkte Hardware und viele Probleme und offene Fragen (Skalierbarkeit/Netzdichte/Energieversorgung/Entsorgung)
-		\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstoranisierend, geringe Leistungsaufnahme, Batteriebetrieb
-		\item Physical & Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte
-		\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
-		\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt
-		\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
-		\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituatione. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
-		\item Smartphones: Heutige Schnittstelle des Menschen zum IoE. Leistungsfähige Hardware, die leistungsfähige Kommunikationsinfrastruktur voraussetzt
-		\item Single-Board Computer: Eingesetzt in Entwicklungs- und Prototypingumgebungen. Anpassbare bzw. vielfältige Betriebssysteme und kostengünstige Herstellungsweise (beispielsweise Raspberry Pi oder BeagleBone)
-		\item Industrie 4.0 / Industrial Internet: Breites Spektrum an unterschiedlicher Hardware. Hohe Anforderungen an Zuverlässigkeit, Robustheit, Langlebigkeit
-	\end{itemize}
-	\item \textbf{Geräteanbindung und Datenmodell}
-	\begin{itemize}
-		\item Betriebssysteme und Programmierung: Große Unterschiede zwischen den Geräteklassen. Hardwarenähe/Abstraktionsebenen/Anzahl Anwendungen pro Gerät/Power- und Speichermanagement. Spezielle (angepasste) Betriebssysteme für die Geräteklassen
-		\item Cloudanbindung: Trend zur Interation von IoE-Kleinstgeräte in Cloud für Datenhaltung
-	\end{itemize}
+	\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone in Wasser
+	\item Smart Dust: Sehr viele kleine (dumme) Knoten, die unaufdringlich in die Umwelt integriert werden. Sehr beschränkte Hardware und viele Probleme und offene Fragen (Skalierbarkeit/Netzdichte/Energieversorgung/Entsorgung)
+	\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstoranisierend, geringe Leistungsaufnahme, Batteriebetrieb
+	\item Physical und Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte
+	\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
+	\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt
+	\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
+	\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituatione. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
+	\item Smartphones: Heutige Schnittstelle des Menschen zum IoE. Leistungsfähige Hardware, die leistungsfähige Kommunikationsinfrastruktur voraussetzt
+	\item Single-Board Computer: Eingesetzt in Entwicklungs- und Prototypingumgebungen. Anpassbare bzw. vielfältige Betriebssysteme und kostengünstige Herstellungsweise (beispielsweise Raspberry Pi oder BeagleBone)
+	\item Industrie 4.0 / Industrial Internet: Breites Spektrum an unterschiedlicher Hardware. Hohe Anforderungen an Zuverlässigkeit, Robustheit, Langlebigkeit
 \end{itemize}
 
 
 \subsection{Geräteanbindung und Datenmodell}
+\begin{itemize}
+	\item Betriebssysteme und Programmierung: Große Unterschiede zwischen den Geräteklassen. Hardwarenähe/Abstraktionsebenen/Anzahl Anwendungen pro Gerät/Power- und Speichermanagement. Spezielle (angepasste) Betriebssysteme für die Geräteklassen
+	\item Cloudanbindung: Trend zur Interation von IoE-Kleinstgeräte in Cloud für Datenhaltung
+\end{itemize}
 
 
 
