@@ -150,6 +150,111 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \section{Kommunikation}
 
+\subsection{Medienzugriff}
+
+\subsubsection{Grundlegendes}
+\begin{itemize}
+	\item Sensorknoten sind häufig batteriebetrieben \(\rightarrow\) Energie ist wichtige aber sehr beschränkte Ressource \(\rightarrow\) Funktransceiver möglichst häufig deaktvieren (Problem: Wann empfangsbereit?)
+	\item Betrachtetes Medium: Geteiltes Medium mit relativ hoher Unzuverlässigkeit ohne Duplexbetrieb (i.d.R.)
+	\item \textbf{Funkmedium}
+	\begin{itemize}
+		\item Klassische Probleme gegenüber drahtgebundenen Netzen: Höhe Fehlerraten, niedrigere Datenrate, hohe Verzögerung, geringere Sicherheit
+		\item Quadratische Abnahme der Signalausbreitung
+		\item CSMA/CD-basierte Verfahren für Medienzuteilung nicht nutzbar, da nur der Empfänger Kollisionen erkennen kann (\textit{Semi-Broadcast-Medium})
+		\item Versteckte Endsysteme: 
+	\end{itemize}
+	\item \textbf{Medienzuteilung}
+	\begin{itemize}
+		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen sowie Mithören
+		\item RTS-CTS-Handshake zur Kollisionsvermeidung (Auftritt während des Handshake unwahrscheinlich, da Pakete sehr klein): Empfänger wird zunächst mit \texttt{RTS} angefragt ob es empfangsbereit ist. Bei naherzu zeitgleichen Anfragen zweier Sender gewinnt der schnellere. Die sendewilligen Systeme warten, bis der Empfänger mittels \texttt{CTS} Empfangsbereitschaft signalisiert
+		\item Duty-Cycling zur Reduzierung des Energieverbrauchs: Funktransceiver wird bei Bedarf synchron (erfordert Zeitsynchronisation zwischen den Knoten) oder asynchron (ohne Koordinnation zwischen den Knoten) aktiviert, was zusätzliche Latenz verursacht, da bei Sendewunsch zunächst auf das entsprechende Zeitfenster gewartet werden muss
+		\item WLAN im IoE: Verursacht hohen Energiebedarf durch Kollisionen, Idle Listening, Overhearing
+		\item Bluetooth im IoE: Langsamer, aufwendiger Verbindungsaufbau; Synchronisation mehrerer Piconetze problematisch
+		\item Bluetooth low energy: Hohe Reichweite (150 m) mit geringer Bandbreite (1 Mbit/s). Nur der Master versucht dauerhaft neue Geräte zu finden sowie eingebaute Sicherheitsfunktionalität (AES-128-CCM). Lizenzfreier Betrieb (konventionelles Bluetooth erfordert Zertifizerung im kommerziellen Umfeld) \(\rightarrow\) insgesamt energieeffizienter Betrieb möglich
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Medienzugriffsprotokolle}
+\begin{itemize}
+	\item \textbf{S-MAC (Sensor Media Access Control)}
+	\begin{itemize}
+		\item Kein akademisch, keine Verbreitung in der Praxis
+		\item Zielsetzung: Ernergieeffiziens, Skalierbarkeit, Autokonfiguration
+		\item Weniger berücksichtigt: Fairness zwischen den Systemen, Latenz
+		\item Idee: Koordiniertes Schlafen zur Vermeidung von idle listening durch zeitliche Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
+		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleepphase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
+		\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase)
+		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Datenheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis es schlafendes System, dass die Datenübertragung abgeschlossen ist?
+		\item Leistungsbewertung über Energiebedarf pro Byte; durschnittliche Ende-zu-Ende-Verzögerung sowie Ende-zu-Ende-Goodput (Gesamtmenge durch Gesamtzeit). S-MAC reduziert den Energiebedarf deutlich. Bei hoher Last kann Adaptive Listening den Energiebedarf nochmals halbieren
+	\end{itemize}
+	\item \textbf{B-MAC}
+	\begin{itemize}
+		\item Zielsetzung: Energieeffizient durch Kolliosionsvermeidung und effiziente Kanalnutzung; Skalierbarkeit; Toleranz bzgl. Funkbedingungen; einfache Implementierbarkeit
+		\item Besonderheiten: Periodisches Prüfen des Kanals statt zeitlicher Synchronisation; keine Fragmentierung großer Nachrichten
+		\item \textit{Low Power Listening} (LPL): System schläft meist und erwacht gelegentlich kurzzeitig um Kanal auf Daten zu prüfen. Bleibt nur wach, falls Daten zum Empfang anstehen
+		\item \textit{Clear Channel Assessment} (CCA): Prüfe ob Kanal frei ist und übertrage ggf. Präambel und Daten. Präambel muss daher mindestens dem Intervall zwischen zwei Kanalüberprüfungen entsprechen (damit der Empfänger nichts verpasst)
+		\item Erweiterung X-MAC: Statt einer großen Präambel werden viele kleine Präambelpakete gesendet mit Quittung für erhaltene Präambel um die Kosten beim Sender weiter zu reduzieren
+		\item Kenngrößen zur Leistungsbewertung
+		\begin{itemize}
+			\item Durschnittlicher Energiebedarf pro Byte: Gesamtenergiebedarf aller Systeme geteilt duech die Anzahl von der Senke empfangenen Bytes
+			\item Durschnittliche Ende-zu-Ende Verzögerung: Summe aller Ende-zu-Ende Verzögerungen geteilt durch die Anzahl der Dateneinheiten
+			\item Ende-zu-Ende Goodput: Gesamtzahl von der Senke empfangener Bytes geteilt durch die Zeitspanne zwischen Versenden der ersten Datenheit bis zum Empfang der letzten Dateneinheit an der Senke
+		\end{itemize}
+		\item Leistungsvergleich: S-MAC vs. B-MAC
+		\begin{itemize}
+			\item Durchsatz: Je weniger Systeme um den Kanal konkurrieren, desto höher ist der Durchsatz. Bei nur einem System hat B-MAX den höheren Durchsatz. Durch CCA erreicht B-MAC das 4,5-fache des S-MAC-Durchsatzes
+			\item Energiebedarf und Durchsatz: Mit steigendem Durchsatz wächst der Energieverbauch von S-MAC schneller und ist insgesamt höher
+			\item Ende-zu-Ende Verzögerung steigt mit der Anzahl der Hops linear
+		\end{itemize}
+		\item IEEE 802.15.4 mit B-MAC/X-MAC
+		\begin{itemize}
+			\item B/X-MAC nicht auf vorhandenen Funkchips implementierbar, da 802.15.4 paketbasiert ist und kein dauerhaftes Präambelsenden erlaubt \(\rightarrow\) wiederholtes Senden einer kurzen Präambel. Beispielsweise in TinyOS-LPL entsprechend umgesetzt
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{IEEE 802.15.4}
+	\begin{itemize}
+		\item IEEE Standard für Low-Rate WPAN-Anwendungen, der oft von Zigbee und 6LoWPAN genutzt wird
+		\item Ziele: Kleine bis mittlere Datenraten, moderate Verzögerung, geringer Energiebedarf sowie geringe Komplexität
+		\item Eigenschaften: Frequenzbänder 868/914/2450 MHz; Datenrate von maximal 250 kbit/s; Reichweite 10 m
+		\item MAC-Protokoll
+		\begin{itemize}
+			\item Größe der Datenheit maximal 127 Byte
+			\item Kombiniert Zeitplan-basiertes und Konkurrenz-basiertes Verfahren. Realtimefähigkeit durch garantierte Zeitschlitze
+			\item Asymmetrisch: Systeme können unterschiedliche Rollen einnehmen
+			\item Basiert auf CSMA/CA, das auch bei WLAN verwendet wird
+		\end{itemize}
+		\item Typen von Netzen: P2P-Netz ("`Mesh-Netzwerk"') oder Stern-Netz
+		\item Klassen von Systemen
+		\begin{itemize}
+			\item \textit{Full Function Device} (FFD)
+			\item \textit{Reduced Function Device} (RDF), nur in Stern-Netzen
+		\end{itemize}
+		\item Betriebsmodi
+		\begin{itemize}
+			\item Beacon Modus
+			\begin{itemize}
+				\item Stern-Netz: Systeme sind einem Koordinator zugeordnet und formieren ein \textit{Persona Area Network} (PAN)
+				\item Koordinator verwaltet das Netz, bearbeitet Anforderungen für garantierte Zeitschlitze und vermittelt zwischen Systemen und Peer-Koordinatoren. Annahme: Für Koordinator steht unbegrenzte Energie zur Verfügung
+				\item Rahmenstruktur
+				\begin{enumerate}
+					\item Aktive Phase: \textit{Contention Access Period} (CAP) mit konkurrierendem Zugriff auf die Zeitschlitze durch Slotted CSMA/CA. Danach \textit{Guaranteed Time Slots} (GTS). Während der gesamten Phase muss der Koordinator aktiv sein
+					\item Inaktive Phase: Alle Systeme können Transceiver ausschalten
+				\end{enumerate}
+			\end{itemize}
+			\item Non-Beacon Modus: Keine feste Rahmenstruktur, Zugriff auf das Medium durch unslotted CSMA/CA (wegen fehlender Zeitsynchronisation keine Zeitschlitze möglich). Bei P2P-Netzen können die Systeme direkt untereinander kommunizieren
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Routing}
+
+
+\subsection{Datentransport}
+
+
+\subsection{Topologiekontrolle}
+
 
 
 \section{Sicherheit}
