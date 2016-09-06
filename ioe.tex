@@ -61,6 +61,91 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \section{Privatsphäre}
 
+\subsection{Einführung}
+\begin{itemize}
+	\item Problem: Sensoren können über das Internet angegriffen werden
+	\item Beispiel RFID als herausforderung für den Datenschutz: Eindeutige Identifikation jedes Objekts ohne Sichtkontakt möglich. Historie verschiedenster Objekte kann im Vorbeigehen überwacht werden (Kleidungsstücke, Fahrkarten, Inhalt einer Einkaufstasche)
+	\item Lösungsansätze: Kill-Befehl, Blocker-Tags, Authentifizierung für Zugriff (z.B. Reisepass), Abreißen der Antenne
+	\item Neben den personenbezogenen Daten auch Metadaten schützenswert, da mit ihnen ein Benutzerprofil erstellt werden kann
+	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz
+	\item Allgemeine IT-Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA: Confidentiality, Integrity, Availability)
+	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparen, Intervenierbarkeit
+	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen\footnote{\url{https://de.wikipedia.org/wiki/PET}}
+	\item \textbf{Prozess zum Entwurf und zur Bewertung}
+	\begin{enumerate}
+		\item Analyse des Systems: Welche Entitäten sind beteiligt und welcher Dienst wird erbracht?
+		\item Erstellen von Vertrauensmodell (Wie viel Vertrauen wird dem Anbieter entgegengebracht?) und Angreifermodell (Kategorisierung des Angreifers nach Motivation/Ressourcen/Ziel/etc.)
+		\item Entwurf geeigneter PETs
+		\item Bewertung der PETs
+	\end{enumerate}
+\end{itemize}
+
+
+\subsection{Ansätze zum Schutz der Privatsphäre}
+\begin{itemize}
+	\item Anwendungsabhängige Anforderungen. Diensterbringung mit dem Prinzip der Datensparsamkeit
+	\item Es sollen lediglich Daten erfasst werden, die möglichst wenig privates preisgeben und die nicht mit Nutzern oder untereinander in Verbindung gebracht werden können
+	\item Ansätze: Verschleierung von Sampling-Werten (Präzision herabsetzen oder Störwerte einfügen); Vermeidung von zentralen Datensenken (P2P oder lokale Diensterbringung); Verschleierung der Identität der Quelle; Unverkettbarkeit von Samples gewährleisten (Anpassen der Samplerate)
+	\item \textbf{Entwurfsstrategien: Schutz der Privatsphäre}
+	\begin{itemize}
+		\item Datenorientiert
+		\begin{itemize}
+			\item MINIMISE: Verarbeitung und Erfassung von Daten auf ein Minimum reduzieren
+			\item HIDE: Beziehungen zwischen Datensetzen sollen verborgen werden
+			\item SEPARATE: Dezentrale Speicherung und Verarbeitung
+			\item AGGREGATE: Aggregierte Verarbeitung personenbezogener Daten
+		\end{itemize}
+		\item Prozessorientiert
+		\begin{itemize}
+			\item INFORM: Benutzer sollen über die Verarbeitung ihrer Daten informiert werden (Schutzziel: Transparenz)
+			\item CONTROL: Benutzer sollen die Kontrolle über die Verarbeitung ihrer personenbezogenen Daten behalten (Schutzziel: Intervenierbarkeit)
+			\item ENFORCE: Erstellen und Durchsetzen einer rechtskonformen Datenschutzrichtlinie
+			\item DEMINSTRATE: Bei der Verarbeitung personenbezogener Daten muss die Einhaltung der Datenschutzrichtlinie demonstriert werden können
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Was ist anders im Internet of Everything?}
+\begin{itemize}
+	\item Technologie greift viel stärker in das private Leben ein \(\rightarrow\) Privatsphäre stärker gefährdet als im klassischen Internet
+	\item Technische Herausforderungen: Mehr Daten; kontinuierliche Datenerfassung; sensiblere Daten; Vielfalt von gemessenen Größen
+	\item Angreifermodell im IoE: Geräte befinden sich häufig an zugänglichen Orten. Diebstahl/Auslesen/Korrumpieren/Zerstören einfacher \(\rightarrow\) Diensterbringung muss auch dann zuverlässig funktionieren, wenn ein Teil der Geräte korrumpiert worden ist
+	\item Beispiel Smart-Metering: Informationsbedarf für Stromnetz der Zukunft ist enorm. Schutzbedarf nicht nur vor Outsider sondern auch vor Datensenke \(\rightarrow\) klassische Verschlüsselung bietet keine Lösung
+	\item Beispiel Smart-Traffic: Dienstanbieter benötigt Positionsdaten für Liveupdates. Selbst ohne Klarnamen können anonyme IDs - die wenig wechseln - typischen Routen (beispielsweise die Fahrt zum Arbeitsplatz) zugeordnet werden
+	\item IBM-Studie "`Device democracy"': Betreiben einer zentralisierten Cloud verursacht hohe Kosten sowie schwer umzusetzende Privatsphäre. Daher in Zukunft dezentrale Umsetzung
+	\item Anforderungen an die verteilte IoE-Cloud: Sicherer Nachrichtenaustausch zwischen Geräten ohne zentrale Vertrauensanker (beispielsweise via "`Peet-Tor-Peer-Kommunikation"'); Verteilen der Daten; robuste und skalierbare Koordinaten von Geräten mit Halten eines konsistenten Zustands
+\end{itemize}
+
+
+\subsection{Konkrete Beispiele und Szenarien}
+\begin{itemize}
+	\item \textbf{Privatheit beim Smart-Metering}
+	\begin{itemize}
+		\item Ziel: Verbrauch von Energie in Energienetzen oder kundenspezifisch in Echtzeit nachvollziehbar machen. Stromzähler senden hierfür regelmäßig Messdaten über den Internetanschluss des Kunden an den Messdienstleister (MDL)
+		\item Gefahr für die Privatsphäre: Periodisches Senden der Messwerte (beispielsweise alle 15 Minuten) liefert ein detailliertes Verbraucherprofil. Heutiges einjähriges Ableseintervall stellt implizierten Privatsphäreschutz dar
+		\item Generische Lösungsansätze
+		\begin{itemize}
+			\item Pseudonymisierung: Aufwendige Pseudonymverwaltung sowie Verknüpfbarkeit mit Nutzer (durch IP-Adresse oder mittels externen Daten wie Urlaube oder Arbeitszeit)
+			\item Modifikation des Energiebedarfs durch lokalen Akkumulator. Dazu allerdings teurer, sich abnutzender Akku sowie Ladestrategie erforderlich
+		\end{itemize}
+		\item Generische Ansätze unzureichend \(\rightarrow\) anwendungsspezifischer Ansatz nötig: Aggregation der Daten. Dadurch lediglich der summierte Verbrauch einer Region sichtbar
+		\item Möglichkeiten zur Aggregation
+		\begin{itemize}
+			\item Über die Zeit mittels verschiedener Tarifregister, einfach realisierbar
+			\item Über Haushalte, ohne Kooperation der Stromzähler: Hinzufügen von Rauschwerten, die sich bei der Summenbildung gegenseitig eliminieren. Allerdings unrealistisch viele Teilnehmer für feingranulare Messung notwendig
+			\item Über Haushalte, mit kooperierenden Stromzählern: Einzelne Messwerte vor MDL geschützt, Ausfallschutz durch Redundanz, auf ressourcenbeschränkter Hardware realisierbar. Zusätzlich homomorphe Verschlüsselung baumartig verwendbar, wodurch kein Stromzähler den Wert eines anderen erfährt. Kryptografie allerdings ungeeignet fr ressourcenbeschränkte Hardware
+		\end{itemize}
+		\item Eigene Arbeit \textit{SMART-ER}: Auf SMART basierendes, privatsphäregerechtes Smart Metering Protocol, das die Benutzer in untereinander kooperierende Gruppen einteilt, die ein gemeinsames Aggregat zur Verfügung stellen
+	\end{itemize}
+	\item \textbf{Privatheit im Smart Traffic}
+	\begin{itemize}
+		\item Anwendungen: Verkehrssicherheit, Verkehrsoptimierung, Efassen von Wetter/Luftqualität/etc. mittels Sensordaten
+		\item Trennung von Positionssamples und Identitäten notwendig. Pseudonymwechsel nötig, um Positionssamples desselben Nutzers nicht leicht zusammengruppieren zu können. Problem: Beobachtbarkeit. Lösung: Zufällige "`Funkstille"' beim Wechsel oder gleichzeitiger Wechsel verschiedener Nutzer in der selben Umgebung (innerhalb "`Mix-Zones"')
+		\item Eigene Arbeit \textit{Geocast mit OverDrive}: P2P-Netz zwischen den Fahrzeugen. Keine zentrale Senke, niemand hat die komplette Sicht. Nur direkte Nachbarn erhalten die genaue Position, weit entfernte bekommen verfälschte Daten (bei jedem Hopp werden die Daten leicht verändert)
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{Kommunikation}
