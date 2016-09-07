@@ -249,11 +249,133 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsection{Routing}
 
+\subsubsection{Probabilistische Verfahren}
+\begin{itemize}
+	\item \textbf{Fluten}
+	\begin{itemize}
+		\item Knoten sendet jede Dateneinheit per Broadcast an alle Nachbarn. Diese leiten wieder die Dateneinheit wieder per Broadcast an alle Nachbarn weiter
+		\item Durchaus häufig im Einsatz, da dezentral/selbstorganisierend und keine Routingtablen erforderlich
+		\item Vorteile: Keine Routenfindung/Topologiewartung/Routentabelle erforderlich
+		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten);limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
+		\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
+		\item Reichweitenbegrenzung mit maximaler Time-To-Live: Sorgt für weniger Netzbelastung, auch nicht zuverlässig
+	\end{itemize}
+	\item \textbf{Gossiping}
+	\begin{itemize}
+		\item Idee: Simulation der Verbreitung von Gerüchten. Die Dateneinheit wird an eine gewisse Anzahl Nachbarknoten weitergeleitet, die sie wieder zufällig an Nachbarknoten weiterleitet
+		\item Vorteile: Keine Nachrichtenimplosion, geringerer Overhead als Fluten
+		\item Nachteile: Unzuverlässig, eventuell lange Übertragungszeit durch ungünstige Pfadwahl
+	\end{itemize}
+	\item \textbf{Kombination aus Fluten und Gossiping}
+	\begin{itemize}
+		\item Idee: Auf den ersten \(k\) Hops fluten, danach Gossiping mit Wahrscheinlichkeit \(p\)
+		\item Erfahrungswerte: Ideale Parametrisierung möglich, so dass nahezu alle Knoten erreicht werden
+		\item Verbesserung: \(p\) steigt, je näher eine Dateneinheit ihrem Ziel kommt. Voraussetzung ist, dass jeder Knoten die Distanz zum Ziel kennt
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Inhaltsbasierte Verfahren}
+\begin{itemize}
+	\item \textbf{Direct Diffusion}
+	\begin{itemize}
+		\item Basiert Fluten, ist selbstorganisierend. Unterstützt die Aggregation von Daten
+		\item Besonders geeignet bei regelmäßiger Anfrage von Daten. Alle Knoten, welche die Bedingungen der Anfrage erfüllen (beispielsweise Datentyp oder Lokation), antworten
+		\item Verfahren
+		\begin{enumerate}
+			\item Senke äußert Interesse an Daten (Query), dieses wird im Netz geflutet
+			\item Aufbau eines Pfads zur Datenquelle: Speicherung der Richtung (Gradient), aus der die Queryy kam. Zu einem Query können mehrere Gradienten existieren
+			\item Daten werden auf dem Rückwärtspfad gesendet
+		\end{enumerate}
+		\item Gradientenverstärkung zur Etablierung eines oder mehreren "`guten"' Wege. Gradienten werden verstärkt wenn eine Senke gefunden wird. Weiterleitung von Datenpaketen erfolgt dann entsprechend des stärksten Gradienten \(\rightarrow\) zunächst redundantes Senden von Daten, danach Reduktion der Pfade durch Gradientenverstärkung
+		\item Evaluierung Direct Diffusion vs. Fluten: Direct Diffusion verbraucht deutlich weniger Energie pro Knoten
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Lokationsbasierte Verfahren}
+\begin{itemize}
+	\item \textbf{Rumor Routing}
+	\begin{itemize}
+		\item Datenzentrischer Ansatz: Initiative geht von Ereignisquelle und -senke aus. Kompromiss zwischen Fluten von Anfragen und Fluten von Ereignissen
+		\item \textit{Ereignis-Agenten}
+		\begin{itemize}
+			\item Etablieren Pfade zu Ereignissen. Anfragen suchen im Netz nach Ereignis-Pfaden
+			\item Ereignis-Agenten wandern als langlebige Dateneinheiten (mit maximaler Lebensdauer) durch das Netz, lernen unterwegs selbstständig Information und hinterlassen Pfadinformationen in den Knoten (Vgl. Ameisen in biologischen Systemen)
+			\item Pfadwahl durch Random-Walk
+		\end{itemize}
+		\item Die beteiligten Sensorknoten sammeln Informationen über Nachbarn (beispielsweise durch periodische Hello-Dateneinheiten) und Ereginisse (Ereignistabelle mit zeitlich limitierten Informationen zu Weiterleitungen bei bekannten Ereignissen)
+		\item Beispiel
+		\begin{itemize}
+			\item Knoten A beobachtet Ereignis und sendet zwei Ereignis-Agenten aus, die Routinginformationen zum Ereignis installieren (geben je einen Pfad vor)
+			\item Knoten B fragt nach einem Ergebnis und sendet Such-Agenten aus, die mit hoher Wahrscheinlichkeit einen bestehenden Ereihnospfad kreuzen \(\rightarrow\) Pfad zum Ereignis ab jetzt bekannt
+		\end{itemize}
+		\item Leistungsfähigkeit: Fluten vs. Rumor Routing
+		\begin{itemize}
+			\item Anfragen fluten: Lohnt sich bei vielen Events und wenigen Anfragen
+			\item Events fluten: Gradienten zur Eventquelle aufbauen, dann sind Anfragen mit geringen Kosten möglich
+			\item Rumor Routing lohnt sich bei allen Fällen dazwischen 
+		\end{itemize}
+	\end{itemize}
+	\item Motivation lokationsbasierter Verfahren: In vielen Anwendungen sollen Orte/Regionen adressiert werden. Informationen über Position der beteiligten Systeme kann Routing unterstützen (beispielsweise Koordinaten).
+	\item \textbf{Distanzbasiertes Greedy-Verfahren}
+	\begin{itemize}
+		\item Ziel: Übertragung einer Dateneinheit zu einer bekannten Position
+		\item Basiert auf der Annahme dass jedes System die eigene Position kennt
+		\item Strategie: Weiterleiten der Nachricht an das System in Reichweite, das dem Ziel am nächsten ist
+		\item Vorteil: Strategie garantiert schleifenfrei
+		\item Nachteile: Topologie bleibt unbeachten (eventuell schlechte Routen); Systeme am Rand der Übertragungsreichweite bevorzugt (eventuell schlechte Verbindungen)
+	\end{itemize}
+	\item \textbf{Richtungsbasiertes Greedy-Verfahren}
+	\begin{itemize}
+		\item Idee: Wähle das nächste Zwischenziel möglichst nahe an der idealen Richtung
+		\item Metriken: Minimalistischer Abtand zur Verbindungsgerade oder minimaler Winkel zur Verbindungsgerade
+		\item Problem: Nicht garantiert schleifenfrei
+	\end{itemize}
+	\item Generelles Problem bei Greedy-Strategien: Algorithmus kann in Sackgassen stecken bleiben
+	\item \textbf{Greedy Perimeter Stateless Routing (GPSR)}
+	\begin{itemize}
+		\item Benötigt einen planaren Graphen, da drahtlose Regel i.d.R. nicht planar sind müssen sie erst "`planiert"' werden
+		\item Idee: Rechte-Hand-Regel anwenden um aus Sackgassen zu entkommen
+		\item Weiterleitungs-Modi: Distanzbasiertes Greedy-Routing (kommt dem Ziel schneller näher); Perimetermodus um Sackgassen durch Rechte-Hand-Regel zu entkommen. GPSR startet im Greedy-Modus und wechselt in einer Sackgasse selbstständig in den Perimetermodus. Diese Position wird als Eintrittspunkt in den Permietermodus gespeichert. Sobald das Ziel näher ist als der Eintrittpunkt wird wieder in den Greedy-Modus gewechselt
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Distanzvektorbasierte Verfahren: RPL}
+\begin{itemize}
+	\item \textbf{Anforderungen (aus RFC 6550)}
+	\begin{itemize}
+		\item Adaptivität: Dynamisches Anpassen der Pfade bei geänderten Umgebungsbedingungen
+		\item Constrait-based Routing: Miteinbeziehen von Ransbedingungen wie niedrigem Batteriestand oder schlechter Verbindungsqualität
+		\item Unterstützung verschiedener Verkehrsmuster
+		\item So wenig wie möglich Konfigurations- und Managementaufwand
+	\end{itemize}
+	\item Routingprotokoll RPL als IETF-Standard entwickelt
+	\item \textbf{Grundlegendes Prinzip}
+	\begin{itemize}
+		\item Verbindung von Sensor-basierten Zgangsnetzen zum Internet über wenige dedizierte, hierarchisch angeordnete Knoten
+		\item Verwendung von Gerichteten Azyklische Graphen (DAG, DODAG): Wurzel ist höchster Knoten in "`up"'-Richtung (Concast) und hält Verbindung zum Internet, "`down"' in entgegengesetzter Richtung (Multicast)
+	\end{itemize}
+	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (Vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
+	\item DODAGS sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
+	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten, gültig innerhalb einer DODAG-Version
+	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraits zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
+	\item Knoten können Informationen für Down-Routing speichern (storing nodes). Im alternativen non-storing Betrieb fügt die Wurzel die Routinginformationen bei. Mischbetrieb ist unzulässig
+	\item Sicherheit: Wahlweise \textit{unsecured}, \textit{pre-installed} (vorinstallierte gemeinsame Geheimnisse auf den Knoten zum Versenden gesicherter Nachrichten), \textit{authentifiziert} (Beitritt mit Schlüssel einer Authentication Authority)
+	\item \textbf{DODAG-Konstruktion im Detail}
+	\begin{enumerate}
+		\item Initialisierung durch Wurzel sowie verknüpfen der Knoten untereinander. Wurzel gibt den \texttt{ROOT\_RANK} bekannt (weitere Wurzeln würden den selben Wert benutzen)
+		\item Berechnung der Link-Kosten und Node-Ranks
+		\item Hierarchische Wahl der/des Elternknoten (Link-Kosten entscheidend)
+	\end{enumerate}
+\end{itemize}
+
 
 \subsection{Datentransport}
 
 
 \subsection{Topologiekontrolle}
+
+
+\subsection{Internet of Things}
 
 
 
