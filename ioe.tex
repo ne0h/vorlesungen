@@ -373,6 +373,30 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 
 \subsection{Topologiekontrolle}
+\begin{itemize}
+	\item "`Topologie"' beschreibt den Aufbau von Verbindungen zwischen Systemen. Ein dichtes Netz führt zu komplexer Topologie (Anzahl der Nachbarn als Dichtemaß)
+	\item Im Folgenden Möglichkeiten zur Kontrolle
+	\item \textbf{Flache Netze mit gleichberechtigten Systemen}
+	\begin{itemize}
+		\item Sendeleistung regulieren: Sendeleistung und Zahl der direkten Nachbarn hängen unmittelbar zusammen. Ideale Sendeleistung als Tradeoff zwischen Energiesparen und Qualität der Konnektivität. Ziel: Bestimmen der Minimalen maximalen Sendeleistung (MMS)
+		\item Zahl der der Nachbarn regulieren
+	\end{itemize}
+	\item \textbf{Hierarchische Netze (Systeme haben unterschiedliche Fähigkeiten/Aufgaben)}
+	\begin{itemize}
+		\item Backbone-Netz: Einteilung des Netzes in Klassen (entsprechend ihrer Lokalität) mit Backbones. Zwischnen den Klassen dürfen nur Backbones kommunizieren, diese bilden ein \textit{dominating set}
+		\item Cluster-Netze
+		\begin{itemize}
+			\item Aufteilung der Sensoren in Gruppen (Cluster), so dass jedes Sstem in genau einer Gruppe ist. \textit{Cluster-Heads} bilden Vertreter ihrer Gruppe, wobei keine zwei Cluster-Heads direkte Nachbarn sein dürfen. Gesucht ist die maximale unabhängige Menge
+			\item Bestimmung der Gateways: Nach der Bestimmung der Cluster-Heads werden diese untereinander verbunden. Jeder Cluster-Head benötigt eine Vebrindung zu allen anderen Cluster-Heads, die maximal drei Schritte entfernt sind
+			\item Low-Energy Cluster Hierarchy (LEACH)
+			\begin{itemize}
+				\item Idee: Regelmäßiges Rotieren der höher belasteten Cluster-Heads zur Umverteilung der Last \(\rightarrow\) gleimäßige Verteilung des Energieverbrauchs
+			\end{itemize}
+			\item Vorgehen: Knoten bestimmen sich selbstständig mit bestimmter Wahrscheinlichkeit zu einem Cluster-Head und teilen dies den benachbarten Knoten mit (rundenbasiert). Alle anderen Knoten ordnen sich dem nächsten, neuen Cluster-Head in Reichweite zu
+			\item Mögliche Verbesserung: Clusterwahl nicht rein probabilistisch sondern basierend auf Restenergie der Knoten
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Internet of Things}
