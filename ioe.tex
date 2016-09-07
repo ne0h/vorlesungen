@@ -370,6 +370,96 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 
 \subsection{Datentransport}
+\begin{itemize}
+	\item Besonderheiten: Zuverlässigkeit; beschränkte Ressourcen; oft Echtzeit-Anforderung; keine klassischen Topologien mit Client-Server-Architekturen
+\end{itemize}
+
+\subsubsection{Unicast}
+\begin{itemize}
+	\item Kommunikationsform: Sensoren \(\rightarrow\) Aktoren
+	\item Herausforderungen: Zuverlässigkeit, geringe Verzögerung
+	\item Anwendungsbeispiele: Hausautomation (Schalter steuert Lichtquelle), Industrie (Überwachungssensor stoppt Produktionsanlage), Autowäsche (Abstandssensor verhindert Beschädigungen am Auto)
+	\item \textbf{Zuverlässigkeit}
+	\begin{itemize}
+		\item Traditioneller Weise TCP als zuverlässiger Transportdienst. Probleme: TCP erkennt die Ursachen für Paketverlust nicht; erfordert ggf. viele Sendewiederholungen (hoher Energiebedarf); 3-Wege-Handshake sehr teuer
+		\item Nicht alle Messwerte sind relevant, Ungenauigkeiten können (anwendungsabhängig) toleriert werden (beispielsweise minimale Temperaturschwankungen in einem Raum)
+		\item Probabilistische Zuverlässigkeit: Nur ein Teil aller Dateneinheiten erreicht die Senke. Ggf. leidet die Genauigkeit/Aktualität
+		\item Prop-Hop Quittungen: Quittungen/Sendewiederholungen pro Hop. Energieverbrauch wird gleichmäßig im Netz verteilt
+		\item Ende-zu-Ende Quittungen: Nur ursprünglicher Sender wiederholt die Dateneinheit. Bei geringen Bitfehlern besser geeignet
+	\end{itemize}
+	\item \textbf{Hop-by-Hop Reliabilty (HHR)}
+	\begin{itemize}
+		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden
+		\item HHR mit Acknoledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
+		\item Evaluierung: Pro-Hio Quittungen lohnen sich erst bei hohen Paketfehlerraten
+		\item HRR vs. HRRA
+		\begin{itemize}
+			\item HRR
+			\begin{itemize}
+				\item Vorteile Einsparen von Übertragungen durch Verzicht auf Quittungen bei niedrigen Paketfehlerraten
+				\item Paketwiederholung stoppt nicht, wenn Dateneinheit erfolgreich übertragen worden ist
+			\end{itemize}
+			\item HRRA
+			\begin{itemize}
+				\item Vorteil: Bei hohen Paketfehlerraten wird auf weiteres Senden nach erfolgreichem Erhalt einer Quittung verzichtet
+				\item Nachteil: Großer Overhead bei geringer Paketfehlerquote \(\rightarrow\) lohnt dann nicht
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Multicast}
+\begin{itemize}
+	\item Kommunikationsform: Senke \(rightarrow\) Sensoren/Aktoren
+	\item Herausforderungen: Zuverlässigkeit
+	\item Typische Daten: Kontroll-/Steuerungsaufgaben; Code-Updates
+	\item \textbf{Pump Slowly Fetch Quickly (PSFQ)}
+	\begin{itemize}
+		\item Ziel: Transportieren von Daten von einer Basisstation zu mehreren Sensoren/Aktoren
+		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit einer Pause nach dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch} explizit angefordert werden oder per \texttt{NACK} dem Sender gemeldet werden
+		\item Evaluierung/Beobcahtungwen
+		\begin{itemize}
+			\item Je größer die Distanz zur Quelle desto niedriger die Zustellrate (Prozentsatz der angekommenen Dateneinheiten an den Gesamteinheiten)
+			\item Je höher die Paketfehlerrate desto niedriger die Zustellrate
+			\item Keine Zustellgarantie
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Concast}
+\begin{itemize}
+	\item Kommunikationsform: Sensoren \(\rightarrow\) Senke
+	\item Herausforderungen: Zuverlässigkeit, Staukvermeidung und Energieeffiziens
+	\item Anwendungsbeispiel: Sensor beantwortet Anfrage mit Messdaten
+	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: Erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: Weniger Daten senden)
+	\item \textbf{Event-to-Sink Reliable Transport (ESRT)}
+	\begin{itemize}
+		\item Szenario: Viele Sensoren senden periodisch Dateneinheiten zur Senke, welche eine ausreichende Anzahl Dateneinheiten (egal von welchem Sensor) benötigt
+		\item Ziel: Bestimmen der benötigten Senderate im nächsten Zeitschritt auf Basis der aktuellen Senderate und der aktuellen Zustellrate
+		\item Ein Stau wird erkannt, wenn weniger Daten als gewünscht die Senke erreichen (Schwelle festgelegt vom Benutzer)
+	\end{itemize}
+	\item \textbf{Aggregation}
+	\begin{itemize}
+		\item Ziel: Zusammenfassen von Daten um weniger Dateneinheiten zu verschicken
+		\item Aggregationsformen
+		\begin{itemize}
+			\item Keine Aggregation: Eingehende Daten werden direkt Weitergeleitet
+			\item Paketaggregation: Eingehende Daten werden zwischengespeichert und zusammen in einem großen Paket weitergeleitet
+			\item Datenaggregation: Eingehende Daten werden zwischengespeichert und mit Aggregatsfunktion zusammengefasst und weitergeleitet
+		\end{itemize}
+		\item Evaluations-Metrik: Anzahl Messwerte, welche die Datensenke erreichen (MRS)
+		\begin{itemize}
+			\item Ergebnisse mit TinyOS LPL: Unterschiede durch Aggregation minimal da LPL die Knoten lokal synchronisiert. Kein unmittelbarer Zusammenhang zwischen Energiebedarf und Anzhl Datenpakete/-volumen
+			\item Ergebnisse mit S-MAC: Aggregation erhöht MRS, da der Durchsatz mit S-MAC bei kleinem Duty-Cycle gering ist. Aggregation reduziert die Azahl der Übertragungen
+		\end{itemize}
+		\item Fazit
+		\begin{itemize}
+			\item Ergebnis stark abhängig vom MAC-Protokoll
+			\item Kein signifikanter Unterschied zwischen Daten- und Paketaggregation. Paketaggregation ist daher vorzuziehen, da so alle Messwerte bei der Senke ankommen und nicht nur das Aggregat
+			\item Datenvolumen hat hier keinen großen Einfluss auf Energiebedarf
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Topologiekontrolle}
