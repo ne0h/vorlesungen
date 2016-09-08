@@ -489,8 +489,212 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \end{itemize}
 
 
-\subsection{Internet of Things}
+\subsection{Systeme und Standards}
 
+\subsubsection{IETF}
+\begin{itemize}
+	\item \textbf{Einführung}
+	\begin{itemize}
+		\item Verwendung von IPv6 (da IPv4-Adressraum nicht ausreicht): Knoten haben eine global eindeutige Adresse und nutzen den IPv6-Autokonfigurationsmechanismus
+		\item Nutzung etablierter Managementprotokollen (UPD als Transport) \(\rightarrow\) kein Anpassen von Anwendungen notwendig
+		\item Architektur
+		\begin{itemize}
+			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen engebetteten Systemen herstellen. Inseln mit Geraäten haben einen gemeinsamen IP-Adresspräfix
+			\item Router: Führen auch Routingaufgaben aus
+			\item Host: Quellen und/oder Senken von Daten. Nicht in das Routing involviert
+		\end{itemize}
+		\item Typen
+		\begin{itemize}
+			\item Simple LoWPAN: Ein Edge-Router mit einem Link zu anderen IP-Netzen
+			\item Ad-hoc LoWPAN: Kein Edge-Router, keine Infrastruktur
+			\item Extended LoWPAN: Mehrere Edge-Router, gemeinsamer Backbone-Link
+		\end{itemize}
+		\item Schichtenmodell
+		\begin{itemize}
+			\item Anwendung
+			\item \texttt{Constrait Application Protocol (CoAP)}: Transferprotokol für Umgebungen mit stark limitierten Ressourcen. RESTful, Interworking mit HTTP (einfache Proxy und Caching Umsetzung), Unterstützung für DTLS
+			\item \texttt{UDP}
+			\item \texttt{RPL}: Distanzvektor-basiertes Routing. Fokus auf Concast und Multicast
+			\item \texttt{IPv6 mit 6LoWPAN-Adaption}: Adressierung mit Autokonfiguration für IPv6, Fragmentierung, Header-Kompression
+			\item \texttt{802.15.4}: Medienzugriffsprotokoll mit verschiedenen Betriebsmodi. Alternativen sind beispielsweise Bluetooth-Low-Energy oder NFC
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{IPv6 over Low-Power Wireless Personal Area Networks (6LoWPAN)}
+	\begin{itemize}
+		\item Annahmen und Anforderungen
+		\begin{itemize}
+			\item Anwendungen senden kleine Datenmengen, typischerweise unter 100 Byte
+			\item Basiert auf 802.15.4, wobei Alternativen existieren (IPv6 über Bluetooth Low Energy oder NFC)
+			\item Batteriebetriebene, günstige Geräte mit geringer Leistungsfähigkeit
+			\item Minimaler Konfigurations- und Managementaufwand (u.U. schwere Erreichbarkeit der Geräte)
+		\end{itemize}
+		\item IPv6-Adressen
+		\begin{itemize}
+			\item Adresstypen
+			\begin{itemize}
+				\item Adresstyp wird durch führende Bits einr Adresse festgelegt
+				\item Unicast \texttt{fe80::/10}: Identifikator für ein einzelnes Interface
+				\item Anycast: Identifikator für eine Menge von Interfaces. Dateneinheit mit einer solchen Adresse wird an ein Interface aus dieser Menge ausgeliefert (üblicherweise an das "`nächstgelegene"')
+				\item Multicast \texttt{ff00::/8}: Identifikator für eine Menge von Interfaces. Dateneinheit mit solcher Adresse wird an alle Interfaces aus dieser Menge ausgeliefert
+				\item Global Unicast \texttt{0:0:0:0:0:ffff::/96}: IPv4-Adressen abgebildet auf IPv6-Adressen
+			\end{itemize}
+		\end{itemize}
+		\item Beispiel für Simple LoWPAN Netzkonfiguration mit einem Edge-Router und mehreren Routern/Hosts
+		\begin{enumerate}
+			\item Router gibt IPv6-Präfix \texttt{2001:300a::/32} bekannt
+			\item Edge-Router konfiguriert IPv6-Präfix \texttt{2001:300a::/48} für 802.15.4-Interface
+			\item Edge-Router gibt Präfix im LoWPAN bekannt und Router konfigurieren Adressen
+		\end{enumerate}
+		\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(rightarrow\) Fragementierung in der Adaptionsschicht notwendig
+		\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
+		\item Header Compression
+		\begin{itemize}
+			\item Motivation: Vermeidung von redundanten Informationen. Dabei kann entweder der IPv6-Kop oder der UDP-Kopf komprimiert werden
+			\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
+			\item Komprimierung im IPv6-Kopf
+			\begin{itemize}
+				\item Größe eines IPv6-Headers: 48 Byte
+				\item Parameter, die komprimiert werden können: Versionsnummer (ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden); Payload length (kann aus Schicht 2 Payloud length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP \(\rightarrow\) kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
+			\end{itemize}
+			\item Komprimierung im UDP-Kopf
+			\begin{itemize}
+				\item Was kann kmprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend), UDP-Payload-Length kann aus Schicht 3 berechnet werden. Komprimierung der Prüfsumme allerdings schwierig
+				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
+			\end{itemize}
+			\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{CoAP}
+	\begin{itemize}
+		\item Transferprotokoll für eingebettete bzw. ressourcenbeschränkte Maschinen-zu-Maschinen Kommunikation als leichtgewichtige Alternative zu HTTP. Kann von Proxy unkompliziert in HTTP umgewandelt werden
+		\item Requests/Responses enthalten jeweils einen Methodenaufruf (\texttt{GET} (Abruf), \texttt{PUT} (Speicherung), \texttt{POST} (Update), \texttt{DELETE} (Löschen)) auf ein Objekt (eindeutig per URI identifiziert)
+		\item Messaging-Modell
+		\begin{itemize}
+			\item Eindeutige ID zur Duplikatserkennung sowie dem Zuordnen von Quittungen
+			\item Wahlweise unzuverlässige Übertragung durch Non-Confirmable Nachrichtentyp (\texttt{NON}) oder zuverlässige Übertragung (Quittungen und exponentieller Backoff) durch Confirmable Nachrichtentyp (\texttt{CON})
+			\item Signalisierung con Fehlern durch Reset Nachrichtentyp (\texttt{RST})
+		\end{itemize}
+		\item Response-Klassen: 2 (Success), 4 (Client-Error), 5 (Server-Error). Responses können Piggy-Backed im \texttt{ACK} oder als separate Nachricht übertragen werden (muss im zweiten Fall ggf. mit einem \texttt{ACK} vom Client bestätigt werden)
+		\item Sicherheitsmodi bei Verwendung von DTLS
+		\begin{itemize}
+			\item NoSec
+			\item PrSharedKey
+			\item RawPublicKey: Nutzung von DTLS mit asymmetrischem Schlüsselpaar
+			\item Certificate: Nutzung von DTLS mit X.509-Zertifikat
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{ZigBee}
+\begin{itemize}
+	\item Von der \textit{ZigBee Allicance} entwickelter Standard für das Internet der Dinge ohne Interoperabilität mit etablierter Infrastruktur
+	\item Randbedingungen: Geringes Datenvolumen sowie geringer Energieverbauch
+	\item \textbf{Schichtenmodell}
+	\begin{itemize}
+		\item Anwendungsschicht
+		\begin{itemize}
+			\item Anwendungsunterstützung: Zuverlässiger Transportdienst, Kopplung von Geräten, Gruppenverwaltung
+			\item Awendungs-Framework: Anwendungsfunktionalität
+			\begin{itemize}
+				\item Einbettung von bis zu 240 Anwenungsobjekten (entsprecht jeweils einem Endpunkt)
+				\item Definition von Anwendungsprofilen (Kommunikationsstandards)
+			\end{itemize}
+			\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
+		\end{itemize}
+		\item Netzwerkschicht für Routing und Adressierung
+		\item 802.15.4 als Medienzugriffsprotokoll
+	\end{itemize}
+	\item \textbf{Anwendungsprofile}
+	\begin{itemize}
+		\item Soll Interoperabilität zwischen Geräteherstellern sicherstellen
+		\item In ZigBee Profilen werden für einen bestimmten Anwendungsfall Systemvoraussetzungen und Geräte definiert. Jedes Gerät implementiert hierbei eine Menge von Clustern. Beispielprofile sind z. B. Home Automation, Building Automation und Health Care\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Profile}}
+		\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschlter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
+	\end{itemize}
+	\item Client/Server-Modell: Attribute sind typischerweise Servern zugeordnet (beispielsweise der Status einer Lampe)
+	\item Cluster. Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst.\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
+	\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
+	\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
+	\item Fragmentierung: Quittungen verpflichtend
+	\item Gruppenverwaltung: Endpunkte können mehreren Gruppen zugeordnet werden. In der \textit{Gruppentabelle} werden Gruppen IDs lokalen Endpunkten zugeordnet
+	\item Adressierung erfolgt über 16 Bit Kurzadressen. Keine Verwendung von IP-Adressen
+	\item \textbf{Geräteklassen bzw. Rollen}
+	\begin{itemize}
+		\item Koordinator (FFD): Verwaltung des ZigBee-Netzwerks, beeinflusst Netztopologie, Funkkanal, etc.
+		\item Router (FFD): Kann Dateneinheiten im Netzwerk weiterleiten
+		\item Endgerät (FFD, RFD): Geräte ohne Weiterleitungsfunktion
+	\end{itemize}
+	\item \textbf{Routing}
+	\begin{itemize}
+		\item Baumtopologie
+		\begin{itemize}
+			\item Topologie: Ein Koordinator als Wurzel, Router als weitere Elternknoten, Endgeräte als Blätter
+			\item Statisches Adressierungsschema, das für jeden Router einen eigenen Adressraum vorsieht \(\rightarrow\) implizite Baumstruktur im Adressraum
+			\item Adressen können direkt zum Routing genutzt werden
+			\item Vorteile: Weder Pfadsuche noch Zustandshaltung
+			\item Nachteile: Ausfallanfällig (keine redundanten Pfade); suboptimale Pfade; falls kein Router mit freier Adresse in Reichweite: kein Netzzutritt möglich
+			\item Beacon-Modus möglich: Duty-cycling für alle Knoten
+		\end{itemize}
+		\item Meshtopologie
+		\begin{itemize}
+			\item Topologie: Ein Koordinator im Netzwerk, Router verbinden untereinander und Endgeräte verbinden sich zum nächsten Router
+			\item Adressen werden zufällig gewählt. Koordinator stellt sicher, dass keine Kollisionen entstehen
+			\item Ad-hoc on Demand Distance Vector Routing (AODV): Fluten von Routinganfragen worauf hin das Zielsystem die Anfrage beantwortet und so ein bidirektionaler Pfad zwischen den Routern aufgebaut wird. Das Endsystem eteiligt sich nicht an der Pfadsuche
+			\item Vorteile: Robust, selbstheilend; eventuell bessere Pfade
+			\item Nachteile: Kein Beacon-Modus, höherer Ressourcenbedarf
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{ZigBee 2007 - Stack-Profile}
+	\begin{itemize}
+		\item ZigBee: Baumtopologie mit statischem Routing und "`normaler Sicherheit"'. Reduzierte Funktionalität und einfache Verfahren \(\rightarrow\) insgesamt geringer Ressourcenbedarf
+		\item ZigBee Pro: Meshtopologie mit freier Adressvergabe, die Concast, Multicast und Source-Routing beherrscht. Sicherheitsstandard mit hohem Anspruch
+	\end{itemize}
+	\item \textbf{ZigBee IP}
+	\begin{itemize}
+		\item Basiert auf 6LoWPAN und definiert einen Protokollstapel auf Basis etablierter Standards: RPL, TCP, HTTP+TLS, ZigBee SE 2.0
+		\item Spezifiziert im Wesentlichen Datenformate, Schnittstellen und Anwendungsverhalten
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Industrial Internet}
+\begin{itemize}
+	\item Bisher Fokus auf Energiebedarf und Leistungsfähigkeit. Jetzt harte Echtzeit- und Verfügbarkeitsanforderungen: Deterministisches Verhalten, geringe Latenz sowie Isolierung des Verkehrs von verschiedenen Kunden
+	\item Anwendungsgebiete: AV-Streaming, Industie 4.0 (Prozessleitsysteme, Maschinensteuerung)
+	\item \textbf{WPAN}
+	\begin{itemize}
+		\item Drahtlose Ansätze aus dem Internet der Dinge auf Grund hoher Fehlerraten und geringer Robustheit keine gangbare Möglichkeit
+		\item Verwendung von 6LoWPAN (nahtlose Integration in IP-basierte Lösungen) mit \textit{Im-Slotted Channel Hopping (TSCH), einem Medienzugriffsverfahren, das eine hohe Robustheitund weniger Fehleranfälligkeit verspricht}
+		\item Time Slotted Channel Hopping (TSCH)
+		\begin{itemize}
+			\item Entwicklung neuer Medienzugriffsverfahren basierend auf synchronem Zeitmultiplex (feste Zeitschlitze) und Channel Hopping (Wechsel der Frequenz für jede zu übertragende Dateneinheit \(\rightarrow\) Sendewiederholungen erfolgt auf einer anderen Frequenz)
+			\item Vorteile: Planebare Belegung; Bandbreitenzuteilung möglich; Frequenzwechsel verbessert Robustheit (Störungen durch Signalüberlagerung betreffen normalerweise nie alle Funkkanäle)
+			\item Umsetzung als neuer Betriebsmodus in \texttt{IEEE 802.15.4e}
+			\item Netzwerkstack
+			\begin{itemize}
+				\item \texttt{CoAP}
+				\item \texttt{UDP}
+				\item \texttt{RPL}
+				\item \texttt{(6)TiSCH}: Umsetzung von Scheduling
+				\item \texttt{IPv6 mit 6LoWPAN-Adaption}
+				\item \texttt{802.15.4e}
+			\end{itemize}
+			\item Synchronisation
+			\begin{itemize}
+				\item Problem: Knoten müssen sehr genau synchronisiert werden (auf etwa 1 ms genau) \(\rightarrow\) wiederkehrende Synhronisation notwendig
+				\item Lösung: Einführung von \textit{Time-Mastern}, wozu verschiedene Verfahren möglich sind
+				\item Umsetzung entweder über paketbasierte Synchronisierung (messen der Ankunftszeit der der Pakete und verlängern/verkürzen der eigenen Aktivitätsphase); ACK-basierte Synchronisierung oder regelmäßige Keep-Alive Nachrichten (alle 30 s), falls keine Kommunikation stattgefunden hat
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{LAN}
+	\begin{itemize}
+		\item Keine Änderung des Medienzugriffsverfahren. Einhalten von Garantien durch geeignetes Scheduling (übergeordnete Planung/Koordination der Mediennutzung)
+		\item Grundlegendes Konzept
+		\begin{itemize}
+			\item Geringe Latenzen und hohe zuverlässigkeit: Keine Paketverluste/große Puffer in Zwischensystemen möglich
+			\item Explizite Reservierung von Bandbreite. Dadurch entstehen keine Überlastsituation \(\rightarrow\) keine Pufferung nötig \(\rightarrow\) deterministische Latenzen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \section{Sicherheit}
