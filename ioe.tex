@@ -698,3 +698,151 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 
 \section{Sicherheit}
+\begin{itemize}
+	\item Kryptografische Operationen sind teuer und benötigen viel Speicher. Speziell asymmetrische Schlüssel benötigen noch mehr Speicherplatz \(\rightarrow\) vermeide asymmetrische Kryptografie so weit wie möglich
+\end{itemize}
+
+\subsection{Schlüsselaustausch in Sensornetzen}
+\begin{itemize}
+	\item Klassische Schlüsselaustauschprotokolle benutzen häufig zentrale Komponenten (beispielsweise PKIs), Einsatz von Diffie-Hellman aufgrund von Ressourcenbeschränkungen schwierig
+	\item \textbf{Verfahren zum Schlüsselaustausch}
+	\begin{itemize}
+		\item Single-Mission-Key
+		\begin{itemize}
+			\item Alle Systeme erhalten vor ihrer Ausbringung den selben Schlüssel, der zur Kommunikationsicherung (Verschlüsselung, Integrität, etc.) verwendet wird
+			\item Problem: Sobald ein System korrumpiert wird, ist die gesamte Kommunikation im Netz unsicher
+			\item Paarweise Schlüssel mit allen Systmen: Extrem hoher Speicherbedarf; was passiert, wenn neue Systeme dem Netz beitreten?
+		\end{itemize}
+		\item Zufallsverteilte Schlüssellisten: Ansatz von Eschenauer und Gligor
+		\begin{itemize}
+			\item Benutzer erstellt vorab offline eine große Liste mit verschiedenen, nummerierten Schlüsseln. Jedes System, das dem Netz beitreten soll, bekommt vorab eine zufällige Teilmenge dieser Schlüssel
+			\item Zwei Systeme, die kommunizieren wollen besitzen mit einer bestimmten Wahrscheinlichkeit einen gemeinsamen Schlüssel; falls nicht lässt sich ein Schlüsselpfad konstruieren
+			\item Finden von gemeinsamen Schlüsseln: \texttt{System 1} sendet eine Liste seiner Schlüsselnummern im Klartext an \texttt{System 2}. \texttt{System 2} antwortet mit einer gemeinsamen Schlüsselnummer, ebenfalls im Klartext \(\rightarrow\) unsicher
+			\item Erweiterung um Challenge: \texttt{System 1} sendet Zufallszahl \(Z\) sowie jeweils verschlüsseltes \(Z\) (also (\(Z, ENC_{1..n}(Z)\)) an \texttt{System 2}. \texttt{System 2} antwortet beispielsweise mit \(ENC_2(Z+1)\) \(\rightarrow\) teuer
+			\item Simulierte Sicherheitsbetrachtung mit \(n\) Systemen: Logarithmisches Wachstum der prozentualen Anzahl an gebrochener Verbindung, abhängig vom Prozentsatz der kurrumpierten Systeme. Spätestens bei 10 \% Korruption sind nahezu alle Verbindungen unsicher
+			\item Fazit: Insgesamt unsicher, kommt allerdings ohne zusätzliche Infrastruktur aus \(\rightarrow\) Tradeoff zwischen Speicherverbrauch und Sicherheit der Schlüssel
+		\end{itemize}
+		\item Key Infection: Smart Trust for Smart Dust
+		\begin{itemize}
+			\item Einsatzszenario: Viele, sehr günstige und zufällige ausgebrachte Sensorknoten mit eingeschränktem Angreifermodell (kann nicht das komplette Netz abhören und kann keine Angriffe während der Schlüsselaustauschphase starten)
+			\item \textit{Key Infection}: Inital gegenseitiger Schlüsselaustausch zwischen allen Systemen in Reichweite. Dazu sendet \texttt{Knoten 1} einen zufälligen Schlüssel und versendet ihn per Broadcast. \texttt{Knoten 2} wählt einen gemeinsamen Sitzungsschlüssel und sendet diesen zusammen mit seiner ID verschlüsselt an \texttt{Knoten 1}
+			\item Protokoll (2 und 3 optional)
+			\begin{enumerate}
+				\item Key Infection: Initialer Schlüsselaustausch zwischen Nachbarknoten
+				\item Multihop Key Exchange: Schlüsselaustausch zwischen nicht benachbarten Knoten
+				\item Secrecy Amplification: Verstärkung der Schlüsselsicherheit durch Nutzung von Mehrweg Austausch
+			\end{enumerate}
+			\item Zusammenfassung
+			\begin{itemize}
+				\item Einfaches Schlüsselaustauschprotokoll mit geringem Speicheraufwand für Schlüsselmaterial
+				\item Hoher Kommunikationsaufwand da in der Praxis alle Knoten nahezu gleichzeitig anfangen Schlüssel auszutauschen \(\rightarrow\) viele Sendewiederholungen durch Kollisionen
+				\item Tatsächlicher Angreifer eventuell mit mehr Möglichkeiten
+			\end{itemize}
+		\end{itemize}
+		\item Aktuell einige neue Ansätze mit asymmetrischen Verfahren auf dem Weg zur Standardisierung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Standardisierung - Sicherheit im IoT}
+\begin{itemize}
+	\item \textbf{DTLS In Constrained Environments (DICE): Draft bei der IETF}
+	\begin{itemize}
+		\item Ziel: Effiziente Nutzung von DTLS in IoT/IoE-Anwendungen
+		\item Soll Vertraulichkeit sicherstellen und auf ressourcenbeschränkten Systemen implementierbar sein
+		\item Definition von DTLS-Konfigurationen, die effizient und sicher sind
+		\item DICE DTLS-Profil
+		\begin{itemize}
+			\item Einschränkung der unterstützten, kryptografischen Algorithmen auf eine wenige sichere, aber auch effiziente
+			\item Einschränkung der Authentifizierungsmechanismen: Preshared Keys, Raw Public Keys, Zertifikate
+			\item Einschränkung der Protokollerweiterungen und Funktionen
+		\end{itemize}
+		\item Einschränkung der Cipher-Suites auf AES, SHA-1 und Elliptische Kurven (effizienter als RSA, geringere Schlüssellänge als RSA)
+	\end{itemize}
+	\item \textbf{Delegated CoAP Authentication und Authorization (DCAF): Draft bei der IETF}
+	\begin{itemize}
+		\item Problem bisher: Existierende Sicherheitslösungen sind zu komplex für IoE, auch mit DICE ist asyymetrische Kryptografie zu teuer
+		\item Idee \textit{Delegated Security}: Authentifizierung und Autorisierung durh vertrauenswürdigen Stellvertreter zur Entlastung der ressourcenbeschränkten Systeme. Allerdings entsteht so ein höher Kommunikationsaufwand (Tradeoff zwischen Kommunikations- und Berechnungsaufwand)
+		\item Spezifiziert einen Delegationsmechanismus in CoAP und ist darin eingebettet. Keine zusätzliche Protokollschicht
+		\item Nur symmetrische Verschlüsselung auf ressourcenbeschränkten Systeme mit individueller Autorisierung für jede CoAP-Ressource
+		\item Rollen
+		\begin{itemize}
+			\item Besitzer sowie eingeschränkte System (Clients oder Servers)
+			\item Vertrauensbeziehung zwischen Besitzern durch Zugriffsberechtigungen
+			\item \textit{Client Authentication Manager} (CAM) übernimmt die Rolle des Clients im Autorisierungsprozess
+			\item \textit{Server Authentication Manager} (SAM) vertritt den Server im Autorisierungsprozess
+		\end{itemize}
+		\item Delegation - Architektur
+		\begin{itemize}
+			\item Jeweils symmetrische Schlüssel zwischen Client und CAM, Server und SAM
+			\item Wechselseitige Authentifizierung von CAM und SAM (beispielsweise mit Zertifikaten)
+		\end{itemize}
+		\item Ablauf
+		\begin{enumerate}
+			\item Unautorisierte Anfragen Client \(\rightarrow\) Server: Server verweist Client an SAM. Bei Autorisierungsanfragen an CAM enthält die Anfrage die URI des SAM. CAM kann die Anfragen ablehnen oder einschränken
+			\item SAM stellt jeweils für Client und Server ein Ticket mit gemeinsamem Geheimnis aus. Das Client-Ticket wird zunächst CAM geschickt
+			\item CAM leitet Client-Ticket an Client weiter
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{ZigBee}
+	\begin{itemize}
+		\item Absicherung entweder auf Netzwerkschicht (ein Schlüssel für das gesamte Netzwerk: Single Mission Key) oder Anwendungsschicht (eigene Schlüssel für jede Ende-zu-Ende-Verbindung möglich: Linkschlüssel). Letzteres nur für Unicast-Kommunikation anwendbar
+		\item Schlüsselverwaltung erfolgt durch ein Trustcenter. Problem: Schlüsselverteilung bei initialem Vebrindungsaufbau
+		\item \textit{ZigBee Home Automation Profile} definiert Standardschlüssel \(\rightarrow\) kein Mehrwert gegenüber Übertragungen im Klartext
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Reality Check: BMW ConnectedDrive}
+\begin{itemize}
+	\item Cloud-basierter Dienst zur Steuerung des Autos aus der Ferne. Kommunikation via SMS und HTTP
+	\item \textbf{Schutzmechanismen}
+	\begin{itemize}
+		\item Sicherheitsmechanismen sind im Modem (im Auto) implementiert. Mikrokontroller realisiert Basisfunktionalität und überwacht das Modem
+		\item Verschlüsselung wahlweise AES oder DES, Signaturverfahren mit DES-CBC-MAC, HMAC-SHA1 oder HMAC-SHA256
+		\item Schlüsselmaterial ist im Modus fest implementiert und bei allen Fahrzeugen gleich \(\rightarrow\) relativ einfach zu extrahieren
+	\end{itemize}
+	\item \textbf{Angriff}
+	\begin{itemize}
+		\item Ausgangspunkt: Falsche Mobilfunk-Basisstation \(\rightarrow\) Auto bucht sich ins gefälschte Netz ein
+		\item Angreifer weckt das Steuergerät mit einer SMS
+		\item Auto fordert Befehler per HTTP(!) aus der Cloud an
+		\item Angreifer antwortet mit gewünschtem Steuerbefehl. Die Nutzdaten sind mit bekannten Schlüsseln verschlüsselt und signiert
+		\item Auto akzeptiert Befehle nur, wenn die Fahrgestellnummer übereinstimmt...schickt diese allerdings per SMS an den Angreifer, wenn sie nicht übereinstimmt
+		\item Letzte Hoffnung: ConnectedDrive kann deaktiviert werden, ist aber über den gleichen Angriff wieder aktivierbar
+	\end{itemize}
+	\item \textbf{Was ist schief gelaufen?}
+	\begin{itemize}
+		\item Ein gemeinsamer Schlüsselsatz für alle Fahrzeuge des Herstellers
+		\item Keine Authentifizierung der ConnectedDrive Cloud
+		\item Unnötige Preisgabe von zur Validierung nutzbaren Informationen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Projekte}
+\begin{itemize}
+	\item \textf{Kompetenzzentrum für angewandte Sicherheitstechnologien (KASTEL)}
+	\begin{itemize}
+		\item Herausforderungen
+		\begin{itemize}
+			\item ZeroConf vs. LittleConf vs. Expert
+			\item Nutzung von IPv6
+			\item Stark heterogene Netze mit unterschiedlichen Sicherheitsanforderungen in Teilen des Netzes
+			\item Sicherheit verursacht Kosten: Energieeffizienz
+		\end{itemize}
+		\item Funktionale Domäne: Komponenten im Smart-Home, die gemeinsam eine bestimmte Funktion erfüllen
+		\item Sicherheitszone: Setzt Komponenten des Smart-Home mit gleichem Schutzbedarf in Vertrauensbeziehungen (beispielsweise "`intern"' und "`extern"'). Funktionale Domänen können sich über mehrere Sicherheitszonen erstrecken
+		\item Zonenübergänge müssen kontrolliert werden (Firewall, VLANs, etc.)
+	\end{itemize}
+	\item \textf{FleGSens}
+	\begin{itemize}
+		\item Untersucht die Möglichkeit einer sicheren und flexiblen Überwachung von Grenz- und Liegenschaften mit Hilfe von drahtlosen Sensornetzen. Prototyp überwacht eine 350 m lange Grenze mit 200 Sensorknoten
+		\item Herausforderungen: Unsichere/raue Umgebung, Protokolle zum Betrieb und zur Ortung von Eindringlingen, Absicherung gegen Angriffe mit IT-Mitteln, sicherer Betrieb auch bei Ausfall von 10 \% der Knoten
+		\item Protokolle
+		\begin{itemize}
+			\item Trackingprotokoll mit Lokalisierung
+			\item Zeitsynchronisation
+			\item Knotenausfallerkennung, Partitionserkennung, DoS-Erkennung
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
