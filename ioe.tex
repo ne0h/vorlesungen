@@ -158,7 +158,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Betrachtetes Medium: Geteiltes Medium mit relativ hoher Unzuverlässigkeit ohne Duplexbetrieb (i.d.R.)
 	\item \textbf{Funkmedium}
 	\begin{itemize}
-		\item Klassische Probleme gegenüber drahtgebundenen Netzen: Höhe Fehlerraten, niedrigere Datenrate, hohe Verzögerung, geringere Sicherheit
+		\item Klassische Probleme gegenüber drahtgebundenen Netzen: Höhere Fehlerraten, niedrigere Datenrate, hohe Verzögerung, geringere Sicherheit
 		\item Quadratische Abnahme der Signalausbreitung
 		\item CSMA/CD-basierte Verfahren für Medienzuteilung nicht nutzbar, da nur der Empfänger Kollisionen erkennen kann (\textit{Semi-Broadcast-Medium})
 		\item Versteckte Endsysteme: 
@@ -178,13 +178,13 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item \textbf{S-MAC (Sensor Media Access Control)}
 	\begin{itemize}
-		\item Kein akademisch, keine Verbreitung in der Praxis
-		\item Zielsetzung: Ernergieeffiziens, Skalierbarkeit, Autokonfiguration
+		\item Rein akademisch, keine Verbreitung in der Praxis
+		\item Zielsetzung: Ernergieeffizienz, Skalierbarkeit, Autokonfiguration
 		\item Weniger berücksichtigt: Fairness zwischen den Systemen, Latenz
 		\item Idee: Koordiniertes Schlafen zur Vermeidung von idle listening durch zeitliche Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
-		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleepphase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
+		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleep-Phase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
 		\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase)
-		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Datenheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis es schlafendes System, dass die Datenübertragung abgeschlossen ist?
+		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis es schlafendes System, dass die Datenübertragung abgeschlossen ist?
 		\item Leistungsbewertung über Energiebedarf pro Byte; durschnittliche Ende-zu-Ende-Verzögerung sowie Ende-zu-Ende-Goodput (Gesamtmenge durch Gesamtzeit). S-MAC reduziert den Energiebedarf deutlich. Bei hoher Last kann Adaptive Listening den Energiebedarf nochmals halbieren
 	\end{itemize}
 	\item \textbf{B-MAC}
@@ -196,7 +196,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Erweiterung X-MAC: Statt einer großen Präambel werden viele kleine Präambelpakete gesendet mit Quittung für erhaltene Präambel um die Kosten beim Sender weiter zu reduzieren
 		\item Kenngrößen zur Leistungsbewertung
 		\begin{itemize}
-			\item Durschnittlicher Energiebedarf pro Byte: Gesamtenergiebedarf aller Systeme geteilt duech die Anzahl von der Senke empfangenen Bytes
+			\item Durschnittlicher Energiebedarf pro Byte: Gesamtenergiebedarf aller Systeme geteilt durch die Anzahl von der Senke empfangenen Bytes
 			\item Durschnittliche Ende-zu-Ende Verzögerung: Summe aller Ende-zu-Ende Verzögerungen geteilt durch die Anzahl der Dateneinheiten
 			\item Ende-zu-Ende Goodput: Gesamtzahl von der Senke empfangener Bytes geteilt durch die Zeitspanne zwischen Versenden der ersten Datenheit bis zum Empfang der letzten Dateneinheit an der Senke
 		\end{itemize}
@@ -213,7 +213,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{IEEE 802.15.4}
 	\begin{itemize}
-		\item IEEE Standard für Low-Rate WPAN-Anwendungen, der oft von Zigbee und 6LoWPAN genutzt wird
+		\item IEEE Standard für Low-Rate WPAN-Anwendungen, der oft von ZigBee und 6LoWPAN genutzt wird
 		\item Ziele: Kleine bis mittlere Datenraten, moderate Verzögerung, geringer Energiebedarf sowie geringe Komplexität
 		\item Eigenschaften: Frequenzbänder 868/914/2450 MHz; Datenrate von maximal 250 kbit/s; Reichweite 10 m
 		\item MAC-Protokoll
@@ -256,7 +256,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Knoten sendet jede Dateneinheit per Broadcast an alle Nachbarn. Diese leiten wieder die Dateneinheit wieder per Broadcast an alle Nachbarn weiter
 		\item Durchaus häufig im Einsatz, da dezentral/selbstorganisierend und keine Routingtablen erforderlich
 		\item Vorteile: Keine Routenfindung/Topologiewartung/Routentabelle erforderlich
-		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten);limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
+		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten); limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
 		\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
 		\item Reichweitenbegrenzung mit maximaler Time-To-Live: Sorgt für weniger Netzbelastung, auch nicht zuverlässig
 	\end{itemize}
@@ -283,7 +283,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Verfahren
 		\begin{enumerate}
 			\item Senke äußert Interesse an Daten (Query), dieses wird im Netz geflutet
-			\item Aufbau eines Pfads zur Datenquelle: Speicherung der Richtung (Gradient), aus der die Queryy kam. Zu einem Query können mehrere Gradienten existieren
+			\item Aufbau eines Pfads zur Datenquelle: Speicherung der Richtung (Gradient), aus der die Query kam. Zu einem Query können mehrere Gradienten existieren
 			\item Daten werden auf dem Rückwärtspfad gesendet
 		\end{enumerate}
 		\item Gradientenverstärkung zur Etablierung eines oder mehreren "`guten"' Wege. Gradienten werden verstärkt wenn eine Senke gefunden wird. Weiterleitung von Datenpaketen erfolgt dann entsprechend des stärksten Gradienten \(\rightarrow\) zunächst redundantes Senden von Daten, danach Reduktion der Pfade durch Gradientenverstärkung
@@ -306,7 +306,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Beispiel
 		\begin{itemize}
 			\item Knoten A beobachtet Ereignis und sendet zwei Ereignis-Agenten aus, die Routinginformationen zum Ereignis installieren (geben je einen Pfad vor)
-			\item Knoten B fragt nach einem Ergebnis und sendet Such-Agenten aus, die mit hoher Wahrscheinlichkeit einen bestehenden Ereihnospfad kreuzen \(\rightarrow\) Pfad zum Ereignis ab jetzt bekannt
+			\item Knoten B fragt nach einem Ergebnis und sendet Such-Agenten aus, die mit hoher Wahrscheinlichkeit einen bestehenden Ereignispfad kreuzen \(\rightarrow\) Pfad zum Ereignis ab jetzt bekannt
 		\end{itemize}
 		\item Leistungsfähigkeit: Fluten vs. Rumor Routing
 		\begin{itemize}
@@ -390,13 +390,13 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Hop-by-Hop Reliabilty (HHR)}
 	\begin{itemize}
 		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden
-		\item HHR mit Acknoledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
-		\item Evaluierung: Pro-Hio Quittungen lohnen sich erst bei hohen Paketfehlerraten
+		\item HHR mit Acknowledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
+		\item Evaluierung: Pro-Hip Quittungen lohnen sich erst bei hohen Paketfehlerraten
 		\item HRR vs. HRRA
 		\begin{itemize}
 			\item HRR
 			\begin{itemize}
-				\item Vorteile Einsparen von Übertragungen durch Verzicht auf Quittungen bei niedrigen Paketfehlerraten
+				\item Vorteile: Einsparen von Übertragungen durch Verzicht auf Quittungen bei niedrigen Paketfehlerraten
 				\item Paketwiederholung stoppt nicht, wenn Dateneinheit erfolgreich übertragen worden ist
 			\end{itemize}
 			\item HRRA
@@ -410,7 +410,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsubsection{Multicast}
 \begin{itemize}
-	\item Kommunikationsform: Senke \(rightarrow\) Sensoren/Aktoren
+	\item Kommunikationsform: Senke \(\rightarrow\) Sensoren/Aktoren
 	\item Herausforderungen: Zuverlässigkeit
 	\item Typische Daten: Kontroll-/Steuerungsaufgaben; Code-Updates
 	\item \textbf{Pump Slowly Fetch Quickly (PSFQ)}
@@ -429,9 +429,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsubsection{Concast}
 \begin{itemize}
 	\item Kommunikationsform: Sensoren \(\rightarrow\) Senke
-	\item Herausforderungen: Zuverlässigkeit, Staukvermeidung und Energieeffiziens
+	\item Herausforderungen: Zuverlässigkeit, Stauvermeidung und Energieeffizienz
 	\item Anwendungsbeispiel: Sensor beantwortet Anfrage mit Messdaten
-	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: Erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: Weniger Daten senden)
+	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: weniger Daten senden)
 	\item \textbf{Event-to-Sink Reliable Transport (ESRT)}
 	\begin{itemize}
 		\item Szenario: Viele Sensoren senden periodisch Dateneinheiten zur Senke, welche eine ausreichende Anzahl Dateneinheiten (egal von welchem Sensor) benötigt
@@ -464,19 +464,19 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsection{Topologiekontrolle}
 \begin{itemize}
-	\item "`Topologie"' beschreibt den Aufbau von Verbindungen zwischen Systemen. Ein dichtes Netz führt zu komplexer Topologie (Anzahl der Nachbarn als Dichtemaß)
+	\item \textit{Topologie} beschreibt den Aufbau von Verbindungen zwischen Systemen. Ein dichtes Netz führt zu komplexer Topologie (Anzahl der Nachbarn als Dichtemaß)
 	\item Im Folgenden Möglichkeiten zur Kontrolle
 	\item \textbf{Flache Netze mit gleichberechtigten Systemen}
 	\begin{itemize}
-		\item Sendeleistung regulieren: Sendeleistung und Zahl der direkten Nachbarn hängen unmittelbar zusammen. Ideale Sendeleistung als Tradeoff zwischen Energiesparen und Qualität der Konnektivität. Ziel: Bestimmen der Minimalen maximalen Sendeleistung (MMS)
+		\item Sendeleistung regulieren: Sendeleistung und Zahl der direkten Nachbarn hängen unmittelbar zusammen (Übertragungen zu lokal näher gelegene Nachbarn benötigen weniger Energie). Ideale Sendeleistung als Tradeoff zwischen Energiesparen und Qualität der Konnektivität. Ziel: Bestimmen der \textit{Minimalen maximalen Sendeleistung} (MMS)
 		\item Zahl der der Nachbarn regulieren
 	\end{itemize}
 	\item \textbf{Hierarchische Netze (Systeme haben unterschiedliche Fähigkeiten/Aufgaben)}
 	\begin{itemize}
-		\item Backbone-Netz: Einteilung des Netzes in Klassen (entsprechend ihrer Lokalität) mit Backbones. Zwischnen den Klassen dürfen nur Backbones kommunizieren, diese bilden ein \textit{dominating set}
+		\item Backbone-Netz: Bilden von Backbones und einfachen Knoten. Die einfachen Knoten sind jeweils dem lokal nächsten Backbone zugeordnet. Einfache Knoten dürfen lediglich innerhalb des selben Backbone-Netzes kommunizieren. Außerhalb dürfen nur Backbones direkt kommunizeren (diese bilden ein \textit{dominating set})
 		\item Cluster-Netze
 		\begin{itemize}
-			\item Aufteilung der Sensoren in Gruppen (Cluster), so dass jedes Sstem in genau einer Gruppe ist. \textit{Cluster-Heads} bilden Vertreter ihrer Gruppe, wobei keine zwei Cluster-Heads direkte Nachbarn sein dürfen. Gesucht ist die maximale unabhängige Menge
+			\item Aufteilung der Sensoren in Gruppen (Cluster), so dass jedes Sytem in genau einer Gruppe ist. \textit{Cluster-Heads} bilden Vertreter ihrer Gruppe, wobei keine zwei Cluster-Heads direkte Nachbarn sein dürfen. Gesucht ist die maximale unabhängige Menge
 			\item Bestimmung der Gateways: Nach der Bestimmung der Cluster-Heads werden diese untereinander verbunden. Jeder Cluster-Head benötigt eine Vebrindung zu allen anderen Cluster-Heads, die maximal drei Schritte entfernt sind
 			\item Low-Energy Cluster Hierarchy (LEACH)
 			\begin{itemize}
@@ -497,9 +497,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Verwendung von IPv6 (da IPv4-Adressraum nicht ausreicht): Knoten haben eine global eindeutige Adresse und nutzen den IPv6-Autokonfigurationsmechanismus
 		\item Nutzung etablierter Managementprotokollen (UPD als Transport) \(\rightarrow\) kein Anpassen von Anwendungen notwendig
-		\item Architektur
+		\item 6LoWPAN Architektur
 		\begin{itemize}
-			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen engebetteten Systemen herstellen. Inseln mit Geraäten haben einen gemeinsamen IP-Adresspräfix
+			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen engebetteten Systemen herstellen. Inseln mit Geräten haben einen gemeinsamen IP-Adresspräfix
 			\item Router: Führen auch Routingaufgaben aus
 			\item Host: Quellen und/oder Senken von Daten. Nicht in das Routing involviert
 		\end{itemize}
@@ -511,8 +511,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item Schichtenmodell
 		\begin{itemize}
-			\item Anwendung
-			\item \texttt{Constrait Application Protocol (CoAP)}: Transferprotokol für Umgebungen mit stark limitierten Ressourcen. RESTful, Interworking mit HTTP (einfache Proxy und Caching Umsetzung), Unterstützung für DTLS
+			\item \texttt{Constrait Application Protocol (CoAP)}: Transferprotokol für Umgebungen mit stark limitierten Ressourcen. RESTful, Interworking mit HTTP (einfache Proxy- und Caching-Umsetzung), Unterstützung für DTLS
 			\item \texttt{UDP}
 			\item \texttt{RPL}: Distanzvektor-basiertes Routing. Fokus auf Concast und Multicast
 			\item \texttt{IPv6 mit 6LoWPAN-Adaption}: Adressierung mit Autokonfiguration für IPv6, Fragmentierung, Header-Kompression
@@ -532,7 +531,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\begin{itemize}
 			\item Adresstypen
 			\begin{itemize}
-				\item Adresstyp wird durch führende Bits einr Adresse festgelegt
+				\item Adresstyp wird durch führende Bits einer Adresse festgelegt
 				\item Unicast \texttt{fe80::/10}: Identifikator für ein einzelnes Interface
 				\item Anycast: Identifikator für eine Menge von Interfaces. Dateneinheit mit einer solchen Adresse wird an ein Interface aus dieser Menge ausgeliefert (üblicherweise an das "`nächstgelegene"')
 				\item Multicast \texttt{ff00::/8}: Identifikator für eine Menge von Interfaces. Dateneinheit mit solcher Adresse wird an alle Interfaces aus dieser Menge ausgeliefert
@@ -545,26 +544,26 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Edge-Router konfiguriert IPv6-Präfix \texttt{2001:300a::/48} für 802.15.4-Interface
 			\item Edge-Router gibt Präfix im LoWPAN bekannt und Router konfigurieren Adressen
 		\end{enumerate}
-		\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(rightarrow\) Fragementierung in der Adaptionsschicht notwendig
+		\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
 		\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
 		\item Header Compression
 		\begin{itemize}
-			\item Motivation: Vermeidung von redundanten Informationen. Dabei kann entweder der IPv6-Kop oder der UDP-Kopf komprimiert werden
+			\item Motivation: Vermeidung von redundanten Informationen. Dabei kann entweder der IPv6-Kopf oder der UDP-Kopf komprimiert werden
 			\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
 			\item Komprimierung im IPv6-Kopf
 			\begin{itemize}
 				\item Größe eines IPv6-Headers: 48 Byte
-				\item Parameter, die komprimiert werden können: Versionsnummer (ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden); Payload length (kann aus Schicht 2 Payloud length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP \(\rightarrow\) kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
+				\item Parameter, die komprimiert werden können: Versionsnummer (ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP \(\rightarrow\) kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
 			\end{itemize}
 			\item Komprimierung im UDP-Kopf
 			\begin{itemize}
-				\item Was kann kmprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend), UDP-Payload-Length kann aus Schicht 3 berechnet werden. Komprimierung der Prüfsumme allerdings schwierig
+				\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend), UDP-Payload-Length kann aus Schicht 3 berechnet werden. Komprimierung der Prüfsumme allerdings schwierig
 				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
 			\end{itemize}
 			\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{CoAP}
+	\item \textbf{Constrained Application Protocol (CoAP)}
 	\begin{itemize}
 		\item Transferprotokoll für eingebettete bzw. ressourcenbeschränkte Maschinen-zu-Maschinen Kommunikation als leichtgewichtige Alternative zu HTTP. Kann von Proxy unkompliziert in HTTP umgewandelt werden
 		\item Requests/Responses enthalten jeweils einen Methodenaufruf (\texttt{GET} (Abruf), \texttt{PUT} (Speicherung), \texttt{POST} (Update), \texttt{DELETE} (Löschen)) auf ein Objekt (eindeutig per URI identifiziert)
@@ -572,13 +571,13 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\begin{itemize}
 			\item Eindeutige ID zur Duplikatserkennung sowie dem Zuordnen von Quittungen
 			\item Wahlweise unzuverlässige Übertragung durch Non-Confirmable Nachrichtentyp (\texttt{NON}) oder zuverlässige Übertragung (Quittungen und exponentieller Backoff) durch Confirmable Nachrichtentyp (\texttt{CON})
-			\item Signalisierung con Fehlern durch Reset Nachrichtentyp (\texttt{RST})
+			\item Signalisierung von Fehlern durch Reset Nachrichtentyp (\texttt{RST})
 		\end{itemize}
 		\item Response-Klassen: 2 (Success), 4 (Client-Error), 5 (Server-Error). Responses können Piggy-Backed im \texttt{ACK} oder als separate Nachricht übertragen werden (muss im zweiten Fall ggf. mit einem \texttt{ACK} vom Client bestätigt werden)
 		\item Sicherheitsmodi bei Verwendung von DTLS
 		\begin{itemize}
 			\item NoSec
-			\item PrSharedKey
+			\item PreSharedKey
 			\item RawPublicKey: Nutzung von DTLS mit asymmetrischem Schlüsselpaar
 			\item Certificate: Nutzung von DTLS mit X.509-Zertifikat
 		\end{itemize}
@@ -594,9 +593,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Anwendungsschicht
 		\begin{itemize}
 			\item Anwendungsunterstützung: Zuverlässiger Transportdienst, Kopplung von Geräten, Gruppenverwaltung
-			\item Awendungs-Framework: Anwendungsfunktionalität
+			\item Anwendungs-Framework: Anwendungsfunktionalität
 			\begin{itemize}
-				\item Einbettung von bis zu 240 Anwenungsobjekten (entsprecht jeweils einem Endpunkt)
+				\item Einbettung von bis zu 240 Anwendungsobjekten (entsprecht jeweils einem Endpunkt)
 				\item Definition von Anwendungsprofilen (Kommunikationsstandards)
 			\end{itemize}
 			\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
