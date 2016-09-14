@@ -54,7 +54,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Geräteanbindung und Datenmodell}
 \begin{itemize}
 	\item Betriebssysteme und Programmierung: Große Unterschiede zwischen den Geräteklassen. Hardwarenähe/Abstraktionsebenen/Anzahl Anwendungen pro Gerät/Power- und Speichermanagement. Spezielle (angepasste) Betriebssysteme für die Geräteklassen
-	\item Cloudanbindung: Trend zur Interation von IoE-Kleinstgeräte in Cloud für Datenhaltung
+	\item Cloudanbindung: Trend zur Interation von IoE-Kleinstgeräten in Cloud für Datenhaltung
 \end{itemize}
 
 
@@ -64,12 +64,12 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Einführung}
 \begin{itemize}
 	\item Problem: Sensoren können über das Internet angegriffen werden
-	\item Beispiel RFID als herausforderung für den Datenschutz: Eindeutige Identifikation jedes Objekts ohne Sichtkontakt möglich. Historie verschiedenster Objekte kann im Vorbeigehen überwacht werden (Kleidungsstücke, Fahrkarten, Inhalt einer Einkaufstasche)
+	\item Beispiel RFID als Herausforderung für den Datenschutz: Eindeutige Identifikation jedes Objekts ohne Sichtkontakt möglich. Historie verschiedenster Objekte kann im Vorbeigehen überwacht werden (Kleidungsstücke, Fahrkarten, Inhalt einer Einkaufstasche)
 	\item Lösungsansätze: Kill-Befehl, Blocker-Tags, Authentifizierung für Zugriff (z.B. Reisepass), Abreißen der Antenne
 	\item Neben den personenbezogenen Daten auch Metadaten schützenswert, da mit ihnen ein Benutzerprofil erstellt werden kann
 	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz
 	\item Allgemeine IT-Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA: Confidentiality, Integrity, Availability)
-	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparen, Intervenierbarkeit
+	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparenz, Intervenierbarkeit
 	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen\footnote{\url{https://de.wikipedia.org/wiki/PET}}
 	\item \textbf{Prozess zum Entwurf und zur Bewertung}
 	\begin{enumerate}
@@ -91,7 +91,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Datenorientiert
 		\begin{itemize}
 			\item MINIMISE: Verarbeitung und Erfassung von Daten auf ein Minimum reduzieren
-			\item HIDE: Beziehungen zwischen Datensetzen sollen verborgen werden
+			\item HIDE: Beziehungen zwischen Datensätzen sollen verborgen werden
 			\item SEPARATE: Dezentrale Speicherung und Verarbeitung
 			\item AGGREGATE: Aggregierte Verarbeitung personenbezogener Daten
 		\end{itemize}
@@ -100,7 +100,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item INFORM: Benutzer sollen über die Verarbeitung ihrer Daten informiert werden (Schutzziel: Transparenz)
 			\item CONTROL: Benutzer sollen die Kontrolle über die Verarbeitung ihrer personenbezogenen Daten behalten (Schutzziel: Intervenierbarkeit)
 			\item ENFORCE: Erstellen und Durchsetzen einer rechtskonformen Datenschutzrichtlinie
-			\item DEMINSTRATE: Bei der Verarbeitung personenbezogener Daten muss die Einhaltung der Datenschutzrichtlinie demonstriert werden können
+			\item DEMONSTRATE: Bei der Verarbeitung personenbezogener Daten muss die Einhaltung der Datenschutzrichtlinie demonstriert werden können
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -112,9 +112,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Technische Herausforderungen: Mehr Daten; kontinuierliche Datenerfassung; sensiblere Daten; Vielfalt von gemessenen Größen
 	\item Angreifermodell im IoE: Geräte befinden sich häufig an zugänglichen Orten. Diebstahl/Auslesen/Korrumpieren/Zerstören einfacher \(\rightarrow\) Diensterbringung muss auch dann zuverlässig funktionieren, wenn ein Teil der Geräte korrumpiert worden ist
 	\item Beispiel Smart-Metering: Informationsbedarf für Stromnetz der Zukunft ist enorm. Schutzbedarf nicht nur vor Outsider sondern auch vor Datensenke \(\rightarrow\) klassische Verschlüsselung bietet keine Lösung
-	\item Beispiel Smart-Traffic: Dienstanbieter benötigt Positionsdaten für Liveupdates. Selbst ohne Klarnamen können anonyme IDs - die wenig wechseln - typischen Routen (beispielsweise die Fahrt zum Arbeitsplatz) zugeordnet werden
+	\item Beispiel Smart-Traffic: Dienstanbieter benötigt Positionsdaten für Liveupdates. Selbst ohne Klarnamen können anonyme IDs - die selten wechseln - typischen Routen (beispielsweise die Fahrt zum Arbeitsplatz) zugeordnet werden
 	\item IBM-Studie "`Device democracy"': Betreiben einer zentralisierten Cloud verursacht hohe Kosten sowie schwer umzusetzende Privatsphäre. Daher in Zukunft dezentrale Umsetzung
-	\item Anforderungen an die verteilte IoE-Cloud: Sicherer Nachrichtenaustausch zwischen Geräten ohne zentrale Vertrauensanker (beispielsweise via "`Peet-Tor-Peer-Kommunikation"'); Verteilen der Daten; robuste und skalierbare Koordinaten von Geräten mit Halten eines konsistenten Zustands
+	\item Anforderungen an die verteilte IoE-Cloud: Sicherer Nachrichtenaustausch zwischen Geräten ohne zentrale Vertrauensanker (beispielsweise via "`Peer-Tor-Peer-Kommunikation"'); Verteilen der Daten; robuste und skalierbare Koordination von Geräten mit Halten eines konsistenten Zustands
 \end{itemize}
 
 
@@ -127,7 +127,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Generische Lösungsansätze
 		\begin{itemize}
 			\item Pseudonymisierung: Aufwendige Pseudonymverwaltung sowie Verknüpfbarkeit mit Nutzer (durch IP-Adresse oder mittels externen Daten wie Urlaube oder Arbeitszeit)
-			\item Modifikation des Energiebedarfs durch lokalen Akkumulator. Dazu allerdings teurer, sich abnutzender Akku sowie Ladestrategie erforderlich
+			\item Modifikation des Energiebedarfs durch lokalen Akkumulator. Dazu allerdings teurer, sich abnutzender Akku sowie Lade- und Entladestrategie erforderlich
 		\end{itemize}
 		\item Generische Ansätze unzureichend \(\rightarrow\) anwendungsspezifischer Ansatz nötig: Aggregation der Daten. Dadurch lediglich der summierte Verbrauch einer Region sichtbar
 		\item Möglichkeiten zur Aggregation
@@ -140,7 +140,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Privatheit im Smart Traffic}
 	\begin{itemize}
-		\item Anwendungen: Verkehrssicherheit, Verkehrsoptimierung, Efassen von Wetter/Luftqualität/etc. mittels Sensordaten
+		\item Anwendungen: Verkehrssicherheit, Verkehrsoptimierung, Erfassen von Wetter/Luftqualität/etc. mittels Sensordaten
 		\item Trennung von Positionssamples und Identitäten notwendig. Pseudonymwechsel nötig, um Positionssamples desselben Nutzers nicht leicht zusammengruppieren zu können. Problem: Beobachtbarkeit. Lösung: Zufällige "`Funkstille"' beim Wechsel oder gleichzeitiger Wechsel verschiedener Nutzer in der selben Umgebung (innerhalb "`Mix-Zones"')
 		\item Eigene Arbeit \textit{Geocast mit OverDrive}: P2P-Netz zwischen den Fahrzeugen. Keine zentrale Senke, niemand hat die komplette Sicht. Nur direkte Nachbarn erhalten die genaue Position, weit entfernte bekommen verfälschte Daten (bei jedem Hopp werden die Daten leicht verändert)
 	\end{itemize}
@@ -165,7 +165,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Medienzuteilung}
 	\begin{itemize}
-		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen sowie Mithören
+		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen und Mithören
 		\item RTS-CTS-Handshake zur Kollisionsvermeidung (Auftritt während des Handshake unwahrscheinlich, da Pakete sehr klein): Empfänger wird zunächst mit \texttt{RTS} angefragt ob es empfangsbereit ist. Bei naherzu zeitgleichen Anfragen zweier Sender gewinnt der schnellere. Die sendewilligen Systeme warten, bis der Empfänger mittels \texttt{CTS} Empfangsbereitschaft signalisiert
 		\item Duty-Cycling zur Reduzierung des Energieverbrauchs: Funktransceiver wird bei Bedarf synchron (erfordert Zeitsynchronisation zwischen den Knoten) oder asynchron (ohne Koordinnation zwischen den Knoten) aktiviert, was zusätzliche Latenz verursacht, da bei Sendewunsch zunächst auf das entsprechende Zeitfenster gewartet werden muss
 		\item WLAN im IoE: Verursacht hohen Energiebedarf durch Kollisionen, Idle Listening, Overhearing
@@ -181,15 +181,15 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Rein akademisch, keine Verbreitung in der Praxis
 		\item Zielsetzung: Ernergieeffizienz, Skalierbarkeit, Autokonfiguration
 		\item Weniger berücksichtigt: Fairness zwischen den Systemen, Latenz
-		\item Idee: Koordiniertes Schlafen zur Vermeidung von idle listening durch zeitliche Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
+		\item Idee: Koordiniertes Schlafen zur Vermeidung von idle listening mit zeitliche Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
 		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleep-Phase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
 		\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase)
-		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis es schlafendes System, dass die Datenübertragung abgeschlossen ist?
+		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis ein schlafendes System, dass die Datenübertragung abgeschlossen ist?
 		\item Leistungsbewertung über Energiebedarf pro Byte; durschnittliche Ende-zu-Ende-Verzögerung sowie Ende-zu-Ende-Goodput (Gesamtmenge durch Gesamtzeit). S-MAC reduziert den Energiebedarf deutlich. Bei hoher Last kann Adaptive Listening den Energiebedarf nochmals halbieren
 	\end{itemize}
 	\item \textbf{B-MAC}
 	\begin{itemize}
-		\item Zielsetzung: Energieeffizient durch Kolliosionsvermeidung und effiziente Kanalnutzung; Skalierbarkeit; Toleranz bzgl. Funkbedingungen; einfache Implementierbarkeit
+		\item Zielsetzung: Energieeffizient durch Kollisionsvermeidung und effiziente Kanalnutzung; Skalierbarkeit; Toleranz bzgl. Funkbedingungen; einfache Implementierbarkeit
 		\item Besonderheiten: Periodisches Prüfen des Kanals statt zeitlicher Synchronisation; keine Fragmentierung großer Nachrichten
 		\item \textit{Low Power Listening} (LPL): System schläft meist und erwacht gelegentlich kurzzeitig um Kanal auf Daten zu prüfen. Bleibt nur wach, falls Daten zum Empfang anstehen
 		\item \textit{Clear Channel Assessment} (CCA): Prüfe ob Kanal frei ist und übertrage ggf. Präambel und Daten. Präambel muss daher mindestens dem Intervall zwischen zwei Kanalüberprüfungen entsprechen (damit der Empfänger nichts verpasst)
@@ -253,8 +253,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item \textbf{Fluten}
 	\begin{itemize}
-		\item Knoten sendet jede Dateneinheit per Broadcast an alle Nachbarn. Diese leiten wieder die Dateneinheit wieder per Broadcast an alle Nachbarn weiter
-		\item Durchaus häufig im Einsatz, da dezentral/selbstorganisierend und keine Routingtablen erforderlich
+		\item Knoten sendet jede Dateneinheit per Broadcast an alle Nachbarn. Diese leiten die Dateneinheit wieder per Broadcast an alle Nachbarn weiter
+		\item Durchaus häufig im Einsatz, da dezentral/selbstorganisierend und keine Routingtabellen erforderlich
 		\item Vorteile: Keine Routenfindung/Topologiewartung/Routentabelle erforderlich
 		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten); limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
 		\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
@@ -262,7 +262,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Gossiping}
 	\begin{itemize}
-		\item Idee: Simulation der Verbreitung von Gerüchten. Die Dateneinheit wird an eine gewisse Anzahl Nachbarknoten weitergeleitet, die sie wieder zufällig an Nachbarknoten weiterleitet
+		\item Idee: Simulation der Verbreitung von Gerüchten. Die Dateneinheit wird an eine gewisse Anzahl Nachbarknoten weitergeleitet, die sie wieder zufällig an Nachbarknoten weiterleiten
 		\item Vorteile: Keine Nachrichtenimplosion, geringerer Overhead als Fluten
 		\item Nachteile: Unzuverlässig, eventuell lange Übertragungszeit durch ungünstige Pfadwahl
 	\end{itemize}
@@ -278,7 +278,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item \textbf{Direct Diffusion}
 	\begin{itemize}
-		\item Basiert Fluten, ist selbstorganisierend. Unterstützt die Aggregation von Daten
+		\item Basiert auf Fluten, ist selbstorganisierend. Unterstützt die Aggregation von Daten
 		\item Besonders geeignet bei regelmäßiger Anfrage von Daten. Alle Knoten, welche die Bedingungen der Anfrage erfüllen (beispielsweise Datentyp oder Lokation), antworten
 		\item Verfahren
 		\begin{enumerate}
@@ -295,7 +295,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item \textbf{Rumor Routing}
 	\begin{itemize}
-		\item Datenzentrischer Ansatz: Initiative geht von Ereignisquelle und -senke aus. Kompromiss zwischen Fluten von Anfragen und Fluten von Ereignissen
+		\item Datenzentrischer Ansatz: Initiative geht von Ereignisquelle und -senke aus. Kompromis zwischen Fluten von Anfragen und Fluten von Ereignissen
 		\item \textit{Ereignis-Agenten}
 		\begin{itemize}
 			\item Etablieren Pfade zu Ereignissen. Anfragen suchen im Netz nach Ereignis-Pfaden
