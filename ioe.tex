@@ -351,11 +351,11 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Routingprotokoll RPL als IETF-Standard entwickelt
 	\item \textbf{Grundlegendes Prinzip}
 	\begin{itemize}
-		\item Verbindung von Sensor-basierten Zgangsnetzen zum Internet über wenige dedizierte, hierarchisch angeordnete Knoten
-		\item Verwendung von Gerichteten Azyklische Graphen (DAG, DODAG): Wurzel ist höchster Knoten in "`up"'-Richtung (Concast) und hält Verbindung zum Internet, "`down"' in entgegengesetzter Richtung (Multicast)
+		\item Verbindung von Sensor-basierten Zugangsnetzen zum Internet über wenige dedizierte, hierarchisch angeordnete Knoten
+		\item Verwendung von Gerichteten Azyklischen Graphen (DAG, DODAG): Wurzel ist höchster Knoten in "`up"'-Richtung (Concast) und hält Verbindung zum Internet, "`down"' in entgegengesetzter Richtung (Multicast)
 	\end{itemize}
-	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (Vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
-	\item DODAGS sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
+	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
+	\item DODAG sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
 	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten, gültig innerhalb einer DODAG-Version
 	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraits zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
 	\item Knoten können Informationen für Down-Routing speichern (storing nodes). Im alternativen non-storing Betrieb fügt die Wurzel die Routinginformationen bei. Mischbetrieb ist unzulässig
@@ -384,7 +384,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Traditioneller Weise TCP als zuverlässiger Transportdienst. Probleme: TCP erkennt die Ursachen für Paketverlust nicht; erfordert ggf. viele Sendewiederholungen (hoher Energiebedarf); 3-Wege-Handshake sehr teuer
 		\item Nicht alle Messwerte sind relevant, Ungenauigkeiten können (anwendungsabhängig) toleriert werden (beispielsweise minimale Temperaturschwankungen in einem Raum)
 		\item Probabilistische Zuverlässigkeit: Nur ein Teil aller Dateneinheiten erreicht die Senke. Ggf. leidet die Genauigkeit/Aktualität
-		\item Prop-Hop Quittungen: Quittungen/Sendewiederholungen pro Hop. Energieverbrauch wird gleichmäßig im Netz verteilt
+		\item Pro-Hop Quittungen: Quittungen/Sendewiederholungen pro Hop. Energieverbrauch wird gleichmäßig im Netz verteilt
 		\item Ende-zu-Ende Quittungen: Nur ursprünglicher Sender wiederholt die Dateneinheit. Bei geringen Bitfehlern besser geeignet
 	\end{itemize}
 	\item \textbf{Hop-by-Hop Reliabilty (HHR)}
@@ -610,7 +610,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschlter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
 	\end{itemize}
 	\item Client/Server-Modell: Attribute sind typischerweise Servern zugeordnet (beispielsweise der Status einer Lampe)
-	\item Cluster. Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst.\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
+	\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
 	\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
 	\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
 	\item Fragmentierung: Quittungen verpflichtend
