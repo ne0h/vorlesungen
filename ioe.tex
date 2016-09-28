@@ -391,7 +391,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden
 		\item HHR mit Acknowledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
-		\item Evaluierung: Pro-Hip Quittungen lohnen sich erst bei hohen Paketfehlerraten
+		\item Evaluierung: Pro-Hop Quittungen lohnen sich erst bei hohen Paketfehlerraten
 		\item HRR vs. HRRA
 		\begin{itemize}
 			\item HRR
@@ -443,14 +443,14 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Ziel: Zusammenfassen von Daten um weniger Dateneinheiten zu verschicken
 		\item Aggregationsformen
 		\begin{itemize}
-			\item Keine Aggregation: Eingehende Daten werden direkt Weitergeleitet
+			\item Keine Aggregation: Eingehende Daten werden direkt weitergeleitet
 			\item Paketaggregation: Eingehende Daten werden zwischengespeichert und zusammen in einem großen Paket weitergeleitet
 			\item Datenaggregation: Eingehende Daten werden zwischengespeichert und mit Aggregatsfunktion zusammengefasst und weitergeleitet
 		\end{itemize}
 		\item Evaluations-Metrik: Anzahl Messwerte, welche die Datensenke erreichen (MRS)
 		\begin{itemize}
 			\item Ergebnisse mit TinyOS LPL: Unterschiede durch Aggregation minimal da LPL die Knoten lokal synchronisiert. Kein unmittelbarer Zusammenhang zwischen Energiebedarf und Anzhl Datenpakete/-volumen
-			\item Ergebnisse mit S-MAC: Aggregation erhöht MRS, da der Durchsatz mit S-MAC bei kleinem Duty-Cycle gering ist. Aggregation reduziert die Azahl der Übertragungen
+			\item Ergebnisse mit S-MAC: Aggregation erhöht MRS, da der Durchsatz mit S-MAC bei kleinem Duty-Cycle gering ist. Aggregation reduziert die Anzahl der Übertragungen
 		\end{itemize}
 		\item Fazit
 		\begin{itemize}
