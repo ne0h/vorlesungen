@@ -1,0 +1,504 @@
+\tikzset{XOR/.style={draw,circle,append after command={
+		[shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+		(\tikzlastnode.north) edge (\tikzlastnode.south)
+		(\tikzlastnode.east) edge (\tikzlastnode.west)
+		}
+	}
+}
+
+\chapter{Sicherheit - Verfahren und Formelsammlung}
+
+Zusammenfassung der Vorlesung "`Sicherheit"' aus dem Sommersemester 2016.\footnote{\url{https://crypto.iti.kit.edu/index.php?id=sic-sose16}}
+
+Der Lehrstuhl stellt bereits ein ausführliches Skript zur Verfügung.\footnote{\url{https://github.com/skript-sicherheit/skript}}. Die hier verwendeten Grafiken sind im Wesentlichen von dort entnommen.
+
+\section{Einleitung}
+
+
+
+\section{Symmetrische Verschlüsselung}
+
+\subsection{Stromchiffren}
+
+\subsubsection{One-Time-Pad}
+\begin{itemize}
+	\item Verschlüsselung einer Nachricht \(M\) mit einem Schlüssel \(K\) der selben Länge: \(C = M \oplus K, |M| = |K|\)
+	\item \(K\) muss zufällig gleichverteilt gezogen werden und darf nicht mehrfach verwendet werden
+	\item Vorteil: Perfekte Geheimhaltung, da \(C\) keine Informationen über \(M\) ausgibt
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Bei Wiederverwenden des selben Schlüssels angreifbar: \(C_1 \oplus C_2 = M_1 \oplus K \oplus K \oplus M_2 = M_1 \oplus M_2\)
+		\item Verdoppelter Übertragungsaufwand (unhandlich)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Blockchiffren}
+
+\subsubsection{Betriebsmodi}
+
+\paragraph{Electronic Codebook Mode (ECB-Modus)}
+Alle Nachrichtenblöcke werden unabhängig voneinander, mit dem selben Schlüssel verschlüsselt \(\rightarrow\) identische Klartextblöcke liefern identische Chiffratblöcke.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex]
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (M\nr) at (0,{(\n-\nr)*2}) {$M_\nr$};
+					\node (C\nr) at (4,{(\n-\nr)*2}) {$C_\nr$};
+					\node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {ENC};
+					\node (K\nr) at (2,{(\n-\nr)*2+1}) {K};
+					
+					\draw[->,semithick] (M\nr) -- (E\nr);
+					\draw[->,semithick] (K\nr) -- (E\nr);
+					\draw[->,semithick] (E\nr) -- (C\nr);
+				}
+			\end{scope}
+		\end{tikzpicture}
+		\caption{Verschlüsselung im ECB-Modus.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex]
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (M\nr) at (0,{(\n-\nr)*2}) {$M_\nr$};
+					\node (C\nr) at (4,{(\n-\nr)*2}) {$C_\nr$};
+					\node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {DEC};
+					\node (K\nr) at (2,{(\n-\nr)*2+1}) {K};
+					
+					\draw[->,semithick] (M\nr) -- (E\nr);
+					\draw[->,semithick] (K\nr) -- (E\nr);
+					\draw[->,semithick] (E\nr) -- (C\nr);
+				}
+			\end{scope} 
+		\end{tikzpicture}
+		\caption{Entschlüsselung im ECB-Modus.}
+	\end{subfigure}
+\end{figure}
+\FloatBarrier
+
+\paragraph{Cipher Block Chaining Mode (CBC-Modus)}
+Jeder Block wird zusätzlich mit dem Ergebnis des davor liegenden Block "`vorverschlüsselt"'. Bitfehler innerhalb eines Blocks wirken sich bei der Entschlüsselung nur auf diesen und den nachfolgenden Block aus (selbstkorrigierend).
+
+\begin{figure}[h]
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex]
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (M\nr)            at (0,{(\n-\nr)*2}) {$M_\nr$};
+					\node (x\nr)[XOR]       at (2,{(\n-\nr)*2}) {};
+					\node (E\nr)[encrypt]   at (4,{(\n-\nr)*2}) {ENC};
+					\node (C\nr)            at (6,{(\n-\nr)*2}) {C};
+					
+					\node (K\nr)            at (4,{(\n-\nr)*2+1}) {K};
+					
+					\draw[->,semithick] (M\nr) -- (x\nr);
+					\draw[->,semithick] (x\nr) -- (E\nr);
+					\draw[->,semithick] (E\nr) -- (C\nr);
+					
+					\draw[->,semithick] (K\nr) -- (E\nr);
+				}
+				
+				\foreach \nr in {2, ..., \n}{
+					\pgfmathtruncatemacro{\tmp}{\nr-1}
+					\node (p\tmp)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (5.0, {(\n-\tmp)*2}) {};
+					\draw[->,semithick] (p\tmp) -- (5.0, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+				}
+				
+				\node (IV) at (2,{\n*2-1}) {$IV$};
+				\draw[->,semithick] (IV) -- (x1);
+			\end{scope}
+		\end{tikzpicture}
+		\caption{Verschlüsselung im CBC-Modus.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex]
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (C\nr)            at (0,{(\n-\nr)*2}) {$C_\nr$};
+					\node (D\nr)[encrypt]   at (2,{(\n-\nr)*2}) {DEC};
+					\node (x\nr)[XOR]       at (4,{(\n-\nr)*2}) {};
+					\node (M\nr)            at (6,{(\n-\nr)*2}) {$M_\nr$};
+					
+					\node (K\nr)            at (2,{(\n-\nr)*2+1}) {K};
+					
+					\draw[->,semithick] (C\nr) -- (D\nr);
+					\draw[->,semithick] (D\nr) -- (x\nr);
+					\draw[->,semithick] (x\nr) -- (M\nr);
+					
+					\draw[->,semithick] (K\nr) -- (D\nr);
+				}
+				
+				\foreach \nr in {2, ..., \n}{
+					\pgfmathtruncatemacro{\tmp}{\nr-1}
+					\node (p\tmp)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (1.0, {(\n-\tmp)*2}) {};
+					\draw[->,semithick] (p\tmp) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
+				}
+				
+				\node (IV) at (4,{\n*2-1}) {$IV$};
+				\draw[->,semithick] (IV) -- (x1);
+			\end{scope}
+		\end{tikzpicture}
+		\caption{Entschlüsselung im CBC-Modus.}
+	\end{subfigure}
+\end{figure}
+\FloatBarrier
+
+\paragraph{Counter Mode (CTR-Modus)}
+Bietet die Vorteile des CBC-Modus und kann parallelisiert werden.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
+					\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
+					\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {ENC};
+					\node (K\nr) at (2,{(\n-\nr)*3+2}) {K};
+					\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
+					\draw[->,semithick] (M\nr) -- (x\nr);
+					\draw[->,semithick] (x\nr) -- (C\nr);
+					\draw[->,semithick] (K\nr) -- (E\nr);
+					\draw[->,semithick] (E\nr) -- (x\nr);
+				}
+				\foreach \nr in {1, ..., \n}{
+					\node (IV\nr) at (0.38,{(\n - \nr)*3+1}) {$IV+\nr$};
+					\draw[->,semithick] (IV\nr) -- (E\nr);
+				}
+			\end{scope}
+		\end{tikzpicture}
+		\caption{Verschlüsselung im CTR-Modus.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
+		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
+				\newcommand{\n}{3}
+				\foreach \nr in {1, ..., \n}{
+					\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
+					\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
+					\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {ENC};
+					\node (K\nr) at (2,{(\n-\nr)*3+2}) {K};
+					\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
+					\draw[->,semithick] (C\nr) -- (x\nr);
+					\draw[->,semithick] (x\nr) -- (M\nr);
+					\draw[->,semithick] (K\nr) -- (E\nr);
+					\draw[->,semithick] (E\nr) -- (x\nr);
+				}
+				\foreach \nr in {1, ..., \n}{
+					\node (IV\nr) at (0.38,{(\n - \nr)*3+1}) {$IV+\nr$};
+					\draw[->,semithick] (IV\nr) -- (E\nr);
+				}
+			\end{scope}
+		\end{tikzpicture}
+		\caption{Entschlüsselung im CTR-Modus.}
+	\end{subfigure}
+\end{figure}
+\FloatBarrier
+
+
+
+\section{Kryptografische Sicherheitsbegriffe}
+
+\subsection{Sicherheitsparameter und effiziente Angreifer}
+\begin{itemize}
+	\item Sicherheitsniveau \(k\) legt mit der Definition des Schlüsselraums \(1^k\) das Sicherheitsniveau einer Funktion fest
+	\item Effizienter Angreifer: Muss in \(\mathcal{O}\big(k^c\big), c \in \mathbb{N}\). Dies schließt so beispielsweise einen Brute-Force-Angriff auf den kompletten Schlüsselraum \(\{0,1\}^k\) mit \(\mathcal{O}\big(2^k\big)\) aus
+	\item PPT-Angreifer: Verwendet probabilistische Angriffe ("`probabilistic polynomial time"')
+\end{itemize}
+
+
+
+\section{Hashfunktionen}
+
+
+
+\section{Asymmetrische Verschlüsselung}
+
+\subsection{RSA-Verschlüsselung}
+RSA ist homomorph.
+
+\subsubsection{Generator-Algorithmus (Schlüsselerzeugung)}
+\begin{enumerate}
+	\item Wähle zwei große Primzahlen \(P,Q\) mit \(P \neq Q\) und vorgegebener Bitlänge \(k\)
+	\item Berechne \(N = P \cdot Q\) und \(\varphi(N) = \big(P-1\big)\big(Q-1\big)\)
+	\item Wähle \(e \in \{3,\ldots,\varphi(N)-1\}\) mit \(ggT\big(e, \varphi(N)\big) = 1\)
+	\item Berechne \(d\) mit Hilfe des Erweiterten Euklidischen Algorithmus: \(d \cdot e \equiv 1 \big(\varphi(N)\big)\)
+\end{enumerate}
+
+\subsubsection{Ver- und Entschlüsseln}
+
+\subsubsection{Sicheres RSA mit Optimal Asymmetric Encryption Pattern (RSA-OAEP)}
+RSA ist deterministisch und damit nicht semantisch sicher ist. Daher werden Nachrichten hier zunächst gepattet und danach verschlüsselt. 
+
+\begin{itemize}
+	\item Verschlüsselung: \(ENC_{OAEP}(pk,M) = \big(X \parallel Y\big)^e mod~N\)
+	\item Entschlüsselung: \(\big(X \parallel Y \big) = DEC_{OAEP}(sk,C)\) mit \(R = Y \oplus H(X)\) und \(M = X \oplus G(R)\)
+\end{itemize}
+
+\begin{figure}[h]
+	\begin{center} \unitlength=1mm \linethickness{0.4pt} \hspace{-3 cm}
+		\begin{picture}(60,60)
+			
+			\put(0,50){\framebox(30,5){$m$}}
+			\put(32,50){\framebox(15,5){$000$}} \put(55,50){\framebox(20,5){$R$}}
+			
+			\put(15,45){\line(0,1){5}} \put(39,45){\line(0,1){5}}
+			\put(15,45){\line(1,0){24}} \put(25,45){\vector(0,-1){40}}
+			
+			\put(65,50){\vector(0,-1){45}}
+			
+			\put(45,35){\circle{7}} \put(45,34){\makebox(0,0)[cb]{$G$}}
+			\put(25,35){\circle{4}} \put(23,35){\line(1,0){18.5}}
+			\put(65,35){\vector(-1,0){16.5}}
+			
+			\put(45,20){\circle{7}} \put(45,19){\makebox(0,0)[cb]{$H$}}
+			\put(65,20){\circle{4}} \put(25,20){\vector(1,0){16.5}}
+			\put(48.5,20){\line(1,0){18.5}}
+			
+			\put(0,0){\framebox(45,5){$X$}} \put(55,0){\framebox(20,5){$Y$}}
+			
+		\end{picture}
+	\end{center}
+	\caption{Pad-Funktion von RSA-OAEP ($G,H$ sind Hashfunktionen)}
+	\label{fig:rsa-oaep}
+\end{figure}
+\FloatBarrier
+
+
+\subsection{ElGamal-Verschlüsselung}
+\begin{itemize}
+	\item Macht sich die Schwierigkeit zu nutze, diskrete Logarithmen in zyklischen Gruppen zu lösen (DLOG-Problem)
+	\item Verwendung einer ausreichend großen Gruppe \(\mathbb{G}\) mit Primordnung \(p\) und Erzeuger \(g\)
+	\item \textbf{Schlüsselerzeugung}
+	\begin{itemize}
+		\item Zufällige Wahl eines \(x \in 2,\ldots,p-1\) und Berechnung von \(h \equiv g^x\)
+		\item Öffentlicher Schlüssel: \(pk = \big(\mathbb{G},g,h\big)\)
+		\item Privater Schlüssel: \(sk = \big(\mathbb{G},g,x\big)\)
+	\end{itemize}
+	\item \textbf{Verschlüsseln und Entschlüsseln}
+	\begin{itemize}
+		\item \(y\) wird bei jeder Verschlüsselung zufällig neu gewählt
+		\item Verschlüsselung: \(C = ENC\big(pk,M\big) = ENC\big((\mathbb{G},g,h), h^yM\big)\)
+		\item Entschlüsselung: \(M = DEC\big(sk,C\big) = DEC\big((\mathbb{G},g,x),(Y,Z)\big) = \frac{Z}{Y^x}\)
+	\end{itemize}
+\end{itemize}
+
+
+\section{Symmetrische Authentifikation von Nachrichten (Message Authentication Codes)}
+
+\subsection{Ziel}
+Ermöglicht es erhaltene Nachrichten hinsichtlich Fehler und Veränderungen zu prüfen (Integrität) sowie den Ansender zu bestimmen.
+
+\subsection{MACs}
+\textit{Message Authentication Codes} sind symmetrische Verfahren um die Authentizität von Nachrichgen sicherzustellen. Hierzu gibt es einen Signatur- und einen Verifikationsalgorithmus. Beide Algorithmen sind PPT-Algorithmen und verwenden als Eingabe ein gemeinsames Geheimnis \(K\).
+\begin{itemize}
+	\item Signieren: \(\sigma = SIG\big(K,M\big)\)
+	\item Verifizieren: \(VER\big(K,M,\sigma\big)\)
+\end{itemize}
+
+
+\subsection{Symmetrische EUF-CMA-Sicherheit}
+Kein PPT-Angreifer soll einen MAC fälschen können. Kann der Angreifer die Signatur einer Nachricht nicht voraussagen, so ist das Verfahren EUF-CMA-sicher.
+
+
+
+\section{Asymmetrische Authentifikation von Nachrichten (Digitale Signaturen/Zertifikate)}
+\begin{itemize}
+ 	\item Ziel: Authentifikationsprüfung mit nicht-geheimem Schlüssel
+ 	\item \textbf{Algorithmen}
+ 	\begin{itemize}
+ 		\item Schlüsselgenerierung: \((pk,sk) \leftarrow KEYGEN(1^k)\)
+ 		\item Signieren: \(\sigma \leftarrow SIG(sk,M)\)
+ 		\item Verifizieren: \(VER(pk,M,\sigma)\)
+ 	\end{itemize}
+\end{itemize}
+
+
+\subsection{RSA-Signaturen}
+\begin{itemize}
+	\item Signieren: \(SIG(sk,M) = M^d~mod~N\)
+	\item Verifizieren: \(VER(pk,M,\sigma)=1 :\Leftrightarrow M = \sigma^e~mod~N\)
+\end{itemize}
+
+\paragraph{Signatur "`unsinniger"' Nachrichten}
+Für eine beliebige Signatur \(\sigma \in \mathbb{Z}\) kann mit Hilfe von \(pk\) eine Signatur gefälscht und eine Nachricht generiert werden. Damit sind zwar nicht möglich sinnvolle Nachrichten zu fälschen, jedoch ist dies ein generelles Problem und bricht die EUF-CMA-Sicherheit.
+
+\paragraph{Homomorphie von RSA}
+Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und der entsprechenden Nachrichten \(M_1\) und \(M_2\) ist, kann für \(M_3 = M_1 \cdot M_2\) eine gültige Signatur \(\sigma_3\) fälschen:
+\[\sigma_3 = M^d_3~mod~N = \big(M_1 \cdot M_2\big)^d~mod~N = M_1^d \cdot M_2^d~mod~N = \sigma_1 \cdot \sigma_2~mod~N\]
+
+\subsubsection{RSA-PSS (\textit{Probabilistic Signature Scheme})}
+\begin{itemize}
+	\item Erweitert das Signaturverfahren um ein Padding
+	\item Ist wie RSA-OAEP als der der PKCS kryptografischer Standard
+	\item Signieren: \(SIG(sk,M) = \big(pad(M)\big)^d~mod~N\)
+	\item Verifizieren: \(VER(pk,M,\sigma)=1 :\Leftrightarrow \sigma^e~mod~N\)
+	\item Bei Verwendung einer idealen Hashfunktion EUF-CMA sicher
+\end{itemize}
+
+
+\subsection{ElGamal-Signaturen}
+
+
+
+\section{Schlüsselaustauschprotokolle}
+
+\subsection{Symmetrische Verfahren}
+
+
+\subsection{Asymmetrische Verfahren}
+
+\subsubsection{Diffie-Hellman-Schlüsselaustausch}
+Alice und Bob einigen sich auf eine hinreichend große, zyklische Gruppe \(\mathbb{G} = \langle g \rangle\) mit Ordnung
+\(q\). Alice und Bob wählen sich jeweils eine Zufallszahl \(x, y \in
+\mathbb{Z}_q\) und schicken \(g^x\) bzw. \(g^y\) an den jeweils
+anderen. Die Sicherheit ergibt sich dadurch, dass alleine mit Kenntniss von \(g\), \(g^x\) und \(g^y\) der Schlüssel \(g^{xy}\) nicht effizient berechnen lässt ("`computational Diffie-Hellman-Problem"').
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[x=2em, y=2em]
+
+			\draw (-6,0) node (Alice) {\texttt{Alice}};
+			\draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+			\draw (6,0) node (Bob) {\texttt{Bob}};
+			\draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+			
+			% Lebenslinien
+			\draw[dashed] (AliceSk) -- (-6,-3.25);
+			\draw[dashed] (BobSk) -- (6,-3.25);
+			
+			% Pfeile fuer Nachrichten
+			\textbf{\draw[->, thick] (-5.7,-1) -- (5.7,-1.5) node[sloped,above,pos=0.5] {$g^x$};}
+			\textbf{\draw[->, thick] (5.7,-2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$g^y$};}	
+			
+			% Beschriftung Ergebnis
+			\draw (-6, -3.75) node {$(g^y)^x$};
+			\draw (-3, -3.75) node {$=$};
+			\draw (0, -3.75) node  {$g^{xy}$};
+			\draw (3, -3.75) node  {$=$};
+			\draw (6, -3.75) node  {$(g^x)^y$};
+
+		\end{tikzpicture}
+	\end{center}
+	\caption{Diffie-Hellman-Schlüsselaustausch}
+	\label{fig:keyex:dh}
+\end{figure}
+
+
+
+\section{Identifikationsprotokolle}
+
+
+
+\section{Zero-Knowledge}
+Voraussetzungen:
+\begin{itemize}
+	\item Verifier V lernt \(sk_P\) nicht (der geheime Schlüssel von \(P\))
+	\item Prover P beweist, dass er \(sk_P\) kennt
+\end{itemize}
+
+
+\subsection{Zero-Knowledge-Eigenschaften}
+\begin{itemize}
+	\item V soll nichts über \(sk_P\) lernen, auch wenn er \(pk_P\) bereits kennt (\(pk_P\) ist mit \(sk_P\)) verknüpft
+	\item Beispiel ElGamal: \(sk_P = x\) und \(pk_P = g^x\)
+	\item Verwendung eines Simulators \(\mathcal{S}\), der die selbe Ausgabe erzeugt wie \(P\), jedoch ohne mit \(P\) kommuniziert zu haben
+\end{itemize}
+
+\paragraph{Ununterscheidbarkeit} Zwei Verteilungen \(X\) und \(Y\) sind ununterscheidbar, wenn für alle PPT-Algorithemn die Differenz \(Pr\big\lbrack\mathcal{A}(^k,x) ) 1 : x\leftarrow X\big\rbrack - Pr\big\lbrack\mathcal{A}(1^k,y) = 1 : y\leftarrow Y\big\rbrack\) vernachlässigbar in \(k\) ist. Intuitiv sind also Elemente aus \(X\) nicht effizient von Elementen aus \(Y\) unterscheidbar
+
+\paragraph{Zero-Knowledge} Ein PK-Identifikationsprotokoll \(\big(GEN,P,V\big)\) ist Zero-Knowledge (ZK), falls für jeden PPT-Algorithmus \(\mathcal{A}\) (der Angreifer) ein PPT-Algorithmus \(\mathcal{S}\) (der Simulator) existiert, so dass die folgenden Verteilungen uunterscheidbar sind (wobei \((pk,sk) \leftarrow GEN(1^k)\)):
+\[\langle P(sk),\mathcal{A}(1^k,pk)\rangle~~~~~~und~~~~~~(Ausgabe~von)~\mathcal{S}(1^k,pk)\]
+
+
+
+\section{Benutzerauthentifikation}
+
+
+
+\section{Zugriffskontrolle}
+
+\subsection{Das Bell-LaPadula-Modell}
+\begin{itemize}
+	\item Dynamisches Modell zur Zugriffskontrolle
+	\item Bestandteile: Menge von Subjekten \(\mathcal{S}\), Menge von Objekten \(\mathcal{O}\), Menge \(\mathcal{A} = \{read,write,append,execute\}\) von Zugriffsoperation, halbgeordnete Menge \(\mathcal{L}\) von Sicherheitsleveln
+	\item Ein Systemzustand ist sicher, wenn die folgenden Eigenschaften erfüllt sind
+	\item Sieht kein dynamisches Anpassen der Zugriffskontrollmatrix vor
+\end{itemize}
+
+\paragraph{Discretionary-Eigenschaft (ds-Eigenschaft)}
+Alle Anfragen müssen konsistent mit der Zugriffsmatrix sein. Ein Systemzustand \((B,M,F)\) hat die ds-Eigenschaft, falls
+\[\forall\big(s,o,a\big) \in B : a \in m_{s,o}.\]
+
+\paragraph{Simple-Security-Eigenschaft (ss-Eigenschaft)}
+Kein Subjekt darf lesend auf Objekte zugreifen, deren Sicherheitslevel das maximale Sicherheitslevel des zugreifenden Subjekts übersteigt. Ein Systemzustand \((B,M,F)\) hat die ss-Eigenschaft, falls
+\[\forall\big(s,o,read\big) \in B : f_s(s) \geq f_o(o).\]
+
+\paragraph{Star-Eigenschaft}
+Subjekte dürfen lediglich in Objekte schreiben deren Sicherheitslevel mindestens genauso hoch sind (verhindert Informationsweitergabe "`nach unten"'). Ein Systemzustand \((B,M,F)\) hat die \(\star\)-Eigenschaft, falls
+\[\forall\big(s,o\{write,append\}\big) \in B : f_o(o) \geq f_c(s).\]
+
+Ist für eine gegebene Anfrage die ss-Eigenschaft und die ds-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel angepasst:
+\[f_c(s) = max\big\{f_c(s),f_o(o)\big\}\]
+
+\subsubsection{Nachteile}
+\begin{itemize}
+	\item Die aktuellen Sicherheitslevel werden nie herabgesetzt (Subjekte können in der Regel nicht gezwungen werden, gelesene Informationen zu vergessen)
+	\item Subjekte können auf Objekte mit höherem Sicherheitslevel schreibend zugreifen
+\end{itemize}
+
+
+\subsection{Das Chinese-Wall-Modell}
+\begin{itemize}
+	\item Dynamisches Modell zur Zugriffskontrolle
+	\item Ziel: Verhindern von Interessenskonflikten beim Zugriff auf Daten verschiedener Firmen, beispielsweise bei eines Beratungsunternehmen mit verschiedenen, teilweise in Konflikt stehenden Kunden
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Menge von Firmen \(\mathcal{C}\), Menge von Beratern \(\mathcal{S}\), Menge von Objekten \(\mathcal{O}\)
+		\item Menge \(\mathcal{A} = \{read,write\}\) von Zugriffsoperation
+		\item Funktion \(y: \mathcal{O} \rightarrow \mathcal{C}\), die jedem Objekt seine Firma eindeutig zuweist
+		\item Funktion \(x: \mathcal{O} \rightarrow \mathcal{P}(\mathcal{C})\), die jedem Objekt die Menge an Firmen zuweist, mit denen es in Konflikt steht
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Simple-Security-Eigenschaft (ss-Eigenschaft)}
+Ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hate, das in Konflikt mit \(y(o)\) steht. Die Eigenschaft gilt, falls \(\forall o' \in \mathcal{O}\), auf die \(s\) schon Zugriff hatte, gilt:
+\[y(o) = y(o') \vee y(o) \notin x(o').\]
+
+\paragraph{Star-Eigenschaft}
+Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von ihm zuvor gelesenen Objekte entweder aus der gleichen Firma stammen oder mit keiner Firma in Konflikt stehen. Eine Anfrage hat die Eigenschaft, falls \(\forall o' \in \mathcal{O}\), auf die \(s\) schon lesend zugegriffen hat, gilt:
+\[y(o) = y(o') \vee x(o') = \emptyset.\]
+
+
+
+\section{Analyse umfangreicher Protokolle}
+
+
+
+\section{Implementierungsprobleme}

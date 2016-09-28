@@ -48,3 +48,7 @@ propaonly:
 rsonly:
 	pdflatex rsonly.tex
 	pdflatex rsonly.tex
+
+sicherheitonly:
+	pdflatex sicherheitonly.tex
+	pdflatex sicherheitonly.tex
