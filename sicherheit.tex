@@ -89,7 +89,11 @@ Alle Nachrichtenblöcke werden unabhängig voneinander, mit dem selben Schlüsse
 \FloatBarrier
 
 \paragraph{Cipher Block Chaining Mode (CBC-Modus)}
-Jeder Block wird zusätzlich mit dem Ergebnis des davor liegenden Block "`vorverschlüsselt"'. Bitfehler innerhalb eines Blocks wirken sich bei der Entschlüsselung nur auf diesen und den nachfolgenden Block aus (selbstkorrigierend).
+\begin{itemize}
+	\item Jeder Block wird zusätzlich mit dem Ergebnis des davor liegenden Block "`vorverschlüsselt"'
+	\item Bitfehler innerhalb eines Blocks wirken sich bei der Entschlüsselung nur auf diesen und den nachfolgenden Block aus (selbstkorrigierend)
+	\item Entschlüsselung kann parallelisiert werden (Verschlüsselung nicht)
+\end{itemize}
 
 \begin{figure}[h]
 	\begin{subfigure}[h]{.45\textwidth}
@@ -236,6 +240,79 @@ Bietet die Vorteile des CBC-Modus und kann parallelisiert werden.
 
 \section{Hashfunktionen}
 
+\subsection{Grundlagen}
+Funktionen die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden:
+\[H_k : \{0,1\}^* \leftarrow \{0,1\}^k\]
+
+
+\subsection{Sicherheitseigenschaften}
+\begin{itemize}
+	\item Kollisionsresistenz: Es soll schwierig sein, zwei unterschiedliche Urbilder \(X\) und \(X'\) zu finden, für die \(X \neq X'~\text{und}~H(X) = H(X')\) gilt
+	\item Einwegeingeschaft: Zu jedem gegebenen Wert \(H(X)\) soll es schwierig sein, ein passendes \(X\) zu finden
+	\item Jede kollisionsresistente Hashfunktion ist eine Einwegfunktion
+\end{itemize}
+
+
+\subsection{Merkle-Damg\r{a}rd-Transformation}
+\begin{itemize}
+	\item Zusätzlichen zu den beschriebenen Eigenschaften müssen Hashfunktionen in der Praxis bei flexibler Eingabelänge konstant in ihrer Ausgabelänge sein
+	\item Zunächst Aufteilung der Eingabe in Blöcke der Länge \(l\) (der hinterste Block wird ggf. gepattet), auf diese anschließend nacheinander die Kompressionsfunktion \(F: \{0,1\}^{l+k} \leftarrow \{0,1\}^k\) angewendet wird
+	\item Der Initialisierungsvektor wird fpr jede Hashfunktion fest gewählt
+	\item Die Sicherheit der Transformation \(H_{MD}\) hängt stark von der verwendeten Kompressionsfunktion ab
+\end{itemize}
+
+\begin{figure}[h]
+  \begin{center}
+    \unitlength=1mm
+    \linethickness{0.4pt}
+    \begin{picture}(110,20)
+
+      \put(5,5){\vector(1,0){15}}
+      \put(12,6){\makebox(0,0)[cb]{IV}}
+
+      \put(25,15){\vector(0,-1){7.5}}
+      \put(28,10){\makebox(0,0)[cb]{$M_1$}}
+
+      \put(20,2.5){\framebox(10,5){$F$}}
+
+      \put(30,5){\vector(1,0){12}}
+      \put(36,6){\makebox(0,0)[cb]{$Z_1$}}
+
+      \put(47,15){\vector(0,-1){7.5}}
+      \put(50,10){\makebox(0,0)[cb]{$M_2$}}
+
+      \put(42,2.5){\framebox(10,5){$F$}}
+
+      \put(52,5){\vector(1,0){12}}
+      \put(58,6){\makebox(0,0)[cb]{$Z_2$}}
+
+      \put(68,4){\makebox(0,0)[cb]{\ldots}}
+
+      \put(72,5){\vector(1,0){12}}
+      \put(78,6){\makebox(0,0)[cb]{$Z_{n-1}$}}
+
+      \put(84,2.5){\framebox(10,5){$F$}}
+
+      \put(89,15){\vector(0,-1){7.5}}
+      \put(92,10){\makebox(0,0)[cb]{$M_{n}$}}
+
+      \put(94,5){\vector(1,0){12}}
+      \put(100,6){\makebox(0,0)[cb]{$Z_{n}$}}
+
+    \end{picture}
+  \end{center}
+  \caption{Merkle-Damgård-Transformation $H_{\textnormal{MD}}$}
+  \label{fig:md-konstruktion}
+\end{figure}
+\FloatBarrier
+
+
+\subsection{Angriffe auf Hashfunktionen}
+\begin{itemize}
+	\item Birthday-Attack: Vorberechnung möglichst vieler \(Y_i = H(X_i)\), Sortieren der Liste nach \(Y_i\) und Untersuchen der Liste auf Kollisionen
+	\item Meet-in-the-Middle-Angriff: Kann die Zeit zum Auffinden einer Kollision verkürzen, setzt allerdings die Möglichkeit zur "`Rückwärtsberechnung"' voraus
+\end{itemize}
+
 
 
 \section{Asymmetrische Verschlüsselung}
@@ -339,6 +416,14 @@ Kein PPT-Angreifer soll einen MAC fälschen können. Kann der Angreifer die Sign
  	\end{itemize}
 \end{itemize}
 
+\subsubsection{Asymmetrische EUF-CMA-Sicherheit}
+Ein Signaturschema \(SIG = \big(GEN,SIG,VER\big)\) ist genau dann EUF-CMA-sicher, wenn kein PPT-Angreifer \(\mathcal{A}\) das folgende Spiel nicht-vernachlässigbar oft gewinnt (für \((pk,sk) \leftarrow GEN(1^k)\)):
+\begin{enumerate}
+	\item \(\mathcal{A}\) erhält Zugriff auf \(SIG(sk,\cdot)\)-Orakel und \(pk\)
+	\item \(\mathcal{A}\) darf polynomiell viele Nachrichten \(M_i\) zum signieren an das Orkel schicken und erhält die entsprechenden Ausgaben \(\sigma_i \leftarrow SIG(sk,M_i)\)
+	\item \(\mathcal{A}\) wählt ein \(\sigma_i\) und gibt es zurück. Er gewinnt, wenn dies die richtige Signatur ist (Prüfung via \(VER(pk,M_i,\sigma_i\))
+\end{enumerate}
+
 
 \subsection{RSA-Signaturen}
 \begin{itemize}
@@ -347,7 +432,7 @@ Kein PPT-Angreifer soll einen MAC fälschen können. Kann der Angreifer die Sign
 \end{itemize}
 
 \paragraph{Signatur "`unsinniger"' Nachrichten}
-Für eine beliebige Signatur \(\sigma \in \mathbb{Z}\) kann mit Hilfe von \(pk\) eine Signatur gefälscht und eine Nachricht generiert werden. Damit sind zwar nicht möglich sinnvolle Nachrichten zu fälschen, jedoch ist dies ein generelles Problem und bricht die EUF-CMA-Sicherheit.
+Für eine beliebige Signatur \(\sigma \in \mathbb{Z}\) kann mit Hilfe von \(pk\) eine Nachricht gefälscht und eine Nachricht generiert werden. Damit sind zwar nicht möglich Signturen für sinnvolle Nachrichten zu fälschen, jedoch ist dies ein generelles Problem und bricht die EUF-CMA-Sicherheit.
 
 \paragraph{Homomorphie von RSA}
 Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und der entsprechenden Nachrichten \(M_1\) und \(M_2\) ist, kann für \(M_3 = M_1 \cdot M_2\) eine gültige Signatur \(\sigma_3\) fälschen:
@@ -409,6 +494,96 @@ anderen. Die Sicherheit ergibt sich dadurch, dass alleine mit Kenntniss von \(g\
 	\caption{Diffie-Hellman-Schlüsselaustausch}
 	\label{fig:keyex:dh}
 \end{figure}
+\FloatBarrier
+
+
+\subsection{Transport Layer Security (TLS)}
+Ziel ist, ein sicheres Verschlüsselungsverfahren für die Kommunikation über ein unsicheres Netzwerk zu ermöglichen.
+
+\subsubsection{TLS-Handshake}
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+	\begin{picture}(120,150)(-10,0)
+		\put(20,143){\makebox(0,0)[cb]{\texttt{Client}$_{sk_C, pk_C}$}}
+		\put(100,143){\makebox(0,0)[cb]{\texttt{Server}$_{sk_S, pk_S}$}}
+	
+		\put(20,2){\line(0,1){140}}
+		\put(100,2){\line(0,1){140}}
+		
+		\put(5,131){\makebox(0,0)[cb]{berechne}}
+		\put(5,127){\makebox(0,0)[cb]{Zufallszahl $R_C$}}
+		\put(60,123){\makebox(0,0)[cb]{\emph{client\_hello}(Liste$_{Algorithmen}$, $R_C$)}}
+		\put(20,122){\vector(1,0){80}}
+	
+		\put(117,118){\makebox(0,0)[cb]{berechne}}
+		\put(117,114){\makebox(0,0)[cb]{Zufallszahl $R_S$}}
+		\put(60,110){\makebox(0,0)[cb]{\emph{server\_hello}(Auswahl$_{Algorithmen}$, $R_S$)}}
+		\put(100,109){\vector(-1,0){80}}
+		
+		\put(60,100){\makebox(0,0)[cb]{Server-Zertifikat (inkl. $pk_S$)}}
+		\put(100,99){\vector(-1,0){80}}
+		\put(60,94){\makebox(0,0)[cb]{Anfrage Client-Zertifikat}}
+		\put(100,93){\vector(-1,0){80}}
+		
+		\put(3,87){\makebox(0,0)[cb]{überprüfe}}
+		\put(3,84){\makebox(0,0)[cb]{Server-Zertifikat}}
+		
+		\put(60,80){\makebox(0,0)[cb]{Client-Zertifikat (inkl. $pk_C$)}}
+		\put(20,79){\vector(1,0){80}}
+	
+		\put(3,73){\makebox(0,0)[cb]{berechne Hash $H$}}
+		\put(3,69){\makebox(0,0)[cb]{aller bisherigen}}
+		\put(3,66){\makebox(0,0)[cb]{Nachrichten}}
+		\put(60,62){\makebox(0,0)[cb]{$SIG(sk_C, H)$}}
+		\put(20,61){\vector(1,0){80}}
+		
+		\put(117,55){\makebox(0,0)[cb]{überprüfe $H$}}
+		\put(117,51){\makebox(0,0)[cb]{und Signatur}}
+		
+		\put(3,55){\makebox(0,0)[cb]{berechne}}
+		\put(3,51){\makebox(0,0)[cb]{Zufallszahl \emph{PMS}}}
+		\put(60,47){\makebox(0,0)[cb]{$ENC(pk_S, \textit{PMS})$}}
+		\put(20,46){\vector(1,0){80}}
+		
+		\put(3,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
+		\put(3,36){\makebox(0,0)[cb]{aus $R_C$, $R_S$, \emph{PMS}}}
+		
+		\put(117,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
+		\put(117,36){\makebox(0,0)[cb]{aus $R_C$, $R_S$, \emph{PMS}}}
+		
+		\put(60,32){\makebox(0,0)[cb]{\emph{ChangeCipherSpec}}}
+		\put(20,31){\vector(1,0){80}}
+		
+		\put(60,26){\makebox(0,0)[cb]{\emph{Finished}}}
+		\put(20,25){\vector(1,0){80}}
+	
+		\put(60,16){\makebox(0,0)[cb]{\emph{ChangeCipherSpec}}}
+		\put(100,15){\vector(-1,0){80}}
+		
+		\put(60,10){\makebox(0,0)[cb]{\emph{Finished}}}
+		\put(100,9){\vector(-1,0){80}}
+	
+	\end{picture}
+\end{center}
+\caption{Vereinfachter Ablauf eines SSL/TLS-Handshakes mit beidseitiger
+  Authentifikation.} 
+\label{fig:keyex:tls-handshake}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Angriffe auf TLS}
+Unter Verwendung einer idealen Verschlüsselung ist TLS sicher. Allerdings mussten konkrete Implementierungen als Reaktion auf veröffentlichte Angriffe immer wieder gepatcht werden.
+
+\begin{itemize}
+	\item \texttt{ChangeCipherSpec}-Drop: Angreifer unterdrückt den Aufruf des Clients, ab jetzt verschlüsselt zu kommunizieren. Falls der Server sofort danach Nutzdaten schickt, werden diese nicht verschlüsselt.
+	\item Angriffe auf das Padding
+	\item \texttt{CRIME}: Bei eingeschalteter Kompression kann ein aktiver Angreifer mit vielen Wiederholungen gezielt Klartexte rekonstruieren
+	\item Logjam: Downgrade-Angriff
+\end{itemize}
 
 
 
@@ -447,7 +622,7 @@ Voraussetzungen:
 \subsection{Das Bell-LaPadula-Modell}
 \begin{itemize}
 	\item Dynamisches Modell zur Zugriffskontrolle
-	\item Bestandteile: Menge von Subjekten \(\mathcal{S}\), Menge von Objekten \(\mathcal{O}\), Menge \(\mathcal{A} = \{read,write,append,execute\}\) von Zugriffsoperation, halbgeordnete Menge \(\mathcal{L}\) von Sicherheitsleveln
+	\item Bestandteile: Menge von Subjekten \(\mathcal{S}\), Menge von Objekten \(\mathcal{O}\), Menge \(\mathcal{A} = \{\texttt{read},\texttt{write},\texttt{append},\texttt{execute}\}\) von Zugriffsoperation, halbgeordnete Menge \(\mathcal{L}\) von Sicherheitsleveln
 	\item Ein Systemzustand ist sicher, wenn die folgenden Eigenschaften erfüllt sind
 	\item Sieht kein dynamisches Anpassen der Zugriffskontrollmatrix vor
 \end{itemize}
@@ -458,13 +633,13 @@ Alle Anfragen müssen konsistent mit der Zugriffsmatrix sein. Ein Systemzustand 
 
 \paragraph{Simple-Security-Eigenschaft (ss-Eigenschaft)}
 Kein Subjekt darf lesend auf Objekte zugreifen, deren Sicherheitslevel das maximale Sicherheitslevel des zugreifenden Subjekts übersteigt. Ein Systemzustand \((B,M,F)\) hat die ss-Eigenschaft, falls
-\[\forall\big(s,o,read\big) \in B : f_s(s) \geq f_o(o).\]
+\[\forall\big(s,o,\texttt{read}\big) \in B : f_s(s) \geq f_o(o).\]
 
-\paragraph{Star-Eigenschaft}
+\paragraph{Star-Eigenschaft (\(\star\)-Eigenschaft)}
 Subjekte dürfen lediglich in Objekte schreiben deren Sicherheitslevel mindestens genauso hoch sind (verhindert Informationsweitergabe "`nach unten"'). Ein Systemzustand \((B,M,F)\) hat die \(\star\)-Eigenschaft, falls
-\[\forall\big(s,o\{write,append\}\big) \in B : f_o(o) \geq f_c(s).\]
+\[\forall\big(s,o,\{\texttt{write},\texttt{append}\}\big) \in B : f_o(o) \geq f_c(s).\]
 
-Ist für eine gegebene Anfrage die ss-Eigenschaft und die ds-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel angepasst:
+Ist für eine gegebene \texttt{read}-Anfrage die ds-Eigenschaft und die ss-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel angepasst:
 \[f_c(s) = max\big\{f_c(s),f_o(o)\big\}\]
 
 \subsubsection{Nachteile}
@@ -477,11 +652,11 @@ Ist für eine gegebene Anfrage die ss-Eigenschaft und die ds-Eigenschaft erfüll
 \subsection{Das Chinese-Wall-Modell}
 \begin{itemize}
 	\item Dynamisches Modell zur Zugriffskontrolle
-	\item Ziel: Verhindern von Interessenskonflikten beim Zugriff auf Daten verschiedener Firmen, beispielsweise bei eines Beratungsunternehmen mit verschiedenen, teilweise in Konflikt stehenden Kunden
+	\item Ziel: Verhindern von Interessenskonflikten beim Zugriff auf Daten verschiedener Firmen, beispielsweise bei einer Beratungsunternehmen mit verschiedenen, teilweise in Konflikt stehenden Kunden
 	\item \textbf{Bestandteile}
 	\begin{itemize}
 		\item Menge von Firmen \(\mathcal{C}\), Menge von Beratern \(\mathcal{S}\), Menge von Objekten \(\mathcal{O}\)
-		\item Menge \(\mathcal{A} = \{read,write\}\) von Zugriffsoperation
+		\item Menge \(\mathcal{A} = \{\texttt{read},\texttt{write}\}\) von Zugriffsoperation
 		\item Funktion \(y: \mathcal{O} \rightarrow \mathcal{C}\), die jedem Objekt seine Firma eindeutig zuweist
 		\item Funktion \(x: \mathcal{O} \rightarrow \mathcal{P}(\mathcal{C})\), die jedem Objekt die Menge an Firmen zuweist, mit denen es in Konflikt steht
 	\end{itemize}
