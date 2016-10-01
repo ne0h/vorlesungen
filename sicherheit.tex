@@ -24,7 +24,7 @@ Der Lehrstuhl stellt bereits ein ausführliches Skript zur Verfügung.\footnote{
 \begin{itemize}
 	\item Verschlüsselung einer Nachricht \(M\) mit einem Schlüssel \(K\) der selben Länge: \(C = M \oplus K, |M| = |K|\)
 	\item \(K\) muss zufällig gleichverteilt gezogen werden und darf nicht mehrfach verwendet werden
-	\item Vorteil: Perfekte Geheimhaltung, da \(C\) keine Informationen über \(M\) ausgibt
+	\item Vorteil: Perfekte Geheimhaltung, da sich aus \(C\) keine Informationen über \(M\) ableiten lassen
 	\item \textbf{Nachteile}
 	\begin{itemize}
 		\item Bei Wiederverwenden des selben Schlüssels angreifbar: \(C_1 \oplus C_2 = M_1 \oplus K \oplus K \oplus M_2 = M_1 \oplus M_2\)
@@ -34,6 +34,64 @@ Der Lehrstuhl stellt bereits ein ausführliches Skript zur Verfügung.\footnote{
 
 
 \subsection{Blockchiffren}
+
+\subsubsection{Verschlüsselungsverfahren}
+\begin{itemize}
+	\item Blockweise Aufteilung und Verschlüsselung: \(ENC: \big\{0,1\big\}^k \times \big\{0,1\big\}^l \rightarrow \big\{0,1\big\}^l\)
+	\item \textbf{Designkriterien}
+	\begin{itemize}
+		\item \textit{Diffusion} bzw. Nichtunterscheidbarkeit von echt zufälligen Funktionen: Kleine Änderungen an der Eingabe müssen im Mittel zu großen Veränderungen bei der Ausgabe führen
+		\item \textit{Confusion}: Jedes Zeichen des Chiffrats ist von mehreren Zeichen des Schlüssels abhängig
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+	\tikzstyle{every circle node}= [draw]
+	\begin{tikzpicture}
+		\begin{scope}[>=latex] %for filled arrow tips
+			\newcommand{\n}{3}
+			\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$ENC$};
+	
+			\node (rectM) at (2, {(\n -1)*2 + 2}) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$M$};
+			\node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
+			\node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
+			\draw[->,semithick] (rectM) -- (2, {(\n -1)*2 + 1.30});
+			\foreach \nr in {1, ..., \n}{
+				\node (x\nr)[XOR] at (0,{(\n-\nr)*2}) {};
+				\node (F\nr)[encrypt] at (2.0, {(\n-\nr)*2}) {$F_\nr$};
+				\draw[->,semithick] (F\nr) -- (x\nr);
+			}
+			\node (rectL3) at (0, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_3$};
+			\node (rectR3) at (4, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_3$};
+			% draw first connection lines
+			\draw[->,semithick] (rect1) -- (x1);
+			\draw[->, semithick] (rect2) |- (F1);
+			% \node (p1)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-1)*2}) {};
+			% \draw[->, semithick] (p1) -- (F1);
+	
+			% draw connection lines between F-Boxes
+			\foreach \nr in {1, ..., 2}{
+				\pgfmathsetmacro\cnr{int(\nr + 1)}
+				\node (p\nr)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-\nr)*2}) {};
+				\draw[->, semithick] (p\nr) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
+		
+				\draw[->, semithick] (x\nr) -- (0, {(\n-\nr)*2 - 0.6}) -- (4, {(\n-\nr)*2 - 1.2}) |- (F\cnr);
+			}
+			\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
+	
+			\node (p3)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-3)*2}) {};
+			\draw[->, semithick] (p3) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
+	
+			\node (rectC) at (2, -3) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$C$};
+			\draw[->,semithick] (2, -2.25) -- (rectC);
+	
+		\end{scope}
+	\end{tikzpicture}
+	\caption{3-ründige Feistel-Struktur}
+\end{figure}
+\FloatBarrier
 
 \subsubsection{Betriebsmodi}
 
@@ -225,6 +283,9 @@ Bietet die Vorteile des CBC-Modus und kann parallelisiert werden.
 \end{figure}
 \FloatBarrier
 
+\paragraph{Galois/-Counter Mode (GCM-Modus)}
+Berechnet neben dem Chiffrat zusätzlich eine Signatur, um die Integrität sicherzustellen.
+
 
 
 \section{Kryptografische Sicherheitsbegriffe}
@@ -234,6 +295,22 @@ Bietet die Vorteile des CBC-Modus und kann parallelisiert werden.
 	\item Sicherheitsniveau \(k\) legt mit der Definition des Schlüsselraums \(1^k\) das Sicherheitsniveau einer Funktion fest
 	\item Effizienter Angreifer: Muss in \(\mathcal{O}\big(k^c\big), c \in \mathbb{N}\). Dies schließt so beispielsweise einen Brute-Force-Angriff auf den kompletten Schlüsselraum \(\{0,1\}^k\) mit \(\mathcal{O}\big(2^k\big)\) aus
 	\item PPT-Angreifer: Verwendet probabilistische Angriffe ("`probabilistic polynomial time"')
+\end{itemize}
+
+
+\subsection{Semantische Sicherheit}
+
+
+\subsection{Der IND-CPA-Sicherheitsbegriff}
+\begin{itemize}
+	\item \textit{Undistinguishability unser chosen-plaintext attacks}: Ein polynomiell bschränkter Angreifer \(\mathcal{A}\) kann nicht Chiffrate nicht von selbst gewählen (und verschlüsselten) Klartexten unterscheiden
+	\item Einführung eines Verschlüsselungsorakels (\(\mathcal{A}\) kann zu jedem Zeitpunkt jedes beliebige \(M\) verschlüsseln lassen) und eines Herausforderers \(\mathcal{C}\)
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item \(\mathcal{A}\) wählt zwei Nachrichten \(M_1\) und \(M_2\) mit \(M_1 \neq M_2\) und \(|M_1| = |M_2|\)
+		\item \(\mathcal{C}\) verschlüsselt zufällig \(M_b\) mit \(b \in \{1,2\}\)
+		\item \(\mathcal{A}\) gewinnt, wenn er \(b\) mit Hilfe des Orakels korrekt rät
+	\end{enumerate}
 \end{itemize}
 
 
@@ -257,52 +334,52 @@ Funktionen die von einer großen, potentiell unbeschränkten Menge in eine klein
 \begin{itemize}
 	\item Zusätzlichen zu den beschriebenen Eigenschaften müssen Hashfunktionen in der Praxis bei flexibler Eingabelänge konstant in ihrer Ausgabelänge sein
 	\item Zunächst Aufteilung der Eingabe in Blöcke der Länge \(l\) (der hinterste Block wird ggf. gepattet), auf diese anschließend nacheinander die Kompressionsfunktion \(F: \{0,1\}^{l+k} \leftarrow \{0,1\}^k\) angewendet wird
-	\item Der Initialisierungsvektor wird fpr jede Hashfunktion fest gewählt
+	\item Der Initialisierungsvektor wird für jede Hashfunktion fest gewählt
 	\item Die Sicherheit der Transformation \(H_{MD}\) hängt stark von der verwendeten Kompressionsfunktion ab
 \end{itemize}
 
 \begin{figure}[h]
-  \begin{center}
-    \unitlength=1mm
-    \linethickness{0.4pt}
-    \begin{picture}(110,20)
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(110,20)
 
-      \put(5,5){\vector(1,0){15}}
-      \put(12,6){\makebox(0,0)[cb]{IV}}
+			\put(5,5){\vector(1,0){15}}
+			\put(12,6){\makebox(0,0)[cb]{IV}}
 
-      \put(25,15){\vector(0,-1){7.5}}
-      \put(28,10){\makebox(0,0)[cb]{$M_1$}}
+			\put(25,15){\vector(0,-1){7.5}}
+			\put(28,10){\makebox(0,0)[cb]{$M_1$}}
 
-      \put(20,2.5){\framebox(10,5){$F$}}
+			\put(20,2.5){\framebox(10,5){$F$}}
 
-      \put(30,5){\vector(1,0){12}}
-      \put(36,6){\makebox(0,0)[cb]{$Z_1$}}
+			\put(30,5){\vector(1,0){12}}
+			\put(36,6){\makebox(0,0)[cb]{$Z_1$}}
 
-      \put(47,15){\vector(0,-1){7.5}}
-      \put(50,10){\makebox(0,0)[cb]{$M_2$}}
+			\put(47,15){\vector(0,-1){7.5}}
+			\put(50,10){\makebox(0,0)[cb]{$M_2$}}
 
-      \put(42,2.5){\framebox(10,5){$F$}}
+			\put(42,2.5){\framebox(10,5){$F$}}
 
-      \put(52,5){\vector(1,0){12}}
-      \put(58,6){\makebox(0,0)[cb]{$Z_2$}}
+			\put(52,5){\vector(1,0){12}}
+			\put(58,6){\makebox(0,0)[cb]{$Z_2$}}
 
-      \put(68,4){\makebox(0,0)[cb]{\ldots}}
+			\put(68,4){\makebox(0,0)[cb]{\ldots}}
 
-      \put(72,5){\vector(1,0){12}}
-      \put(78,6){\makebox(0,0)[cb]{$Z_{n-1}$}}
+			\put(72,5){\vector(1,0){12}}
+			\put(78,6){\makebox(0,0)[cb]{$Z_{n-1}$}}
 
-      \put(84,2.5){\framebox(10,5){$F$}}
+			\put(84,2.5){\framebox(10,5){$F$}}
 
-      \put(89,15){\vector(0,-1){7.5}}
-      \put(92,10){\makebox(0,0)[cb]{$M_{n}$}}
+			\put(89,15){\vector(0,-1){7.5}}
+			\put(92,10){\makebox(0,0)[cb]{$M_{n}$}}
 
-      \put(94,5){\vector(1,0){12}}
-      \put(100,6){\makebox(0,0)[cb]{$Z_{n}$}}
+			\put(94,5){\vector(1,0){12}}
+			\put(100,6){\makebox(0,0)[cb]{$Z_{n}$}}
 
-    \end{picture}
-  \end{center}
-  \caption{Merkle-Damgård-Transformation $H_{\textnormal{MD}}$}
-  \label{fig:md-konstruktion}
+		\end{picture}
+	\end{center}
+	\caption{Merkle-Damgård-Transformation $H_{\textnormal{MD}}$}
+	\label{fig:md-konstruktion}
 \end{figure}
 \FloatBarrier
 
@@ -316,6 +393,14 @@ Funktionen die von einer großen, potentiell unbeschränkten Menge in eine klein
 
 
 \section{Asymmetrische Verschlüsselung}
+
+\subsection{Sicherheitsbegriffe für asymmetrische Verfahren}
+
+\subsubsection{Semantische Sicherheit für Public-Key-Verfahren}
+% TODO
+
+\subsubsection{IND-CPA-Sicherheit für Public-Key-Verfahren}
+% TODO
 
 \subsection{RSA-Verschlüsselung}
 RSA ist homomorph.
@@ -380,9 +465,14 @@ RSA ist deterministisch und damit nicht semantisch sicher ist. Daher werden Nach
 	\end{itemize}
 	\item \textbf{Verschlüsseln und Entschlüsseln}
 	\begin{itemize}
-		\item \(y\) wird bei jeder Verschlüsselung zufällig neu gewählt
-		\item Verschlüsselung: \(C = ENC\big(pk,M\big) = ENC\big((\mathbb{G},g,h), h^yM\big)\)
+		\item \(r\) wird bei jeder Verschlüsselung zufällig neu gewählt
+		\item Verschlüsselung: \(C = ENC\big(pk,M\big) = ENC\big((\mathbb{G},g,h),(m,r)\big) = \big(g^r,h^rM\big)\)
 		\item Entschlüsselung: \(M = DEC\big(sk,C\big) = DEC\big((\mathbb{G},g,x),(Y,Z)\big) = \frac{Z}{Y^x}\)
+	\end{itemize}
+	\item \textbf{Sicherheit des Verfahrens und Wahl geeigneter Gruppen}
+	\begin{itemize}
+		\item Für die Sicherheit ist die Wahl einer geeigneten Gruppe \(\mathbb{G} = \lbrack g \rbrack\) von entscheidender Bedeutung (DDH-Annahme muss gelten)
+		\item \textit{Decisional Diffie-Hellman-Annahme} (DDH-Annahme): Für zufällige \(a,b,c \in \big\{0,\ldots,|G|-1\big\}\) sind die Tripel \(\big(g^a,g^b,g^{ab}\big)\) und \(\big(g^a,g^b,g^z\big)\) nicht effizient unterscheidbar
 	\end{itemize}
 \end{itemize}
 
@@ -390,7 +480,7 @@ RSA ist deterministisch und damit nicht semantisch sicher ist. Daher werden Nach
 \section{Symmetrische Authentifikation von Nachrichten (Message Authentication Codes)}
 
 \subsection{Ziel}
-Ermöglicht es erhaltene Nachrichten hinsichtlich Fehler und Veränderungen zu prüfen (Integrität) sowie den Ansender zu bestimmen.
+Ermöglicht es erhaltene Nachrichten hinsichtlich Fehler und Veränderungen zu prüfen (Integrität) sowie den Absender zu bestimmen.
 
 \subsection{MACs}
 \textit{Message Authentication Codes} sind symmetrische Verfahren um die Authentizität von Nachrichgen sicherzustellen. Hierzu gibt es einen Signatur- und einen Verifikationsalgorithmus. Beide Algorithmen sind PPT-Algorithmen und verwenden als Eingabe ein gemeinsames Geheimnis \(K\).
@@ -407,13 +497,13 @@ Kein PPT-Angreifer soll einen MAC fälschen können. Kann der Angreifer die Sign
 
 \section{Asymmetrische Authentifikation von Nachrichten (Digitale Signaturen/Zertifikate)}
 \begin{itemize}
- 	\item Ziel: Authentifikationsprüfung mit nicht-geheimem Schlüssel
- 	\item \textbf{Algorithmen}
- 	\begin{itemize}
- 		\item Schlüsselgenerierung: \((pk,sk) \leftarrow KEYGEN(1^k)\)
- 		\item Signieren: \(\sigma \leftarrow SIG(sk,M)\)
- 		\item Verifizieren: \(VER(pk,M,\sigma)\)
- 	\end{itemize}
+	\item Ziel: Authentifikationsprüfung mit nicht-geheimem Schlüssel
+	\item \textbf{Algorithmen}
+	\begin{itemize}
+		\item Schlüsselgenerierung: \((pk,sk) \leftarrow KEYGEN(1^k)\)
+		\item Signieren: \(\sigma \leftarrow SIG(sk,M)\)
+		\item Verifizieren: \(VER(pk,M,\sigma)\)
+	\end{itemize}
 \end{itemize}
 
 \subsubsection{Asymmetrische EUF-CMA-Sicherheit}
@@ -570,7 +660,7 @@ Ziel ist, ein sicheres Verschlüsselungsverfahren für die Kommunikation über e
 	\end{picture}
 \end{center}
 \caption{Vereinfachter Ablauf eines SSL/TLS-Handshakes mit beidseitiger
-  Authentifikation.} 
+	Authentifikation.} 
 \label{fig:keyex:tls-handshake}
 \end{figure}
 \FloatBarrier
