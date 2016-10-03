@@ -494,6 +494,14 @@ Ermöglicht es erhaltene Nachrichten hinsichtlich Fehler und Veränderungen zu p
 Kein PPT-Angreifer soll einen MAC fälschen können. Kann der Angreifer die Signatur einer Nachricht nicht voraussagen, so ist das Verfahren EUF-CMA-sicher.
 
 
+\subsection{Konstruktionen}
+
+\subsubsection{Keyed-Hash Message Authentication Code (HMAC)}
+Löst das Problem, dass authentifizierte Daten durch Anfügen von Blöcken erweitert und korrekt authentifiziert werden können:
+\[SIG\big(K,M\big) = H\Big((K \oplus opad) || H\big((K \oplus ipad) || M\big)\Big)\text{, sowie}\]
+\[VER\big(K,M,\sigma\big) = 1 \Leftrightarrow H\Big((K \oplus opad) || H\big((K \oplus ipad) || M\big)\Big)\]
+
+
 
 \section{Asymmetrische Authentifikation von Nachrichten (Digitale Signaturen/Zertifikate)}
 \begin{itemize}
@@ -513,6 +521,7 @@ Ein Signaturschema \(SIG = \big(GEN,SIG,VER\big)\) ist genau dann EUF-CMA-sicher
 	\item \(\mathcal{A}\) darf polynomiell viele Nachrichten \(M_i\) zum signieren an das Orkel schicken und erhält die entsprechenden Ausgaben \(\sigma_i \leftarrow SIG(sk,M_i)\)
 	\item \(\mathcal{A}\) wählt ein \(\sigma_i\) und gibt es zurück. Er gewinnt, wenn dies die richtige Signatur ist (Prüfung via \(VER(pk,M_i,\sigma_i\))
 \end{enumerate}
+Das Verfahren darf nicht (wie RSA) hommorph sein.
 
 
 \subsection{RSA-Signaturen}
@@ -539,6 +548,19 @@ Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und
 
 
 \subsection{ElGamal-Signaturen}
+
+\subsubsection{Signieren}
+Wähle einen zufälligen, modulo g invertierbaren Exponenten \(e\) und berechne
+\[a := g^e (\text{mod } g)\]
+sowie
+\[b := \big(M - a \cdot x \big) \cdot e^{-1}.\]
+
+\subsubsection{Verifizieren}
+Berechne
+\[v_1 = \big(g^x\big)^a \cdot a^b (\text{mod } g)\]
+sowie
+\[v_2 = g^M (\text{mod } g).\]
+Gilt \(v_1=v_2\), so ist die Signatur gültig.
 
 
 
@@ -767,3 +789,40 @@ Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von 
 
 
 \section{Implementierungsprobleme}
+
+\subsection{Bufferoverflow}
+\begin{itemize}
+	\item In C/C++ (und weiteren Programmiersprachen) finden Pufferzugriffe ohne Größenüberprüfungen statt
+	\item Auch bei Zugriffen außerhalb des Speicherbereichs kommt es zu keinem Programmfehler
+	\item Angreifer können gezielt Speicherbereiche überschreiben
+	\item Befindet sich der übergelaufene Puffer auf dem Stack, kann sogar die Rücksprungadresse überschrieben werden \(\rightarrow\) wird diese überschrieben, so kann der Programmfluss gelenkt werden
+	\item \textbf{Gegenmaßnahmen}
+	\begin{itemize}
+		\item Explizites Prüfen der Puffergröße. Kann auch automatisch von bestimmten Funktionen (beispielsweise \texttt{strncat} oder \texttt{strncopy}) oder Programmiersprachen (beispielsweise Java) durchgeführt werden. Allerdings sehr aufwendig bei großen Programmen nachzurüsten
+		\item \textit{Stack Canaries}: Zufällige Dummywerte, die vor der Rücksprungadresse platziert werden. Der Compiler fügt vor jedem Rücksprung noch einige Befehle ein, die Prüfen, ob der Stack Canary verändert worden ist
+		\item \textit{Data Execution Prevention}: Prozessor erzwingt Trennung von Code- und Speicherbereichen. Dadurch kann der vom Angreifer eingeschleuste Code nicht ausgeführt werden
+		\item \textit{Address Space Layout Randomization}: Das Betriebssystem platziert Speicherbereiche zufällig. Dadurch kann der Angreifer entsprechende Bereiche nicht erkennen (wo beispielsweise die Rücksprungadresse liegt)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{SQL-Injection}
+\begin{itemize}
+	\item Ziel des Angreifers: "`Platzieren"' von bösartigen SQL-Befehlen über Eingabemasken
+	\item Beispiel: Aus \texttt{SELECT * FROM cd WHERE album='\$album';} wird \texttt{SELECT * FROM cd WHERE album=''; DROP TABLE cd;}. Die Datenbank interpretiert die Abfrage als zwei Anweisungen und führt beide hintereinander aus
+	\item Gegenmaßnahmen: Gründliche Überprüfung der Benutzereingaben; Escapen von Sonderzeichen (beispielsweise über \texttt{mysql\_escape\_string}); Verwenden von \textit{Prepared Statements}
+\end{itemize}
+
+
+\subsection{Cross Site Scripting}
+\begin{itemize}
+	\item Injízieren von HTML-Elementen in eine Webseite. Über JavaScript kann diese dann vollständig kontrolliert werden. So können beispielsweise Login-Daten abgegriffen werden
+	\item Gegenmaßnahme: Maskieren aller Benutzereingaben (\texttt{htmspecialchars}), damit sie nicht vom Browser als HTML interpretiert werden können
+\end{itemize}
+
+
+\subsection{Denial of Service}
+\begin{itemize}
+	\item Ziel: Lahmlegen bestimmter Dienste durch eine sehr große Menge parallele Anfragen
+	\item \textit{SYN-Flooding}: Initiierung des (clientseitigen) TCP-Handshaken mit \texttt{SYN}-Paket, ohne abschießend \texttt{ACK} zu senden. So wartet der Server nach Empfang von \texttt{SYN} auf \texttt{ACK} und reserviert Ressourcen
+\end{itemize}
