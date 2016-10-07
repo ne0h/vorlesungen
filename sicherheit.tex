@@ -471,7 +471,7 @@ RSA ist deterministisch und damit nicht semantisch sicher ist. Daher werden Nach
 	\end{itemize}
 	\item \textbf{Sicherheit des Verfahrens und Wahl geeigneter Gruppen}
 	\begin{itemize}
-		\item Für die Sicherheit ist die Wahl einer geeigneten Gruppe \(\mathbb{G} = \lbrack g \rbrack\) von entscheidender Bedeutung (DDH-Annahme muss gelten)
+		\item Für die Sicherheit ist die Wahl einer geeigneten Gruppe \(\mathbb{G} = \langle g \rangle\) von entscheidender Bedeutung (DDH-Annahme muss gelten)
 		\item \textit{Decisional Diffie-Hellman-Annahme} (DDH-Annahme): Für zufällige \(a,b,c \in \big\{0,\ldots,|G|-1\big\}\) sind die Tripel \(\big(g^a,g^b,g^{ab}\big)\) und \(\big(g^a,g^b,g^z\big)\) nicht effizient unterscheidbar
 	\end{itemize}
 \end{itemize}
@@ -519,7 +519,7 @@ Ein Signaturschema \(SIG = \big(GEN,SIG,VER\big)\) ist genau dann EUF-CMA-sicher
 \begin{enumerate}
 	\item \(\mathcal{A}\) erhält Zugriff auf \(SIG(sk,\cdot)\)-Orakel und \(pk\)
 	\item \(\mathcal{A}\) darf polynomiell viele Nachrichten \(M_i\) zum signieren an das Orkel schicken und erhält die entsprechenden Ausgaben \(\sigma_i \leftarrow SIG(sk,M_i)\)
-	\item \(\mathcal{A}\) wählt ein \(\sigma_i\) und gibt es zurück. Er gewinnt, wenn dies die richtige Signatur ist (Prüfung via \(VER(pk,M_i,\sigma_i\))
+	\item \(\mathcal{A}\) wählt ein \(\sigma_i\) und gibt es zurück. Er gewinnt, wenn dies die richtige Signatur ist (Prüfung via \(VER(pk,M_i,\sigma_i)\))
 \end{enumerate}
 Das Verfahren darf nicht (wie RSA) hommorph sein.
 
@@ -532,6 +532,9 @@ Das Verfahren darf nicht (wie RSA) hommorph sein.
 
 \paragraph{Signatur "`unsinniger"' Nachrichten}
 Für eine beliebige Signatur \(\sigma \in \mathbb{Z}\) kann mit Hilfe von \(pk\) eine Nachricht gefälscht und eine Nachricht generiert werden. Damit sind zwar nicht möglich Signturen für sinnvolle Nachrichten zu fälschen, jedoch ist dies ein generelles Problem und bricht die EUF-CMA-Sicherheit.
+
+Bei Kenntnis des öffentlichen Schlüssels \(pk \leftarrow \big(e,N\big)\) kann zu einer beliebigen Signatur \(\sigma\) ein signierter Klartext \(M\) erzeugt werden:
+\[\sigma^e \equiv M~mod~N.\]
 
 \paragraph{Homomorphie von RSA}
 Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und der entsprechenden Nachrichten \(M_1\) und \(M_2\) ist, kann für \(M_3 = M_1 \cdot M_2\) eine gültige Signatur \(\sigma_3\) fälschen:
@@ -550,17 +553,21 @@ Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und
 \subsection{ElGamal-Signaturen}
 
 \subsubsection{Signieren}
-Wähle einen zufälligen, modulo g invertierbaren Exponenten \(e\) und berechne
-\[a := g^e (\text{mod } g)\]
+Wähle einen zufälligen, modulo g invertierbaren Exponenten \(e\) in der multiplikativen Gruppe \(\mathbb{G}=\mathbb{Z}_{p}^*\) mit Ordnung \(q\) und berechne
+\[a := g^e (\text{mod } p)\]
 sowie
-\[b := \big(M - a \cdot x \big) \cdot e^{-1}.\]
+\[b := \big(M - a \cdot x \big) \cdot e^{-1}(\text{mod } p).\]
 
 \subsubsection{Verifizieren}
 Berechne
-\[v_1 = \big(g^x\big)^a \cdot a^b (\text{mod } g)\]
+\[v_1 = h^a \cdot a^b (\text{mod } p)\]
 sowie
-\[v_2 = g^M (\text{mod } g).\]
+\[v_2 = g^M (\text{mod } p).\]
 Gilt \(v_1=v_2\), so ist die Signatur gültig.
+
+
+\subsection{Hash-Then-Sign-Paradigma}
+Die Verwendung einer kollisionsresistenten Hashfunktion ermöglicht eine Abwehr gegen die Erzeugung "`unsinniger"' Signaturen, denn die errechneten "`unsinnigen"' Klartexte müssen nun zusätzlich denselben Hashwert erzeugen wie die Orginalnachricht.
 
 
 
@@ -724,8 +731,59 @@ Voraussetzungen:
 \[\langle P(sk),\mathcal{A}(1^k,pk)\rangle~~~~~~und~~~~~~(Ausgabe~von)~\mathcal{S}(1^k,pk)\]
 
 
+\subsection{Commitments}
+\begin{itemize}
+	\item Hiding-Eigenschaft: \(COM\big(M;R\big)\) verrät zunächst keinerlei Informationen über \(M\)
+	\item Binding-Eigenschaft: \(COM\big(M;R\big)\) legt den Ersteller des Commitments auf \(M\) fest, d.h. der Ersteller kann später nicht glaubhaft behaupten, dass \(M' \neq M\) zur Erstellung des Commitments verwendet wurde
+\end{itemize}
+
+
 
 \section{Benutzerauthentifikation}
+
+\subsection{Kompression von Hashtabellen}
+Anstelle einer vollständigen Liste aller möglichen Passwörter speichert
+man nun eine Menge von $n$ Hashketten. Diese kann man tabellarisch darstellen:
+
+\begin{figure}[h]
+	\begin{gather*}
+		(H(pw_{1,1}),pw_{1,1}) \xrightarrow{f}
+		(H(pw_{1,2}),pw_{1,2}) \xrightarrow{f}\ldots\xrightarrow{f} (H(pw_{1,m}),pw_{1,m})\\
+		(H(pw_{2,1}),pw_{2,1}) \xrightarrow{f} (H(pw_{2,2}),pw_{2,2}) \xrightarrow{f}\ldots\xrightarrow{f}
+		(H(pw_{2,m}),pw_{2,m})\\ 
+		\vdots\\ 
+		(H(pw_{n,1}),pw_{n,1}) \xrightarrow{f}
+		(H(pw_{n,2}),pw_{n,2}) \xrightarrow{f}\ldots\xrightarrow{f} (H(pw_{n,m}),pw_{n,m})
+	\end{gather*}
+	\caption{Tabellarische Darstellung von $n$ Hashketten der Länge
+		$m$.}
+\end{figure}
+
+Gespeichert werden von diesen Hashketten nur die Startpassworte sowie die letzten Hashwerte. Die Tabelle wird nach Hashwerten sortiert. In komprimierter Form ergibt dies:
+
+\begin{table}[!h]
+	\begin{equation*}
+		\begin{array}{|c|c|} \hline pw_{1,1} & H(pw_{1,m})\\
+			\hline pw_{2,1} & H(pw_{2,m})\\
+			\hline
+			\vdots & \vdots \\
+			\hline
+			pw_{n,1} & H(pw_{n,m})\\
+			\hline
+		\end{array}
+	\end{equation*}
+	\caption{Die komprimierte Hashtabelle.}
+\end{table}
+
+Problem: Es kann passieren, das mehrere Hashketten, die mit verschiedenen Passworten starten, "`zusammenlaufen"'.
+
+\subsubsection{Vorgehen}
+\begin{itemize}
+	\item Gegeben: Ein Hashwert
+	\item Prüfe, ob der Hashwert in der komprimierten Tabelle vorkommt (also eines der letzten Hashkettenelemente ist)
+	\item Falls ja: Berechne die komplette Hashkette, um den Ausgangswert des letzten Hashvorgangs zu erhalten
+	\item Falls nein: % TODO
+\end{itemize}
 
 
 
@@ -826,3 +884,48 @@ Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von 
 	\item Ziel: Lahmlegen bestimmter Dienste durch eine sehr große Menge parallele Anfragen
 	\item \textit{SYN-Flooding}: Initiierung des (clientseitigen) TCP-Handshaken mit \texttt{SYN}-Paket, ohne abschießend \texttt{ACK} zu senden. So wartet der Server nach Empfang von \texttt{SYN} auf \texttt{ACK} und reserviert Ressourcen
 \end{itemize}
+
+
+\begin{landscape}
+\setlength\extrarowheight{5pt}
+
+\section{Appendix A: Sicherheitsbegriffe}
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{|l|X|X|X|}
+\hline
+& \textbf{Semantische Sicherheit} 	& \textbf{IND-CPA-Sicherheitsbegriff} 	& \textbf{IND-CCA-Sicherheitsbegriff} 	\\
+\hline
+\textbf{Begriff} &
+Alle Informationen, die mit \(C\) effizient über \(M\) berechnet werden können, sind auch ohne das Chiffrat berechenbar. &
+\textit{Indistinguishability under chosen-plaintext attacks}: Ein polynomiell beschränkter Angreifer \(\mathcal{A}\) kann die Chiffrate nicht von selbst gewählten Klartexten unterscheiden. &
+\textit{Indistinguishability under chosen-ciphertext attacks}\\
+\hline
+\textbf{Definition} &
+Ein Verfahren ist genau dann semantisch sicher, wenn es IND-CPA-sicher ist.&
+\(\mathcal{A}\) kann sich zu jedem Zeitpunkt jedes beliebige \(M\) vom Orakel verschlüsseln lassen.
+\begin{enumerate}
+	\item \(\mathcal{A}\) wählt verschiedene \(M_1\) und \(M_2\) gleicher Länge
+	\item Challenger \(\mathcal{C}\) verschlüsselt zufällig einen der beiden Klartexte \(M_i\) mit \(i \in \{1,2\}\) und übergibt dieses \(C*\) an \(\mathcal{A}\)
+	\item \(\mathcal{A}\) gewinnt, wenn er \(i\) korrekt rät
+\end{enumerate}&
+Verschlüsselungsorakel:
+\begin{itemize}
+	\item \(\mathcal{A}\) kann sich beliebige \(M\) verschlüsseln lassen
+	\item \(\mathcal{A}\) darf sich, mit Ausnahme des in (2) erhaltenen \(C*\) jedes beliebige \(C\) verschlüsseln lassen
+\end{itemize}
+Verfahren:
+\begin{enumerate}
+	\item \(\mathcal{A}\) wählt verschiedene \(M_1\) und \(M_2\) gleicher Länge
+	\item Challenger \(\mathcal{C}\) verschlüsselt zufällig einen der beiden Klartexte \(M_i\) mit \(i \in \{1,2\}\) und übergibt dieses \(C*\) an \(\mathcal{A}\)
+	\item \(\mathcal{A}\) gewinnt, wenn er \(i\) korrekt rät
+\end{enumerate}\\
+\hline
+\textbf{RSA/ElGamal}&
+Da beide Verfahren nicht IND-CPA-sicher sind, sind sie auch nicht semantisch sicher.&
+Beide Verfahren sind deterministisch und können daher nicht IND-CPA-sicher sein.&
+RSA-OAEP ist IND-CCA-sicher.\\
+\hline
+\end{tabularx}
+\end{table}
+
+\end{landscape}
