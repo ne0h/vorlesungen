@@ -556,7 +556,7 @@ Ein Angreifer, der im Besitz zweier Signaturen \(\sigma_1\) und \(\sigma_2\) und
 Wähle einen zufälligen, modulo g invertierbaren Exponenten \(e\) in der multiplikativen Gruppe \(\mathbb{G}=\mathbb{Z}_{p}^*\) mit Ordnung \(q\) und berechne
 \[a := g^e (\text{mod } p)\]
 sowie
-\[b := \big(M - a \cdot x \big) \cdot e^{-1}(\text{mod } p).\]
+\[b := \big(M - a \cdot x \big) \cdot e^{-1}(\text{mod } q).\]
 
 \subsubsection{Verifizieren}
 Berechne
@@ -893,7 +893,7 @@ Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von 
 \begin{table}[H]
 \begin{tabularx}{\linewidth}{|l|X|X|X|}
 \hline
-& \textbf{Semantische Sicherheit} 	& \textbf{IND-CPA-Sicherheitsbegriff} 	& \textbf{IND-CCA-Sicherheitsbegriff} 	\\
+& \textbf{Semantische Sicherheit} & \textbf{IND-CPA-Sicherheitsbegriff} & \textbf{IND-CCA-Sicherheitsbegriff} 	\\
 \hline
 \textbf{Begriff} &
 Alle Informationen, die mit \(C\) effizient über \(M\) berechnet werden können, sind auch ohne das Chiffrat berechenbar. &
@@ -924,6 +924,33 @@ Verfahren:
 Da beide Verfahren nicht IND-CPA-sicher sind, sind sie auch nicht semantisch sicher.&
 Beide Verfahren sind deterministisch und können daher nicht IND-CPA-sicher sein.&
 RSA-OAEP ist IND-CCA-sicher.\\
+\hline
+\end{tabularx}
+\end{table}
+
+
+\begin{table}[H]
+\begin{tabularx}{\linewidth}{|l|X|X|}
+\hline
+& \textbf{Symmetrische EUF-CMA-Sicherheit} & \textbf{Asymmetrische EUF-CMA-Sicherheit} \\
+\hline
+\textbf{Begriff} &
+\textit{Existential Unforgeability}: Es darf keine Nachricht geben, für die \(\mathcal{A}\) eine Fälschung erstellen kann &
+\\
+\hline
+\textbf{Beschreibung} &
+\begin{enumerate}
+	\item \(\mathcal{A}\) erhält Zugriff an ein Signaturorakel \(SIG(K,\cdot)\), an das er polynomiell viele Nachrichten zum Signieren schicken darf
+	\item \(\mathcal{A}\) gibt ein Nachrichten-Signatur-Paar als (potentielle) Fälschung aus
+	\item \(\mathcal{A}\) gewinnt, wenn die Signatur korrekt ist und er sich diese Nachricht nicht vom Orakel hat signieren lassen
+\end{enumerate} &
+\begin{enumerate}
+	\item \(\mathcal{C}\) generiert ein Schlüsselpaar \((pk,sk) \leftarrow GEN(1^k)\) für sich
+	\item \(\mathcal{A}\) erhält Zugriff auf ein Signturorakel \(SIG(pk,\cdot)\), an das er polynomiell viele Nachrichten schicken darf
+	\item \(\mathcal{A}\) gibt ein Nachrichten-Signatur-Paar als (potentielle) Fälschung aus
+	\item \(\mathcal{A}\) gewinnt, wenn die Signatur korrekt ist und er sich diese Nachricht nicht vom Orakel hat signieren lassen
+\end{enumerate}
+\\
 \hline
 \end{tabularx}
 \end{table}
