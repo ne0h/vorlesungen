@@ -52,3 +52,7 @@ rsonly:
 sicherheitonly:
 	pdflatex sicherheitonly.tex
 	pdflatex sicherheitonly.tex
+
+telematikonly:
+	pdflatex telematikonly.tex
+	pdflatex telematikonly.tex
