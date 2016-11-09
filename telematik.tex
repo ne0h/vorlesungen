@@ -70,12 +70,61 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Szenario: Verbindung zweier Netze über langsames Weitverkehrsnetz. Dateneinheiten benötigen bei der langsamen Übertragung mehr Zeit als in den lokalen Netzen. Dadurch kommen sie verzögert beim Empfänger an, welcher sie entsprechend "`langsam"' quittiert. Durch den entstehenden Takt weis der Sender, wie schnell er senden kann. Aber: Wie soll die "`Uhr"' gestartet werden
 		\item Wieso wird kein Gleichgewicht erreicht?
 		\begin{itemize}
-			\item Verbindung kommt nicht ins Gleichgewicht
+			\item Verbindung kommt nicht ins Gleichgewicht. Mögliche Auslöser: Neue Verbindung/Neustart, automatische Anpassung der Datenrate und Verzögerung
 			\item Sender sendet neue Dateneinheiten zu früh
 			\item Ressourcenbeschränkungen verhindern Gleichgewicht
 		\end{itemize}
+		\item Slow-Start (Einzelverbindung)
+		\begin{itemize}
+			\item Erhöhung der Anzahl der gesendeten Dateneinheiten über die Zeit durch Einführung eines Staukontrollfensters (\texttt{Staukontrollfenster < Flusskontrollfenster}). Verhindert burstartiges Senden der Quelle, was zu vielen Sendewiederholungen führen würde
+			\item Startverhalten ohne Slow-Start: Viele Sendewiederholungen durch Paketverluste. "`lineares Zickzackwachstum"', das weit hinter der verfügbaren Datenrate zurück bleibt (effektive Nutzung bei 35\%)
+			\item Startverhalten mit 2s Slow-Start: Keine Sendewiederholungen, Datenrate nahezu am verfügbaren Maximum. Effiziens abhängig von Vebrindungsdauer, da dann die langsame Slow-Start-Phase an Gewicht verliert
+		\end{itemize}
+		\item Congestion Avoidence (Simultane, konkurrierende Verbindungen)
+		\begin{itemize}
+			\item Ohne Congestion Avoidance: Sehr viele Sendewiederholungen (nahezu 50\% im Experiment), sehr unfaire Aufteilung
+			\item Mit Congestion Avoidance: Sehr wenige Sendewiederholungen, verschiedene Quittungsstrategien möglich
+			\item Zusammenfassung: Faire Aufteilung der verfügbaren Kapazität, langsames Herantasten durch lineares Erhöhen des Staukontrollfensters sowie kaum Sendewiederholungen
+		\end{itemize}
+		\item Fast Retransmit
+		\begin{itemize}
+			\item Beobachtung: Nicht jede nicht in Reihenfolge erhaltene Dateneinheit ist ein Indiz für eine Überlastung des Netzes
+			\item Mechanismus zur Staukontrolle: Sendewiederholung beim Empfangeiner defiierten Anzahl duplizierter Quittungen
+			\item Vorgehen: Warten auf Timerablauf, dann Sendewiederholung (Wartezeit größer Umlaufzeit \texttt{RTT})
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Staukontrolle}
+	\begin{itemize}
+		\item Implizite Staukontrolle: Implizite "`Anzeige"' einer Stausituation ohne explizite Unterstützung des Netzes
+		\begin{enumerate}
+			\item TCP-Tahoe
+			\begin{itemize}
+				\item Mechanismen: Slow Start, Timeout, Congestion Avoidance, Fast Retransmit
+				\item Nach Timeout oder Empfang duplizirter Quittungen: Beginn von Slow Start
+				\item Grundlegende Vorgehensweise: Additives Erhöhen des Congestion Window \texttt{CWnd}, multiplikatives Erniedrigen (\texttt{AIMD})
+			\end{itemize}
+			\item TCP-Reno
+			\begin{itemize}
+				\item Zusätzlich zu TCP-Tahoe: Fast Recovery (siehe unten)
+				\item Unterscheidet zwischen \textit{schweren Stausituationen} (Timeout bei Ausstehenden Quittungen) und \textit{leichten Stausituationen} (Empfang von duplizierten Quittungen)
+				\item Leichte Stausituationen: Kein Rücksetzen auf Slow Start, da Quittungsempfang impliziert, dass weiter neue Daten empfangen worden sind
+				\item Schwere Stausituationen: Rücksetzen auf Slow Start wie bei TCP-Tahoe
+				\item Fast Recovery
+				\begin{itemize}
+					\item Szenario: Empfang einer festgelegten Anzahl Quittungen (beispielsweise drei)
+					\item Idee: Senden neuer Dateneinheiten, auch wenn der Fehler noch nicht behoben ist (Self-Clocking geht weiter)
+					\item Vorgehen: Reduzierung der Belastung (halbieren des Staukontrollfensters) sowie Fast Retransmit
+				\end{itemize}
+			\end{itemize}
+		\end{enumerate}
+		\item Explizit Congestion Notification (ECN): Explizite Staukontrolle mit Netzunterstützung
+		\begin{itemize}
+			\item Idee: Erkennen von Stausituationen im Netz über den Füllstand der Warteschlange (setzt aktives Warteschlangenmanagement voraus) sowie markieren der IP-Einheiten vor Weiterleitung zum Empfänger
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
+
+\subsubsection{Fairness}
 
 
 \subsection{Analyse und Randbedingungen}
