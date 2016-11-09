@@ -119,13 +119,31 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\end{enumerate}
 		\item Explizit Congestion Notification (ECN): Explizite Staukontrolle mit Netzunterstützung
 		\begin{itemize}
-			\item Idee: Erkennen von Stausituationen im Netz über den Füllstand der Warteschlange (setzt aktives Warteschlangenmanagement voraus) sowie markieren der IP-Einheiten vor Weiterleitung zum Empfänger
+			\item Idee: Erkennen von Stausituationen im Netz über den Füllstand der Warteschlange (setzt aktives Warteschlangenmanagement voraus) sowie markieren der IP-Einheiten vor Weiterleitung zum Empfänger. Dieser informiert den Sender, um das Staukontrollfenster zu regeln
+			\item Signalisierung in Schicht 3 (IP): Nutzung zweier Bits im TOS-Feld der Dateneinheit
+			\item Signailisierung in Schicht 4 (TCP): Einführung zusätzlicher Flags im TCP-Kopf
+			\begin{itemize}
+				\item \texttt{ECE}-Bit: Signalisiert dem Sender die Stausituation (Sender \(\leftarrow)\) Empfänger)
+				\item \texttt{CWR}-Bit: Bestätigt dem Empfänger den Erhalt einer Staumeldung (Sender \(rightarrow\) Empfänger)
+			\end{itemize}
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
 \subsubsection{Fairness}
-
+\begin{itemize}
+	\item TCP-Verbindungen konkurrieren um Ressourcen des Netzes \(rightarrow\) faire Aufteilung angestrebt
+	\item \textbf{Probleme}
+	\begin{itemize}
+		\item "`Gierige Nutzer"': Faire Verteilung bezieht sich auf TCP-Verbindungen. Kann daher mehrere Verbindungen gleichzeitig öffnen. Gegenmaßnahme: Verteilung der Kapazität pro Benutzer
+		\item "`Gieriger Empfänger"': Da Quittungsverhalten der Empfängerinstanz die Ressourcenzuteilung beeinflusst, kann dieser mehr oder scheller Quittungen senden. Das Staukontrollfenster öffnet sich schneller, damit erhält die Verbindung mehr Ressourcen
+		\begin{enumerate}
+			\item Mehrere Quittungen pro empfangener Dateneinheit: Sequenznummern zählen Bytes, Staukontrollfenster zählen Dateneinheiten. Bestätigt der Empfänger jede Dateneinheit in mehreren "`Häppchen"', so öffnet sich das Staukontrollfenster schneller
+			\item Quittungen schneller senden als Daten empfangen werden. Protokolländerung notwendig
+			\item Identische Quittungen mehrfach senden: Fehlende Dateneinheit wird erneut gesendet. Bei TCP-Reno läuft Self-Clocking weiter \(\rightarrow\) Staukontrollfenster wird weiter geöffnet
+		\end{enumerate}
+	\end{itemize}
+\end{itemize}
 
 \subsection{Analyse und Randbedingungen}
 
