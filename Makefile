@@ -53,6 +53,10 @@ sicherheitonly:
 	pdflatex sicherheitonly.tex
 	pdflatex sicherheitonly.tex
 
+swt2only:
+	pdflatex swt2only.tex
+	pdflatex swt2only.tex
+
 telematikonly:
 	pdflatex telematikonly.tex
 	pdflatex telematikonly.tex
