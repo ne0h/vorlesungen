@@ -152,7 +152,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item 48 \% aller gescheiterten Softwareprojekte sind an mangelhafter Anforderungsdefinition gescheitert
 	\item Beheben von falsch definierten Anforderungen in späteren Entwicklungsphasen kann extrem teuer sein
 	\item Beschreibungskriterien: Ausreichend, komplett, widerspruchsfrei, verständlich, eindeutig, überprüfbar, risikoadjustiert
-	\item Werden meist in Form von User-Stories (Agile) oder Anwendungsfälle (modelgetrieben) beschrieben
+	\item Werden meist in Form von User-Stories (Agile) oder Anwendungsfälle (modellgetrieben) beschrieben
 	\item \textbf{Typen von Anforderungen (concern-based Classification)}
 	\begin{itemize}
 		\item Funktionale Anforderungen (Functional Requirements): Verhalten der Software, beispielsweise bei der Eingabe von Daten; "`kann per Turing-Maschine beschrieben werden"'\footnote{Reussner, andere}
@@ -194,4 +194,258 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Festhalten wer für welche Aktionen/Handlungen verantwortlich ist
 	\item Führen/Verwenden eines Begriffsglossars
 	\item Verwenden einer Satzvorlage
+\end{itemize}
+
+
+
+\section{Modellgetriebene Entwicklung (Model Driven Development)}
+\begin{itemize}
+	\item Ziele: Plattformunabhängigkeit; höhere Entwicklungsgeschwindigkeit; bessere Softwarequalität; Wiederverwendbarkeit
+	\item Erwartete Vorteile: Kostenreduzierung; kürzere Time-to-Market; variabel
+\end{itemize}
+
+
+\subsection{MDD-Paradigma}
+\begin{itemize}
+	\item \textit{Domain Expert} künftig für die Entwicklung von Anwendersoftware verantwortlich
+	\item Modelle reduzieren die Komplexität, sind (automatisch) analysierbar, verbesseren die Kommunikationseffizienz
+	\item \textit{Model-Driven}: Modelle sind primäre Artefakte, anstelle des Sourcecodes.
+	\item \textit{Model-Based}: Modelle sind sekundäre Artefakte, die beispielsweise für Dokumentationen erstellt werden
+\end{itemize}
+
+\subsubsection{Beispiel: Model Driven Architecture (MDA)}
+\begin{itemize}
+	\item MDD Implementierung
+	\item Bietet Standardisierung
+	\item Verwendet existierende Standards
+	\item \textbf{Modellformen}
+	\begin{itemize}
+		\item Computing Independent Models (CIM)
+		\begin{itemize}
+			\item Umgangssprachliche Beschreibung
+			\item Klassendiagramm mit Klassenattributen aber ohne Klassenmethoden
+		\end{itemize}
+		\item Platform Independent Models (PIM)
+		\begin{itemize}
+			\item Plattformunabhängiges Modell für Geschäftsprozesse
+			\item Hinzufügen von Methoden (und eventuell zusätzlichen, technischen Attributen) zum Klassendiagramm
+		\end{itemize}
+		\item Platform Specific Models (PSM)
+		\begin{itemize}
+			\item Plattformabhängiges Modell für Architektur/Services
+			\item Ersetzen von generischen Typen durch plattformspezifische
+		\end{itemize}
+		\item Transformationen (Abstrakte Ebene \(\rightarrow\) Code-Ebene)\\\\
+		\begin{tikzpicture}
+			\node at (0, 0) [rectangle,draw] (cim)  {\(CIM\)};
+			\node at (3, 0) [rectangle,draw] (pim)  {\(PIM\)};
+			\node at (6, 0) [rectangle,draw] (psm)  {\(PSM\)};
+			\node at (9, 0) [rectangle,draw] (code) {\(Code\)};
+
+			\draw[->] (cim) edge node {} (pim);
+			\draw[->] (pim) edge node {} (psm);
+			\draw[->] (psm) edge node {} (code);
+			\draw[<-] ($(pim.east)!0.5!(psm.west)$) -- ++(0,1cm) node[above] {Plattformmodell}; 
+		\end{tikzpicture}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Schlüsselkonzepte und Definitionen}
+
+\subsubsection{Metamodeling}
+\begin{itemize}
+	\item Vereinfachtes UML-Klassendiagramm
+	\item Müssen immer vollständig sein, d.h. bereits alle Attribute/Typen und Assoziationen/Aggregationen enthalten, da sie automatisch weiterverarbeitet werden
+\end{itemize}
+
+\subsubsection{Model Transformation}
+\begin{itemize}
+	\item Transformation: \texttt{Meta-Model\_A} \(\longrightarrow\) \texttt{Meta-Model\_B} nach vorgegebenen Regeln
+\end{itemize}
+
+
+\subsection{Sprachen und Werkzeuge}
+\begin{itemize}
+	\item \textbf{Eclipse Modeling Framework (EMF)}
+	\begin{itemize}
+		\item De-facto MDD-Standard
+		\item Wird von vielen großen Firmen und Projekten verwendet
+	\end{itemize}
+	\item \textbf{Essential Meta-Object Facility (EMOF)}
+	\begin{itemize}
+		\item Von der \textit{Object Management Group} (OMG) als Metadaten-Architektur definiert
+	\end{itemize}
+\end{itemize}
+
+% TODO Rest ab Folie #48
+
+
+\subsection{Forschung und Praxis}
+
+
+
+\section{Designpatterns für Enterprise Application Architecture}
+\begin{itemize}
+	\item \textbf{Eigenschaften von Enterprise Applications (EA)}
+	\begin{itemize}
+		\item Langlebige Daten: Daten bleiben länger als Anwendungen und Hardware erhalten \(\rightarrow\) müssen in Anwendungen integrierbar sein
+		\item Große Datenmengen mit meist mehreren Millionen Datensätzen \(\rightarrow\) effizienter Zugriff notwendig
+		\item Konkurrierender Zugriff \(\rightarrow\) Inkonsistenzen müssen verhindert werden
+	\end{itemize}
+	\item Viele verschiedene Systeme: Shop, Leasing-Management-System, Ausgabenüberwachungssystem
+	\item Web Shops: Viele parallele Anwender; einfache Logic
+	\item \textbf{Ebenen}
+	\begin{itemize}
+		\item Präsentation: Benutzerinterface zur Informationsdarstellung und Eingabeverarbeitung
+		\item Domain: Logik, Berechnungen
+		\item Datenquelle: Kommunikation mit anderen Systemen, beispielsweise Datenbanken
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Patternfamilien}
+\begin{itemize}
+	\item Jede Familie beschäftigt sich mit einem Problem von EAs
+	\item Generell: Kein Pattern ist "`das beste"'. Wahl des Patterns aus einer Familie hängt von den konkreten Vorraussetzungen ab
+\end{itemize}
+
+\subsubsection{Domain-Logik Patterns}
+\begin{itemize}
+	\item Mögliche Herausforderungen: Hohe Komplexität, Austauschbarkeit, Verknüpfung mit Presentation und Datenquelle(n)
+	\item \textbf{Pattern: Transaction Script}
+	\begin{itemize}
+		\item Jede Anfrage wird in einer separaten Prozedur abgearbeitet \(\rightarrow\) sämtliche Transaktionslogik in dieser Prozedur
+		\item Beispiel: Laden von Objekt aus der Datenquelle, bearbeiten des Objekts, speichern des Objekts
+		\item Vorteile: Einfache, verständliche Prozeduren; unkomplizierte Verbindungen mit Datenquellen; Transaktionsgrenzen einfach feststellbar
+		\item Nachteile: Skalieren schlecht bei komplexer Logik; tendenziell doppelter Code
+	\end{itemize}
+	\item \textbf{Pattern: Domain Model}
+	\begin{itemize}
+		\item Objektmodell, das Verhalten und Daten beinhaltet
+		\item Objekte arbeiten für Transaction zusammen
+		\item Vorteil: Bessere Organisation der Domain-Logik
+		\item Nachteile: Höhere Ansprüche an Entwickler; Mapping zur Datenquelle komplexer
+	\end{itemize}
+	\item \textbf{Pattern: Table Module}
+	\begin{itemize}
+		\item Einzelne Instanz, welche die komplette Logik für eine Tabelle implementiert
+		\item Entweder eine Instanz pro Datensatz oder statisch per Singleton
+		\item Vorteile: Einfaches Mappen Objekt \(\leftrightarrow\) Tabellenzeile; Logiktrennung für verschiedene Konzepte; nützlich, wenn von bereits verwendeten Technologien unterstützt
+		\item Nachteil: Keine Instanzen pro Objekt \(\rightarrow\) eventuell unpraktisch/nachteilig bei komplexen Anwendungen
+	\end{itemize}
+	\item \textbf{Entscheidungskriterien}
+		\item Wichtigstes Kriterium: Komplexität der Domain-Logik
+		\begin{itemize}
+			\item Bei wenig Komplexität: \texttt{Table Module < Transaction Skript < Domain Model} (gemessen am Implementierungsaufwand)
+			\item Bei hoher Komplexität: \texttt{Domain Model < Table Module < Transaction Skript} (gemessen am Implementierungsaufwand)
+		\end{itemize}
+		\item Wie aufwendig ist das Mapping zur Datenquelle?
+		\item Kennen die Entwickler das Domain-Model?
+		\item Welche Werkzeuge/Entwicklungsumgebungen werden verwendet?
+\end{itemize}
+
+\subsubsection{Datenquelle-Architektur-Patterns}
+\begin{itemize}
+	\item Ziel: Trennung von Datenbankzugriff und Domain-Logic
+	\item Herausforderung: Mapping Objekt \(\leftrightarrow\) Tabellenzeile
+	\item \textbf{Pattern: Record Set}
+	\begin{itemize}
+		\item Lokale (in-memory) Kopie von Tabellenzeile(n)
+		\item Einfach zu erzeugen und zu verändern
+	\end{itemize}
+	\item \textbf{Pattern: Table Data Gateway}
+	\begin{itemize}
+		\item Ein Objekt als Gateway (nicht als Facade), das den Zugriff auf alle Tabellenzeilen verwaltet
+		\item Trennt Anfragen und Datenbankzugriff
+		\item Implementiert \textbf{CRUD}-Methoden
+		\item Geeignet für \texttt{Transaction Script}, eher ungeeignet für \texttt{Domain Model}
+	\end{itemize}
+	\item \textbf{Pattern: Active Record}
+	\begin{itemize}
+		\item Ein Objekt pro Tabellenzeile, das die Datenbankzugriff und Domain-Logic implementiert
+		\item Objektorientiert: Vereint Daten und Funktionalität
+		\item Mapping muss isomorph sein
+		\item Gute Wahl bei wenig komplexer Domain-Logic, ansonsten ungeeignet \(\rightarrow\) \texttt{Data Mapper} verwenden
+	\end{itemize}
+	\item \textbf{Pattern: Row Data Gateway}
+	\begin{itemize}
+		\item Objekt, das als Gateway zu einer einzelnen Tabellenzeile fungiert
+		\item Idee: Ähnlich wie \texttt{Active Record}, verhindert allerdings die Komplexität; kann SQL-Anfragen für verschiedene Datenbanktypen abstrahieren \(\rightarrow\) alle Zugriffsdetails sind hinter dem Interface versteckt
+		\item Meist hat jede Tabelle eine Zusätzliche Finder-Klasse: \texttt{PersonFinder.find(id) \(\rightarrow\) PersonGateway}
+		\item Gut geeignet für automatisch erzeugten Zugriffscode (der gesamte Datenbankzugriff wird generiert)
+	\end{itemize}
+	\item \textbf{Pattern: Identity Map}
+	\begin{itemize}
+		\item Jedes Objekt wird nur einmal aus der Datenbank geladen und dann lokal im Speicher vorgehalten (Cache)
+	\end{itemize}
+	\item \textbf{Pattern: Data Mapper}
+	\begin{itemize}
+		\item Mapping-Layer, der zwischen Datenbank und Objektspeicher vermittelt bzw. diese voneinander isoliert
+		\item Mapping kann entweder explizit (für jedes Domain-Objekt existiert ein Mapper) oder Metadaten erfolgt werden, aus denen ggf. Code generiert wird
+		\item Beispiel: \texttt{Hibernate}
+		\item Verwendung
+		\begin{itemize}
+			\item Datenbankschema und Objekt-Modell entwickeln sich unabhängig (was meist der Fall ist)
+			\item KomplexeBusiness-Logik, \texttt{Active Record} nicht ausreichend
+			\item Automatisch erzeugt bei MDD
+			\item Legacy Systeme mit bereits existierenden Datenbanken
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Sinnvolle Kombinationen aus Datenquelle-Pattern und Domain-Logic-Pattern}
+\begin{itemize}
+	\item \textbf{Transaction Script}
+	\begin{itemize}
+		\item \texttt{Row Data Gateway} oder \texttt{Table Data Gateway}
+	\end{itemize}
+	\item \textbf{Domain Model}
+	\begin{itemize}
+		\item Wenig komplexes Mapping: \texttt{Active Record}
+		\item Komplexes Mapping: \texttt{Data Mapper}
+	\end{itemize}
+	\item \textbf{Table Module}
+	\begin{itemize}
+		\item \texttt{Table Data Gateway} (falls RecordSet-Framework)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Object-Relational Structural Patterns}
+\begin{itemize}
+	\item Mapping von OO-Strukturen zu relationalen Datenbanken (besonders bei \texttt{Domain Model} und \texttt{Data Mapper})
+	\item \textbf{Pattern: Single Table Inheritance}
+	\begin{itemize}
+		\item Verherbungshierarchie mehrerer Klassen wird in einer einzigen Klasse repräsentiert, die Spalten für alle Attribute der verschiedenen Klassen und eine Type-Spalte hat
+		\item Vorteile: Einfaches Datenbankschema; keine \texttt{Joins} notwendig; Verschieben von Attributen innerhalb der Hierarchie erfordert kein Anpassen der Tabelle
+		\item Nachteile: Viele ungenutzte Attribute; Tabelle kann sehr groß werden; es gibt nur einen Namespace für alle Attribute (problematisch, falls mehrere Klassen gleiche Attributnamen für verschiedene Typen benutzen. Abhilfe: Naming Convention wie beispielsweise \texttt{[Classname]\_[Fieldname]})
+	\end{itemize}
+	\item \textbf{Pattern: Class Table Inheritance}
+	\begin{itemize}
+		\item Vererbungshierarchie mit je einer Tabelle pro Klasse
+		\item Bei vererbten Klassen werden jeweils lediglich die neuen Attribute in der entsprechenden Tabelle gespeichert
+		\item Vorteile: Einfach verständlich; Alle Spalten sind wichtig - keine Speicherverschwendung; einfaches Mapping zwischen Objekt und Datenbank
+		\item Nachteile: Beim Laden eines Objekte müssen meist Daten aus mehreren Tabellen geladen werden (Leistungsverlust); aufwendigeres Refactoring; Supertypes können zum Flaschenhals werden
+	\end{itemize}
+	\item \textbf{Pattern: Concrete Table Inheritance}
+	\begin{itemize}
+		\item Jede Klasse der Vererbungshierarchie erhält eine Tabelle mit allen (auch den vererbten) Attributen
+		\item Vorteile: Einfaches Zugriff, keine überflüssigen Spalten; keine \texttt{Joins} notwendig
+		\item Nachteile: Verschieben von Attributen in der Hierarchie erfordert Schemaanpassung; Anpassungen bei Supertypes erfordern viele Änderungen; \texttt{find} über die Superklasse erfordert Suche in allen Subklassen (und damit Subtabellen)
+	\end{itemize}
+	\item \textbf{Verwendung}
+	\begin{itemize}
+		\item Alle Pattern in erster Linie zur Verwendung von \texttt{Domain Model} mit \texttt{Data Mapper}
+		\item Abwägung zwischen Datendopplung und Geschwindigkeit
+		\item Konkrete Wahl hängt von Zugriffsmustern ab
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Praxis: Java Persistance API (JPA)}
+\begin{itemize}
+	\item Bestandteil von \texttt{Java EE}
+	\item Definiert das komplette Mapping zwischen Objekt-Modell und Datenbank
+	\item Kann wahlweise per \texttt{Java Annotations} oder \texttt{XML} definiert werden
+	\item Vererbungspattern kann explizit festgelegt werden
 \end{itemize}
