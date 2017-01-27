@@ -456,11 +456,25 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 \subsection{Responsibility-Driven Design}
 \begin{itemize}
-	\item Software-Objekte sollen tatsächlichen Objekten entsprechen
+	\item Zentrale Frage: Wie wird die Funktionalität auf die Objekte verteilt?
+	\item Software-Objekte sollen tatsächlichen Objekten in der Realität entsprechen
+	\item \textbf{Objekte erhalten \textit{Verantwortlichkeiten} (Responsibilities)}
+	\begin{itemize}
+		\item Doing responsibilities: Für welche Handlungen ist das Objektverantwortlich?
+		\item Knowing responsibilities: Welche Informationen hält/teilt das Objekt
+	\end{itemize}
+	\item Verantwortlichkeiten werden mittels \texttt{Methoden} implementiert
+	\item Pattern zum Verteilen von Verantwortlichkeiten: \textit{Informationsexperte}. Verarbeitung erfolgt in dem Objekt, das die Informationen hält
+	\item Verarbeitungsbeispiel: Eingabeobjekt wird an die richtige "`Bearbeitungsstelle"' weitergegeben
 \end{itemize}
 
 
 \subsection{Design Diagramme}
+\begin{itemize}
+	\item Interaktionsdiagramme sind eine große Hilfe beim Entwurf
+	\item Aus den fertigen Interaktionsdiagrammen können Software-Klassen abgeleitet werden: Nachricht im Interaktionsdiagramm \(\rightarrow\) Klassenmethode
+	\item Typische Bestandteile eines Klassendiagramms: Klassen, Assoziationen, Attribute und deren Typen, Methoden, Interfaces, Abhängigkeiten
+\end{itemize}
 
 
 \subsection{GRASP Patterns}
