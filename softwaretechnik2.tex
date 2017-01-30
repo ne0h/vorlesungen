@@ -477,7 +477,21 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \end{itemize}
 
 
-\subsection{GRASP Patterns}
+\subsection{General Responsibility Assignment Software Patterns (GRASP)}
+\begin{itemize}
+	\item Systematische Beschreibung, welche Objekte für was zuständig sein sollen
+	\item \textbf{Creator}
+	\begin{itemize}
+		\item Legt fest, welches Objekt ein bestimmtes anderes erstellen soll
+		\item \texttt{A} erstellt neues Objekt \texttt{B}, falls
+		\begin{itemize}
+			\item \texttt{A} eine Aggregation von \texttt{B} ist
+			\item \texttt{A} \texttt{B}-Objekte beeinhaltet
+			\item \texttt{A} \texttt{B}-Objekte mit starker Kopplung verwendet
+			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Zusammenfassung}
