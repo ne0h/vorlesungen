@@ -491,7 +491,23 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat
 		\end{itemize}
 	\end{itemize}
+	\textbf{Controllers}
+	\begin{itemize}
+		\item Der \texttt{Controller} oder \texttt{Facade} entscheidet, wie Ereignisse/Anfragen weiterverarbeitet werden
+		\item Strategien
+		\begin{itemize}
+			\item Ein \textit{System Facade Controller}: Alle Ereignisse werden in dieser Klasse behandelt
+			\item Ein Controller pro Anwendungsfall
+		\end{itemize}
+		\item Nicht gleichzusetzen mit einem \texttt{MVC}-Controller
+	\end{itemize}
+	\item Low Coupling: Niedriges Maß an Abhängigkeiten einer Klasse zu seiner Umgebung. Vereinfacht Änderungen und fördert Wiederverwendbarkeit und Verständlichkeit
+	\item High Cohesion: Verringerung der Komplexität in dem unterschiedliche Funktionalität auf verschiedene Klassen aufgeteilt wird
+	\item Polymorphism: Verwendung von polymorphen Klassen/Methoden statt \texttt{if} für verschiedene Eingabetypen. Erhöht allerdings die Gesamtzahl an Klassen/Methoden
+	\item \texttt{Kompositionen > Vererbung}. \textit{Strategie-Pattern}: Verhalten wird zur Laufzeit konfiguriert
+	\item Pure Fabrication: Normalerweise wird eine Pure Fabrication verwendet, um einen Algorithmus zu kapseln, der in keine Domain-Klasse passt. Sie kann zum Beispiel verwendet werden, um Technologiewissen von Domänenwissen zu trennen. Sie implementiert reines Verhalten und hat somit keinen Zustand. Sollte nicht zu häufig verwendet werden, sonst existieren am Schluss nur noch Klassen die einzelne Methoden kapseln.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Pure_Fabrication}}
+	\item Indirection: Indirection (Umweg) kann verwendet werden um geringe Kopplung zu erreichen. Sie wird erreicht, indem ein Vermittler zwischen Client und Server eingebaut wird. Sinnvoll wenn sich ein Serverobjekt ständig verändert. Als Nachteil ist die Leistungsfähigkeit vermindert. Beispielhaft für dieses Muster ist die Einführung der Controller-Komponente, die zwischen dem Datenmodell (Model) und dessen Präsentation (View) im Model-View-Controller-Architekturmuster vermittelt.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Indirection}}
+	\item Protected Variations: Interfaces sollen immer verschiedene konkrete Implementierung verstecken. Man nutzt also Polymorphismus und Delegation, um zwischen den Implementierungen zu wechseln. Dadurch kann das restliche System vor den Auswirkungen eines Wechsels der Implementierung geschützt werden.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Protected_Variations}}
 \end{itemize}
 
 
-\subsection{Zusammenfassung}
