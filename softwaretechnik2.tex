@@ -511,3 +511,70 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \end{itemize}
 
 
+
+\section{Clean Code}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Schlechter Code senkt die Produktivität exponentiell
+		\item Lesbarkeit extrem wichtig, da Code i.d.R. öfters gelesen als geschrieben wird
+		\item Guter Code erhöht die Wartbarkeit ("`a system that is used will be changed"'\footnote{Lehman's first law} sowie "`an evolving system increases its complexity unless work is done to reduce it"'\footnote{Lehman's second law})
+		\item Verwendung iterativer/inkrementeller Methoden (Agile) erreicht durch Refactorn, dass die Kurve flach bleibt
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Die fünf SOLID-Prinzipien für gutes OO-Design}
+\begin{enumerate}
+	\item \textbf{Single Responsibility Principle (SRP)}
+	\begin{itemize}
+		\item Klassen sollen lediglich eine Verantwortung haben (Definition "`Anzahl Verantwortung"' über die Anzahl der Änderungsgründe)
+		\item Bei komplexen Verantwortungen muss die Klasse ggf. aufgeteilt werden
+		\item Verbessert die Lesbarkeit und verringert das Fehlerrisiko
+	\end{itemize}
+	\item \textbf{Open Closed Principle (OCP)}
+	\begin{itemize}
+		\item Softwareeinheiten sollen Erweiterungen möglich machen ohne ihr Verhalten zu verändern
+		\item Beispielsweise durch Vererben und Überschreiben von Methoden
+		\item Beispiel: Zeichnen verschiedener Grafikprimitiven
+	\end{itemize}
+	\item \textbf{Liskov Substitution Principle (LSP)}
+	\begin{itemize}
+		\item Ersetzbarkeitsprinzip fordert, dass eine Instanz einer abgeleiteten Klasse sich so verhalten muss, dass jemand, der meint, ein Objekt der Basisklasse vor sich zu haben, nicht durch unerwartetes Verhalten überrascht wird, wenn es sich dabei tatsächlich um ein Objekt eines Subtyps handelt\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Liskovsches_Substitutionsprinzip}}
+		\item Verletzung des Prinzips häufig nicht auf den ersten Blick erkennbar
+	\end{itemize}
+	\item \textbf{Interface Segregation Principle (ISP)}
+	\begin{itemize}
+		\item Dient dazu, große Interfaces aufzuteilen
+		\item Die Aufteilung soll gemäß der Anforderungen der Clients an die Interfaces gemacht werden - und zwar derart, dass die neuen Interfaces genau auf die Anforderungen der einzelnen Clients passen. Die Clients müssen also nur mit Interfaces agieren, die das, und nur das können, was die Clients benötigen\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Interface-Segregation-Prinzip}}
+		\item Beispiel: Industrieroboter vs. Mensch. Ein Mensch benötigt mehr Zugriffe (essen, trinken,...)
+	\end{itemize}
+	\item \textbf{Dependency Inversion Principle (DIP)}
+	\begin{itemize}
+		\item Abhängigkeiten sollten immer von konkreteren Modulen niedriger Ebenen zu abstrakten Modulen höherer Ebenen gerichtet sein\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs#Dependency-Inversion-Prinzip}}
+	\end{itemize}
+\end{enumerate}
+
+
+\subsection{Weitere Prinzipien}
+\begin{itemize}
+	\item \textit{Law of Demeter}: Objekte sollen nur mit Objekten in ihrer unmittelbaren Umgebung kommunizieren. Dadurch soll die Kopplung in einem Softwaresystem verringert und dadurch die Wartbarkeit erhöht werden\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs#Gesetz_von_Demeter}}
+	\item \textit{Boy Scout Rule}: Code wird mit der Zeit schlechter \(\rightarrow\) regelmäßiges Refactern (beispielsweise vor dem Commiten)
+	\item \textit{Principle of least Surprise}: Funktionen und Klassen sollten implementieren, was von ihnen erwartet wird (Intuitivität)
+	\item \textbf{Code Conventions}
+	\begin{itemize}
+		\item Naming: Innerhalb eines Projekts/Teams standardisiert; aussagekräftig; Vermeidung unnötiger Pre-/Postfixes
+		\item Commenting: Aussagekräftig; Verschieben von komplexen Kontrollstrukturen (die aufwendig kommentiert werden müssen) in Methoden
+	\end{itemize}
+	\item \textit{Don't repeat yourself} (DRY): Führt zu Fehlern und Inkonsistenzen. Vermindert Wartbarkeit, Verständlichkeit, Erweiterbarkeit
+	\item \textit{Keep it simple (KISS)}: Erhöht die Verständlich. Beispiel: Verzicht auf unnötig komplexe Datenstrukturen
+	\item \textit{You ain't gonna need it} (YAGNI): Features sind teuer/aufwendig (mehr Testing/Dokumentation). Implementiere lediglich was nötig ist
+	\item \textit{Single Level of Abstraction} (SLA): Statements innerhalb einer Funktion/Funtionen innerhalb einer Klasse sollten auf dem selben Abstraktionslevel sein
+	\item \textbf{Clean Architecture Patterns}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Refactoring}
