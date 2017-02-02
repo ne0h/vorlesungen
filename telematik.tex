@@ -55,8 +55,8 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\end{itemize}
 	\item \textbf{Aktives Warteschlangenmanagement}
 	\begin{itemize}
-		\item Das Netz gibt einen Hinweis auf eine entstehende Stausituation
-		\item Router verwirft (randomisiert) Dateneinheiten, bevor die Warteschlange voll ist
+		\item Das Netz gibt einen Hinweis auf eine entstehende Stausituation, bevor eine Überlast entsteht
+		\item Router verwirft (randomisiert) Dateneinheiten, bevor die Warteschlange voll ist. Sorgt für Fairness und verhindert globale Synchronisation
 		\item Verfahren
 		\begin{itemize}
 			\item Konkrete Implementierung: Random Early Detection (RED)
@@ -67,7 +67,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\end{itemize}
 	\item \textbf{Self-Clocking}
 	\begin{itemize}
-		\item Szenario: Verbindung zweier Netze über langsames Weitverkehrsnetz. Dateneinheiten benötigen bei der langsamen Übertragung mehr Zeit als in den lokalen Netzen. Dadurch kommen sie verzögert beim Empfänger an, welcher sie entsprechend "`langsam"' quittiert. Durch den entstehenden Takt weis der Sender, wie schnell er senden kann. Aber: Wie soll die "`Uhr"' gestartet werden
+		\item Szenario: Verbindung zweier Netze über langsames Weitverkehrsnetz. Dateneinheiten benötigen bei der langsamen Übertragung mehr Zeit als in den lokalen Netzen. Dadurch kommen sie verzögert beim Empfänger an, welcher sie entsprechend "`langsam"' quittiert. Durch den entstehenden Takt weis der Sender, wie schnell er senden kann. Aber: Wie soll die "`Uhr"' gestartet werden?
 		\item Wieso wird kein Gleichgewicht erreicht?
 		\begin{itemize}
 			\item Verbindung kommt nicht ins Gleichgewicht. Mögliche Auslöser: Neue Verbindung/Neustart, automatische Anpassung der Datenrate und Verzögerung
@@ -77,6 +77,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Slow-Start (Einzelverbindung)
 		\begin{itemize}
 			\item Erhöhung der Anzahl der gesendeten Dateneinheiten über die Zeit durch Einführung eines Staukontrollfensters (\texttt{Staukontrollfenster < Flusskontrollfenster}). Verhindert burstartiges Senden der Quelle, was zu vielen Sendewiederholungen führen würde
+			\item Bei Verbindungsstart oder Verlust einer Dateneinheit wird das Staukontrollfenster zurückgesetzt
 			\item Startverhalten ohne Slow-Start: Viele Sendewiederholungen durch Paketverluste. "`lineares Zickzackwachstum"', das weit hinter der verfügbaren Datenrate zurück bleibt (effektive Nutzung bei 35\%)
 			\item Startverhalten mit 2s Slow-Start: Keine Sendewiederholungen, Datenrate nahezu am verfügbaren Maximum. Effiziens abhängig von Vebrindungsdauer, da dann die langsame Slow-Start-Phase an Gewicht verliert
 		\end{itemize}
@@ -149,3 +150,20 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 
 \subsection{Aktuelle Entwicklungen}
+
+
+
+\section{Routing im Internet}
+
+\subsection{Grundlagen}
+\begin{itemize}
+	\item Weiterleitung im Router anhand Weiterleitungstabelle. Schnelle Weiterleitung mittels kurzen Warteschlangen und kleinen Tabellen
+	\item Herausforderung: Weiterleitung in Line-Speed. Dazu extrem teure, spezielle Cisco Hardware
+	\item Weiterleitungstabelle: \[Präfix\]
+\end{itemize}
+
+
+\subsection{Routing-Protokolle}
+
+
+\subsection{Trends}
