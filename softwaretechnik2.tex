@@ -551,14 +551,14 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\end{itemize}
 	\item \textbf{Dependency Inversion Principle (DIP)}
 	\begin{itemize}
-		\item Abhängigkeiten sollten immer von konkreteren Modulen niedriger Ebenen zu abstrakten Modulen höherer Ebenen gerichtet sein\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs#Dependency-Inversion-Prinzip}}
+		\item Abhängigkeiten sollten immer von konkreteren Modulen niedriger Ebenen zu abstrakten Modulen höherer Ebenen gerichtet sein\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Dependency-Inversion-Prinzip}}
 	\end{itemize}
 \end{enumerate}
 
 
 \subsection{Weitere Prinzipien}
 \begin{itemize}
-	\item \textit{Law of Demeter}: Objekte sollen nur mit Objekten in ihrer unmittelbaren Umgebung kommunizieren. Dadurch soll die Kopplung in einem Softwaresystem verringert und dadurch die Wartbarkeit erhöht werden\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs#Gesetz_von_Demeter}}
+	\item \textit{Law of Demeter}: Objekte sollen nur mit Objekten in ihrer unmittelbaren Umgebung kommunizieren. Dadurch soll die Kopplung in einem Softwaresystem verringert und dadurch die Wartbarkeit erhöht werden\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Gesetz_von_Demeter}}
 	\item \textit{Boy Scout Rule}: Code wird mit der Zeit schlechter \(\rightarrow\) regelmäßiges Refactern (beispielsweise vor dem Commiten)
 	\item \textit{Principle of least Surprise}: Funktionen und Klassen sollten implementieren, was von ihnen erwartet wird (Intuitivität)
 	\item \textbf{Code Conventions}
@@ -580,3 +580,61 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Grundlage zur Code-Qualität: Testcases
 	\item Anwendungsbeispiele, die Refactoring notwendig machen: Lange Methoden; doppelter Code; (zu) große Klassen, etc.
 \end{itemize}
+
+
+
+\section{Design Patterns für Echtzeitsysteme}
+
+\subsection{Grundlagen}
+\begin{itemize}
+	\item Echtzeitanforderung: System \textit{muss} innerhalb einer vorgegebenen Zeit antworten
+	\item "`Harte Echtzeitanforderung"': Daten sind korrekt, wenn sie zeitlich und logisch korrekt sind
+	\item "`Weiche Echtzeitanforderung"': Antwortzeit muss innerhalb einer Toleranz liegen (beispielsweise Mittelwert als Kriterium). Die vorgegebene Antwortzeit kann regelmäßig überschritten werden
+	\item Typische Anwendung: Embedded Mess-/Regelsystem
+	\item Sensor-Aktor-Schema (wird meist als Schleife ausgeführt)\\\\
+		\begin{tikzpicture}
+			\node at (-3.2, 3) [circle,draw] (sensor) {SENSOR};
+			\node at ( 3.2, 3) [circle,draw] (actor)  {AKTOR};
+			\node at (   0, 0) [rectangle,draw,text depth = 2cm,minimum width=10cm,font=\Large] (processing){Verarbeitung};
+
+			\node at ([xshift=6em]processing.west)  [rectangle,draw] (sensor_controller) {Sensor-\\Controller};
+			\node at (processing.center)            [rectangle,draw] (data_processor)    {Daten-\\prozessor};
+			\node at ([xshift=-6em]processing.east) [rectangle,draw] (sensor_actor)      {Aktor-\\Controller};
+
+			\draw[->] (sensor)            edge node {} (sensor_controller);
+			\draw[->] (sensor_controller) edge node {} (data_processor);
+			\draw[->] (data_processor)    edge node {} (sensor_actor);
+			\draw[->] (sensor_actor)      edge node {} (actor);
+		\end{tikzpicture}
+	\item Herausforderungen: Viele verschiedene Sensoren mit unterschiedlichen Echtzeitbedingungen beeinhalten
+\end{itemize}
+
+
+\subsection{Echtzeitbetriebssysteme}
+\begin{itemize}
+	\item "`Normale"' Betriebssysteme ungeeignet, da sie viel unnötigen Overhead (Dateimanagement, Netzwerk, UI, etc) \(\rightarrow\) Echtzeitbetriebssysteme auf Echtzeitanwendungen spezialisiert
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Echtzeitsystemuhr (\textit{real-time clock})
+		\item \textit{Interrupt Handler}
+		\item \textit{Scheduler}: Bestimmt, welcher Prozess als nächstes ausgeführt wird
+		\item \textit{Resource Manager} zum Verwalten von Speicher-/Prozessresourcen
+		\item \textit{Dispatcher} zum Ausführen von Befehlen/Anwendungen (nachdem der Scheduler einen Prozess ausgewählt hat)
+	\end{itemize}
+	\item \textbf{Scheduling}
+	\begin{itemize}
+		\item Statisch oder dynamisch
+		\item Beispiele
+		\begin{itemize}
+			\item \texttt{First In First Out (FIFO)}: dynamisch, non-preemtive, keine Prioritäten
+			\item \texttt{Fixed Priorities}: dynamisch, statische Prioritäten
+			\item \texttt{Earliest Deadline First (EDF)}: dynamisch, dynamische Prioritäten
+			\item \texttt{Least Laxity First (LLF)}: \(laxity = deadline-now-t_{remaining}\)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsection{System Design}
+
+
+\subsection{Sicherheits- und Zuverlässigkeitspatterns für Echtzeitsystem-Design}
