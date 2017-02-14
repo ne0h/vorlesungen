@@ -1,12 +1,12 @@
 \chapter{Internet of Everything}
 
-Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 2015.\footnote{\url{http://telematics.tm.kit.edu/ws201617_IoE.php}}
+Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 2016.\footnote{\url{http://telematics.tm.kit.edu/ws201617_IoE.php}}
 
 \section{Einführung}
 \begin{itemize}
-	\item Zielvorstellung: Erhöhung der Lebensqualität in einer zunehmend Technik geprägten und vernetzten Umgebung
-	\item Allerdings vebunden mit allgegenwärtigem Sammeln und Auswerten von Daten, meist beim Hersteller, ohne Kontrolle des Eigentümers
-	\item Alltagsbeispiele: Die intelligente Toilette; Lifelogging-Armband; internetfähige Wetterstation (die eine öffentliche Wetterkarte bereitstellt)
+	\item Zielvorstellung: Erhöhung der Lebensqualität in einer zunehmend Technik-geprägten und vernetzten Umgebung
+	\item Allerdings verbunden mit ubiquitären Sammeln und Auswerten von Daten, meist beim Hersteller, ohne Kontrolle des Eigentümers
+	\item Alltagsbeispiele: Die intelligente Toilette; Lifelogging-Armband; internetfähige Wetterstation, deren Daten auf einer öffentliche Wetterkarte bereitstellt werden, es werden Sprachdaten erfasst, Kommunikation Wetterstation \(\leftrightarrow\) Smartphone-App ausschließlich per Server des Anbieters
 	\item Sensor/Aktor, Anwendungsbeispiel Gewächshaus: Sensoren erfassen Umweltdate, Aktoren setzen Regeln zur Kontrolle um (Wasserzufuhr, Schatten, etc.)
 	\item \textbf{Historische Beispiele}
 	\begin{itemize}
@@ -23,26 +23,36 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Einführung}
 \begin{itemize}
 	\item Klassifizierung von Geräten. Beispielsweise nach Anwendungsbreich, Leistungsfähigkeit, Energiebedarf, Lebensdauer, Kosten, Größe/Gewicht, etc.
-	\item Auswahl von Geräteklasse und hardwarekomponenten von konkreter Anwendungsanforderung abhängig
+	\item Auswahl von Geräteklasse und Hardwarekomponenten von konkreter Anwendungsanforderung abhängig
 \end{itemize}
 
 
 \subsection{Klassifikationskriterien}
 \begin{itemize}
-	\item Energiebedarf. Grundlegende Problematiken bei Energiebschränkung: bereitstellung durch Batterien oder Kondensatoren, alternativ Umwandlung alternativer Enegieformen aus der Umgebung (\textit{Energie Harvesting})
-	\item Deployment-Model: Klassifikation anhand Aufteilung und Ausbringungsort der Komponenten. Logisch-funtionale Aufteilung mittels Systemmodell/Schnittstellen/HW-Ressourcen/Dienste
+	\item Energiebedarf: Grundlegende Problematiken bei Energiebschränkung: Bereitstellung durch Batterien oder Kondensatoren oder Umwandlung alternativer Enegieformen aus der Umgebung (\textit{Energy Harvesting})
+	\item Deployment-Model: Klassifikation anhand Aufteilung und Ausbringungsort der Komponenten. Logisch-funktionale Aufteilung mittels Systemmodell/Schnittstellen/HW-Ressourcen/Dienste
 	\item Sonsoren: Kontext/Technik/Funktionsweise/Messgröße
+	\item \textbf{Klassifikation der Leistungsfähigkeit von Objekten im IoE}\\\\
+	\begin{tabularx}{\linewidth}{l|l|l|X}
+		\textbf{Klasse} & \textbf{Data Size (RAM)} & \textbf{Code Size (Flash)} & \textbf{Typische Eigenschaften} \\
+		\hline
+		\texttt{C0} & \(< 10 KB\) & \(< 100 KB\) & Sichere Internetkommunikation nur über Gateways/Proxies möglich \\
+		\hline
+		\texttt{C1} & \(\sim 10 KB\) & \(\sim 100 KB\) & Optimiertes IP und UDP, kein HTTP oder TLS \\
+		\hline
+		\texttt{C2} & \(\sim 50 KB\) & \(\sim 250 KB\) & Energieoptimierte Netzwerkstacks für traditionelle Internet-Protokolle \\
+	\end{tabularx}
 \end{itemize}
 
 
 \subsection{Hardware und Anwendungen}
 \begin{itemize}
-	\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone in Wasser
+	\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone (in Wasser)
 	\item Smart Dust: Sehr viele kleine (dumme) Knoten, die unaufdringlich in die Umwelt integriert werden. Sehr beschränkte Hardware und viele Probleme und offene Fragen (Skalierbarkeit/Netzdichte/Energieversorgung/Entsorgung)
 	\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstoranisierend, geringe Leistungsaufnahme, Batteriebetrieb
 	\item Physical und Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte
 	\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
-	\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt
+	\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt; Abhängigkeit von externen Anbietern bei privaten, sicherheitsrelevanten Systemen (Heizung, Rauchmelder, Alarmanlage, etc)
 	\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
 	\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituatione. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
 	\item Smartphones: Heutige Schnittstelle des Menschen zum IoE. Leistungsfähige Hardware, die leistungsfähige Kommunikationsinfrastruktur voraussetzt
