@@ -32,7 +32,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Energiebedarf: Grundlegende Problematiken bei Energiebschränkung: Bereitstellung durch Batterien oder Kondensatoren oder Umwandlung alternativer Enegieformen aus der Umgebung (\textit{Energy Harvesting})
 	\item Deployment-Model: Klassifikation anhand Aufteilung und Ausbringungsort der Komponenten. Logisch-funktionale Aufteilung mittels Systemmodell/Schnittstellen/HW-Ressourcen/Dienste
 	\item Sonsoren: Kontext/Technik/Funktionsweise/Messgröße
-	\item \textbf{Klassifikation der Leistungsfähigkeit von Objekten im IoE}\\\\
+	\item \textbf{Klassifikation der Leistungsfähigkeit von Objekten im IoE (\texttt{IETF RFC 7228}\footnote{\url{https://tools.ietf.org/html/rfc7228}})}\\\\
 	\begin{tabularx}{\linewidth}{l|l|l|X}
 		\textbf{Klasse} & \textbf{Data Size (RAM)} & \textbf{Code Size (Flash)} & \textbf{Typische Eigenschaften} \\
 		\hline
@@ -41,6 +41,17 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\texttt{C1} & \(\sim 10 KB\) & \(\sim 100 KB\) & Optimiertes IP und UDP, kein HTTP oder TLS \\
 		\hline
 		\texttt{C2} & \(\sim 50 KB\) & \(\sim 250 KB\) & Energieoptimierte Netzwerkstacks für traditionelle Internet-Protokolle \\
+	\end{tabularx}
+	\item \textbf{Klassifikation nach Energiebschränkung (\texttt{IETF RFC 7228})}\\\\
+	\begin{tabularx}{\linewidth}{l|l|X}
+		\textbf{Klasse} & \textbf{Typ der Energiebeschränkung} & \textbf{Beispiel}\\
+		\hline
+		\texttt{E0} & Beschränkung auf Ereignis & Event-basiertes Harvesting \\
+		\hline
+		\texttt{E1} & Beschränkung auf Zeitperiode & Batterie, die periodisch aufgeladen wird \\
+		\hline
+		\texttt{E2} & Lebenszeitbeschränkung & Nicht austauschbare Batterie \\
+		\texttt{E9} & Keine Beschränkung & Kontinuierliche Stromversorgung \\
 	\end{tabularx}
 \end{itemize}
 
@@ -54,9 +65,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
 	\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt; Abhängigkeit von externen Anbietern bei privaten, sicherheitsrelevanten Systemen (Heizung, Rauchmelder, Alarmanlage, etc)
 	\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
-	\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituatione. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
+	\item Wearables: Datenverarbeitung unauffällig in Kleidung oder Körpernähe zur Unterstützung in Alltagssituationen. Verwendung neuartiger Benutzerschnittstellen wie Gestenerkennung, Anwendung beispielsweise Life-Logging
 	\item Smartphones: Heutige Schnittstelle des Menschen zum IoE. Leistungsfähige Hardware, die leistungsfähige Kommunikationsinfrastruktur voraussetzt
-	\item Single-Board Computer: Eingesetzt in Entwicklungs- und Prototypingumgebungen. Anpassbare bzw. vielfältige Betriebssysteme und kostengünstige Herstellungsweise (beispielsweise Raspberry Pi oder BeagleBone)
+	\item Single-Board Computer: Eingesetzt in Entwicklungs- und Prototypingumgebungen. Anpassbare bzw. vielfältige Betriebssysteme und kostengünstige Herstellung (beispielsweise Raspberry Pi oder BeagleBone)
 	\item Industrie 4.0 / Industrial Internet: Breites Spektrum an unterschiedlicher Hardware. Hohe Anforderungen an Zuverlässigkeit, Robustheit, Langlebigkeit
 \end{itemize}
 
@@ -71,15 +82,15 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \section{Privatsphäre}
 
-\subsection{Einführung}
+\subsection{Allgemein}
 \begin{itemize}
 	\item Problem: Sensoren können über das Internet angegriffen werden
 	\item Beispiel RFID als Herausforderung für den Datenschutz: Eindeutige Identifikation jedes Objekts ohne Sichtkontakt möglich. Historie verschiedenster Objekte kann im Vorbeigehen überwacht werden (Kleidungsstücke, Fahrkarten, Inhalt einer Einkaufstasche)
 	\item Lösungsansätze: Kill-Befehl, Blocker-Tags, Authentifizierung für Zugriff (z.B. Reisepass), Abreißen der Antenne
 	\item Neben den personenbezogenen Daten auch Metadaten schützenswert, da mit ihnen ein Benutzerprofil erstellt werden kann
-	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz
+	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz durch PETs
 	\item Allgemeine IT-Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA: Confidentiality, Integrity, Availability)
-	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparenz, Intervenierbarkeit
+	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparenz, Intervenierbarkeit, Nicht-Identifizierbarkeit, Unentdeckbarkeit, (Nicht-) Abstreitbarkeit
 	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen\footnote{\url{https://de.wikipedia.org/wiki/PET}}
 	\item \textbf{Prozess zum Entwurf und zur Bewertung}
 	\begin{enumerate}
@@ -88,6 +99,26 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Entwurf geeigneter PETs
 		\item Bewertung der PETs
 	\end{enumerate}
+	\item Angreifermodell: Klassifizierung von Angreifern nach Motivation/Ressourcen/Fähigkeiten
+	\item \textbf{Klassisches Angreifermodell: "`Dolev-Yoa"'-Angteifer}
+	\begin{itemize}
+		\item Omnipräsent im Netz, kann sämtliche Kommunikation abhören
+		\item Kann eigene Dateneinheiten verzeugen und versenden sowie fremden Datenverkehr abhören und modifizieren
+		\item Kann nicht Ent-/Verschlüsseln ohne den Schlüssel zu kennen
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Was ist anders im Internet of Everything?}
+\begin{itemize}
+	\item Technologie greift viel stärker in das private Leben ein \(\rightarrow\) Privatsphäre stärker gefährdet als im klassischen Internet
+	\item Technische Herausforderungen: Mehr Daten; kontinuierliche Datenerfassung; sensiblere Daten; Vielfalt von gemessenen Größen
+	\item Angreifermodell im IoE: Geräte befinden sich häufig an zugänglichen Orten. Diebstahl/Auslesen/Korrumpieren/Zerstören einfacher \(\rightarrow\) Diensterbringung muss auch dann zuverlässig funktionieren, wenn ein Teil der Geräte korrumpiert worden ist
+	\item Dienst muss auch dann zuverlässig funktionieren, wenn ein Angreifer einen Teil der Geräte korrumpiert hat ("`byzantinische"' Fehler) \(\rightarrow\) Herausforderung für Kommunikationsprotokoll (Angreifer wird zum Insider)
+	\item Beispiel Smart-Metering: Informationsbedarf für Stromnetz der Zukunft ist enorm. Schutzbedarf nicht nur vor Outsider sondern auch vor Datensenke \(\rightarrow\) klassische Verschlüsselung bietet keine Lösung
+	\item Beispiel Smart-Traffic: Dienstanbieter benötigt Positionsdaten für Liveupdates. Selbst ohne Klarnamen können anonyme IDs - die selten wechseln - typischen Routen (beispielsweise die Fahrt zum Arbeitsplatz) zugeordnet werden
+	\item IBM-Studie "`Device democracy"': Betreiben einer zentralisierten Cloud verursacht hohe Kosten sowie schwer umzusetzende Privatsphäre \(\rightarrow\) in Zukunft dezentrale Umsetzung
+	\item Anforderungen an die verteilte IoE-Cloud: Sicherer Nachrichtenaustausch zwischen Geräten ohne zentrale Vertrauensanker (beispielsweise via "`P2P-Kommunikation"'); Verteilen der Daten; robuste und skalierbare Koordination von Geräten mit Halten eines konsistenten Zustands
 \end{itemize}
 
 
@@ -113,18 +144,6 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item DEMONSTRATE: Bei der Verarbeitung personenbezogener Daten muss die Einhaltung der Datenschutzrichtlinie demonstriert werden können
 		\end{itemize}
 	\end{itemize}
-\end{itemize}
-
-
-\subsection{Was ist anders im Internet of Everything?}
-\begin{itemize}
-	\item Technologie greift viel stärker in das private Leben ein \(\rightarrow\) Privatsphäre stärker gefährdet als im klassischen Internet
-	\item Technische Herausforderungen: Mehr Daten; kontinuierliche Datenerfassung; sensiblere Daten; Vielfalt von gemessenen Größen
-	\item Angreifermodell im IoE: Geräte befinden sich häufig an zugänglichen Orten. Diebstahl/Auslesen/Korrumpieren/Zerstören einfacher \(\rightarrow\) Diensterbringung muss auch dann zuverlässig funktionieren, wenn ein Teil der Geräte korrumpiert worden ist
-	\item Beispiel Smart-Metering: Informationsbedarf für Stromnetz der Zukunft ist enorm. Schutzbedarf nicht nur vor Outsider sondern auch vor Datensenke \(\rightarrow\) klassische Verschlüsselung bietet keine Lösung
-	\item Beispiel Smart-Traffic: Dienstanbieter benötigt Positionsdaten für Liveupdates. Selbst ohne Klarnamen können anonyme IDs - die selten wechseln - typischen Routen (beispielsweise die Fahrt zum Arbeitsplatz) zugeordnet werden
-	\item IBM-Studie "`Device democracy"': Betreiben einer zentralisierten Cloud verursacht hohe Kosten sowie schwer umzusetzende Privatsphäre. Daher in Zukunft dezentrale Umsetzung
-	\item Anforderungen an die verteilte IoE-Cloud: Sicherer Nachrichtenaustausch zwischen Geräten ohne zentrale Vertrauensanker (beispielsweise via "`Peer-Tor-Peer-Kommunikation"'); Verteilen der Daten; robuste und skalierbare Koordination von Geräten mit Halten eines konsistenten Zustands
 \end{itemize}
 
 
