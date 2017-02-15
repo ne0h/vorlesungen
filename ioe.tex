@@ -125,7 +125,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Ansätze zum Schutz der Privatsphäre}
 \begin{itemize}
 	\item Anwendungsabhängige Anforderungen. Diensterbringung mit dem Prinzip der Datensparsamkeit
-	\item Es sollen lediglich Daten erfasst werden, die möglichst wenig privates preisgeben und die nicht mit Nutzern oder untereinander in Verbindung gebracht werden können
+	\item Es sollen lediglich Daten erfasst werden, die möglichst wenig Privates preisgeben und die nicht mit Nutzern oder untereinander in Verbindung gebracht werden können
 	\item Ansätze: Verschleierung von Sampling-Werten (Präzision herabsetzen oder Störwerte einfügen); Vermeidung von zentralen Datensenken (P2P oder lokale Diensterbringung); Verschleierung der Identität der Quelle; Unverkettbarkeit von Samples gewährleisten (Anpassen der Samplerate)
 	\item \textbf{Entwurfsstrategien: Schutz der Privatsphäre}
 	\begin{itemize}
@@ -146,13 +146,28 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 \end{itemize}
 
+\subsubsection{Blockchain-Grundkurs}
+\begin{itemize}
+	\item High-Level Vorstellung: Blockchain ist wie ein schwarzes Brett; man kann nur schreiben (mit Zeitstempel) aber nichts löschen
+	\item Über P2P-Netz realisiert. Alle Peers kennen die komplette Blockchain, kein Vertrauen untereinenader notwendig
+	\item Neue Einträge (\textit{Transaktionen}): Werden an alle Peers geflutet. \textit{Blöcke} bestehen aus mehreren Transaktionen und halten eine Referenz auf den vorherigen Block. Das Finden von gültigen Blöcken (\textit{Mining}) benötigt viele Ressourcen (beispielsweise Rechenzeit durch Lösen von Krypto-Puzzles)
+	\item Widersprüchliche Transaktionen werden beim Erstellen von Blöcken ausgeschlossen
+	\item Bei parallel erstellten Blöcken entstehen Forks \(\rightarrow\) "`die"' Blockchain ist die längste bekannte Kette gültiger Blöcke
+	\item Flexiel einsetzbarer Baustein. Beispielsweise zum Realisieren von Namensdiensten; robusten Zeitstempeln bei Messwerten oder als finanzielle Gegenleistung bei Micropayments
+	\item \textbf{Eigene Arbeit: \texttt{BitNym}}
+	\begin{itemize}
+		\item Problem bei vielen IoE-Anwendungen: Nutzer brauchen fair verteilte, eindeutige Identifier. Privatsphäre: Echte Identitäten sollen verschleiert werden
+		\item Ansatz: Ersetze Vertrauensanker (der die Pseudonyme verteilt) durch Blockchain \(\rightarrow\) Pseudonyme werden auf Blockchain abgespeichert. Die Blockchain sichert die Nachvollziehbarkeit der Pseudonymwechsel
+	\end{itemize}
+\end{itemize}
+
 
 \subsection{Konkrete Beispiele und Szenarien}
 \begin{itemize}
 	\item \textbf{Privatheit beim Smart-Metering}
 	\begin{itemize}
 		\item Ziel: Verbrauch von Energie in Energienetzen oder kundenspezifisch in Echtzeit nachvollziehbar machen. Stromzähler senden hierfür regelmäßig Messdaten über den Internetanschluss des Kunden an den Messdienstleister (MDL)
-		\item Gefahr für die Privatsphäre: Periodisches Senden der Messwerte (beispielsweise alle 15 Minuten) liefert ein detailliertes Verbraucherprofil. Heutiges einjähriges Ableseintervall stellt implizierten Privatsphäreschutz dar
+		\item Gefahr für die Privatsphäre: Periodisches Senden der Messwerte (beispielsweise alle 15 Minuten) liefert ein detailliertes Verbraucherprofil (beispielsweise über Arbeitszeiten, Urlaube, Art der Geräte, Personenzahl). Heutiges einjähriges Ableseintervall stellt impliziten Privatsphäreschutz dar
 		\item Generische Lösungsansätze
 		\begin{itemize}
 			\item Pseudonymisierung: Aufwendige Pseudonymverwaltung sowie Verknüpfbarkeit mit Nutzer (durch IP-Adresse oder mittels externen Daten wie Urlaube oder Arbeitszeit)
@@ -161,14 +176,15 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Generische Ansätze unzureichend \(\rightarrow\) anwendungsspezifischer Ansatz nötig: Aggregation der Daten. Dadurch lediglich der summierte Verbrauch einer Region sichtbar
 		\item Möglichkeiten zur Aggregation
 		\begin{itemize}
-			\item Über die Zeit mittels verschiedener Tarifregister, einfach realisierbar
-			\item Über Haushalte, ohne Kooperation der Stromzähler: Hinzufügen von Rauschwerten, die sich bei der Summenbildung gegenseitig eliminieren. Allerdings unrealistisch viele Teilnehmer für feingranulare Messung notwendig
-			\item Über Haushalte, mit kooperierenden Stromzählern: Einzelne Messwerte vor MDL geschützt, Ausfallschutz durch Redundanz, auf ressourcenbeschränkter Hardware realisierbar. Zusätzlich homomorphe Verschlüsselung baumartig verwendbar, wodurch kein Stromzähler den Wert eines anderen erfährt. Kryptografie allerdings ungeeignet fr ressourcenbeschränkte Hardware
+			\item Über die Zeit mittels verschiedener Tarifregister: Einfach realisierbar
+			\item Über Haushalte, ohne Kooperation der Stromzähler: Hinzufügen von Rauschwerten, die sich bei der Summenbildung gegenseitig eliminieren. Allerdings unrealistisch viele Teilnehmer zur Verschleierung feingranularer Messungen notwendig
+			\item Über Haushalte, mit kooperierenden Stromzählern: Einzelne Messwerte vor MDL geschützt; Ausfallschutz durch Redundanz; auf ressourcenbeschränkter Hardware realisierbar. Zusätzlich homomorphe Verschlüsselung baumartig mit Keypair verwendbar, wodurch kein Stromzähler den Wert eines anderen erfährt. Kryptografie allerdings ungeeignet für ressourcenbeschränkte Hardware; einzelne korrumpierte Zähler lassen Rückschlüsse zu
 		\end{itemize}
 		\item Eigene Arbeit \textit{SMART-ER}: Auf SMART basierendes, privatsphäregerechtes Smart Metering Protocol, das die Benutzer in untereinander kooperierende Gruppen einteilt, die ein gemeinsames Aggregat zur Verfügung stellen
 	\end{itemize}
 	\item \textbf{Privatheit im Smart Traffic}
 	\begin{itemize}
+		\item Nutzung von Positionsdaten von Android-Smartphones
 		\item Anwendungen: Verkehrssicherheit, Verkehrsoptimierung, Erfassen von Wetter/Luftqualität/etc. mittels Sensordaten
 		\item Trennung von Positionssamples und Identitäten notwendig. Pseudonymwechsel nötig, um Positionssamples desselben Nutzers nicht leicht zusammengruppieren zu können. Problem: Beobachtbarkeit. Lösung: Zufällige "`Funkstille"' beim Wechsel oder gleichzeitiger Wechsel verschiedener Nutzer in der selben Umgebung (innerhalb "`Mix-Zones"')
 		\item Eigene Arbeit \textit{Geocast mit OverDrive}: P2P-Netz zwischen den Fahrzeugen. Keine zentrale Senke, niemand hat die komplette Sicht. Nur direkte Nachbarn erhalten die genaue Position, weit entfernte bekommen verfälschte Daten (bei jedem Hopp werden die Daten leicht verändert)
@@ -189,17 +205,26 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Klassische Probleme gegenüber drahtgebundenen Netzen: Höhere Fehlerraten, niedrigere Datenrate, hohe Verzögerung, geringere Sicherheit
 		\item Quadratische Abnahme der Signalausbreitung
-		\item CSMA/CD-basierte Verfahren für Medienzuteilung nicht nutzbar, da nur der Empfänger Kollisionen erkennen kann (\textit{Semi-Broadcast-Medium})
-		\item Versteckte Endsysteme: 
+		\item Signalausbreitungsbereiche: Übertragungsbereich, Erkennungsbereich, Intereferenzbereich. Grenzbereiche unscharf, natürliche Gegenheiten ausschlaggebend
+		\item Sicherheitsbetrachtung: Abhören/Manipulieren ohne großen Aufwand möglich
+		\item \texttt{CSMA/CD}-basierte Verfahren für Medienzuteilung nicht nutzbar, da nur der Empfänger Kollisionen erkennen kann (\textit{Semi-Broadcast-Medium})
+		\item \textbf{Problem}
+		\begin{itemize}
+			\item Genereller Aufbau: \texttt{A} \(\Leftrightarrow\) \texttt{B} \(\Leftrightarrow\) \texttt{C} \(\Leftrightarrow\) \texttt{D}
+			\item Versteckte Endsysteme: \texttt{A} sendet zu \texttt{B}, \texttt{C} kann dies nicht feststellen und versucht ebenfalls zu \texttt{B} zu senden \(rightarrow\) Carrier Sense versagt
+			\item Ausgelieferte Endsysteme: \texttt{B} sendet zu \texttt{A}, \texttt{C} möchte zu \texttt{D} senden, muss aber warten bis \texttt{B} fertig gesent hat
+			\item Nahe und ferne Endsysteme: \texttt{A} und \texttt{C} möchten senden, die Signalstärke nimmt allerdings quadratisch ab. Daher "`übertönt"' \texttt{C} \texttt{A} im rechten Teil des Aufbaus
+		\end{itemize}
 	\end{itemize}
 	\item \textbf{Medienzuteilung}
 	\begin{itemize}
-		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen und Mithören
-		\item RTS-CTS-Handshake zur Kollisionsvermeidung (Auftritt während des Handshake unwahrscheinlich, da Pakete sehr klein): Empfänger wird zunächst mit \texttt{RTS} angefragt ob es empfangsbereit ist. Bei naherzu zeitgleichen Anfragen zweier Sender gewinnt der schnellere. Die sendewilligen Systeme warten, bis der Empfänger mittels \texttt{CTS} Empfangsbereitschaft signalisiert
+		\item Verwendung von Zeitmultiplex, beispielsweise mit (festen) Zeitschlitzen
+		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen und Mithören \(\rightarrow\) vermeiden. Transceiver soll möglichst oft ausgeschaltet werden
+		\item RTS-CTS-Handshake zur Kollisionsvermeidung (Auftritt während des Handshake unwahrscheinlich, da Pakete sehr klein): Empfänger wird zunächst mit \texttt{RTS} angefragt ob es empfangsbereit ist. Bei naherzu zeitgleichen Anfragen zweier Sender gewinnt der schnellere. Die sendewilligen Systeme warten, bis der Empfänger mittels \texttt{CTS} Empfangsbereitschaft signalisiert. Vermeidet versteckte/ausgelieferte Endsysteme
 		\item Duty-Cycling zur Reduzierung des Energieverbrauchs: Funktransceiver wird bei Bedarf synchron (erfordert Zeitsynchronisation zwischen den Knoten) oder asynchron (ohne Koordinnation zwischen den Knoten) aktiviert, was zusätzliche Latenz verursacht, da bei Sendewunsch zunächst auf das entsprechende Zeitfenster gewartet werden muss
 		\item WLAN im IoE: Verursacht hohen Energiebedarf durch Kollisionen, Idle Listening, Overhearing
 		\item Bluetooth im IoE: Langsamer, aufwendiger Verbindungsaufbau; Synchronisation mehrerer Piconetze problematisch
-		\item Bluetooth low energy: Hohe Reichweite (150 m) mit geringer Bandbreite (1 Mbit/s). Nur der Master versucht dauerhaft neue Geräte zu finden sowie eingebaute Sicherheitsfunktionalität (AES-128-CCM). Lizenzfreier Betrieb (konventionelles Bluetooth erfordert Zertifizerung im kommerziellen Umfeld) \(\rightarrow\) insgesamt energieeffizienter Betrieb möglich
+		\item Bluetooth Smart (beeinhaltet "`classic"', "`high speed"' und "`low energy"'): Hohe Reichweite (150 m) mit geringer Bandbreite (1 Mbit/s). Nur der Master versucht dauerhaft neue Geräte zu finden sowie eingebaute Sicherheitsfunktionalität (AES-128-CCM). Lizenzfreier Betrieb (konventionelles Bluetooth erfordert Zertifizerung im kommerziellen Umfeld) \(\rightarrow\) insgesamt energieeffizienter Betrieb möglich
 	\end{itemize}
 \end{itemize}
 
@@ -208,19 +233,32 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{S-MAC (Sensor Media Access Control)}
 	\begin{itemize}
 		\item Rein akademisch, keine Verbreitung in der Praxis
-		\item Zielsetzung: Ernergieeffizienz, Skalierbarkeit, Autokonfiguration
+		\item Zielsetzung: Ernergieeffizienz (durch periodisches Schlafen des Transceivers), Skalierbarkeit, Autokonfiguration
 		\item Weniger berücksichtigt: Fairness zwischen den Systemen, Latenz
-		\item Idee: Koordiniertes Schlafen zur Vermeidung von idle listening mit zeitliche Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
+		\item Idee: Koordiniertes Schlafen zur Vermeidung von \textit{idle listening} mit zeitlicher Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
+		\item Aufbau eines S-MAC Frames
+		\begin{description}
+			\item{\texttt{Listen Phase}} (In Zeitschlitze gegliedert)
+			\begin{enumerate}
+				\item \texttt{Sync Phase}: In einem zufälligen Zeitschlitz wird die Zeitspanne bis zum Beginn der nächsten Sleep Phase gesendet
+				\item \texttt{RTS/CTS Phase}: In einem zufälligen Zeitschlitz wird der Datenaustausch durch Senden eines \texttt{RTS} angestoßen. Pro Frame kann maximal eine Dateneinheit übertragen werden
+			\end{enumerate}
+			\item{\texttt{Sleep Phase}} Datenaustausch oder temporäres Schlafen des Transceivers. Empfangene Daten werden mit \texttt{ACK} quittiert
+		\end{description}
 		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleep-Phase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
-		\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase)
-		\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase). Problem: Woher weis ein schlafendes System, dass die Datenübertragung abgeschlossen ist?
+		\item Synchronisation: System muss den Anfang der nächsten Sleep Phase kennen lernen. Dazu lernt es die Zeitpläne seiner Nachbarn durch regelmäßiges Hören der \texttt{SYNC}-Dateneinheiten \(\rightarrow\) es entstehen "`SYNC-Inseln"'. Grenzknoten lernen und befolgen verschiedene Zeitpläne. Initiierung einer "`eigenen"' "`SYNC-Insel"' falls nach einem Timeout kein \texttt{SYNC} eines anderen Knotens empfangen wird
+		\item Verbesserungen
+		\begin{itemize}
+			\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Die Bitfehlerwahrscheinlichkeit steigt mit der Länge der Nachricht. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase). Wird eine Dateneinheit nicht sofort quittiert, so wird von einem Übertragungsfehler ausgegangen und sie wird erneut gesendet
+			\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase; startet nach Versenden der Quittung). So kann innerhalb eines einzelnen S-MAC-Frames mehr als ein Hop überbrückt werden. Problem: Woher weis ein schlafendes System, dass die Datenübertragung abgeschlossen ist?
+		\end{itemize}
 		\item Leistungsbewertung über Energiebedarf pro Byte; durschnittliche Ende-zu-Ende-Verzögerung sowie Ende-zu-Ende-Goodput (Gesamtmenge durch Gesamtzeit). S-MAC reduziert den Energiebedarf deutlich. Bei hoher Last kann Adaptive Listening den Energiebedarf nochmals halbieren
 	\end{itemize}
 	\item \textbf{B-MAC}
 	\begin{itemize}
 		\item Zielsetzung: Energieeffizient durch Kollisionsvermeidung und effiziente Kanalnutzung; Skalierbarkeit; Toleranz bzgl. Funkbedingungen; einfache Implementierbarkeit
 		\item Besonderheiten: Periodisches Prüfen des Kanals statt zeitlicher Synchronisation; keine Fragmentierung großer Nachrichten
-		\item \textit{Low Power Listening} (LPL): System schläft meist und erwacht gelegentlich kurzzeitig um Kanal auf Daten zu prüfen. Bleibt nur wach, falls Daten zum Empfang anstehen
+		\item \textit{Low Power Listening} (LPL): System schläft meist und erwacht gelegentlich kurzzeitig um Kanal auf Daten zu prüfen. Sendewunsch durch Senden einer Präambel. Bleibt nur wach, falls Präambel empfangen wird und daher Daten zum Empfang bereitstehen
 		\item \textit{Clear Channel Assessment} (CCA): Prüfe ob Kanal frei ist und übertrage ggf. Präambel und Daten. Präambel muss daher mindestens dem Intervall zwischen zwei Kanalüberprüfungen entsprechen (damit der Empfänger nichts verpasst)
 		\item Erweiterung X-MAC: Statt einer großen Präambel werden viele kleine Präambelpakete gesendet mit Quittung für erhaltene Präambel um die Kosten beim Sender weiter zu reduzieren
 		\item Kenngrößen zur Leistungsbewertung
@@ -257,18 +295,29 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\begin{itemize}
 			\item \textit{Full Function Device} (FFD)
 			\item \textit{Reduced Function Device} (RDF), nur in Stern-Netzen
+			\item Jedes Netz besitzt einen Koordinator (FFD), der das Netz organisiert (koordiniert Zeitschlitze, verwaltet Systeme und Adressen)
 		\end{itemize}
 		\item Betriebsmodi
 		\begin{itemize}
 			\item Beacon Modus
 			\begin{itemize}
-				\item Stern-Netz: Systeme sind einem Koordinator zugeordnet und formieren ein \textit{Persona Area Network} (PAN)
+				\item Stern-Netz: Systeme sind einem Koordinator zugeordnet und formieren ein \textit{Personal Area Network} (PAN)
 				\item Koordinator verwaltet das Netz, bearbeitet Anforderungen für garantierte Zeitschlitze und vermittelt zwischen Systemen und Peer-Koordinatoren. Annahme: Für Koordinator steht unbegrenzte Energie zur Verfügung
 				\item Rahmenstruktur
-				\begin{enumerate}
-					\item Aktive Phase: \textit{Contention Access Period} (CAP) mit konkurrierendem Zugriff auf die Zeitschlitze durch Slotted CSMA/CA. Danach \textit{Guaranteed Time Slots} (GTS). Während der gesamten Phase muss der Koordinator aktiv sein
-					\item Inaktive Phase: Alle Systeme können Transceiver ausschalten
-				\end{enumerate}
+				\begin{description}
+					\item {Aktive Phase:} Während der gesamten Phase muss der Koordinator aktiv sein
+					\begin{enumerate}
+						\item \textit{Contention Access Period} (\texttt{CAP}) mit konkurrierendem Zugriff auf die Zeitschlitze durch \texttt{Slotted CSMA/CA} (Kanal abhören bevor gesendet wird mit exponentiellem Backoff zur Kollisionsvermeidung. Kein Schutz versteckter Endsysteme)
+						\item \textit{Guaranteed Time Slots} (\texttt{GTS}). Zeitschlitze müssen während der \texttt{CAP}-Phase beim Koordinator angefragt werden und gelten so lange, bis sie wieder freigegeben werden
+					\end{enumerate}
+					\item {Inaktive Phase:} Alle Systeme können Transceiver ausschalten
+				\end{description}
+				\item GTS-Anfrage an den Koordinator: System fragt während der \texttt{CAP}-Phase an und bekommt den Empfang der Anfrage unmittelbar quittiert. Der zugeordnete \texttt{GTS}-Zeitschlitz wird einem der folgenden \texttt{Beacons} mitgeteilt, sobald einer verfügbar (frei) ist. Koordinator kann \texttt{GTS}-Zeitschlitze freigeben, falls diese für eine bestimmte Dauer nicht genutzt worden sind
+				\item Übertragung
+				\begin{description}
+					\item{+} System \(\rightarrow\) Koordinator: Während \texttt{CAP} oder \texttt{GTS} (falls ein Zeitschlitz reserviert wurde)
+					\item{+} Koordinator \(\rightarrow\) System: Während \texttt{GTS}, falls ein Zeitschlitz reserviert wurde oder während \texttt{CAP} (Koordinator teilt dies im \texttt{Beacon} mit). Während \texttt{CAP} schickt das System zunächst eine Daten-Anfrage und erhält anschließend die Daten. Alle Transaktionen während \texttt{CAP} werden quittiert
+				\end{description}
 			\end{itemize}
 			\item Non-Beacon Modus: Keine feste Rahmenstruktur, Zugriff auf das Medium durch unslotted CSMA/CA (wegen fehlender Zeitsynchronisation keine Zeitschlitze möglich). Bei P2P-Netzen können die Systeme direkt untereinander kommunizieren
 		\end{itemize}
