@@ -238,12 +238,12 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Idee: Koordiniertes Schlafen zur Vermeidung von \textit{idle listening} mit zeitlicher Synchronisation der Systeme. Einführung eines \textit{S-MAC-Rahmen} mit fester Länge. Während \textit{Listen-Phase} erfolgt die Synchronisation sowie ggf. der Anstoß zum Datenaustauschen. Anschließend \textit{Sleep-Phase} zum Energie sparen oder Daten austauschen
 		\item Aufbau eines S-MAC Frames
 		\begin{description}
-			\item{\texttt{Listen Phase}} (In Zeitschlitze gegliedert)
+			\item{\texttt{Listen Phase:}} In Zeitschlitze gegliedert
 			\begin{enumerate}
 				\item \texttt{Sync Phase}: In einem zufälligen Zeitschlitz wird die Zeitspanne bis zum Beginn der nächsten Sleep Phase gesendet
 				\item \texttt{RTS/CTS Phase}: In einem zufälligen Zeitschlitz wird der Datenaustausch durch Senden eines \texttt{RTS} angestoßen. Pro Frame kann maximal eine Dateneinheit übertragen werden
 			\end{enumerate}
-			\item{\texttt{Sleep Phase}} Datenaustausch oder temporäres Schlafen des Transceivers. Empfangene Daten werden mit \texttt{ACK} quittiert
+			\item{\texttt{Sleep Phase:}} Datenaustausch oder temporäres Schlafen des Transceivers. Empfangene Daten werden mit \texttt{ACK} quittiert
 		\end{description}
 		\item Ablauf aus Sendersicht: Während des ersten Teil der Listen-Phase durch ein SYNC-Paket die Zeitspanne bis zum Beginn der nächsten Sleep-Phase gesendet. im zweiten Teil der Listen-Phase wird in einem zufälligen Zeitschlitz ein RTS-Signal gesendet. Antwortet der Empfänger mit CTS, so hat der Sender wärend der folgenden Sleep-Phase Zeit, die gewünschten Daten zu senden
 		\item Synchronisation: System muss den Anfang der nächsten Sleep Phase kennen lernen. Dazu lernt es die Zeitpläne seiner Nachbarn durch regelmäßiges Hören der \texttt{SYNC}-Dateneinheiten \(\rightarrow\) es entstehen "`SYNC-Inseln"'. Grenzknoten lernen und befolgen verschiedene Zeitpläne. Initiierung einer "`eigenen"' "`SYNC-Insel"' falls nach einem Timeout kein \texttt{SYNC} eines anderen Knotens empfangen wird
@@ -327,6 +327,13 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsection{Routing}
 
+\subsubsection{Motivation Routing im drahtlosen Sensornetz}
+\begin{itemize}
+	\item Adressierung anders: Globales Adressierungsschema unpraktisch
+	\item Datenfluss: Meist von vielen Quellen zu einer Senke (Concast) oder von einer Quelle an viele andere Knoten. Meist wenig Knoten-zu-Knoten Kommunikation
+	\item Ressourcen stark limitiert
+\end{itemize}
+
 \subsubsection{Probabilistische Verfahren}
 \begin{itemize}
 	\item \textbf{Fluten}
@@ -335,12 +342,16 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Durchaus häufig im Einsatz, da dezentral/selbstorganisierend und keine Routingtabellen erforderlich
 		\item Vorteile: Keine Routenfindung/Topologiewartung/Routentabelle erforderlich
 		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten); limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
-		\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
-		\item Reichweitenbegrenzung mit maximaler Time-To-Live: Sorgt für weniger Netzbelastung, auch nicht zuverlässig
+		\item Verbesserungen
+		\begin{itemize}
+			\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
+			\item Reichweitenbegrenzung mit maximaler Time-To-Live: Sorgt für weniger Netzbelastung; allerdings nicht zuverlässig
+		\end{itemize}
 	\end{itemize}
 	\item \textbf{Gossiping}
 	\begin{itemize}
-		\item Idee: Simulation der Verbreitung von Gerüchten. Die Dateneinheit wird an eine gewisse Anzahl Nachbarknoten weitergeleitet, die sie wieder zufällig an Nachbarknoten weiterleiten
+		\item Idee: Simulation der Verbreitung von Gerüchten. 
+		\item Zufallsbasierte Weiterleitung von Dateneinheiten an Nachbarknoten, die sie wieder zufallsbasiert an Nachbarknoten weiterleiten. Weiterleitungswahrscheinlichkeit typischerweise bei \(65\%-75\%\)
 		\item Vorteile: Keine Nachrichtenimplosion, geringerer Overhead als Fluten
 		\item Nachteile: Unzuverlässig, eventuell lange Übertragungszeit durch ungünstige Pfadwahl
 	\end{itemize}
@@ -357,30 +368,28 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Direct Diffusion}
 	\begin{itemize}
 		\item Basiert auf Fluten, ist selbstorganisierend. Unterstützt die Aggregation von Daten
-		\item Besonders geeignet bei regelmäßiger Anfrage von Daten. Alle Knoten, welche die Bedingungen der Anfrage erfüllen (beispielsweise Datentyp oder Lokation), antworten
+		\item Besonders geeignet bei regelmäßiger Anfrage von Daten (beispielsweise regelmäßige Temperaturmessungen). Alle Knoten, welche die Bedingungen der Anfrage erfüllen (beispielsweise Datentyp oder Lokation), antworten
 		\item Verfahren
 		\begin{enumerate}
-			\item Senke äußert Interesse an Daten (Query), dieses wird im Netz geflutet
+			\item Senke äußert Interesse an Daten (Query), diese wird im Netz geflutet
 			\item Aufbau eines Pfads zur Datenquelle: Speicherung der Richtung (Gradient), aus der die Query kam. Zu einem Query können mehrere Gradienten existieren
 			\item Daten werden auf dem Rückwärtspfad gesendet
+			\item Anfragen generell teuer (Fluten), Antworten günstig (Gradienten) \(\rightarrow\) gut geeignet für wiederkehrende Daten zur Senke
 		\end{enumerate}
-		\item Gradientenverstärkung zur Etablierung eines oder mehreren "`guten"' Wege. Gradienten werden verstärkt wenn eine Senke gefunden wird. Weiterleitung von Datenpaketen erfolgt dann entsprechend des stärksten Gradienten \(\rightarrow\) zunächst redundantes Senden von Daten, danach Reduktion der Pfade durch Gradientenverstärkung
+		\item Verbesserung: Gradientenverstärkung zur Etablierung eines oder mehrerer "`guten"' Wege. Gradienten werden verstärkt, wenn eine Senke gefunden wird. Weiterleitung von Datenpaketen erfolgt dann entsprechend des stärksten Gradienten \(\rightarrow\) zunächst redundantes Senden von Daten, danach Reduktion der Pfade durch Gradientenverstärkung
 		\item Evaluierung Direct Diffusion vs. Fluten: Direct Diffusion verbraucht deutlich weniger Energie pro Knoten
 	\end{itemize}
-\end{itemize}
-
-\subsubsection{Lokationsbasierte Verfahren}
-\begin{itemize}
 	\item \textbf{Rumor Routing}
 	\begin{itemize}
 		\item Datenzentrischer Ansatz: Initiative geht von Ereignisquelle und -senke aus. Kompromis zwischen Fluten von Anfragen und Fluten von Ereignissen
 		\item \textit{Ereignis-Agenten}
 		\begin{itemize}
 			\item Etablieren Pfade zu Ereignissen. Anfragen suchen im Netz nach Ereignis-Pfaden
-			\item Ereignis-Agenten wandern als langlebige Dateneinheiten (mit maximaler Lebensdauer) durch das Netz, lernen unterwegs selbstständig Information und hinterlassen Pfadinformationen in den Knoten (Vgl. Ameisen in biologischen Systemen)
+			\item Ereignis-Agenten wandern als langlebige Dateneinheiten (mit maximaler Lebensdauer) durch das Netz, lernen unterwegs selbstständig Information und hinterlassen Pfadinformationen in den Knoten (vgl. Ameisen in biologischen Systemen)
 			\item Pfadwahl durch Random-Walk
 		\end{itemize}
-		\item Die beteiligten Sensorknoten sammeln Informationen über Nachbarn (beispielsweise durch periodische Hello-Dateneinheiten) und Ereginisse (Ereignistabelle mit zeitlich limitierten Informationen zu Weiterleitungen bei bekannten Ereignissen)
+		\item Die beteiligten Sensorknoten sammeln Informationen über Nachbarn (beispielsweise durch periodische Hello-Dateneinheiten) und Ereignisse (Ereignistabelle mit zeitlich limitierten Informationen zu Weiterleitungen bei bekannten Ereignissen)
+		\item Funktioniert, da die Wahrscheinlichkeit sehr hoch ist, dass sich zwei Pfade im zweidimensionalen treffen
 		\item Beispiel
 		\begin{itemize}
 			\item Knoten A beobachtet Ereignis und sendet zwei Ereignis-Agenten aus, die Routinginformationen zum Ereignis installieren (geben je einen Pfad vor)
@@ -393,6 +402,10 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Rumor Routing lohnt sich bei allen Fällen dazwischen 
 		\end{itemize}
 	\end{itemize}
+\end{itemize}
+
+\subsubsection{Lokationsbasierte Verfahren}
+\begin{itemize}
 	\item Motivation lokationsbasierter Verfahren: In vielen Anwendungen sollen Orte/Regionen adressiert werden. Informationen über Position der beteiligten Systeme kann Routing unterstützen (beispielsweise Koordinaten).
 	\item \textbf{Distanzbasiertes Greedy-Verfahren}
 	\begin{itemize}
@@ -400,7 +413,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Basiert auf der Annahme dass jedes System die eigene Position kennt
 		\item Strategie: Weiterleiten der Nachricht an das System in Reichweite, das dem Ziel am nächsten ist
 		\item Vorteil: Strategie garantiert schleifenfrei
-		\item Nachteile: Topologie bleibt unbeachten (eventuell schlechte Routen); Systeme am Rand der Übertragungsreichweite bevorzugt (eventuell schlechte Verbindungen)
+		\item Nachteile: Topologie bleibt unbeachten (eventuell schlechte Routen); Systeme am Rand der Übertragungsreichweite bevorzugt (eventuell schlechte Verbindungen \(\rightarrow\) höhere Wahrscheinlichkeit für Paketverluste und Notwendigkeit zum wiederholten Senden)
 	\end{itemize}
 	\item \textbf{Richtungsbasiertes Greedy-Verfahren}
 	\begin{itemize}
@@ -411,31 +424,36 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Generelles Problem bei Greedy-Strategien: Algorithmus kann in Sackgassen stecken bleiben
 	\item \textbf{Greedy Perimeter Stateless Routing (GPSR)}
 	\begin{itemize}
-		\item Benötigt einen planaren Graphen, da drahtlose Regel i.d.R. nicht planar sind müssen sie erst "`planiert"' werden
-		\item Idee: Rechte-Hand-Regel anwenden um aus Sackgassen zu entkommen
+		\item Idee: Verwendung der Rechte-Hand-Regel um aus Sackgassen zu entkommen
+		\item Benötigt einen planaren Graphen. Da drahtlose Netze i.d.R. nicht planar sind müssen sie erst "`planiert"' werden
 		\item Weiterleitungs-Modi: Distanzbasiertes Greedy-Routing (kommt dem Ziel schneller näher); Perimetermodus um Sackgassen durch Rechte-Hand-Regel zu entkommen. GPSR startet im Greedy-Modus und wechselt in einer Sackgasse selbstständig in den Perimetermodus. Diese Position wird als Eintrittspunkt in den Permietermodus gespeichert. Sobald das Ziel näher ist als der Eintrittpunkt wird wieder in den Greedy-Modus gewechselt
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Distanzvektorbasierte Verfahren: RPL}
+\subsubsection{Distanzvektorbasierte Verfahren: RPL (IETF-Standard)}
 \begin{itemize}
 	\item \textbf{Anforderungen (aus RFC 6550)}
 	\begin{itemize}
 		\item Adaptivität: Dynamisches Anpassen der Pfade bei geänderten Umgebungsbedingungen
-		\item Constrait-based Routing: Miteinbeziehen von Ransbedingungen wie niedrigem Batteriestand oder schlechter Verbindungsqualität
+		\item Constraint-based Routing: Miteinbeziehen von Randbedingungen wie niedrigem Batteriestand oder schlechter Verbindungsqualität
 		\item Unterstützung verschiedener Verkehrsmuster
 		\item So wenig wie möglich Konfigurations- und Managementaufwand
 	\end{itemize}
-	\item Routingprotokoll RPL als IETF-Standard entwickelt
 	\item \textbf{Grundlegendes Prinzip}
 	\begin{itemize}
-		\item Verbindung von Sensor-basierten Zugangsnetzen zum Internet über wenige dedizierte, hierarchisch angeordnete Knoten
+		\item Eine/Mehrere Wurzeln halten die Verbindung zum Internet
 		\item Verwendung von Gerichteten Azyklischen Graphen (DAG, DODAG): Wurzel ist höchster Knoten in "`up"'-Richtung (Concast) und hält Verbindung zum Internet, "`down"' in entgegengesetzter Richtung (Multicast)
 	\end{itemize}
-	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
+	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Hello-Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
 	\item DODAG sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
-	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten, gültig innerhalb einer DODAG-Version
+	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten (zur Schleifenvermeidung), gültig innerhalb einer DODAG-Version
 	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraits zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
+	\item Kontrollnachrichten
+	\begin{itemize}
+		\item \textbf{DAG Information Object (DIO)}: Strukturinformation, die es Knoten ermöglichen neue RPL-Instanzen zu entdecken; Konfigurationsparameter; DODAG-Eltern
+		\item \textbf{DAG Information Solicitation (DIS)}: Gezielte Anforderung eines DIOs von einem Knoten
+		\item \textbf{Destination Advertisement Object (DOA)}: Routingziele (Erreichbarkeit) entlang eines DODAGs
+	\end{itemize}
 	\item Knoten können Informationen für Down-Routing speichern (storing nodes). Im alternativen non-storing Betrieb fügt die Wurzel die Routinginformationen bei. Mischbetrieb ist unzulässig
 	\item Sicherheit: Wahlweise \textit{unsecured}, \textit{pre-installed} (vorinstallierte gemeinsame Geheimnisse auf den Knoten zum Versenden gesicherter Nachrichten), \textit{authentifiziert} (Beitritt mit Schlüssel einer Authentication Authority)
 	\item \textbf{DODAG-Konstruktion im Detail}
@@ -459,7 +477,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Anwendungsbeispiele: Hausautomation (Schalter steuert Lichtquelle), Industrie (Überwachungssensor stoppt Produktionsanlage), Autowäsche (Abstandssensor verhindert Beschädigungen am Auto)
 	\item \textbf{Zuverlässigkeit}
 	\begin{itemize}
-		\item Traditioneller Weise TCP als zuverlässiger Transportdienst. Probleme: TCP erkennt die Ursachen für Paketverlust nicht; erfordert ggf. viele Sendewiederholungen (hoher Energiebedarf); 3-Wege-Handshake sehr teuer
+		\item Traditioneller Weise TCP als zuverlässiger Transportdienst. Probleme: TCP erkennt die Ursachen für Paketverlust nicht; erfordert ggf. viele Sendewiederholungen (hoher Energiebedarf) sowie sehr teuren 3-Wege-Handshake
 		\item Nicht alle Messwerte sind relevant, Ungenauigkeiten können (anwendungsabhängig) toleriert werden (beispielsweise minimale Temperaturschwankungen in einem Raum)
 		\item Probabilistische Zuverlässigkeit: Nur ein Teil aller Dateneinheiten erreicht die Senke. Ggf. leidet die Genauigkeit/Aktualität
 		\item Pro-Hop Quittungen: Quittungen/Sendewiederholungen pro Hop. Energieverbrauch wird gleichmäßig im Netz verteilt
@@ -467,8 +485,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Hop-by-Hop Reliabilty (HHR)}
 	\begin{itemize}
-		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden
-		\item HHR mit Acknowledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
+		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden (\texttt{k} errechnet sich aus der Paketfehlerrate zum Nachbarsystem)
+		\item HHR mit Acknowledgements (HHRA): \(k\)-maliges Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
 		\item Evaluierung: Pro-Hop Quittungen lohnen sich erst bei hohen Paketfehlerraten
 		\item HRR vs. HRRA
 		\begin{itemize}
@@ -490,16 +508,17 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item Kommunikationsform: Senke \(\rightarrow\) Sensoren/Aktoren
 	\item Herausforderungen: Zuverlässigkeit
-	\item Typische Daten: Kontroll-/Steuerungsaufgaben; Code-Updates
+	\item Typische Daten: Kontroll-/Steuerungsaufgaben, Code-Updates, Anfrageverteilung, Befehlsverteilung
 	\item \textbf{Pump Slowly Fetch Quickly (PSFQ)}
 	\begin{itemize}
 		\item Ziel: Transportieren von Daten von einer Basisstation zu mehreren Sensoren/Aktoren
-		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit einer Pause nach dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch} explizit angefordert werden oder per \texttt{NACK} dem Sender gemeldet werden
+		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit je einer Pause zwischen dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch} explizit angefordert werden oder per \texttt{NACK} dem Sender gemeldet werden
 		\item Evaluierung/Beobcahtungwen
 		\begin{itemize}
 			\item Je größer die Distanz zur Quelle desto niedriger die Zustellrate (Prozentsatz der angekommenen Dateneinheiten an den Gesamteinheiten)
 			\item Je höher die Paketfehlerrate desto niedriger die Zustellrate
 			\item Keine Zustellgarantie
+			\item Im Test allerdings selbst bei einer Paketfehlerrate von \(70\%\) noch eine Zuverlässigkeit von \(>70\%\)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -509,7 +528,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Kommunikationsform: Sensoren \(\rightarrow\) Senke
 	\item Herausforderungen: Zuverlässigkeit, Stauvermeidung und Energieeffizienz
 	\item Anwendungsbeispiel: Sensor beantwortet Anfrage mit Messdaten
-	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: weniger Daten senden)
+	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: weniger Daten senden) \(\rightarrow\) Energiebedarf steigt
 	\item \textbf{Event-to-Sink Reliable Transport (ESRT)}
 	\begin{itemize}
 		\item Szenario: Viele Sensoren senden periodisch Dateneinheiten zur Senke, welche eine ausreichende Anzahl Dateneinheiten (egal von welchem Sensor) benötigt
@@ -543,22 +562,22 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Topologiekontrolle}
 \begin{itemize}
 	\item \textit{Topologie} beschreibt den Aufbau von Verbindungen zwischen Systemen. Ein dichtes Netz führt zu komplexer Topologie (Anzahl der Nachbarn als Dichtemaß)
-	\item Im Folgenden Möglichkeiten zur Kontrolle
 	\item \textbf{Flache Netze mit gleichberechtigten Systemen}
 	\begin{itemize}
+		\item Ziel: Nicht immer die volle Sendeleistung nutzen \(\rightarrow\) Energie sparen
 		\item Sendeleistung regulieren: Sendeleistung und Zahl der direkten Nachbarn hängen unmittelbar zusammen (Übertragungen zu lokal näher gelegene Nachbarn benötigen weniger Energie). Ideale Sendeleistung als Tradeoff zwischen Energiesparen und Qualität der Konnektivität. Ziel: Bestimmen der \textit{Minimalen maximalen Sendeleistung} (MMS)
 		\item Zahl der der Nachbarn regulieren
 	\end{itemize}
 	\item \textbf{Hierarchische Netze (Systeme haben unterschiedliche Fähigkeiten/Aufgaben)}
 	\begin{itemize}
-		\item Backbone-Netz: Bilden von Backbones und einfachen Knoten. Die einfachen Knoten sind jeweils dem lokal nächsten Backbone zugeordnet. Einfache Knoten dürfen lediglich innerhalb des selben Backbone-Netzes kommunizieren. Außerhalb dürfen nur Backbones direkt kommunizeren (diese bilden ein \textit{dominating set})
+		\item Backbone-Netz: Aufteilen der Systeme in Backbones und einfachen Knoten. Die einfachen Knoten sind jeweils dem lokal nächsten Backbone zugeordnet. Einfache Knoten dürfen lediglich innerhalb des selben Backbone-Netzes kommunizieren. Außerhalb dürfen nur Backbones direkt kommunizeren (diese bilden ein \textit{dominating set})
 		\item Cluster-Netze
 		\begin{itemize}
 			\item Aufteilung der Sensoren in Gruppen (Cluster), so dass jedes Sytem in genau einer Gruppe ist. \textit{Cluster-Heads} bilden Vertreter ihrer Gruppe, wobei keine zwei Cluster-Heads direkte Nachbarn sein dürfen. Gesucht ist die maximale unabhängige Menge
 			\item Bestimmung der Gateways: Nach der Bestimmung der Cluster-Heads werden diese untereinander verbunden. Jeder Cluster-Head benötigt eine Vebrindung zu allen anderen Cluster-Heads, die maximal drei Schritte entfernt sind
 			\item Low-Energy Cluster Hierarchy (LEACH)
 			\begin{itemize}
-				\item Idee: Regelmäßiges Rotieren der höher belasteten Cluster-Heads zur Umverteilung der Last \(\rightarrow\) gleimäßige Verteilung des Energieverbrauchs
+				\item Idee: Regelmäßiges Rotieren der höher belasteten Cluster-Heads zur Umverteilung der Last \(\rightarrow\) gleichmäßige Verteilung des Energieverbrauchs
 			\end{itemize}
 			\item Vorgehen: Knoten bestimmen sich selbstständig mit bestimmter Wahrscheinlichkeit zu einem Cluster-Head und teilen dies den benachbarten Knoten mit (rundenbasiert). Alle anderen Knoten ordnen sich dem nächsten, neuen Cluster-Head in Reichweite zu
 			\item Mögliche Verbesserung: Clusterwahl nicht rein probabilistisch sondern basierend auf Restenergie der Knoten
@@ -571,6 +590,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsubsection{IETF}
 \begin{itemize}
+	\item Die wesentlichen Standards: \texttt{RPL} (Routing), \texttt{6LoWPAN} (Verbindung zum Internet, Kombrimierung/Fragmentierung) und \texttt{CoAP} (für Client-Server-basierte Systeme)
 	\item \textbf{Einführung}
 	\begin{itemize}
 		\item Verwendung von IPv6 (da IPv4-Adressraum nicht ausreicht): Knoten haben eine global eindeutige Adresse und nutzen den IPv6-Autokonfigurationsmechanismus
@@ -578,14 +598,14 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item 6LoWPAN Architektur
 		\begin{itemize}
 			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen engebetteten Systemen herstellen. Inseln mit Geräten haben einen gemeinsamen IP-Adresspräfix
-			\item Router: Führen auch Routingaufgaben aus
+			\item Router: Führen Routingaufgaben aus
 			\item Host: Quellen und/oder Senken von Daten. Nicht in das Routing involviert
 		\end{itemize}
-		\item Typen
+		\item Typen von 6LoWPANs
 		\begin{itemize}
 			\item Simple LoWPAN: Ein Edge-Router mit einem Link zu anderen IP-Netzen
 			\item Ad-hoc LoWPAN: Kein Edge-Router, keine Infrastruktur
-			\item Extended LoWPAN: Mehrere Edge-Router, gemeinsamer Backbone-Link
+			\item Extended LoWPAN: Mehrere Edge-Router, gemeinsamer Backbone-Link zum Internet
 		\end{itemize}
 		\item Schichtenmodell
 		\begin{itemize}
@@ -600,13 +620,14 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Annahmen und Anforderungen
 		\begin{itemize}
-			\item Anwendungen senden kleine Datenmengen, typischerweise unter 100 Byte
+			\item Anwendungen senden kleine Datenmengen, typischerweise \texttt{<100 Byte}
 			\item Basiert auf 802.15.4, wobei Alternativen existieren (IPv6 über Bluetooth Low Energy oder NFC)
 			\item Batteriebetriebene, günstige Geräte mit geringer Leistungsfähigkeit
 			\item Minimaler Konfigurations- und Managementaufwand (u.U. schwere Erreichbarkeit der Geräte)
 		\end{itemize}
 		\item IPv6-Adressen
 		\begin{itemize}
+			\item Adressierung: Abbildung von \texttt{IPv6-Adressen} \(\rightarrow\) \texttt{IEEE 802.15.4-Adresse}. Alle Knoten eines LoWPANs haben einen gemeinsamen \texttt{IPv6-Prefix}
 			\item Adresstypen
 			\begin{itemize}
 				\item Adresstyp wird durch führende Bits einer Adresse festgelegt
@@ -615,6 +636,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Multicast \texttt{ff00::/8}: Identifikator für eine Menge von Interfaces. Dateneinheit mit solcher Adresse wird an alle Interfaces aus dieser Menge ausgeliefert
 				\item Global Unicast \texttt{0:0:0:0:0:ffff::/96}: IPv4-Adressen abgebildet auf IPv6-Adressen
 			\end{itemize}
+			\item Addressn bei Nutzung von \texttt{IEEE 802.15.4}: \texttt{MAC-Adresse} der Geräte (\texttt{IEEE-64-bit Adressen}) oder \texttt{16-bit} Kurzadressen, die der PAN-Koordinator verteilt (vgl. \texttt{802.15.4} im Non-Beacon-Modus)
 		\end{itemize}
 		\item Beispiel für Simple LoWPAN Netzkonfiguration mit einem Edge-Router und mehreren Routern/Hosts
 		\begin{enumerate}
@@ -623,19 +645,21 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Edge-Router gibt Präfix im LoWPAN bekannt und Router konfigurieren Adressen
 		\end{enumerate}
 		\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
+		\item 6LoWPAN spezifiziert eigene Paketköpfe
 		\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
 		\item Header Compression
 		\begin{itemize}
-			\item Motivation: Vermeidung von redundanten Informationen. Dabei kann entweder der IPv6-Kopf oder der UDP-Kopf komprimiert werden
+			\item Motivation: Verringerung des statischen Übertragungsaufwands durch Vermeidung von redundanten oder weglassen unnötiger Informationen. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
 			\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
 			\item Komprimierung im IPv6-Kopf
 			\begin{itemize}
 				\item Größe eines IPv6-Headers: 48 Byte
-				\item Parameter, die komprimiert werden können: Versionsnummer (ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP \(\rightarrow\) kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
+				\item Parameter, die komprimiert werden können: Versionsnummer (immer \(6\), ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden, bei externen Zielen muss komplette IPv6-Ziel-Adresse angegeben werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP
+				\item Kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
 			\end{itemize}
 			\item Komprimierung im UDP-Kopf
 			\begin{itemize}
-				\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend), UDP-Payload-Length kann aus Schicht 3 berechnet werden. Komprimierung der Prüfsumme allerdings schwierig
+				\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend); UDP-Payload-Length kann aus Schicht 3 berechnet werden; Komprimierung der Prüfsumme allerdings schwierig
 				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
 			\end{itemize}
 			\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
@@ -643,92 +667,122 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Constrained Application Protocol (CoAP)}
 	\begin{itemize}
-		\item Transferprotokoll für eingebettete bzw. ressourcenbeschränkte Maschinen-zu-Maschinen Kommunikation als leichtgewichtige Alternative zu HTTP. Kann von Proxy unkompliziert in HTTP umgewandelt werden
+		\item Transferprotokoll für eingebettete bzw. ressourcenbeschränkte Maschinen-zu-Maschinen Kommunikation als leichtgewichtige Alternative zu HTTP; kann von Proxy unkompliziert in HTTP umgewandelt werden; nutzt \texttt{UDP}; kompakt; mit \texttt{DTLS} verwendbar
 		\item Requests/Responses enthalten jeweils einen Methodenaufruf (\texttt{GET} (Abruf), \texttt{PUT} (Speicherung), \texttt{POST} (Update), \texttt{DELETE} (Löschen)) auf ein Objekt (eindeutig per URI identifiziert)
+		\item Identifizierung eines Objekts per \texttt{URI}
 		\item Messaging-Modell
 		\begin{itemize}
 			\item Eindeutige ID zur Duplikatserkennung sowie dem Zuordnen von Quittungen
 			\item Wahlweise unzuverlässige Übertragung durch Non-Confirmable Nachrichtentyp (\texttt{NON}) oder zuverlässige Übertragung (Quittungen und exponentieller Backoff) durch Confirmable Nachrichtentyp (\texttt{CON})
+			\item Empfangsbestätigung durch \texttt{ACK}-Nachricht (Quittung)
 			\item Signalisierung von Fehlern durch Reset Nachrichtentyp (\texttt{RST})
 		\end{itemize}
 		\item Response-Klassen: 2 (Success), 4 (Client-Error), 5 (Server-Error). Responses können Piggy-Backed im \texttt{ACK} oder als separate Nachricht übertragen werden (muss im zweiten Fall ggf. mit einem \texttt{ACK} vom Client bestätigt werden)
-		\item Sicherheitsmodi bei Verwendung von DTLS
+		\item Sicherheitsmodi bei Verwendung von DTLS: Sichert Integrität, Vertraulichkeit und Authentizität
 		\begin{itemize}
 			\item NoSec
-			\item PreSharedKey
+			\item PreSharedKey: Vorverteilte Schlüssel
 			\item RawPublicKey: Nutzung von DTLS mit asymmetrischem Schlüsselpaar
 			\item Certificate: Nutzung von DTLS mit X.509-Zertifikat
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{ZigBee}
+\subsubsection{Anwendungsgetrieben}
 \begin{itemize}
-	\item Von der \textit{ZigBee Allicance} entwickelter Standard für das Internet der Dinge ohne Interoperabilität mit etablierter Infrastruktur
-	\item Randbedingungen: Geringes Datenvolumen sowie geringer Energieverbauch
-	\item \textbf{Schichtenmodell}
+	\item \textbf{Message Queue Telemetry Transport (MQTT)}
 	\begin{itemize}
-		\item Anwendungsschicht
+		\item Transfer-Protokoll für eingebettete/resourcenbeschränkte Maschinen-zu-Maschinen Kommunikation (wie CoAP). Fokus auf Many-to-Many-Kommunikation
+		\item TCP-basiertes, einfaches Protokoll für leichtgewichtige Implementierung
+		\item Publish-Subscribe-Paradigma mit \texttt{Topics}; Sicherheit mittels \texttt{TLS/DTLS}; ereignisorientiert
+		\item Nachrichtenweiterleitung über zentralen (puffernden) Broker
+		\item Quality of Service: Von Client während \texttt{SUBSCRIBE} festgelegt, kann allerdings von Broker (globale QoS-Levelgrenze) und Absender (in \texttt{PUBLISH}) beschränkt werden
+		\begin{description}
+			\item{Level 0}: Keine Garantien
+			\item{Level 1}: Clients empfangen Nachrichten mindestens einmal
+			\item{Level 2}: Clients emfangen Nachtichten genau einmal
+		\end{description}
+		\item Gegenüberstellung mit CoAP
 		\begin{itemize}
-			\item Anwendungsunterstützung: Zuverlässiger Transportdienst, Kopplung von Geräten, Gruppenverwaltung
-			\item Anwendungs-Framework: Anwendungsfunktionalität
+			\item Publish-Subscribe-Schema mit zentralem Broker vs. Ende-zu-Ende-Verbindungen zwischen Datenquelle und -senke
+			\item \texttt{MQTT} kann Datenquellen entlasten (durch puffernden Broker vs. Request-Response-Schema bei CoAP) oder belasten (Aktualisierungsrate > Bedarf)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{ZigBee}
+	\begin{itemize}
+		\item Von der \textit{ZigBee Allicance} entwickelter Standard für das Internet der Dinge ohne Interoperabilität mit etablierter Infrastruktur
+		\item Randbedingungen: Geringes Datenvolumen sowie geringer Energieverbauch
+		\item \textbf{Schichtenmodell}
+		\begin{itemize}
+			\item Anwendungsschicht
 			\begin{itemize}
-				\item Einbettung von bis zu 240 Anwendungsobjekten (entsprecht jeweils einem Endpunkt)
-				\item Definition von Anwendungsprofilen (Kommunikationsstandards)
+				\item Anwendungsunterstützung: Zuverlässiger Transportdienst, Kopplung von Geräten, Gruppenverwaltung
+				\item Anwendungs-Framework: Anwendungsfunktionalität
+				\begin{description}
+					\item{+} Einbettung von bis zu 240 Anwendungsobjekten (entsprecht jeweils einem Endpunkt)
+					\item{+} Definition von Anwendungsprofilen (Kommunikationsstandards)
+				\end{description}
+				\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
 			\end{itemize}
-			\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
+			\item Netzwerkschicht für Routing und Adressierung
+			\item 802.15.4 als Medienzugriffsprotokoll
 		\end{itemize}
-		\item Netzwerkschicht für Routing und Adressierung
-		\item 802.15.4 als Medienzugriffsprotokoll
-	\end{itemize}
-	\item \textbf{Anwendungsprofile}
-	\begin{itemize}
-		\item Soll Interoperabilität zwischen Geräteherstellern sicherstellen
-		\item In ZigBee Profilen werden für einen bestimmten Anwendungsfall Systemvoraussetzungen und Geräte definiert. Jedes Gerät implementiert hierbei eine Menge von Clustern. Beispielprofile sind z. B. Home Automation, Building Automation und Health Care\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Profile}}
-		\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschlter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
-	\end{itemize}
-	\item Client/Server-Modell: Attribute sind typischerweise Servern zugeordnet (beispielsweise der Status einer Lampe)
-	\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
-	\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
-	\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
-	\item Fragmentierung: Quittungen verpflichtend
-	\item Gruppenverwaltung: Endpunkte können mehreren Gruppen zugeordnet werden. In der \textit{Gruppentabelle} werden Gruppen IDs lokalen Endpunkten zugeordnet
-	\item Adressierung erfolgt über 16 Bit Kurzadressen. Keine Verwendung von IP-Adressen
-	\item \textbf{Geräteklassen bzw. Rollen}
-	\begin{itemize}
-		\item Koordinator (FFD): Verwaltung des ZigBee-Netzwerks, beeinflusst Netztopologie, Funkkanal, etc.
-		\item Router (FFD): Kann Dateneinheiten im Netzwerk weiterleiten
-		\item Endgerät (FFD, RFD): Geräte ohne Weiterleitungsfunktion
-	\end{itemize}
-	\item \textbf{Routing}
-	\begin{itemize}
-		\item Baumtopologie
+		\item \textbf{Anwendungsprofile}
 		\begin{itemize}
-			\item Topologie: Ein Koordinator als Wurzel, Router als weitere Elternknoten, Endgeräte als Blätter
-			\item Statisches Adressierungsschema, das für jeden Router einen eigenen Adressraum vorsieht \(\rightarrow\) implizite Baumstruktur im Adressraum
-			\item Adressen können direkt zum Routing genutzt werden
-			\item Vorteile: Weder Pfadsuche noch Zustandshaltung
-			\item Nachteile: Ausfallanfällig (keine redundanten Pfade); suboptimale Pfade; falls kein Router mit freier Adresse in Reichweite: kein Netzzutritt möglich
-			\item Beacon-Modus möglich: Duty-cycling für alle Knoten
+			\item Soll Interoperabilität zwischen Geräteherstellern sicherstellen
+			\item In ZigBee Profilen werden für einen bestimmten Anwendungsfall Systemvoraussetzungen und Geräte definiert. Jedes Gerät implementiert hierbei eine Menge von Clustern. Beispielprofile sind z. B. Home Automation, Building Automation und Health Care\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Profile}}
+			\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschlter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
 		\end{itemize}
-		\item Meshtopologie
+		\item Client/Server-Modell: Attribute sind typischerweise Servern zugeordnet (beispielsweise der Status einer Lampe)
+		\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
+		\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
+		\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
+		\item Fragmentierung: Quittungen verpflichtend
+		\item Gruppenverwaltung: Endpunkte können mehreren Gruppen zugeordnet werden. In der \textit{Gruppentabelle} werden Gruppen IDs lokalen Endpunkten zugeordnet
+		\item Adressierung erfolgt über 16 Bit Kurzadressen. Keine Verwendung von IP-Adressen
+		\item \textbf{Geräteklassen bzw. Rollen}
 		\begin{itemize}
-			\item Topologie: Ein Koordinator im Netzwerk, Router verbinden untereinander und Endgeräte verbinden sich zum nächsten Router
-			\item Adressen werden zufällig gewählt. Koordinator stellt sicher, dass keine Kollisionen entstehen
-			\item Ad-hoc on Demand Distance Vector Routing (AODV): Fluten von Routinganfragen worauf hin das Zielsystem die Anfrage beantwortet und so ein bidirektionaler Pfad zwischen den Routern aufgebaut wird. Das Endsystem eteiligt sich nicht an der Pfadsuche
-			\item Vorteile: Robust, selbstheilend; eventuell bessere Pfade
-			\item Nachteile: Kein Beacon-Modus, höherer Ressourcenbedarf
+			\item Koordinator (FFD): Verwaltung des ZigBee-Netzwerks, beeinflusst Netztopologie, Funkkanal, etc.
+			\item Router (FFD): Kann Dateneinheiten im Netzwerk weiterleiten
+			\item Endgerät (FFD, RFD): Geräte ohne Weiterleitungsfunktion
+		\end{itemize}
+		\item \textbf{Routing}
+		\begin{itemize}
+			\item Baumtopologie
+			\begin{itemize}
+				\item Topologie: Ein Koordinator als Wurzel, Router als weitere Elternknoten, Endgeräte als Blätter
+				\item Statisches Adressierungsschema, das für jeden Router einen eigenen Adressraum vorsieht \(\rightarrow\) implizite Baumstruktur im Adressraum
+				\item Adressen können direkt zum Routing genutzt werden
+				\item Vorteile: Weder Pfadsuche noch Zustandshaltung
+				\item Nachteile: Ausfallanfällig (keine redundanten Pfade); suboptimale Pfade; falls kein Router mit freier Adresse in Reichweite: kein Netzzutritt möglich
+				\item Beacon-Modus möglich: Duty-cycling für alle Knoten
+			\end{itemize}
+			\item Meshtopologie
+			\begin{itemize}
+				\item Topologie: Ein Koordinator im Netzwerk, Router verbinden untereinander und Endgeräte verbinden sich zum nächsten Router
+				\item Adressen werden zufällig gewählt. Koordinator stellt sicher, dass keine Kollisionen entstehen
+				\item Ad-hoc on Demand Distance Vector Routing (AODV): Fluten von Routinganfragen worauf hin das Zielsystem die Anfrage beantwortet und so ein bidirektionaler Pfad zwischen den Routern aufgebaut wird. Das Endsystem eteiligt sich nicht an der Pfadsuche
+				\item Vorteile: Robust, selbstheilend; eventuell bessere Pfade
+				\item Nachteile: Kein Beacon-Modus, höherer Ressourcenbedarf
+			\end{itemize}
+		\end{itemize}
+		\item \textbf{ZigBee 2007 - Stack-Profile}
+		\begin{itemize}
+			\item ZigBee: Baumtopologie mit statischem Routing und "`normaler Sicherheit"'. Reduzierte Funktionalität und einfache Verfahren \(\rightarrow\) insgesamt geringer Ressourcenbedarf
+			\item ZigBee Pro: Meshtopologie mit freier Adressvergabe, die Concast, Multicast und Source-Routing beherrscht. Sicherheitsstandard mit hohem Anspruch
+		\end{itemize}
+		\item \textbf{ZigBee IP}
+		\begin{itemize}
+			\item Basiert auf 6LoWPAN und definiert einen Protokollstapel auf Basis etablierter Standards: RPL, TCP, HTTP+TLS, ZigBee SE 2.0
+			\item Spezifiziert im Wesentlichen Datenformate, Schnittstellen und Anwendungsverhalten
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{ZigBee 2007 - Stack-Profile}
+	\item \textbf{EnOcean}
 	\begin{itemize}
-		\item ZigBee: Baumtopologie mit statischem Routing und "`normaler Sicherheit"'. Reduzierte Funktionalität und einfache Verfahren \(\rightarrow\) insgesamt geringer Ressourcenbedarf
-		\item ZigBee Pro: Meshtopologie mit freier Adressvergabe, die Concast, Multicast und Source-Routing beherrscht. Sicherheitsstandard mit hohem Anspruch
-	\end{itemize}
-	\item \textbf{ZigBee IP}
-	\begin{itemize}
-		\item Basiert auf 6LoWPAN und definiert einen Protokollstapel auf Basis etablierter Standards: RPL, TCP, HTTP+TLS, ZigBee SE 2.0
-		\item Spezifiziert im Wesentlichen Datenformate, Schnittstellen und Anwendungsverhalten
+		\item Energie bei Energy Harvesting nur eingeschränkt (zeitweise) verfügbar \(\rightarrow\) keine Kontrolle und Planbarkeit
+		\item Kooperativer Medienzugriff impliziert Verzögerung und Kosten
+		\item Beispiele für Energiegewinnung mit Energy Harvesting: Kinetische (Lichtschalter)/thermische Energie, Solarenergie
+		\item EnOcean extrem angepasst an eingeschränkte Energieversorgung (minimale Nutzdaten von \(\sim 1 Byte\) oft ausreichend)
 	\end{itemize}
 \end{itemize}
 
@@ -776,7 +830,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \section{Sicherheit}
 \begin{itemize}
-	\item Kryptografische Operationen sind teuer und benötigen viel Speicher. Speziell asymmetrische Schlüssel benötigen noch mehr Speicherplatz \(\rightarrow\) vermeide asymmetrische Kryptografie so weit wie möglich
+	\item Kryptografische Operationen sind teuer und benötigen viel Speicher. Speziell asymmetrische Schlüssel benötigen noch mehr Speicherplatz als symmetrische \(\rightarrow\) vermeide asymmetrische Kryptografie so weit wie möglich
 \end{itemize}
 
 \subsection{Schlüsselaustausch in Sensornetzen}
@@ -794,6 +848,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\begin{itemize}
 			\item Benutzer erstellt vorab offline eine große Liste mit verschiedenen, nummerierten Schlüsseln. Jedes System, das dem Netz beitreten soll, bekommt vorab eine zufällige Teilmenge dieser Schlüssel
 			\item Zwei Systeme, die kommunizieren wollen besitzen mit einer bestimmten Wahrscheinlichkeit einen gemeinsamen Schlüssel; falls nicht lässt sich ein Schlüsselpfad konstruieren
+			\item Alle Systeme bilden mit einer Wahrscheinlichkeit \(>99\%\) einen zusammenhängenden Schlüsselgrafen
 			\item Finden von gemeinsamen Schlüsseln: \texttt{System 1} sendet eine Liste seiner Schlüsselnummern im Klartext an \texttt{System 2}. \texttt{System 2} antwortet mit einer gemeinsamen Schlüsselnummer, ebenfalls im Klartext \(\rightarrow\) unsicher
 			\item Erweiterung um Challenge: \texttt{System 1} sendet Zufallszahl \(Z\) sowie jeweils verschlüsseltes \(Z\) (also (\(Z, ENC_{1..n}(Z)\)) an \texttt{System 2}. \texttt{System 2} antwortet beispielsweise mit \(ENC_2(Z+1)\) \(\rightarrow\) teuer
 			\item Simulierte Sicherheitsbetrachtung mit \(n\) Systemen: Logarithmisches Wachstum der prozentualen Anzahl an gebrochener Verbindung, abhängig vom Prozentsatz der kurrumpierten Systeme. Spätestens bei 10 \% Korruption sind nahezu alle Verbindungen unsicher
@@ -802,7 +857,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Key Infection: Smart Trust for Smart Dust
 		\begin{itemize}
 			\item Einsatzszenario: Viele, sehr günstige und zufällige ausgebrachte Sensorknoten mit eingeschränktem Angreifermodell (kann nicht das komplette Netz abhören und kann keine Angriffe während der Schlüsselaustauschphase starten)
-			\item \textit{Key Infection}: Inital gegenseitiger Schlüsselaustausch zwischen allen Systemen in Reichweite. Dazu sendet \texttt{Knoten 1} einen zufälligen Schlüssel und versendet ihn per Broadcast. \texttt{Knoten 2} wählt einen gemeinsamen Sitzungsschlüssel und sendet diesen zusammen mit seiner ID verschlüsselt an \texttt{Knoten 1}
+			\item \textit{Key Infection}: Inital gegenseitiger Schlüsselaustausch jeweils zwischen allen Systemen in Reichweite. Dazu sendet \texttt{Knoten 1} einen zufälligen Schlüssel und versendet ihn per Broadcast. \texttt{Knoten 2} wählt einen gemeinsamen Sitzungsschlüssel und sendet diesen zusammen mit seiner ID verschlüsselt an \texttt{Knoten 1}
 			\item Protokoll (2 und 3 optional)
 			\begin{enumerate}
 				\item Key Infection: Initialer Schlüsselaustausch zwischen Nachbarknoten
@@ -816,16 +871,22 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Tatsächlicher Angreifer eventuell mit mehr Möglichkeiten
 			\end{itemize}
 		\end{itemize}
-		\item Aktuell einige neue Ansätze mit asymmetrischen Verfahren auf dem Weg zur Standardisierung
+		\item Stand der Forschung: Einige neue Ansätze mit asymmetrischen Verfahren auf dem Weg zur Standardisierung
 	\end{itemize}
 \end{itemize}
 
 
 \subsection{Standardisierung - Sicherheit im IoT}
 \begin{itemize}
+	\item \textbf{Sicherheit in \texttt{IEEE 802.15.4}}
+	\begin{itemize}
+		\item Link-Layer-Schutzmechanismus durch symmetrisches \texttt{AES-CCM}: Zunächst \texttt{AES-CBC-MAC} zur Integritätssicherung, anschließend Verschlüsselung durch \texttt{AES-CTR}
+		\item Generelles Problem: Jede Kombinationen aus Schlüssel und Initialisierungsvektor (Nonce) darf nur einmal verwendet werden \(\rightarrow\) Nonce beinhaltet einen Frame-Zähler
+	\end{itemize}
 	\item \textbf{DTLS In Constrained Environments (DICE): Draft bei der IETF}
 	\begin{itemize}
 		\item Ziel: Effiziente Nutzung von DTLS in IoT/IoE-Anwendungen
+		\item Problem: (D)TLS zu komplex/speicherintensiv für IoE-Anwendungen \(\rightarrow\) Spezifizierung eines TLS/DTLS-Profils mit angepasstem Umfang (DICE)
 		\item Soll Vertraulichkeit sicherstellen und auf ressourcenbeschränkten Systemen implementierbar sein
 		\item Definition von DTLS-Konfigurationen, die effizient und sicher sind
 		\item DICE DTLS-Profil
@@ -861,23 +922,19 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item CAM leitet Client-Ticket an Client weiter
 		\end{enumerate}
 	\end{itemize}
-	\item \textbf{ZigBee}
-	\begin{itemize}
-		\item Absicherung entweder auf Netzwerkschicht (ein Schlüssel für das gesamte Netzwerk: Single Mission Key) oder Anwendungsschicht (eigene Schlüssel für jede Ende-zu-Ende-Verbindung möglich: Linkschlüssel). Letzteres nur für Unicast-Kommunikation anwendbar
-		\item Schlüsselverwaltung erfolgt durch ein Trustcenter. Problem: Schlüsselverteilung bei initialem Vebrindungsaufbau
-		\item \textit{ZigBee Home Automation Profile} definiert Standardschlüssel \(\rightarrow\) kein Mehrwert gegenüber Übertragungen im Klartext
-	\end{itemize}
 \end{itemize}
 
 
-\subsection{Reality Check: BMW ConnectedDrive}
+\subsection{Reality Check}
+
+\subsection{Fallbeispiel: BMW ConnectedDrive}
 \begin{itemize}
 	\item Cloud-basierter Dienst zur Steuerung des Autos aus der Ferne. Kommunikation via SMS und HTTP
 	\item \textbf{Schutzmechanismen}
 	\begin{itemize}
 		\item Sicherheitsmechanismen sind im Modem (im Auto) implementiert. Mikrokontroller realisiert Basisfunktionalität und überwacht das Modem
 		\item Verschlüsselung wahlweise AES oder DES, Signaturverfahren mit DES-CBC-MAC, HMAC-SHA1 oder HMAC-SHA256
-		\item Schlüsselmaterial ist im Modus fest implementiert und bei allen Fahrzeugen gleich \(\rightarrow\) relativ einfach zu extrahieren
+		\item Schlüsselmaterial ist fest im Modem implementiert und bei allen Fahrzeugen gleich \(\rightarrow\) relativ einfach zu extrahieren
 	\end{itemize}
 	\item \textbf{Angriff}
 	\begin{itemize}
@@ -896,7 +953,15 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Projekte}
+\subsubsection{Fallbeispiel: Philips Hue}
+\begin{itemize}
+	\item Plattform für "`intelligente"' Beleuchtungssysteme, basiered auf ZigBee Light Link; direkt per ZigBee steuerbar; Verfügbar auch über das Internet
+	\item Absicherung durch Single Mission Key: Ein Netzwerkschlüssel für alle Geräte im PAN \(\rightarrow\) sicher solange der Angreifer nicht an den Schlüssel kommt
+	\item Problem: Reichweitenbegrenzung zum Gerätemanagement kann durch Programmierfehler umgangen werden. Nach Rücksetzen des Gerätes bucht es sich (als normales ZLL-Gerät) auch in fremde Netze ein
+\end{itemize}
+
+
+\subsection{Projekte}
 \begin{itemize}
 	\item \textbf{Kompetenzzentrum für angewandte Sicherheitstechnologien (KASTEL)}
 	\begin{itemize}
@@ -914,7 +979,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{FleGSens}
 	\begin{itemize}
 		\item Untersucht die Möglichkeit einer sicheren und flexiblen Überwachung von Grenz- und Liegenschaften mit Hilfe von drahtlosen Sensornetzen. Prototyp überwacht eine 350 m lange Grenze mit 200 Sensorknoten
-		\item Herausforderungen: Unsichere/raue Umgebung, Protokolle zum Betrieb und zur Ortung von Eindringlingen, Absicherung gegen Angriffe mit IT-Mitteln, sicherer Betrieb auch bei Ausfall von 10 \% der Knoten
+		\item Herausforderungen: Unsichere/raue Umgebung, Protokolle zum Betrieb und zur Ortung von Eindringlingen, Absicherung gegen Angriffe mit IT-Mitteln, sicherer Betrieb auch bei Ausfall von 10\% der Knoten
 		\item Protokolle
 		\begin{itemize}
 			\item Trackingprotokoll mit Lokalisierung
