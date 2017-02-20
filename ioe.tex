@@ -7,7 +7,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Zielvorstellung: Erhöhung der Lebensqualität in einer zunehmend Technik-geprägten und vernetzten Umgebung
 	\item Allerdings verbunden mit ubiquitären Sammeln und Auswerten von Daten, meist beim Hersteller, ohne Kontrolle des Eigentümers
 	\item Alltagsbeispiele: Die intelligente Toilette; Lifelogging-Armband; internetfähige Wetterstation, deren Daten auf einer öffentliche Wetterkarte bereitstellt werden, es werden Sprachdaten erfasst, Kommunikation Wetterstation \(\leftrightarrow\) Smartphone-App ausschließlich per Server des Anbieters
-	\item Sensor/Aktor, Anwendungsbeispiel Gewächshaus: Sensoren erfassen Umweltdate, Aktoren setzen Regeln zur Kontrolle um (Wasserzufuhr, Schatten, etc.)
+	\item Sensor/Aktor, Anwendungsbeispiel Gewächshaus: Sensoren erfassen Umweltdaten, Aktoren setzen Regeln zur Kontrolle um (Wasserzufuhr, Schatten, etc.)
 	\item \textbf{Historische Beispiele}
 	\begin{itemize}
 		\item Great Duck Island (2002): Erforschung des Mikroklimas der unterirdischen Nestern von Sturmschwalben ohne die Tiere zu stören ("`non-intrusive"' und "`non-disruptive"'). Seonsorknoten in den Höhlen der Nestern sowie Basisstation mit direktem Satellitenuplink
@@ -60,8 +60,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item Nanonetze: Vernetzte Nanomaschinen, die jeweils nur eine Aufgabe erledigen (Berechnen/Speichern/Messen/Manipulieren). Anwendung beispielsweise in Biomedizin, Militär oder (Chemie-)Industrie. Kommunikation über E. coli Bakterien oder Pheromone (in Wasser)
 	\item Smart Dust: Sehr viele kleine (dumme) Knoten, die unaufdringlich in die Umwelt integriert werden. Sehr beschränkte Hardware und viele Probleme und offene Fragen (Skalierbarkeit/Netzdichte/Energieversorgung/Entsorgung)
-	\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstoranisierend, geringe Leistungsaufnahme, Batteriebetrieb
-	\item Physical und Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte
+	\item Klassische Sensornetze: Sehr kleine, maßgeschneiderte Systeme für Einzelanwendungen. Selbstorganisierend, geringe Leistungsaufnahme, Batteriebetrieb (beispielsweise \texttt{Zebranet})
+	\item Physical und Embedded Computing: Flexible Systeme aus eingebetteter, miniaturisierter Standardhardware. Kostengünstig und energieeffizient. Einsatzbereiche u.a. Steuerungselektronik, Home Automation, Bastlerprojekte (beispielsweise \texttt{ESP8266})
 	\item Smart- und Submetering: Zeitnahe Erfassung und Steuerung von Energieverbräuchen. Große Ansammlung von Geräten und Kommunikationsstandards
 	\item Smart Home: Hausautomation und -monitoring durch (drahtlose) Sensornetze mit Steuerung wahlweise vor Ort oder über das Internet. Herausforderungen beispielsweise Nutzbarkeit vs. Sicherheit, Zugriffsschutz, Robustheit, Skalierbarkeit. Privacy bisher kaum umgesetzt; Abhängigkeit von externen Anbietern bei privaten, sicherheitsrelevanten Systemen (Heizung, Rauchmelder, Alarmanlage, etc)
 	\item Drohnen und Roboter: Mobile Plattform mit Sensoren und Aktoren zur Messung vor Ort. Einsatzbereiche sind kritische/lebensfeindliche/unzugängliche Gebiete sowie Hilfestellung im menschlichen Umfeld
@@ -91,16 +91,16 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz durch PETs
 	\item Allgemeine IT-Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA: Confidentiality, Integrity, Availability)
 	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparenz, Intervenierbarkeit, Nicht-Identifizierbarkeit, Unentdeckbarkeit, (Nicht-) Abstreitbarkeit
-	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen\footnote{\url{https://de.wikipedia.org/wiki/PET}}
+	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen. Beispielse für Technologien: \texttt{Anonymizer}\footnote{\url{https://de.wikipedia.org/wiki/Anonymizer}}, Shared Online Accounts
 	\item \textbf{Prozess zum Entwurf und zur Bewertung}
 	\begin{enumerate}
 		\item Analyse des Systems: Welche Entitäten sind beteiligt und welcher Dienst wird erbracht?
 		\item Erstellen von Vertrauensmodell (Wie viel Vertrauen wird dem Anbieter entgegengebracht?) und Angreifermodell (Kategorisierung des Angreifers nach Motivation/Ressourcen/Ziel/etc.)
-		\item Entwurf geeigneter PETs
-		\item Bewertung der PETs
+		\item Entwurf geeigneter PETs (auf Basis des Angreifermodells)
+		\item Bewertung der PETs (auf Basis des Angreifermodells)
 	\end{enumerate}
 	\item Angreifermodell: Klassifizierung von Angreifern nach Motivation/Ressourcen/Fähigkeiten
-	\item \textbf{Klassisches Angreifermodell: "`Dolev-Yoa"'-Angteifer}
+	\item \textbf{Klassisches Angreifermodell: "`Dolev-Yoa"'-Angreifer}
 	\begin{itemize}
 		\item Omnipräsent im Netz, kann sämtliche Kommunikation abhören
 		\item Kann eigene Dateneinheiten verzeugen und versenden sowie fremden Datenverkehr abhören und modifizieren
@@ -125,7 +125,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsection{Ansätze zum Schutz der Privatsphäre}
 \begin{itemize}
 	\item Anwendungsabhängige Anforderungen. Diensterbringung mit dem Prinzip der Datensparsamkeit
-	\item Es sollen lediglich Daten erfasst werden, die möglichst wenig Privates preisgeben und die nicht mit Nutzern oder untereinander in Verbindung gebracht werden können
+	\item Es sollen lediglich Daten erfasst werden, die möglichst wenig Privates preisgeben und die nicht mit Nutzern oder untereinander in Verbindung gebracht werden können (Unverkettbarkeit)
 	\item Ansätze: Verschleierung von Sampling-Werten (Präzision herabsetzen oder Störwerte einfügen); Vermeidung von zentralen Datensenken (P2P oder lokale Diensterbringung); Verschleierung der Identität der Quelle; Unverkettbarkeit von Samples gewährleisten (Anpassen der Samplerate)
 	\item \textbf{Entwurfsstrategien: Schutz der Privatsphäre}
 	\begin{itemize}
@@ -184,8 +184,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{Privatheit im Smart Traffic}
 	\begin{itemize}
-		\item Nutzung von Positionsdaten von Android-Smartphones
 		\item Anwendungen: Verkehrssicherheit, Verkehrsoptimierung, Erfassen von Wetter/Luftqualität/etc. mittels Sensordaten
+		\item Nutzung von Positionsdaten von Android-Smartphones
 		\item Trennung von Positionssamples und Identitäten notwendig. Pseudonymwechsel nötig, um Positionssamples desselben Nutzers nicht leicht zusammengruppieren zu können. Problem: Beobachtbarkeit. Lösung: Zufällige "`Funkstille"' beim Wechsel oder gleichzeitiger Wechsel verschiedener Nutzer in der selben Umgebung (innerhalb "`Mix-Zones"')
 		\item Eigene Arbeit \textit{Geocast mit OverDrive}: P2P-Netz zwischen den Fahrzeugen. Keine zentrale Senke, niemand hat die komplette Sicht. Nur direkte Nachbarn erhalten die genaue Position, weit entfernte bekommen verfälschte Daten (bei jedem Hopp werden die Daten leicht verändert)
 	\end{itemize}
@@ -221,7 +221,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Verwendung von Zeitmultiplex, beispielsweise mit (festen) Zeitschlitzen
 		\item Unnötiger Energieverbrauch bei Kollisionen, unnötigem Lauschen und Mithören \(\rightarrow\) vermeiden. Transceiver soll möglichst oft ausgeschaltet werden
 		\item RTS-CTS-Handshake zur Kollisionsvermeidung (Auftritt während des Handshake unwahrscheinlich, da Pakete sehr klein): Empfänger wird zunächst mit \texttt{RTS} angefragt ob es empfangsbereit ist. Bei naherzu zeitgleichen Anfragen zweier Sender gewinnt der schnellere. Die sendewilligen Systeme warten, bis der Empfänger mittels \texttt{CTS} Empfangsbereitschaft signalisiert. Vermeidet versteckte/ausgelieferte Endsysteme
-		\item Duty-Cycling zur Reduzierung des Energieverbrauchs: Funktransceiver wird bei Bedarf synchron (erfordert Zeitsynchronisation zwischen den Knoten) oder asynchron (ohne Koordinnation zwischen den Knoten) aktiviert, was zusätzliche Latenz verursacht, da bei Sendewunsch zunächst auf das entsprechende Zeitfenster gewartet werden muss
+		\item Duty-Cycling zur Reduzierung des Energieverbrauchs: Funktransceiver wird bei Bedarf synchron (erfordert Zeitsynchronisation zwischen den Knoten) oder asynchron (ohne Koordination zwischen den Knoten) aktiviert, was zusätzliche Latenz verursacht, da bei Sendewunsch zunächst auf das entsprechende Zeitfenster gewartet werden muss (\textit{Duty Cycle: Zeitanteil, den ein System im Wachzustsnd vrbringen soll})
 		\item WLAN im IoE: Verursacht hohen Energiebedarf durch Kollisionen, Idle Listening, Overhearing
 		\item Bluetooth im IoE: Langsamer, aufwendiger Verbindungsaufbau; Synchronisation mehrerer Piconetze problematisch
 		\item Bluetooth Smart (beeinhaltet "`classic"', "`high speed"' und "`low energy"'): Hohe Reichweite (150 m) mit geringer Bandbreite (1 Mbit/s). Nur der Master versucht dauerhaft neue Geräte zu finden sowie eingebaute Sicherheitsfunktionalität (AES-128-CCM). Lizenzfreier Betrieb (konventionelles Bluetooth erfordert Zertifizerung im kommerziellen Umfeld) \(\rightarrow\) insgesamt energieeffizienter Betrieb möglich
@@ -249,18 +249,19 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Synchronisation: System muss den Anfang der nächsten Sleep Phase kennen lernen. Dazu lernt es die Zeitpläne seiner Nachbarn durch regelmäßiges Hören der \texttt{SYNC}-Dateneinheiten \(\rightarrow\) es entstehen "`SYNC-Inseln"'. Grenzknoten lernen und befolgen verschiedene Zeitpläne. Initiierung einer "`eigenen"' "`SYNC-Insel"' falls nach einem Timeout kein \texttt{SYNC} eines anderen Knotens empfangen wird
 		\item Verbesserungen
 		\begin{itemize}
-			\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge als Burst nach einem einzigen RTS-CTS-Handshake. Die Bitfehlerwahrscheinlichkeit steigt mit der Länge der Nachricht. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase). Wird eine Dateneinheit nicht sofort quittiert, so wird von einem Übertragungsfehler ausgegangen und sie wird erneut gesendet
+			\item \textit{Message Passing} zur fragmentierten Übertragung einer größeren Datenmenge. Die Bitfehlerwahrscheinlichkeit steigt mit der Länge der Nachricht. Jede Dateneinheit wird einzeln bestätigt. Bei einem Bitfehler muss nur die fehlerhafte Einheit neu gesendet werden und nicht die komplette Nachricht (alles während einer einzigen Sleep-Phase). Wird eine Dateneinheit nicht sofort quittiert, so wird von einem Übertragungsfehler ausgegangen und sie wird erneut gesendet
 			\item Erweiterung \textit{Adaptive Listening}: Bisheriges System spart Energie aber vergrößert die Verzögerungen bei Multihop (pro Rahmen kann maximal eine Dateneinheit weitergereicht werden). Einführung einer zusätzlichen Phase um einen neuen Datenaustausch anzustoßen (Adaptive Listening Phase; startet nach Versenden der Quittung). So kann innerhalb eines einzelnen S-MAC-Frames mehr als ein Hop überbrückt werden. Problem: Woher weis ein schlafendes System, dass die Datenübertragung abgeschlossen ist?
 		\end{itemize}
 		\item Leistungsbewertung über Energiebedarf pro Byte; durschnittliche Ende-zu-Ende-Verzögerung sowie Ende-zu-Ende-Goodput (Gesamtmenge durch Gesamtzeit). S-MAC reduziert den Energiebedarf deutlich. Bei hoher Last kann Adaptive Listening den Energiebedarf nochmals halbieren
 	\end{itemize}
 	\item \textbf{B-MAC}
 	\begin{itemize}
+		\item Ebenfalls rein akademisch, hat sich in der Forschung durchgesetzt
 		\item Zielsetzung: Energieeffizient durch Kollisionsvermeidung und effiziente Kanalnutzung; Skalierbarkeit; Toleranz bzgl. Funkbedingungen; einfache Implementierbarkeit
 		\item Besonderheiten: Periodisches Prüfen des Kanals statt zeitlicher Synchronisation; keine Fragmentierung großer Nachrichten
 		\item \textit{Low Power Listening} (LPL): System schläft meist und erwacht gelegentlich kurzzeitig um Kanal auf Daten zu prüfen. Sendewunsch durch Senden einer Präambel. Bleibt nur wach, falls Präambel empfangen wird und daher Daten zum Empfang bereitstehen
 		\item \textit{Clear Channel Assessment} (CCA): Prüfe ob Kanal frei ist und übertrage ggf. Präambel und Daten. Präambel muss daher mindestens dem Intervall zwischen zwei Kanalüberprüfungen entsprechen (damit der Empfänger nichts verpasst)
-		\item Erweiterung X-MAC: Statt einer großen Präambel werden viele kleine Präambelpakete gesendet mit Quittung für erhaltene Präambel um die Kosten beim Sender weiter zu reduzieren
+		\item Erweiterung X-MAC: Statt einer großen Präambel werden viele kleine Präambelpakete gesendet mit Quittung für erhaltene Präambel um die Kosten beim Sender weiter zu reduzieren. Bei \texttt{Unicast} wird die Zieladresse in der Präambel übertragen
 		\item Kenngrößen zur Leistungsbewertung
 		\begin{itemize}
 			\item Durschnittlicher Energiebedarf pro Byte: Gesamtenergiebedarf aller Systeme geteilt durch die Anzahl von der Senke empfangenen Bytes
@@ -290,7 +291,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Asymmetrisch: Systeme können unterschiedliche Rollen einnehmen
 			\item Basiert auf CSMA/CA, das auch bei WLAN verwendet wird
 		\end{itemize}
-		\item Typen von Netzen: P2P-Netz ("`Mesh-Netzwerk"') oder Stern-Netz
+		\item Typen von Netzen: P2P-Netz ("`Mesh-Netzwerk"') oder Stern-Netz. Verbindungen zwischen Netzen über FFD (s.u.) möglich
 		\item Klassen von Systemen
 		\begin{itemize}
 			\item \textit{Full Function Device} (FFD)
@@ -327,7 +328,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsection{Routing}
 
-\subsubsection{Motivation Routing im drahtlosen Sensornetz}
+\subsubsection{Motivation Routing im drahtlosen Sensornetz. Was sit anders?}
 \begin{itemize}
 	\item Adressierung anders: Globales Adressierungsschema unpraktisch
 	\item Datenfluss: Meist von vielen Quellen zu einer Senke (Concast) oder von einer Quelle an viele andere Knoten. Meist wenig Knoten-zu-Knoten Kommunikation
@@ -344,8 +345,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Nachteile: Implosion (Versenden duplizierter Dateneinheiten); limitierte Ressourcen nicht beachtet; terminiert nicht; unzuverlässig
 		\item Verbesserungen
 		\begin{itemize}
-			\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren
-			\item Reichweitenbegrenzung mit maximaler Time-To-Live: Sorgt für weniger Netzbelastung; allerdings nicht zuverlässig
+			\item Duplikatvermeidung: Sensorknoten leiten neue Dateneinheit nur einmal weiter. Knoten müssen dazu allerdings Zustandshaltung über weitergeleitete Nachrichten betreiben und Nachrichten müssen eindeutig identifizierbar sein, was nicht immer zu erfüllen ist \(\rightarrow\) Einsatz probabilistischer Verfahren zur Duplikatserkennung
+			\item Reichweitenbegrenzung mit maximaler Time-To-Live (TTL): Sorgt für weniger Netzbelastung; allerdings nicht zuverlässig
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Gossiping}
@@ -382,14 +383,14 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Rumor Routing}
 	\begin{itemize}
 		\item Datenzentrischer Ansatz: Initiative geht von Ereignisquelle und -senke aus. Kompromis zwischen Fluten von Anfragen und Fluten von Ereignissen
-		\item \textit{Ereignis-Agenten}
+		\item Ereignis-Agenten
 		\begin{itemize}
 			\item Etablieren Pfade zu Ereignissen. Anfragen suchen im Netz nach Ereignis-Pfaden
 			\item Ereignis-Agenten wandern als langlebige Dateneinheiten (mit maximaler Lebensdauer) durch das Netz, lernen unterwegs selbstständig Information und hinterlassen Pfadinformationen in den Knoten (vgl. Ameisen in biologischen Systemen)
 			\item Pfadwahl durch Random-Walk
 		\end{itemize}
 		\item Die beteiligten Sensorknoten sammeln Informationen über Nachbarn (beispielsweise durch periodische Hello-Dateneinheiten) und Ereignisse (Ereignistabelle mit zeitlich limitierten Informationen zu Weiterleitungen bei bekannten Ereignissen)
-		\item Funktioniert, da die Wahrscheinlichkeit sehr hoch ist, dass sich zwei Pfade im zweidimensionalen treffen
+		\item Funktioniert, da die Wahrscheinlichkeit sehr hoch ist, dass sich zwei Pfade im zweidimensionalen Raum treffen
 		\item Beispiel
 		\begin{itemize}
 			\item Knoten A beobachtet Ereignis und sendet zwei Ereignis-Agenten aus, die Routinginformationen zum Ereignis installieren (geben je einen Pfad vor)
@@ -418,7 +419,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Richtungsbasiertes Greedy-Verfahren}
 	\begin{itemize}
 		\item Idee: Wähle das nächste Zwischenziel möglichst nahe an der idealen Richtung
-		\item Metriken: Minimalistischer Abtand zur Verbindungsgerade oder minimaler Winkel zur Verbindungsgerade
+		\item Metriken: Minimalistischer Abstand zur Verbindungsgerade oder minimaler Winkel zur Verbindungsgerade
 		\item Problem: Nicht garantiert schleifenfrei
 	\end{itemize}
 	\item Generelles Problem bei Greedy-Strategien: Algorithmus kann in Sackgassen stecken bleiben
@@ -447,7 +448,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Hello-Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
 	\item DODAG sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
 	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten (zur Schleifenvermeidung), gültig innerhalb einer DODAG-Version
-	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraits zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
+	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraints zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
 	\item Kontrollnachrichten
 	\begin{itemize}
 		\item \textbf{DAG Information Object (DIO)}: Strukturinformation, die es Knoten ermöglichen neue RPL-Instanzen zu entdecken; Konfigurationsparameter; DODAG-Eltern
@@ -472,7 +473,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 
 \subsubsection{Unicast}
 \begin{itemize}
-	\item Kommunikationsform: Sensoren \(\rightarrow\) Aktoren
+	\item Kommunikationsform: Sensoren \(\rightarrow\) Aktoren (Ende-zu-Ende)
 	\item Herausforderungen: Zuverlässigkeit, geringe Verzögerung
 	\item Anwendungsbeispiele: Hausautomation (Schalter steuert Lichtquelle), Industrie (Überwachungssensor stoppt Produktionsanlage), Autowäsche (Abstandssensor verhindert Beschädigungen am Auto)
 	\item \textbf{Zuverlässigkeit}
@@ -486,7 +487,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Hop-by-Hop Reliabilty (HHR)}
 	\begin{itemize}
 		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden (\texttt{k} errechnet sich aus der Paketfehlerrate zum Nachbarsystem)
-		\item HHR mit Acknowledgements (HHRA): \(k\)-maliges Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
+		\item HHR mit Acknowledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
 		\item Evaluierung: Pro-Hop Quittungen lohnen sich erst bei hohen Paketfehlerraten
 		\item HRR vs. HRRA
 		\begin{itemize}
@@ -513,7 +514,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Ziel: Transportieren von Daten von einer Basisstation zu mehreren Sensoren/Aktoren
 		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit je einer Pause zwischen dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch} explizit angefordert werden oder per \texttt{NACK} dem Sender gemeldet werden
-		\item Evaluierung/Beobcahtungwen
+		\item Evaluierung/Beobachtungen
 		\begin{itemize}
 			\item Je größer die Distanz zur Quelle desto niedriger die Zustellrate (Prozentsatz der angekommenen Dateneinheiten an den Gesamteinheiten)
 			\item Je höher die Paketfehlerrate desto niedriger die Zustellrate
@@ -528,7 +529,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Kommunikationsform: Sensoren \(\rightarrow\) Senke
 	\item Herausforderungen: Zuverlässigkeit, Stauvermeidung und Energieeffizienz
 	\item Anwendungsbeispiel: Sensor beantwortet Anfrage mit Messdaten
-	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahe: erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: weniger Daten senden) \(\rightarrow\) Energiebedarf steigt
+	\item Stau: Datenströme können zu Stau/Überlastung führen. Dabei kann es zu Datenverlust (Gegenmaßnahme: erneutes Senden) kommen oder Daten kommen verzögert an (Gegenmaßnahme: weniger Daten senden) \(\rightarrow\) Energiebedarf steigt
 	\item \textbf{Event-to-Sink Reliable Transport (ESRT)}
 	\begin{itemize}
 		\item Szenario: Viele Sensoren senden periodisch Dateneinheiten zur Senke, welche eine ausreichende Anzahl Dateneinheiten (egal von welchem Sensor) benötigt
@@ -578,9 +579,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Low-Energy Cluster Hierarchy (LEACH)
 			\begin{itemize}
 				\item Idee: Regelmäßiges Rotieren der höher belasteten Cluster-Heads zur Umverteilung der Last \(\rightarrow\) gleichmäßige Verteilung des Energieverbrauchs
+				\item Vorgehen: Knoten bestimmen sich selbstständig mit bestimmter Wahrscheinlichkeit zu einem Cluster-Head und teilen dies den benachbarten Knoten mit (rundenbasiert). Alle anderen Knoten ordnen sich dem nächsten, neuen Cluster-Head in Reichweite zu
+				\item Mögliche Verbesserung: Clusterwahl nicht rein probabilistisch sondern basierend auf Restenergie der Knoten
 			\end{itemize}
-			\item Vorgehen: Knoten bestimmen sich selbstständig mit bestimmter Wahrscheinlichkeit zu einem Cluster-Head und teilen dies den benachbarten Knoten mit (rundenbasiert). Alle anderen Knoten ordnen sich dem nächsten, neuen Cluster-Head in Reichweite zu
-			\item Mögliche Verbesserung: Clusterwahl nicht rein probabilistisch sondern basierend auf Restenergie der Knoten
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -597,7 +598,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Nutzung etablierter Managementprotokollen (UPD als Transport) \(\rightarrow\) kein Anpassen von Anwendungen notwendig
 		\item 6LoWPAN Architektur
 		\begin{itemize}
-			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen engebetteten Systemen herstellen. Inseln mit Geräten haben einen gemeinsamen IP-Adresspräfix
+			\item Konzept: Verbindungen zwischen "`Inseln"' mit drahtlosen eingebetteten Systemen herstellen. Inseln mit Geräten haben einen gemeinsamen IP-Adresspräfix
 			\item Router: Führen Routingaufgaben aus
 			\item Host: Quellen und/oder Senken von Daten. Nicht in das Routing involviert
 		\end{itemize}
@@ -609,7 +610,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item Schichtenmodell
 		\begin{itemize}
-			\item \texttt{Constrait Application Protocol (CoAP)}: Transferprotokol für Umgebungen mit stark limitierten Ressourcen. RESTful, Interworking mit HTTP (einfache Proxy- und Caching-Umsetzung), Unterstützung für DTLS
+			\item \texttt{Constraint Application Protocol (CoAP)}: Transferprotokol für Umgebungen mit stark limitierten Ressourcen. RESTful, Interworking mit HTTP (einfache Proxy- und Caching-Umsetzung), Unterstützung für DTLS
 			\item \texttt{UDP}
 			\item \texttt{RPL}: Distanzvektor-basiertes Routing. Fokus auf Concast und Multicast
 			\item \texttt{IPv6 mit 6LoWPAN-Adaption}: Adressierung mit Autokonfiguration für IPv6, Fragmentierung, Header-Kompression
@@ -627,7 +628,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item IPv6-Adressen
 		\begin{itemize}
-			\item Adressierung: Abbildung von \texttt{IPv6-Adressen} \(\rightarrow\) \texttt{IEEE 802.15.4-Adresse}. Alle Knoten eines LoWPANs haben einen gemeinsamen \texttt{IPv6-Prefix}
+			\item Adressierung: Abbildung von \texttt{IPv6-Adressen} \(\rightarrow\) \texttt{IEEE 802.15.4-Adresse} (im Edge-Router). Alle Knoten eines LoWPANs haben einen gemeinsamen \texttt{IPv6-Prefix}
 			\item Adresstypen
 			\begin{itemize}
 				\item Adresstyp wird durch führende Bits einer Adresse festgelegt
@@ -636,7 +637,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Multicast \texttt{ff00::/8}: Identifikator für eine Menge von Interfaces. Dateneinheit mit solcher Adresse wird an alle Interfaces aus dieser Menge ausgeliefert
 				\item Global Unicast \texttt{0:0:0:0:0:ffff::/96}: IPv4-Adressen abgebildet auf IPv6-Adressen
 			\end{itemize}
-			\item Addressn bei Nutzung von \texttt{IEEE 802.15.4}: \texttt{MAC-Adresse} der Geräte (\texttt{IEEE-64-bit Adressen}) oder \texttt{16-bit} Kurzadressen, die der PAN-Koordinator verteilt (vgl. \texttt{802.15.4} im Non-Beacon-Modus)
+			\item Addressen bei Nutzung von \texttt{IEEE 802.15.4}: \texttt{MAC-Adresse} der Geräte (\texttt{IEEE-64-bit Adressen}) oder \texttt{16-bit} Kurzadressen, die der PAN-Koordinator verteilt (vgl. \texttt{802.15.4} im Non-Beacon-Modus). \texttt{IPv6-Adresse} setzt sich aus Prefix und Interface-Identifier zusammen
 		\end{itemize}
 		\item Beispiel für Simple LoWPAN Netzkonfiguration mit einem Edge-Router und mehreren Routern/Hosts
 		\begin{enumerate}
@@ -644,12 +645,15 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Edge-Router konfiguriert IPv6-Präfix \texttt{2001:300a::/48} für 802.15.4-Interface
 			\item Edge-Router gibt Präfix im LoWPAN bekannt und Router konfigurieren Adressen
 		\end{enumerate}
-		\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
-		\item 6LoWPAN spezifiziert eigene Paketköpfe
-		\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
+		\item Fragmentierung
+		\begin{itemize}
+			\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
+			\item 6LoWPAN spezifiziert eigene Paketköpfe
+			\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
+		\end{itemize}
 		\item Header Compression
 		\begin{itemize}
-			\item Motivation: Verringerung des statischen Übertragungsaufwands durch Vermeidung von redundanten oder weglassen unnötiger Informationen. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
+			\item Motivation: Verringerung des statischen Übertragungsaufwands durch Weglassen von redundanten oder weglassen unnötiger Informationen in höheren Schichten. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
 			\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
 			\item Komprimierung im IPv6-Kopf
 			\begin{itemize}
@@ -660,8 +664,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Komprimierung im UDP-Kopf
 			\begin{itemize}
 				\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend); UDP-Payload-Length kann aus Schicht 3 berechnet werden; Komprimierung der Prüfsumme allerdings schwierig
-				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
 			\end{itemize}
+			\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
 			\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
 		\end{itemize}
 	\end{itemize}
@@ -692,10 +696,11 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \begin{itemize}
 	\item \textbf{Message Queue Telemetry Transport (MQTT)}
 	\begin{itemize}
-		\item Transfer-Protokoll für eingebettete/resourcenbeschränkte Maschinen-zu-Maschinen Kommunikation (wie CoAP). Fokus auf Many-to-Many-Kommunikation
+		\item Transfer-Protokoll für eingebettete/resourcenbeschränkte Maschinen-zu-Maschinen Kommunikation (vgl. CoAP). Fokus auf Many-to-Many-Kommunikation
 		\item TCP-basiertes, einfaches Protokoll für leichtgewichtige Implementierung
 		\item Publish-Subscribe-Paradigma mit \texttt{Topics}; Sicherheit mittels \texttt{TLS/DTLS}; ereignisorientiert
-		\item Nachrichtenweiterleitung über zentralen (puffernden) Broker
+		\item Nachrichtenweiterleitung und Speicherung über zentralen Broker
+		\item Clients abonnieren Topics bei Broker
 		\item Quality of Service: Von Client während \texttt{SUBSCRIBE} festgelegt, kann allerdings von Broker (globale QoS-Levelgrenze) und Absender (in \texttt{PUBLISH}) beschränkt werden
 		\begin{description}
 			\item{Level 0}: Keine Garantien
@@ -710,6 +715,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{ZigBee}
 	\begin{itemize}
+		\item Ziel: Überwachungs- und Steueraufgaben mit herstellerübergreifenden Schnittstellen
 		\item Von der \textit{ZigBee Allicance} entwickelter Standard für das Internet der Dinge ohne Interoperabilität mit etablierter Infrastruktur
 		\item Randbedingungen: Geringes Datenvolumen sowie geringer Energieverbauch
 		\item \textbf{Schichtenmodell}
@@ -731,9 +737,9 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\begin{itemize}
 			\item Soll Interoperabilität zwischen Geräteherstellern sicherstellen
 			\item In ZigBee Profilen werden für einen bestimmten Anwendungsfall Systemvoraussetzungen und Geräte definiert. Jedes Gerät implementiert hierbei eine Menge von Clustern. Beispielprofile sind z. B. Home Automation, Building Automation und Health Care\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Profile}}
-			\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschlter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
+			\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschalter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
 		\end{itemize}
-		\item Client/Server-Modell: Attribute sind typischerweise Servern zugeordnet (beispielsweise der Status einer Lampe)
+		\item Client/Server-Modell: Attribute sind typischerweise Geräten zugeordnet (beispielsweise der Status einer Lampe)
 		\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
 		\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
 		\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
