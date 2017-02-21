@@ -15,6 +15,14 @@
 \usepackage{geometry}
 \geometry{left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=10mm}
 \restylefloat{table}
+\usepackage{enumitem}
+
+\setlistdepth{20}
+\renewlist{itemize}{itemize}{20}
+\setlist[itemize]{label=$\cdot$}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=--}
+\setlist[itemize,3]{label=\(\ast\)}
 
 \title{Internet of Everything am Karlsruher Institut für Technologie}
 \date{Februar 2017}

@@ -51,6 +51,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\texttt{E1} & Beschränkung auf Zeitperiode & Batterie, die periodisch aufgeladen wird \\
 		\hline
 		\texttt{E2} & Lebenszeitbeschränkung & Nicht austauschbare Batterie \\
+		\hline
 		\texttt{E9} & Keine Beschränkung & Kontinuierliche Stromversorgung \\
 	\end{tabularx}
 \end{itemize}
@@ -88,7 +89,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item Beispiel RFID als Herausforderung für den Datenschutz: Eindeutige Identifikation jedes Objekts ohne Sichtkontakt möglich. Historie verschiedenster Objekte kann im Vorbeigehen überwacht werden (Kleidungsstücke, Fahrkarten, Inhalt einer Einkaufstasche)
 	\item Lösungsansätze: Kill-Befehl, Blocker-Tags, Authentifizierung für Zugriff (z.B. Reisepass), Abreißen der Antenne
 	\item Neben den personenbezogenen Daten auch Metadaten schützenswert, da mit ihnen ein Benutzerprofil erstellt werden kann
-	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter; Selbstschutz durch PETs
+	\item Säulen der Privatsphäre: Regulierung durch Gesetze; Selbstregulierung durch die Anbieter (Tüv, Trusted Shop, etc.); Selbstschutz durch PETs
 	\item Allgemeine IT-Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA: Confidentiality, Integrity, Availability)
 	\item Schutzziele für Privatsphäre: Unverkettbarkeit, Transparenz, Intervenierbarkeit, Nicht-Identifizierbarkeit, Unentdeckbarkeit, (Nicht-) Abstreitbarkeit
 	\item Privacy Enhancing Technologies, Technologie zur Verbesserung des Datenschutzes, beispielsweise in RFID-Systemen. Beispielse für Technologien: \texttt{Anonymizer}\footnote{\url{https://de.wikipedia.org/wiki/Anonymizer}}, Shared Online Accounts
@@ -100,7 +101,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Bewertung der PETs (auf Basis des Angreifermodells)
 	\end{enumerate}
 	\item Angreifermodell: Klassifizierung von Angreifern nach Motivation/Ressourcen/Fähigkeiten
-	\item \textbf{Klassisches Angreifermodell: "`Dolev-Yoa"'-Angreifer}
+	\item \textbf{Klassisches Angreifermodell: "`Dolev-Yao"'-Angreifer}
 	\begin{itemize}
 		\item Omnipräsent im Netz, kann sämtliche Kommunikation abhören
 		\item Kann eigene Dateneinheiten verzeugen und versenden sowie fremden Datenverkehr abhören und modifizieren
@@ -181,6 +182,20 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Über Haushalte, mit kooperierenden Stromzählern: Einzelne Messwerte vor MDL geschützt; Ausfallschutz durch Redundanz; auf ressourcenbeschränkter Hardware realisierbar. Zusätzlich homomorphe Verschlüsselung baumartig mit Keypair verwendbar, wodurch kein Stromzähler den Wert eines anderen erfährt. Kryptografie allerdings ungeeignet für ressourcenbeschränkte Hardware; einzelne korrumpierte Zähler lassen Rückschlüsse zu
 		\end{itemize}
 		\item Eigene Arbeit \textit{SMART-ER}: Auf SMART basierendes, privatsphäregerechtes Smart Metering Protocol, das die Benutzer in untereinander kooperierende Gruppen einteilt, die ein gemeinsames Aggregat zur Verfügung stellen
+		\begin{itemize}
+			\item MDL teilt Stromzähler in Gruppen ein (Gruppengröße konfigurierbar)
+			\item Gruppenteilnehmer kooperieren und stellen maskierte, ungefährliche Messwerte mit korrektem Aggregat zur Verfügung
+			\item Vorgehen pro Zeitintervall und Zähler. Jeweils lokale Speicherung von \(L\) (Abhängigkeiten) und \(M\) (Messwert)
+			\begin{enumerate}
+				\item Austausch von Zufallswerten innerhalb der Gruppe
+				\item Berechnung von \(M = \sum Zufallswerte_{eingehend} - Zufallswert_{ausgehend}\)
+				\item Menge \(L\) beinhaltet alle Abhängigkeiten (alle Knoten außer dem speichernden)
+				\item Ermitteln den Messwert und Aktualisieren von \(M := M + Messwert\) (Messwerte ist jetzt maskiert)
+				\item Übermittlung von \(L\) und \(M\) an MDL
+			\end{enumerate}
+			\item Ergibt ein gemeinsames Aggregat. Funktioniert da sich die Zufallszahlen gegenseitig egalisieren. Allerdings kann MDL die Werte einzelner Zähler nicht nachvollziehen, da er die Zufallswerte nicht kennt
+			\item Verbleibendes Problem: Gruppenerstellung durch MDL \(\rightarrow\) MDL kann korrumpierte Zähler einschleußen. Lösungsansatz: Denzentrale Gruppenbildung. "`Stromzählerspeeddating"' oder \textit{Elderberry} (baumbasierte, dezentrale Aggregation mit P2P-Overlay)
+		\end{itemize}
 	\end{itemize}
 	\item \textbf{Privatheit im Smart Traffic}
 	\begin{itemize}
@@ -211,7 +226,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item \textbf{Problem}
 		\begin{itemize}
 			\item Genereller Aufbau: \texttt{A} \(\Leftrightarrow\) \texttt{B} \(\Leftrightarrow\) \texttt{C} \(\Leftrightarrow\) \texttt{D}
-			\item Versteckte Endsysteme: \texttt{A} sendet zu \texttt{B}, \texttt{C} kann dies nicht feststellen und versucht ebenfalls zu \texttt{B} zu senden \(rightarrow\) Carrier Sense versagt
+			\item Versteckte Endsysteme: \texttt{A} sendet zu \texttt{B}, \texttt{C} kann dies nicht feststellen und versucht ebenfalls zu \texttt{B} zu senden \(\rightarrow\) Carrier Sense versagt
 			\item Ausgelieferte Endsysteme: \texttt{B} sendet zu \texttt{A}, \texttt{C} möchte zu \texttt{D} senden, muss aber warten bis \texttt{B} fertig gesent hat
 			\item Nahe und ferne Endsysteme: \texttt{A} und \texttt{C} möchten senden, die Signalstärke nimmt allerdings quadratisch ab. Daher "`übertönt"' \texttt{C} \texttt{A} im rechten Teil des Aufbaus
 		\end{itemize}
@@ -445,24 +460,30 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Eine/Mehrere Wurzeln halten die Verbindung zum Internet
 		\item Verwendung von Gerichteten Azyklischen Graphen (DAG, DODAG): Wurzel ist höchster Knoten in "`up"'-Richtung (Concast) und hält Verbindung zum Internet, "`down"' in entgegengesetzter Richtung (Multicast)
 	\end{itemize}
-	\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen Hello-Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
-	\item DODAG sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
-	\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten (zur Schleifenvermeidung), gültig innerhalb einer DODAG-Version
-	\item \textit{Objective Function}: Definiert die zu verwendenden Metriken und Constraints zur Berechnung des Node Rank (und damit welche Elternknoten gewählt werden sollen)
-	\item Kontrollnachrichten
+	\item Destination-oriented Distributed Acyclic Graphs (DODAGs)
 	\begin{itemize}
-		\item \textbf{DAG Information Object (DIO)}: Strukturinformation, die es Knoten ermöglichen neue RPL-Instanzen zu entdecken; Konfigurationsparameter; DODAG-Eltern
-		\item \textbf{DAG Information Solicitation (DIS)}: Gezielte Anforderung eines DIOs von einem Knoten
-		\item \textbf{Destination Advertisement Object (DOA)}: Routingziele (Erreichbarkeit) entlang eines DODAGs
+		\item Nutzung von Metriken ("`Finde Pfade mit der geringsten Latenz"') und Constraints/Randbedingungen ("`Vermeide batteriebetriebene Knoten"')
+		\item Konstruktion des Graphen: Start bei der Wurzel. Knoten in der Nachbarschaft empfangen DIO-Nachricht und entscheiden, ob Beitritt zum Graphen oder nicht (vgl. Breitensuche). Durch individuelle IDs können alle Knoten innerhalb des Graphen eindeutig identifiziert werden. Knoten können immer nur genau einem Netzwerk beitreten
+		\item DODAG sind versionierbar um auf dynamische Anpassungen im Netz reagieren zu können. Für die Anpassungen ist die Wurzel verantwortlich
+		\item \textit{Node Ranks} geben die relative Position eines Knoten im DODAG durch einen skalaren Wert an. Monoton wachsend nach unten (zur Schleifenvermeidung), gültig innerhalb einer DODAG-Version
+		\item \textit{Objective Function}: Gibt die Pfadkosten an. Nutzt Metriken und Constraints zur Berechnung (s.o.)
+		\item Kontrollnachrichten
+		\begin{itemize}
+			\item \textbf{DAG Information Object (DIO)}: Strukturinformation, die es Knoten ermöglichen neue RPL-Instanzen zu entdecken; Konfigurationsparameter; DODAG-Eltern
+			\item \textbf{DAG Information Solicitation (DIS)}: Gezielte Anforderung eines DIOs von einem Knoten
+			\item \textbf{Destination Advertisement Object (DAO)}: Routingziele (Erreichbarkeit) entlang eines DODAGs
+		\end{itemize}
+		\item Knoten können Informationen für Down-Routing speichern (storing nodes). Im alternativen non-storing Betrieb fügt die Wurzel die Routinginformationen bei. Mischbetrieb ist unzulässig
+		\item Sicherheit: Wahlweise \textit{unsecured}, \textit{pre-installed} (vorinstallierte gemeinsame Geheimnisse auf den Knoten zum Versenden gesicherter Nachrichten), \textit{authentifiziert} (Beitritt mit Schlüssel einer Authentication Authority)
+		\item \textbf{DODAG-Konstruktion im Detail}
+		\begin{enumerate}
+			\item Knoten schicken periodisch \texttt{DIO}-Informationen
+			\item Initialisierung durch Wurzel sowie verknüpfen der Knoten untereinander. Wurzel gibt den \texttt{ROOT\_RANK} bekannt (weitere Wurzeln würden den selben Wert benutzen)
+			\item Berechnung der Link-Kosten und Node-Ranks
+			\item Hierarchische Wahl der/des Elternknoten (Link-Kosten entscheidend)
+			\item Schleifenerkennung durch \texttt{max\_depth rule}
+		\end{enumerate}
 	\end{itemize}
-	\item Knoten können Informationen für Down-Routing speichern (storing nodes). Im alternativen non-storing Betrieb fügt die Wurzel die Routinginformationen bei. Mischbetrieb ist unzulässig
-	\item Sicherheit: Wahlweise \textit{unsecured}, \textit{pre-installed} (vorinstallierte gemeinsame Geheimnisse auf den Knoten zum Versenden gesicherter Nachrichten), \textit{authentifiziert} (Beitritt mit Schlüssel einer Authentication Authority)
-	\item \textbf{DODAG-Konstruktion im Detail}
-	\begin{enumerate}
-		\item Initialisierung durch Wurzel sowie verknüpfen der Knoten untereinander. Wurzel gibt den \texttt{ROOT\_RANK} bekannt (weitere Wurzeln würden den selben Wert benutzen)
-		\item Berechnung der Link-Kosten und Node-Ranks
-		\item Hierarchische Wahl der/des Elternknoten (Link-Kosten entscheidend)
-	\end{enumerate}
 \end{itemize}
 
 
@@ -489,14 +510,14 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\item Zielsetzung: Erhöhe Zuverlässigkeit ohne Quittungen durch \(k\)-maliges Senden (\texttt{k} errechnet sich aus der Paketfehlerrate zum Nachbarsystem)
 		\item HHR mit Acknowledgements (HHRA): Wiederholtes Senden bis \(k\) erreicht ist oder die erste Quittung den Sender erreicht
 		\item Evaluierung: Pro-Hop Quittungen lohnen sich erst bei hohen Paketfehlerraten
-		\item HRR vs. HRRA
+		\item HHR vs. HHRA
 		\begin{itemize}
-			\item HRR
+			\item HHR
 			\begin{itemize}
 				\item Vorteile: Einsparen von Übertragungen durch Verzicht auf Quittungen bei niedrigen Paketfehlerraten
 				\item Paketwiederholung stoppt nicht, wenn Dateneinheit erfolgreich übertragen worden ist
 			\end{itemize}
-			\item HRRA
+			\item HHRA
 			\begin{itemize}
 				\item Vorteil: Bei hohen Paketfehlerraten wird auf weiteres Senden nach erfolgreichem Erhalt einer Quittung verzichtet
 				\item Nachteil: Großer Overhead bei geringer Paketfehlerquote \(\rightarrow\) lohnt dann nicht
@@ -628,7 +649,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item IPv6-Adressen
 		\begin{itemize}
-			\item Adressierung: Abbildung von \texttt{IPv6-Adressen} \(\rightarrow\) \texttt{IEEE 802.15.4-Adresse} (im Edge-Router). Alle Knoten eines LoWPANs haben einen gemeinsamen \texttt{IPv6-Prefix}
+			\item Adressierung: Abbildung von \texttt{IPv6-Adressen} \(\rightarrow\) \texttt{IEEE 802.15.4-Adresse} (im Edge-Router). Alle Knoten eines LoWPANs haben einen gemeinsamen \texttt{IPv6-Präfix}
 			\item Adresstypen
 			\begin{itemize}
 				\item Adresstyp wird durch führende Bits einer Adresse festgelegt
@@ -637,7 +658,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Multicast \texttt{ff00::/8}: Identifikator für eine Menge von Interfaces. Dateneinheit mit solcher Adresse wird an alle Interfaces aus dieser Menge ausgeliefert
 				\item Global Unicast \texttt{0:0:0:0:0:ffff::/96}: IPv4-Adressen abgebildet auf IPv6-Adressen
 			\end{itemize}
-			\item Addressen bei Nutzung von \texttt{IEEE 802.15.4}: \texttt{MAC-Adresse} der Geräte (\texttt{IEEE-64-bit Adressen}) oder \texttt{16-bit} Kurzadressen, die der PAN-Koordinator verteilt (vgl. \texttt{802.15.4} im Non-Beacon-Modus). \texttt{IPv6-Adresse} setzt sich aus Prefix und Interface-Identifier zusammen
+			\item Addressen bei Nutzung von \texttt{IEEE 802.15.4}: \texttt{MAC-Adresse} der Geräte (\texttt{IEEE-64-bit Adressen}) oder \texttt{16-bit} Kurzadressen, die der PAN-Koordinator verteilt (vgl. \texttt{802.15.4} im Non-Beacon-Modus). \texttt{IPv6-Adresse} setzt sich aus Präfix und Interface-Identifier zusammen
 		\end{itemize}
 		\item Beispiel für Simple LoWPAN Netzkonfiguration mit einem Edge-Router und mehreren Routern/Hosts
 		\begin{enumerate}
@@ -645,28 +666,31 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Edge-Router konfiguriert IPv6-Präfix \texttt{2001:300a::/48} für 802.15.4-Interface
 			\item Edge-Router gibt Präfix im LoWPAN bekannt und Router konfigurieren Adressen
 		\end{enumerate}
-		\item Fragmentierung
+		\item 6LoWPAN Frame-Format und Paketköpfe
 		\begin{itemize}
-			\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
-			\item 6LoWPAN spezifiziert eigene Paketköpfe
-			\item Fragmentierung: \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
-		\end{itemize}
-		\item Header Compression
-		\begin{itemize}
-			\item Motivation: Verringerung des statischen Übertragungsaufwands durch Weglassen von redundanten oder weglassen unnötiger Informationen in höheren Schichten. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
-			\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
-			\item Komprimierung im IPv6-Kopf
+			\item 6LoWPAN spezifiziert eigene Paketköpfe für LoWPAN-spezifische Metadaten: Standard/Dispatch/Mesh/Fragmentierung. 6LoWPAN-Paketköpfe können verkettet werden
+			\item Fragmentierung
 			\begin{itemize}
-				\item Größe eines IPv6-Headers: 48 Byte
-				\item Parameter, die komprimiert werden können: Versionsnummer (immer \(6\), ändert sich nicht); Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden, bei externen Zielen muss komplette IPv6-Ziel-Adresse angegeben werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP
-				\item Kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
+				\item Randbedingung Paketgröße: Minimale MTU bei IPv6 beträgt 1280 Byte, 802.15.4 unterstützt allerdings nur die maximale Größe von 127 Byte \(\rightarrow\) Fragementierung in der Adaptionsschicht notwendig
+				\item \texttt{Datagram\_tag} zur Unterscheidung der Dateneinheiten bei Reassemblierung sowie \texttt{Datagram\_size} zur Positionsangabe in der reassemblierten Dateneinheit
 			\end{itemize}
-			\item Komprimierung im UDP-Kopf
+			\item Header Compression
 			\begin{itemize}
-				\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend); UDP-Payload-Length kann aus Schicht 3 berechnet werden; Komprimierung der Prüfsumme allerdings schwierig
+				\item Motivation: Verringerung des statischen Übertragungsaufwands durch Weglassen von redundanten/allgemeinen Informationen in höheren Schichten. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
+				\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
+				\item Komprimierung im IPv6-Kopf
+				\begin{itemize}
+					\item Größe eines IPv6-Headers: 48 Byte
+					\item Parameter, die komprimiert werden können: Versionsnummer (immer \(6\), ändert sich nicht); u.U. Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden, bei externen Zielen muss komplette IPv6-Ziel-Adresse angegeben werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP (kurze Bitkodierungen. Bsp.: \texttt{01} \(\rightarrow\) \texttt{UDP})
+					\item Kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
+				\end{itemize}
+				\item Komprimierung im UDP-Kopf
+				\begin{itemize}
+					\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend); UDP-Payload-Length kann aus Schicht 3 berechnet werden; Komprimierung der Prüfsumme allerdings schwierig
+				\end{itemize}
+				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
+				\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
 			\end{itemize}
-			\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
-			\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Constrained Application Protocol (CoAP)}
@@ -731,7 +755,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
 			\end{itemize}
 			\item Netzwerkschicht für Routing und Adressierung
-			\item 802.15.4 als Medienzugriffsprotokoll
+			\item \texttt{IEEE 802.15.4} als Medienzugriffsprotokoll
+			\item Quittungen pro erfolgreich übertragenen Dateneinheit in spezieller Dateneinheit (kein \textit{piggy-back})
 		\end{itemize}
 		\item \textbf{Anwendungsprofile}
 		\begin{itemize}
@@ -795,7 +820,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 \subsubsection{Industrial Internet}
 \begin{itemize}
 	\item Bisher Fokus auf Energiebedarf und Leistungsfähigkeit. Jetzt harte Echtzeit- und Verfügbarkeitsanforderungen: Deterministisches Verhalten, geringe Latenz sowie Isolierung des Verkehrs von verschiedenen Kunden
-	\item Anwendungsgebiete: AV-Streaming, Industie 4.0 (Prozessleitsysteme, Maschinensteuerung)
+	\item Anwendungsgebiete: AV-Streaming (im Studio-Einsatz), Industie 4.0 (Prozessleitsysteme, Maschinensteuerung)
 	\item \textbf{WPAN}
 	\begin{itemize}
 		\item Drahtlose Ansätze aus dem Internet der Dinge auf Grund hoher Fehlerraten und geringer Robustheit keine gangbare Möglichkeit
