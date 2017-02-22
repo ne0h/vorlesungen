@@ -193,7 +193,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Ermitteln den Messwert und Aktualisieren von \(M := M + Messwert\) (Messwerte ist jetzt maskiert)
 				\item Übermittlung von \(L\) und \(M\) an MDL
 			\end{enumerate}
-			\item Ergibt ein gemeinsames Aggregat. Funktioniert da sich die Zufallszahlen gegenseitig egalisieren. Allerdings kann MDL die Werte einzelner Zähler nicht nachvollziehen, da er die Zufallswerte nicht kennt
+			\item MDL erhält Summe aller verschleierten Messwerte (das gemeinsame Aggregat)
 			\item Verbleibendes Problem: Gruppenerstellung durch MDL \(\rightarrow\) MDL kann korrumpierte Zähler einschleußen. Lösungsansatz: Denzentrale Gruppenbildung. "`Stromzählerspeeddating"' oder \textit{Elderberry} (baumbasierte, dezentrale Aggregation mit P2P-Overlay)
 		\end{itemize}
 	\end{itemize}
@@ -220,7 +220,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\begin{itemize}
 		\item Klassische Probleme gegenüber drahtgebundenen Netzen: Höhere Fehlerraten, niedrigere Datenrate, hohe Verzögerung, geringere Sicherheit
 		\item Quadratische Abnahme der Signalausbreitung
-		\item Signalausbreitungsbereiche: Übertragungsbereich, Erkennungsbereich, Intereferenzbereich. Grenzbereiche unscharf, natürliche Gegenheiten ausschlaggebend
+		\item Signalausbreitungsbereiche: Übertragungsbereich, Erkennungsbereich, Interferenzbereich. Grenzbereiche unscharf, natürliche Gegenheiten ausschlaggebend
 		\item Sicherheitsbetrachtung: Abhören/Manipulieren ohne großen Aufwand möglich
 		\item \texttt{CSMA/CD}-basierte Verfahren für Medienzuteilung nicht nutzbar, da nur der Empfänger Kollisionen erkennen kann (\textit{Semi-Broadcast-Medium})
 		\item \textbf{Problem}
@@ -739,7 +739,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\end{itemize}
 	\item \textbf{ZigBee}
 	\begin{itemize}
-		\item Ziel: Überwachungs- und Steueraufgaben mit herstellerübergreifenden Schnittstellen
+		\item Ziel: Überwachungs- und Steueraufgaben mit herstellerübergreifenden Schnittstellen (Haus-/Gebäudeautomation, Einzelhandel/Logistik, Smart Energy, etc.)
 		\item Von der \textit{ZigBee Allicance} entwickelter Standard für das Internet der Dinge ohne Interoperabilität mit etablierter Infrastruktur
 		\item Randbedingungen: Geringes Datenvolumen sowie geringer Energieverbauch
 		\item \textbf{Schichtenmodell}
@@ -748,10 +748,10 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\begin{itemize}
 				\item Anwendungsunterstützung: Zuverlässiger Transportdienst, Kopplung von Geräten, Gruppenverwaltung
 				\item Anwendungs-Framework: Anwendungsfunktionalität
-				\begin{description}
-					\item{+} Einbettung von bis zu 240 Anwendungsobjekten (entsprecht jeweils einem Endpunkt)
-					\item{+} Definition von Anwendungsprofilen (Kommunikationsstandards)
-				\end{description}
+				\begin{itemize}
+					\item Einbettung von bis zu 240 Anwendungsobjekten (entsprecht jeweils einem Endpunkt, was einem Port im ISO/OSI-Modell entspricht)
+					\item Definition von Anwendungsprofilen (Kommunikationsstandards)
+				\end{itemize}
 				\item ZigBee-Device-Object: Besteht aus Netzwerk, Anwendungsunterstützung und Anwendungs-Framework
 			\end{itemize}
 			\item Netzwerkschicht für Routing und Adressierung
@@ -765,12 +765,13 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Beispiel \textit{ZigBee Home Automation Profile}: Beschreibt welche Geräte (Türschloss, Lichtschalter, Dimmer, Thermostat) und welche Cluster (Türschloss, Fensterabdeckung) benötigt werden
 		\end{itemize}
 		\item Client/Server-Modell: Attribute sind typischerweise Geräten zugeordnet (beispielsweise der Status einer Lampe)
-		\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}}
+		\item Cluster: Um insbesondere Interoperabiltät von Produkten verschiedener Hersteller zu gewährleisten, hat die ZigBee Allianz Cluster und Profile definiert. Ein Cluster funktioniert nach dem Client/Serverprinzip. Der Server eines Cluster besitzt verschiedene Attribute, die im Allgemeinen der Client durch bestimmte Kommandos verändern kann. Eine Lampe ist z. B. ein Server des Clusters OnOff (ClusterID: 0x0006). Der Client kann durch Senden wohldefinierter Kommandos (On, Off, Toggle) den Zustand des Attributes verändern. Der Datenaustausch erfolgt über ZCL-Frames. Sämtliche Cluster sind in der ZigBee Cluster Library zusammengefasst\footnote{\url{https://de.wikipedia.org/wiki/ZigBee\#ZigBee_Cluster_Library}} (Cluster \(\Rightarrow\) Satz standardisierter Commandos)
 		\item Datentransport: Keine eigene Schicht, verbindungslos, Fragmentierung für große Dateneinheiten
-		\item Nutzung von Quittungen pro übertragene Dateneinheiten, die as separate Dateneinheiten übertragen werden. Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
+		\item Nutzung von Quittungen pro übertragene Dateneinheiten, die als separate Dateneinheiten übertragen werden (keine Piggy-Back-Quittungen). Nach Ablauf eines Timers erfolgen maximal drei Sendewiederholungen
 		\item Fragmentierung: Quittungen verpflichtend
-		\item Gruppenverwaltung: Endpunkte können mehreren Gruppen zugeordnet werden. In der \textit{Gruppentabelle} werden Gruppen IDs lokalen Endpunkten zugeordnet
 		\item Adressierung erfolgt über 16 Bit Kurzadressen. Keine Verwendung von IP-Adressen
+		\item Binding: Cache-Server, der die Verknüpfungen zwischen den Endpunkten verwaltet. Dadurch bei der Kommunikation keine Adressen erforderlich \(\rightarrow\) Quelle muss Zielgerät nicht kennen
+		\item Gruppenverwaltung: Endpunkte können mehreren Gruppen zugeordnet werden. In der \textit{Gruppentabelle} werden Gruppen IDs lokalen Endpunkten zugeordnet
 		\item \textbf{Geräteklassen bzw. Rollen}
 		\begin{itemize}
 			\item Koordinator (FFD): Verwaltung des ZigBee-Netzwerks, beeinflusst Netztopologie, Funkkanal, etc.
@@ -797,23 +798,33 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Nachteile: Kein Beacon-Modus, höherer Ressourcenbedarf
 			\end{itemize}
 		\end{itemize}
-		\item \textbf{ZigBee 2007 - Stack-Profile}
+		\item Varianten von ZigBee, die im Rahmen der Standardisierung entstanden sind
 		\begin{itemize}
-			\item ZigBee: Baumtopologie mit statischem Routing und "`normaler Sicherheit"'. Reduzierte Funktionalität und einfache Verfahren \(\rightarrow\) insgesamt geringer Ressourcenbedarf
-			\item ZigBee Pro: Meshtopologie mit freier Adressvergabe, die Concast, Multicast und Source-Routing beherrscht. Sicherheitsstandard mit hohem Anspruch
+			\item ZigBee 2007 - Stack-Profile
+			\begin{itemize}
+				\item ZigBee: Baumtopologie mit statischem Routing und "`normaler Sicherheit"'. Reduzierte Funktionalität und einfache Verfahren \(\rightarrow\) insgesamt geringer Ressourcenbedarf
+				\item ZigBee Pro: Meshtopologie mit freier Adressvergabe, die Concast, Multicast und Source-Routing beherrscht. Sicherheitsstandard mit hohem Anspruch
+			\end{itemize}
+			\item ZigBee IP
+			\begin{itemize}
+				\item Basiert auf 6LoWPAN und definiert einen Protokollstapel auf Basis etablierter Standards: RPL, TCP, HTTP+TLS, ZigBee SE 2.0
+				\item Spezifiziert im Wesentlichen Datenformate, Schnittstellen und Anwendungsverhalten
+			\end{itemize}
 		\end{itemize}
-		\item \textbf{ZigBee IP}
+		\item Sicherheit
 		\begin{itemize}
-			\item Basiert auf 6LoWPAN und definiert einen Protokollstapel auf Basis etablierter Standards: RPL, TCP, HTTP+TLS, ZigBee SE 2.0
-			\item Spezifiziert im Wesentlichen Datenformate, Schnittstellen und Anwendungsverhalten
+			\item Netzwerkschicht: Single-Mission-Key für das gesamte Netzwerk
+			\item Anwendungsunterstützungsschicht: Separate Schlüssel für jede (Unicast) E2E-Verbindung
+			\item Schlüsselverwaltung durch Trustcenter
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{EnOcean}
 	\begin{itemize}
-		\item Energie bei Energy Harvesting nur eingeschränkt (zeitweise) verfügbar \(\rightarrow\) keine Kontrolle und Planbarkeit
+		\item Energie bei Energy Harvesting nur eingeschränkt (zeitweise) verfügbar \(\rightarrow\) keine Kontrolle und Planbarkeit; diskontinuierlicher Betrieb
 		\item Kooperativer Medienzugriff impliziert Verzögerung und Kosten
 		\item Beispiele für Energiegewinnung mit Energy Harvesting: Kinetische (Lichtschalter)/thermische Energie, Solarenergie
-		\item EnOcean extrem angepasst an eingeschränkte Energieversorgung (minimale Nutzdaten von \(\sim 1 Byte\) oft ausreichend)
+		\item EnOcean extrem angepasst an eingeschränkte Energieversorgung (minimale, hochoptimierte Nutzdaten von \(\sim 1 Byte\) oft ausreichend)
+		\item Mailbox-Konzept für bidirektionale Kommunikation: Zentrales Gateway (kontinuierliche Stromversorgung) speichert Antwortpakete zwischen und leitet lediglich in einem definierten Zeitfenster weiter
 	\end{itemize}
 \end{itemize}
 
@@ -824,8 +835,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{WPAN}
 	\begin{itemize}
 		\item Drahtlose Ansätze aus dem Internet der Dinge auf Grund hoher Fehlerraten und geringer Robustheit keine gangbare Möglichkeit
-		\item Verwendung von 6LoWPAN (nahtlose Integration in IP-basierte Lösungen) mit \textit{Im-Slotted Channel Hopping (TSCH), einem Medienzugriffsverfahren, das eine hohe Robustheitund weniger Fehleranfälligkeit verspricht}
-		\item Time Slotted Channel Hopping (TSCH)
+		\item Verwendung von 6LoWPAN (nahtlose Integration in IP-basierte Lösungen) mit \textit{Time-Slotted Channel Hopping} (TiSCH), einem Medienzugriffsverfahren, das eine hohe Robustheit und weniger Fehleranfälligkeit verspricht
+		\item Time Slotted Channel Hopping (TiSCH)
 		\begin{itemize}
 			\item Entwicklung neuer Medienzugriffsverfahren basierend auf synchronem Zeitmultiplex (feste Zeitschlitze) und Channel Hopping (Wechsel der Frequenz für jede zu übertragende Dateneinheit \(\rightarrow\) Sendewiederholungen erfolgt auf einer anderen Frequenz)
 			\item Vorteile: Planebare Belegung; Bandbreitenzuteilung möglich; Frequenzwechsel verbessert Robustheit (Störungen durch Signalüberlagerung betreffen normalerweise nie alle Funkkanäle)
@@ -835,8 +846,8 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item \texttt{CoAP}
 				\item \texttt{UDP}
 				\item \texttt{RPL}
-				\item \texttt{(6)TiSCH}: Umsetzung von Scheduling
 				\item \texttt{IPv6 mit 6LoWPAN-Adaption}
+				\item \texttt{(6)TiSCH}: Umsetzung von Scheduling
 				\item \texttt{802.15.4e}
 			\end{itemize}
 			\item Synchronisation
