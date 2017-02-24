@@ -534,7 +534,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Pump Slowly Fetch Quickly (PSFQ)}
 	\begin{itemize}
 		\item Ziel: Transportieren von Daten von einer Basisstation zu mehreren Sensoren/Aktoren
-		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit je einer Pause zwischen dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch} explizit angefordert werden oder per \texttt{NACK} dem Sender gemeldet werden
+		\item Vorgehen: Basisstation pumpt Dateneinheiten ins Sensornetz (mit je einer Pause zwischen dem Versand zweier Dateneinheiten). Systeme leiten nur weiter ("`pumpen"'), falls es eine neue Dateneinheit ist (Identifikation mittels fortlaufender Sequenznummer) und keine Einheit dazwischen fehlt. Fehlende Dateneinheiten können per \texttt{Fetch}-Operation (\texttt{NACK} mit fehlenden Sequenznummern als Boradcast, die mehrere Nachbarn erreichen) explizit angefordert werden
 		\item Evaluierung/Beobachtungen
 		\begin{itemize}
 			\item Je größer die Distanz zur Quelle desto niedriger die Zustellrate (Prozentsatz der angekommenen Dateneinheiten an den Gesamteinheiten)
@@ -554,7 +554,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 	\item \textbf{Event-to-Sink Reliable Transport (ESRT)}
 	\begin{itemize}
 		\item Szenario: Viele Sensoren senden periodisch Dateneinheiten zur Senke, welche eine ausreichende Anzahl Dateneinheiten (egal von welchem Sensor) benötigt
-		\item Ziel: Bestimmen der benötigten Senderate im nächsten Zeitschritt auf Basis der aktuellen Senderate und der aktuellen Zustellrate
+		\item Ziel: Bestimmen der benötigten Senderate im nächsten Zeitschritt auf Basis der aktuellen Senderate und der aktuellen Zustellrate durch die Senke. Senderate wird anschließend per Broadcast an alle Systeme geschickt (Annahme: Alle Knoten können die Senke hören)
 		\item Ein Stau wird erkannt, wenn weniger Daten als gewünscht die Senke erreichen (Schwelle festgelegt vom Benutzer)
 	\end{itemize}
 	\item \textbf{Aggregation}
