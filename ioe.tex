@@ -291,7 +291,7 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item IEEE 802.15.4 mit B-MAC/X-MAC
 		\begin{itemize}
-			\item B/X-MAC nicht auf vorhandenen Funkchips implementierbar, da 802.15.4 paketbasiert ist und kein dauerhaftes Präambelsenden erlaubt \(\rightarrow\) wiederholtes Senden einer kurzen Präambel. Beispielsweise in TinyOS-LPL entsprechend umgesetzt
+			\item B/X-MAC nicht auf vorhandenen Funkchips implementierbar, da 802.15.4 paketbasiert ist und kein dauerhaftes Präambelsenden erlaubt \(\rightarrow\) wiederholtes Senden einer kurzen Präambel. Beispielsweise in TinyOS-LPL entsprechend umgesetzt. Bei Unicast wird die Zieladresse in die Präambel eingefügt
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{IEEE 802.15.4}
@@ -320,22 +320,22 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 				\item Stern-Netz: Systeme sind einem Koordinator zugeordnet und formieren ein \textit{Personal Area Network} (PAN)
 				\item Koordinator verwaltet das Netz, bearbeitet Anforderungen für garantierte Zeitschlitze und vermittelt zwischen Systemen und Peer-Koordinatoren. Annahme: Für Koordinator steht unbegrenzte Energie zur Verfügung
 				\item Rahmenstruktur
-				\begin{description}
+				\begin{itemize}
 					\item {Aktive Phase:} Während der gesamten Phase muss der Koordinator aktiv sein
 					\begin{enumerate}
 						\item \textit{Contention Access Period} (\texttt{CAP}) mit konkurrierendem Zugriff auf die Zeitschlitze durch \texttt{Slotted CSMA/CA} (Kanal abhören bevor gesendet wird mit exponentiellem Backoff zur Kollisionsvermeidung. Kein Schutz versteckter Endsysteme)
 						\item \textit{Guaranteed Time Slots} (\texttt{GTS}). Zeitschlitze müssen während der \texttt{CAP}-Phase beim Koordinator angefragt werden und gelten so lange, bis sie wieder freigegeben werden
 					\end{enumerate}
 					\item {Inaktive Phase:} Alle Systeme können Transceiver ausschalten
-				\end{description}
+				\end{itemize}
 				\item GTS-Anfrage an den Koordinator: System fragt während der \texttt{CAP}-Phase an und bekommt den Empfang der Anfrage unmittelbar quittiert. Der zugeordnete \texttt{GTS}-Zeitschlitz wird einem der folgenden \texttt{Beacons} mitgeteilt, sobald einer verfügbar (frei) ist. Koordinator kann \texttt{GTS}-Zeitschlitze freigeben, falls diese für eine bestimmte Dauer nicht genutzt worden sind
 				\item Übertragung
-				\begin{description}
-					\item{+} System \(\rightarrow\) Koordinator: Während \texttt{CAP} oder \texttt{GTS} (falls ein Zeitschlitz reserviert wurde)
-					\item{+} Koordinator \(\rightarrow\) System: Während \texttt{GTS}, falls ein Zeitschlitz reserviert wurde oder während \texttt{CAP} (Koordinator teilt dies im \texttt{Beacon} mit). Während \texttt{CAP} schickt das System zunächst eine Daten-Anfrage und erhält anschließend die Daten. Alle Transaktionen während \texttt{CAP} werden quittiert
-				\end{description}
+				\begin{itemize}
+					\item System \(\rightarrow\) Koordinator: Während \texttt{CAP} oder \texttt{GTS} (falls ein Zeitschlitz reserviert wurde)
+					\item Koordinator \(\rightarrow\) System: Während \texttt{GTS}, falls ein Zeitschlitz reserviert wurde oder während \texttt{CAP} (Koordinator teilt dies im \texttt{Beacon} mit). Während \texttt{CAP} schickt das System zunächst eine Daten-Anfrage und erhält anschließend die Daten. Alle Transaktionen während \texttt{CAP} werden quittiert
+				\end{itemize}
 			\end{itemize}
-			\item Non-Beacon Modus: Keine feste Rahmenstruktur, Zugriff auf das Medium durch unslotted CSMA/CA (wegen fehlender Zeitsynchronisation keine Zeitschlitze möglich). Bei P2P-Netzen können die Systeme direkt untereinander kommunizieren
+			\item Non-Beacon Modus: Keine feste Rahmenstruktur, Zugriff auf das Medium durch unslotted CSMA/CA (wegen fehlender Zeitsynchronisation keine Zeitschlitze möglich). Bei P2P-Netzen können die Systeme direkt untereinander kommunizieren. PAN-Koordinator wird frei gewählt, beispielsweise das erste, kommunizierende System
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -677,19 +677,24 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 			\item Header Compression
 			\begin{itemize}
 				\item Motivation: Verringerung des statischen Übertragungsaufwands durch Weglassen von redundanten/allgemeinen Informationen in höheren Schichten. Dabei kann der IPv6-Kopf oder der UDP-Kopf komprimiert werden
+				\item Größe eines IPv6+UDP-Headers: 48 Byte
 				\item \texttt{Dispatch-Byte} im Header gibt den nachfolgenden Paketkopftyp an
-				\item Komprimierung im IPv6-Kopf
+				\item Komprimierung im IPv6-Kopf: \texttt{LOWPAN\_HC1}
 				\begin{itemize}
-					\item Größe eines IPv6-Headers: 48 Byte
 					\item Parameter, die komprimiert werden können: Versionsnummer (immer \(6\), ändert sich nicht); u.U. Adressen (lokale Adressen können aus Schicht 2 abgeleitet werden, bei externen Zielen muss komplette IPv6-Ziel-Adresse angegeben werden); Payload length (kann aus Schicht 2 Payload length berechnet werden); Traffic Class und Flow Label sind häufig \(0\); Next Header ist UDP, TCP oder ICMP (kurze Bitkodierungen. Bsp.: \texttt{01} \(\rightarrow\) \texttt{UDP})
 					\item Kann auf 2 Byte + 1 Byte für das Hop-Limit-Feld komprimiert werden
 				\end{itemize}
-				\item Komprimierung im UDP-Kopf
+				\item Komprimierung im UDP-Kopf: \texttt{LOWPAN\_HC2}
 				\begin{itemize}
 					\item Was kann komprimiert werden: Port-Nummer (weniger als \(2^{16}\) Ports im IoE ausrechend); UDP-Payload-Length kann aus Schicht 3 berechnet werden; Komprimierung der Prüfsumme allerdings schwierig
 				\end{itemize}
 				\item IPv6-Kopf und UDP-Kopf können auf 6 Byte komprimiert werden
 				\item Bisher nur Komprimierung von lokalen Adressen. Unter Ausnutzung von Kontextinformationen können auch globale Unicast-Adressen oder Multicast-Adressen komprimiert werden
+				\item Weitere Möglichkeiten
+				\begin{description}
+					\item{\texttt{LOWPAN\_IPHC}:} Komprimierung globaler Unicast sowie Mulicast Adressen
+					\item{\texttt{LOWPAN\_NHC}:} Komprimierung von \texttt{next header}. Sowohl \texttt{UDP} als auch \texttt{TCP} nutzbar
+				\end{description}
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
@@ -939,10 +944,10 @@ Zusammenfassung der Vorlesung "`Internet of Everything"' aus dem Wintersemester 
 		\end{itemize}
 		\item Einschränkung der Cipher-Suites auf AES, SHA-1 und Elliptische Kurven (effizienter als RSA, geringere Schlüssellänge als RSA)
 	\end{itemize}
-	\item \textbf{Delegated CoAP Authentication und Authorization (DCAF): Draft bei der IETF}
+	\item \textbf{Delegated CoAP Authentication und Autorization (DCAF): Draft bei der IETF}
 	\begin{itemize}
-		\item Problem bisher: Existierende Sicherheitslösungen sind zu komplex für IoE, auch mit DICE ist asyymetrische Kryptografie zu teuer
-		\item Idee \textit{Delegated Security}: Authentifizierung und Autorisierung durh vertrauenswürdigen Stellvertreter zur Entlastung der ressourcenbeschränkten Systeme. Allerdings entsteht so ein höher Kommunikationsaufwand (Tradeoff zwischen Kommunikations- und Berechnungsaufwand)
+		\item Problem bisher: Existierende Sicherheitslösungen sind zu komplex für IoE, auch mit DICE ist asymetrische Kryptografie zu teuer
+		\item Idee \textit{Delegated Security}: Authentifizierung und Autorisierung durch vertrauenswürdigen Stellvertreter zur Entlastung der ressourcenbeschränkten Systeme. Allerdings entsteht so ein höher Kommunikationsaufwand (Tradeoff zwischen Kommunikations- und Berechnungsaufwand)
 		\item Spezifiziert einen Delegationsmechanismus in CoAP und ist darin eingebettet. Keine zusätzliche Protokollschicht
 		\item Nur symmetrische Verschlüsselung auf ressourcenbeschränkten Systeme mit individueller Autorisierung für jede CoAP-Ressource
 		\item Rollen
