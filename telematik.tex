@@ -157,13 +157,225 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsection{Grundlagen}
 \begin{itemize}
-	\item Weiterleitung im Router anhand Weiterleitungstabelle. Schnelle Weiterleitung mittels kurzen Warteschlangen und kleinen Tabellen
-	\item Herausforderung: Weiterleitung in Line-Speed. Dazu extrem teure, spezielle Cisco Hardware
-	\item Weiterleitungstabelle: \[Präfix\]
+	\item Aufgaben: Weiterleitung sowie Kopplung von Netzen \(\rightarrow\) Verknüpfung einzelner Übertragungsabschnitte zu einer E2E-Übertragung
+	\item Wegfindung im Kommunikationssystem: Weiterleitung im Router anhand Weiterleitungstabelle. Schnelle Weiterleitung mittels kurzen Warteschlangen und kleinen Tabellen
+	\begin{itemize}
+		\item Pro Dateneinheit ein Lookup in Weiterleitungstabelle
+		\item \textit{Metriken} (üblicherweise Ganzzahl) zur Bewertung von Übertragungsabschnitten
+		\item \textit{Policies} als Betreibervorgabe zur Routingstrategie. Bsp.: Bevorzugt bestimmten Nachbarn wählen
+	\end{itemize}
+	\item Herausforderung: Weiterleitung in Line-Speed. Dazu extrem teure, spezielle Cisco Hardware mit bis zu \texttt{1,2 Tbit/s} pro Chassi \(\rightarrow\) nur wenige dutzend Nanosekunden Bearbeitungszeit pro Dateneinheit
+	\item Das Internet Protokoll (IP): Unzuverlässiger Dienst; keine Kontexthaltung in Zwischensystemen; keine Verbindungen
+\end{itemize}
+
+\subsubsection{Router}
+\begin{itemize}
+	\item \textbf{Weiterleitung}
+	\begin{itemize}
+		\item Aufbau Weiterleitungstabelle: \(Prefix \rightarrow Port\) mit Default-Regel am Ende (falls keine der oberen Regeln zutrifft)
+		\item Falls mehrere Einträge passen: \textit{Longest Prefix Matching}
+		\item Suche in Line-Speed: Verfahren
+		\begin{itemize}
+			\item Binärer Trie: Pfadabstieg entsprechend den Adressbits
+			\item Patricia Trie zur kombrimierten Speicherung von Binärbäumen: Knoten ohne Verzweigung überspringen und dabei Index vom nächsten relevanten Bit merken
+			\item Problem bei Bäumen: Eintrag im Worst-Case erst nach \(N=Adress\_Laenge\) Schritten gefunden
+			\item Hash-Tabelle zur Beschleunigung des Lookups
+			\begin{itemize}
+				\item Longest-Prefix nicht praktikabel \(\rightarrow\) Suche nach der kompletten Adresse
+				\item Trie-Lookups lediglich, wenn kein Eintrag in der Hashtabelle vorhanden ist
+			\end{itemize}
+			\item Hardwarerealisierung \textit{Content-Addressable Memory} (CAM)
+			\begin{itemize}
+				\item Speicherzugriff über einen Teil des gespeicherten Inhalts
+				\item Sehr schnell, da in Hardware realisiert; paralleler Zugriff möglich
+				\item Anwendung hier: Abbildung \(IPAdresse \rightarrow Ausgangsport\)
+				\item Problem: Zuordnung einzlner Adressen wenig hilfreich. Daher \textit{Ternary Content-Addressable Memory} mit dont-care Bits \(\rightarrow\) Suche nach Präfixen möglich
+			\end{itemize}
+		\end{itemize}
+		\item Aufgaben bei Weiterleitung: Header überprüfen; TTL aktualisieren; Prüfsumme neu berechnen; Lookup; Fragmentierung; Behandlung von IP-Optionen; ggf. Klassifizierung und Priorisierung
+		\item Generische Router-Architektur: Der Routingprozessor behandelt lediglich die Kontrolldateneinheiten. Alle Komponenten außer der Routingprozessor puffern. Zielkonflikt Leistungsfähigkeit vs. Kosten\\\\
+		\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+			\node at (4, -3)    [rectangle,draw,minimum height=4cm,minimum width=3cm] (sf)  {Switch-Fabric};
+			\node at (4,  0)    [rectangle,draw,minimum height=1cm,minimum width=3cm] (rp)  {Routing-Prozessor};
+			\node at (0, -1.5)  [rectangle,draw,minimum height=1cm,minimum width=3cm] (e1)  {Lookup \& Weiterleiten};
+			\node at (0, -4.5)  [rectangle,draw,minimum height=1cm,minimum width=3cm] (en)  {Lookup \& Weiterleiten};
+			\node at (8, -1.5)  [rectangle,draw,minimum height=1cm,minimum width=3cm] (a1)  {};
+			\node at (8, -4.5)  [rectangle,draw,minimum height=1cm,minimum width=3cm] (an)  {};
+
+			\node at (0, 0) {\textbf{Eingangsports}}; \node at (8, 0) {\textbf{Ausgangsports}};
+			\node at (0, -3) {\(\vdots\)}; \node at (8, -3) {\(\vdots\)};
+
+			\draw[<->] (sf) edge node {} (rp);
+			\draw[-] (e1.west) -- ++(-0.5cm,0) |- (e1); \draw[->] (e1) edge node {} (e1-|sf.west);
+			\draw[-] (en.west) -- ++(-0.5cm,0) |- (en); \draw[->] (en) edge node {} (en-|sf.west);
+			\draw[-] (sf.east|-a1) edge node {} (a1);   \draw[->] (a1) -| (a1.east) -- ++(0.5cm,0);
+			\draw[-] (sf.east|-an) edge node {} (an);   \draw[->] (an) -| (an.east) -- ++(0.5cm,0);
+		\end{tikzpicture}
+		\end{figure}
+	\end{itemize}
+	\item \textbf{Switch-Fabric}
+	\begin{itemize}
+		\item Blockierungen: Gegenmaßnahmen
+		\begin{itemize}
+			\item \textit{Overprovisioning}: Interne Verbindungen schneller als Eingangsports
+			\item Pufferung an den Netzwerkschnittstellen und in Switch-Fabric
+			\begin{itemize}
+				\item Annahmen zur Vereinfachung: Gleiche Datenrate an allen Ports; alle Pakete gleich groß
+				\item Eingangspuffer: Konfliktauflösung am Eingang; geeignete Scheduling-Strategie
+				\item Ausgangspuffer: Konfliktauflösung am Ausgang, allerdings \(N\)-fache Vermittlungsgeschwindigkeit der Eingangsports notwendig. Kurze Eingangspuffer zur Aufnahme von jeweils einer Dateneinheit trotzdem notwendig
+				\item Verteilter Puffer pro Knotenpunkt in Switch-Fabric: Höherer Speicherbedarf
+				\item Zentraler Puffer zur Konflikauflösung: Geringerer Speicher als bei den anderen Puffern nötig, allerfings höhere Anforderungen an die Speicherzugriffszeit 
+			\end{itemize}
+			\item Backpressur: Überlastsignalisierung an den Eingangsports \(\rightarrow\) Eingangsports reduzieren Last
+			\item Parallele Switch-Fabrics
+		\end{itemize}
+		\item Struktur der Switch-Fabric
+		\begin{itemize}
+			\item Gemeinsamer Speicher
+			\item Bus-/Ringstruktur: Konfliktfreier Zugriff durch Zeitmultiplex; \(Uebertragungskapazitaet \ge \sum Kapazitaet-Eingangsport_i\); Multicast und Broadcast trivial; Anzahl der Anschlüsse sehr begrenzt (\(\le 16\)); Bsp.: \texttt{CISCO 7500}
+			\item Koppelmatrix: Alle Eingänge mit alles Ausgängen verbunden; teilweise parallel nutzbar; hoher Verdrahtungsaufwand; unflexibel; besonders effizient bei gleichgroßen Dateneinheiten
+			\item Mehrstufige Verbindungsnetzwerke: Ebenfalls alle Eingänge mit allen Ausgängen durch hierarchische Schaltelemente verbunden; geringerer Verdrahtungsaufwand als Koppelmatrix; nicht alle Verbindungen gleichzeitig möglich
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Routing-Algorithmen}
+\begin{itemize}
+	\item Kontrollpfad: Austausch von Routingnachrichten zur Berechnung von Wegen; Routingprotokolle
+	\item Datenpfad: Weiterleitung von IP-Paketen
+	\item Routingtabelle: \(Prefix \rightarrow Next~Hop\); wird von den Routingalgorithmen erstellt; auf die Anforderungen von Routingalgorithmen optimiert
+	\item Weiterleitungstabelle: \(Prefix \rightarrow Ausgangsport\); auf effizienten Lookup optimiert
+	\item \textbf{Verteiltes Adaptives Routing}
+	\begin{itemize}
+		\item Router reagieren denzentral auf sich ändernde Netzsituation (Laständerungen, Linkfehler, etc.)
+		\item Adaptiv: Verteiltes Routing mit Informationsaustausch zwischen den Routern
+		\item Benötigte Komponenten: Monitoring, Informationsaustausch, Berechnung aktueller/alternativer Routen
+	\end{itemize}
+	\item \textbf{Distanzvektor vs. Link-State}
+	\begin{itemize}
+		\item Distanzvektor-Algorithmus: Iterative Berechnung der kürzesten Pfade (beispielsweise via Bellman-Ford-Algorithmus). Umsetzung als \textit{Router Information Protocol} (RIP) im Internet. Routinginformationen werden auf Basis der Informationen von den Nachbarn berechnet und ausgetauscht
+		\item Link-State-Algorithmus: Globale Sicht zur Berechnung der kürzesten (Dijkstra-Algorithmus) \(\rightarrow\) jeder Router muss alle Links im Netz kennen \(\rightarrow\) Informationen über lokale Links eines Routers breiten sich im gesamten Netz aus; jeder ROuter berechnet kürzeste Wege selbstständig (replizierte Berechnung)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Routing-Architektur}
+\begin{itemize}
+	\item Strukturierung in \textit{Autonome Systeme} mit externem (\texttt{Exterior Gateway Protocol}) und internem (\texttt{Interior Gateway Protocol}) Routing \(\rightarrow\) Skalierbarkeit durch zwei logische Ebenen
+	\item Autonome Systeme: Erscheinen nach außen als Einheit mit einheitlichem internen Routingprotokoll und gleicherer internen Routingpolicy. IANA delegiert die Zeitteilung
+	\begin{itemize}
+		\item Aufteilung nach Funktion: Stub-AS (kleines Unternehmen mit einem Provider); Multihomed AS (große Unternehmen mit mehreren Providern); Transit AS (Provider)
+		\item Aufteilung nach Bedeutung: Transit AS/Tier-1 mit angeschlossenen Tier-2-Ebenen, etc.
+	\end{itemize}
+	\item Konnektivität und Transit: Übertragungspfade zu allen am Internet teilnehmenden ASen herstellen. AS-Betreiber kauft hierzu die Konnektivität zu einem/mehrerer ASen
+	\item \textbf{Peering}
+	\begin{itemize}
+		\item Private Peering: Direktverbindung zweier ASe i.d.R. auf gleicher Ebene mit kostenneutralen Datenaustausch ohne Transitverkehr anderer ASe \(\rightarrow\) Einsparung von Transitkosten, da beide ASe profitieren. Sehr komplex durch unterschiedliche geografische Standorte
+		\item Public Peering über \textit{Internet Exchange Points} (IXPs): Neutrale Durchleitung auf Schicht 2; keine Unterscheidung nach Kunde, Inhalt oder Diensttyp. Beispiel: \texttt{DE-CIX} in Frankfurt mit mehreren \texttt{TB/s} Datenaufkommen
+	\end{itemize}
+	\textbf{Einteilung Autonomer Systeme}
+	\begin{description}
+		\item{Tier-1}: Größte globale ASe mit Peering zu allen anderen ASen; Verkauf von Transit. Beispiele: Level3, AT\&T, Sprint
+		\item{Tier-2}: Große, überregionale ASe für Verbindungen zu Anbietern von Internet-Anwendungen; Verkaufen Transit und betreiben i.d.R. Peering. Beispiele: Vodafone, Comcast, Tele2
+		\item{Tier-3}: Kleinere, regionale ASe; Kaufen Transit von Tier-2-ASen, verkaufen Transit an Endanwender und betreiben i.d.R. Peering. Beispiele: KabelBW, Congstar, Versatel
+	\end{description}
+	\item \textbf{Content-Delivery-Network (CDN)}
+	\begin{itemize}
+		\item Performante Bereitstellung von Inhalten mit niedrigen Latenzen \(\rightarrow\) Lokation in Tier-1-Nähe wünschenswert
+		\item Webserver direkt über eigene Router verbunden. Peering mit wichtigen Providern wie Google oder Yahoo
+		\item CDN-internes Loadbalancing über die Access-Router
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{Routing-Protokolle}
 
+\subsubsection{Interior Gateway Protocol (IGP)}
+\begin{itemize}
+	\item \textbf{Routing Information Protocol (RIP)}
+	\begin{itemize}
+		\item Eines der ersten Routingprotokolle im Internet. Sehr eingach mit wenig Konfigurationsaufwand über
+		\item Periodisches Versenden (Advertisements, 30s-Takt) von Routinginformationen über UDP. Eine Route wird ungültig, wenn sie nach 180s nicht aufgefrischt worden ist (Wert wird auf \(unendlich\) gesetzt)
+		\item \(Distanze \in \{1,\dots,15\}\) entspricht der Hop-Anzahl zum Ziel. \(Distanz=16\) entspricht "`unendlich"'
+		\item Verhalten bei eingehenden Routingnachrichten: Hinzufügen (wenn nicht vorhanden und Metrik nicht \(unendlich\)) oder aktualisieren (falls neue Route besser ist)
+		\item Spalten der Routingtabelle: \texttt{Zielnetz}, \texttt{Nächster Router}, \texttt{Anzahl Hops}
+		\item Spalten einer Routingnachrichtstabelle: \texttt{Zielnetz}, \texttt{Anzahl Hops}
+	\end{itemize}
+	\item \textbf{Open Shortest Path First (OSPF)}
+	\begin{itemize}
+		\item Link-State-Protokoll mit globaler Netzwerksicht \(\rightarrow\) alle Router benötigen eine globale Sicht (abgelegt in Link-State-Datenbank)
+		\item Arbeitet direkt oberhalb von \texttt{IP} ohne Transportprotokoll
+		\item Sychronisierung der Link-State-Database sobald sich zwei benachbarte Router kennenlernen; im weiter Verlauf lediglich Austausch von Updates
+		\item Flooding-Protokoll für Routing-Updates per Multicast mit Sequenznummer an alle direkten Nachbarn (Nachbarn aktualisieren nur wenn neu oder besser mit neueren Sequenznummer)
+		\item Vermeidung von redundanten Informationsfluten bei Routingupdate: Explizite Auswahl eines \textit{Designated Router} (DR), der die Signalisierungsaufgabe übernimmt
+		\item Sicherung der Zuverlässigkeit der Routing-Updates: Pro-Hop-Quittungen mit Zeitgeber und Prüfsummen. Zusätzlich Authentifizierung möglich (beispielsweise durch IPSec auf IP-Ebene)
+		\item Format einer Routing-Nachricht: Header inklusive Anzahl an Updates (\textit{Link State Advertisements} LSAs)) mit den LSAs
+		\item OSPF-Router müssen ihr direkten Nachbarn kennen (um Updates zu empfangen und den Zustand der Übertragungsabschnitte bestimmen zu können): Periodische Hello-Nachrichten an die Multicast-Adresse \texttt{224.0.0.5} ("`AllOSPFRouters"') \(\rightarrow\) Prüfen ob der Übertragungsabschnitt korrekt funktioniert sowie Auswahl eines zuständigen Routers für den Übertragungsabschnitt
+		\item Skalierbarkeit wird durch zusätzliche Hierarchie-Ebene erreicht: Router werden in Gruppen eingeteilt: "`OSPF-Areas"' und diese durch \textit{Area Border Router} verbunden. Alle anderen Router einer Area kommunizieren lediglich mit Routern innerhalb der Area
+		\item Abwärtskompatibel zu \texttt{RIP}
+		\item Traffic-Engineering durch Type-of-Service-Headerfeld möglich
+	\end{itemize}
+	\item \textbf{Vergleich/Zusammenfassung}
+	\begin{itemize}
+		\item \texttt{RIP}: Begrenzte Möglichkeiten (nur eine Metrik, maximale Pfadlänge auf 15 begrenzt); periodische Updates ggf. ohne Änderungen; konvergiert langsam; Count-to-Infinity \(\rightarrow\) für große Netze ungeeignet
+		\item \texttt{OSPF}: Behebt \texttt{RIP}-Probleme (konvergiert schnell, zyklenfrei, geringerer Signalisierungsaufwand); zusätzliche Hierarchieebene; \texttt{RIP}-Geräte können am Rand des NEtzwerks eingebunden werden
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Exterior Gateway Protocols (EGP): Border Gateway Protokoll (BGP)}
+\begin{itemize}
+	\item Weltweiter Einsatz als Basis des heutigen weltweiten Internetroutings zwischen Autonomen Systemen
+	\item Erweitertes Pfad-Vektor-Protokoll: Verbreitung von Pfaden statt Metriken \(\rightarrow\) garantiert Schleifenfreiheit
+	\item Entscheident für die Wegewahl: Netzbetreiberpolicies (hinsichtlich Wirtschaftlichkeit oder vertraglichen Vereinbarungen)
+	\item Einsparung von Routingnachrichten durch geschickt Präfixvergabe (Zusammenfassen von Adressbereichen)
+	\item \textbf{Zusammenspiel von BGP und IGPs}
+	\begin{itemize}
+		\item Default-Route für unbekannte/externe Ziele zum nächsten BGP-Router. Nicht praktikabel für Transitverkehr
+		\item Veröffentlichung von externen Routen über IGP
+		\item IGP-Router auch BGP sprechen lassen. Oft bei großen Backbone-Providern der Fall
+	\end{itemize}
+	\item BGP-Sessions über TCP-Verbindungen. Routing dabei über IBGP oder über direkte pyhische Verbindungen (kein Routing nötig) oder manuell konfiguriert. Nachbarn werden \textit{Peers} genannt
+	\item \textbf{Nachrichtentypen}
+	\begin{itemize}
+		\item \texttt{OPEN}: Aufbau einer Verbindung zum Peer. TCP-Verbindung muss bereits bestehen
+		\item \texttt{UPDATE}: Bekanntgabe eines neuen, besseren Pfads, Rücknahme eines veralteten Pfads
+		\item \texttt{KEEPALIVE}: Quittung zu einem \texttt{OPEN}-Request zum Aufrechterhalten der Verbindung
+		\item \texttt{NOTIFICATION}: Fehlermeldungen oder Verbindungsabbau
+	\end{itemize}
+	\item \textbf{Routing}
+	\begin{itemize}
+		\item Kein Mechanismus zur Pfadwahl vorgegeben: Policies entscheident
+		\item \textit{Routing Information Base} (RIB) zur Verwaltung der Routen
+		\item Verarbeitung von Updates: \textit{Input Policy Engine} \(\rightarrow\) \textit{Entscheidungsprozess} \(\rightarrow\) \textit{RIB} \(\rightarrow\) \textit{Output Policy Engine}
+		\item Neben der eigentlichen Routingtabelle werden die empfangen/versendeten Routen pro eingehendem/ausgehenden Peer gespeichert
+	\end{itemize}
+	\item Herausforderungen: Aufrechterhalten der Skalierbarkeit (Tabellenwachstum, Dynamik der Routingänderungen); Sicherheitprobleme
+	\item \textbf{Multi-Homing}
+	\begin{itemize}
+		\item AS am Rand des Internets wird über mehrere ASe an das Internet angeschlossen
+		\item Vorteile: Ausfallsicherheit; Verteilungsmöglichkeiten (wichtiger Verkehr über teuren Uplink, restlicher über günstigen)
+		\item Nachteil: Aggregierung von Präfixen wird aufgebrochen \(\rightarrow\) Routenänderungen müssen schlimmstenfalls im ganzen Internet propagiert werden. Abhilfe möglicherweise \texttt{NOPEER}-Attribut: Schränkt die Propagierung von Änderungen am Rand des Internets ein
+	\end{itemize}
+	\item Exponentielles Größenwachstum der Routingtabellen durch zunehmendes Multi-Homing und Verkehrslastsenkung über BGP, da viele kleine Präfixe propagiert werden \(\rightarrow\) zunehmende Dynamik der Routen
+	\item Route Flap Damping: Temporäres Unterdrucken der Änderungen von instabilen Routen durch Erhöhen eines Strafwertes pro Update. Strafwert fällt exponentiell wird ab. Wird ein bestimmter Wert überschritten, werden die Updates unterdrückt. Kann zu Konnektivitätsverlust kommen
+	\item \textbf{Sicherheit des Inter-Domain-Routings}
+	\begin{itemize}
+		\item Probleme: Netzbetreiber verdienen mit der Bekanntgabe von Routinginformationen Geld; wie können die übermittelten Informationen geschützt werden?
+		\item Verschiedene Lösungsansätze verschiedener Hersteller zur Sicherung der Übertragung durch Authentifizierung/Verschlüsselung. Umsetzung scheitert bisher an fehledem Leidensdruck der Netzbetreiber
+	\end{itemize}
+	\item \textit{Cleaning Center} als Gegenmaßenahme für DDoS-Angriffe auf AS-Upstreams: Gibt den Präfix des betroffenen AS bekannt, filtert den legitimen Verkehrs heraus und schickt diesen per \textit{Clean Pipe} an as AS zurück. Hochleistungsinfrastruktur zum Entdecken von Attacken und Umleiten des Verkehrs erforderlich. Privatsphäreproblem: Dieses AS hat Zugriff auf den gesamten Verkehr (Ändern/Löschen/MitM/etc.)
+	\item \textbf{MitM Hijacking}
+	\begin{itemize}
+		\item Angreifer leiter Verkehr des Opfers durch Bekanntgabe der Präfixe des Opfers über sich selbst um
+		\item Schwer zu erkennen ob die Hops auf dem Übertragungspfad legitime Knoten sind oder zu einem MitM-Angriff gehören
+		\item Gegenmaßnahme: Alarmsysteme, die globale Routen überwachen und fehlerhafte Bekanntgaben der eigenen Routen melden. Solange nicht alle ASe ihr Routen filtern besteht das Problem weiter. Lösung könnte eine kryptografisch sichere Vertrauenskette für Routinginformationen sein
+	\end{itemize}
+\end{itemize}
+
 
 \subsection{Trends}
+
+\subsubsection{"`Neues"' bei IP}
+
+\subsubsection{SDN}
