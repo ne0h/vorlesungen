@@ -376,6 +376,55 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsection{Trends}
 
-\subsubsection{"`Neues"' bei IP}
+\subsubsection{Software Defined Networking (SDN)}
+\begin{itemize}
+	\item Ziel: Verbesserte Wartbarkeit von Netzwerken durch zentrale, herstellerübergreifende Steuerung. \textit{OpenFlow} als De-facto Standard (wird immer komplexer; fünf verschiedene Versionen; sehr viele optionale Features)
+	\item Keine allgemeine Definition. Beschreibung über die Eigenschaften
+	\begin{description}
+		\item{Säule 1}: Separierung von Kontrollebene und Datenpfad
+		\item{Säule 2}: Flow-basierte Weiterleitung von Paketen
+		\item{Säule 3}: Logik an externen Controller ausgelagert
+		\item{Säule 4}: Programmierbarkeit des Netzwerks
+	\end{description}
+	\item Vorteile: Zentrierte Sicht; neue Funktionalität in Software \(\rightarrow\) verkürzte Entwicklungszyklen; Herstellerunabhängigkeit durch offene Schnittstellen
+	\item Nachteile: Skalierbarkeit; Single Point of Failure
+	\item \textbf{Flowtable mit SDN-fähigem Switch}
+	\begin{itemize}
+		\item Nutzung verschiedener Header-Felder zur Weiterleitung über Flowtable und Speicherung des Zustands pro Flow
+		\item Verwendung von TCAM: Nutzung von Longest-Prefix-Match für beliebige Header-Felder
+		\item Reaktive Flow-Programmierung: Bei eingehenden Paketen wird zunächst geprüft, ob für die Weiterleitung ein Eintrag im Flowtable vorhanden ist. Falls dieser nicht existiert, wird der Eintrag vom Flowcontroller auf dem Switch programmiert. Danach wird das Paket weitergeleitet
+	\end{itemize}
+	\item \textbf{OpenFlow}
+	\begin{itemize}
+		\item Durch die \textit{Open Network Foundation} (ONF) spezifiziert; massive Unterstützung durch die Industrie
+		\item Definiert die Schnittstelle zwischen Switch (Data Plane) und Controller (Control Plane): Regelt den Zugriff auf die Switch-Konfiguration mit \texttt{Paket-In}- und \texttt{Paket-Out}-Nachrichten
+	\end{itemize}
+\end{itemize}
 
-\subsubsection{SDN}
+\subsubsection{"`Neues"' bei IP}
+\begin{itemize}
+	\item \texttt{IPv4}-Adressknappheit: Außer in Afrika (\texttt{AFRINIC}) sind bereits überall die Adressblöcke ausgegangen \(\rightarrow\) Umsetzung von \texttt{IPv6} mit Übergangslösung \texttt{NAT} (Bildung von Intranets in privaten Adressräumen mit Adress- und Portumsetzung am Gateway) nötig
+	\item Bisher kaum Nachfrage für \texttt{IPv6}. Viele Vorzüge inzwischen auch in \texttt{IPv4} implementiert (NAT, IPsec, etc.)
+	\item \textbf{Weitere Vorteile von \texttt{IPv6}}
+	\begin{itemize}
+		\item Vereinfachtes Management durch Autokonfiguration: Adresse durch Router-Präfix und Interface-ID
+		\item Wiederherstellung der Kohärenz durch Beseitigung von NATs und anderen Speziellösungen
+		\item Effizienteres Routing durch inhärentere Adresshierarchie
+	\end{itemize}
+	\item \textbf{Neuerungen in \texttt{IPv6}}
+	\begin{itemize}
+		\item \textit{Anycast}-Adressen zur Kommunikation mit einem beliebigen Gruppenmitglied
+		\item Vereinfachter Header (acht statt 13 Felder): Beispielsweise keine IP-Prüfsumme \(\rightarrow\) höhere Schichten für Checksummen verantwortlich
+	\end{itemize}
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Größere Header
+		\item Adressen noch weniger handhabbar
+		\item Nicht abwärtskompatibel
+	\end{itemize}
+	\item \textbf{Adressdarstellung}
+	\begin{itemize}
+		\item Hexadezimal durch acht 16 Bit Worte mit Doppelpunkten dazwischen. Führende Nullen dürfen blockweise weggelassen werden; mehrere Nullblöcke dürfen (einmal pro Adresse) durch \texttt{::} ersetzt werden
+		\item \texttt{IPv4}-mapped Adressen: Die letzten 32 Bit der \texttt{IPv6}-Adresse dotted-decimal dargestellt
+	\end{itemize}
+\end{itemize}
