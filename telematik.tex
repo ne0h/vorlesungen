@@ -428,3 +428,123 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item \texttt{IPv4}-mapped Adressen: Die letzten 32 Bit der \texttt{IPv6}-Adresse dotted-decimal dargestellt
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Medienzuteilung}
+
+\subsection{Grundlegende Aspekte}
+\begin{itemize}
+	\item Einordnung im Schichtenmodell: Schicht 2 (Data Link Layer); direkte Übertragung zwischen zwei Hops mit Bitfehlererkennung
+	\item Problem: Mehrere Stationen konkurrieren um den Zugriff (Shared Medium). Multiplexen über Raum, Zeit, Frequenz oder Code nötig
+	\item P2P-Kommunikation: Simplex (in eine Richtung); Halb-Duplex (nacheinander in beide Richtungen); Duplex (zeitgleich in beide Richtungen)
+\end{itemize}
+
+\subsubsection{Zeitmultiplex: Fest vs. variabel}
+\begin{itemize}
+	\item \textbf{Fest}
+	\begin{itemize}
+		\item Systemen sind feste Zeitschlitze zum Senden zugewiesen. Diese werden zwar ggf. nicht benutzt, können allerdings für Dienstgüteanforderungen verwendet werden
+	\end{itemize}
+	\item \textbf{Variabel}
+	\begin{itemize}
+		\item Keine festen Zeitschlitze \(\rightarrow\) bedarfsorientierte Nutzung
+		\item Kontrollierter Zugriff: Zuteilung durch Master order Berechtigungstoken
+		\item Zufälliger Zugriff: Keinerlei Koordination. Reduzierung der Kollisionswahrscheinlichkeit durch Belegungsprüfung vor dem Senden
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Aloha}
+\begin{itemize}
+	\item Ziel: Funkverbindung als Alternative zum Telefonsystem für Rechnerkommunikation (\texttt{ALOHAnet}) \(\rightarrow\) erstes MAC-Protokoll für paketbasierte, drahtlose Kommunikation
+	\item Medienzuteilung: Variabler, zufälliger Zugriff
+	\item \textbf{Kollisionserkennung}
+	\begin{itemize}
+		\item Explizite Kollisionserkennung: Bestätigungen durch höhere Schichten \(\rightarrow\) separater Kommunikationskanel erforderlich
+		\item Implizite Kollisionserkennung bei Nutzung von Aloha über Satelliten: Satellit broadcastet empfangene Pakete an alle. Sendende Station erhält eigenes Paket zurück und kann Korrektheit/Kollision überprüfen
+		\item Kollision erkannt: Retransmit zu randomisiertem Zeitpunkt
+	\end{itemize}
+	\item \textbf{Slotted Aloha mit Zeitschlitzen}
+	\begin{itemize}
+		\item Einsatzbeispiel: Steuerkanal von \texttt{GSM}
+		\item Bewertung Slotted Aloha
+		\begin{itemize}
+			\item Annahmen: Alle Dateneinheiten haben gleiche Länge; Übertragungen starten immer am Beginn eines Zeitschlitzes; alle Systeme sind synchronisiert
+			\item Wahrscheinlichkeit für geglückte Übertragung eines Systems: \(Np\big(1-p\big)^{N-1}\) \(\rightarrow\) maximale Auslastung \(U=lim \big(1-\frac{1}{N}\big)^{N-1}, N \rightarrow \infty = \frac{1}{e} = 0,36\)
+		\end{itemize}
+		\item Bewertung Aloha
+		\begin{itemize}
+			\item Annahmen: Alle Dateneinheiten haben gleiche Länge; unmittelbare Rückmeldung über Kollisionen
+			\item Wahrscheinlichkeit für geglückte Übertragung eines Systems: \(Np\big(1-p\big)^{2(N-1)}\) \(\rightarrow\) maximale Auslastung \(U=lim \frac{N}{2N-1} \big(1-\frac{1}{2N-1}\big)^{2(N-1)}, N \rightarrow \infty = \frac{1}{2e} = 0,18\)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{CSMA-basierte Verfahren}
+\begin{itemize}
+	\item Asynchroner Zugriff mit Medienprüfung ("`Listen before talk"')
+	\item Persistenz: Bei besetztem Medium mithören, bis es wieder frei ist (eher ungeeignet, da bei vielen sendewilligen Stationen alle gleichzeitig anfangen würden zu senden) vs. zufälliges Intervall warten und erneut prüfen, ob das Medium frei ist
+	\item Zeitfenster für Kollisionen durch "`beschränkte"' Signalausbreitungsgeschwindigkeit im Broadcast-Medium
+\end{itemize}
+
+
+\subsection{Ethernet: IEEE 802.3}
+\begin{itemize}
+	\item Asynchroner Zugriff; Verwendung von CSMA/CD zur Kollisionserkennung mit exponentiellem Backoff
+	\item CSMA/CD: Kollisionserkennung durch den Sender \(\rightarrow\) Erkennung muss vor Beendigung des Sendevorgangserfolgt sein \(\rightarrow\) Mindestlänge eines Paketes durch doppelte maximale Ausbreitungszeit auf dem Medium erforderlich (Pakete müssen ggf. gepadded werden)
+	\item Exponentieller Backoff bei Sendewiederholung: Randomisiert aus \(\big\lbrack0,\dots,2^i-1\big\rbrack\) bei \(i\)ter Kollision
+	\item \textbf{Auslastungsbewertung}
+	\begin{itemize}
+		\item \(a=\frac{Ausbreitungsverzoegerung}{Sendezeit}\)
+		\item Auslastung unter optimalen Bedingungen: \(U=\frac{Erzielte~Datenrate}{Datenrate~der~Uebertragungsstrecke}=\frac{1}{1+a}\)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Basics}
+\begin{itemize}
+	\item Kollisionsdomäne: Bereich des Netzes, der vom Auftreten einer Kollision betroffen ist
+	\begin{itemize}
+		\item Repeater (Bus): Komplettes Netz
+		\item Brücke (Bus): Jeweils das komplette, durch Brücke abgetrennte Netz
+		\item Hub (Stern): Komplettes Netz
+		\item Switch (Stern): Jeweils die Verbindung zum Switch
+	\end{itemize}
+	\item Kollisionserkennung bei Sternnetzen: CSMA/CD lediglich im halb-duplex-Modus erforderlich
+\end{itemize}
+
+\subsubsection{Brücken}
+\begin{itemize}
+	\item Kopplung lokaler Netze auf Schicht 2
+	\item Transparente Brücke: Lokale Weiterleitungsentscheidung in jeder Brücke; Endsystem nicht in Wegewahl involviert; bei Switches eingesetzt
+	\item Source-Routing-Brücke: Endsystem fügt Wegewahlinformation in zu Dateneinheit ein; einfach aber in der Praxis wenig eingesetzt
+	\item \textbf{Switches}
+	\begin{itemize}
+		\item Aufgaben: Weiterleitung (Lernen der "`Lokation"' von Endsystemen sowie Aufbau einer Datenbasis); Etablierung einer schleifenfreien Topologie mit \textit{Spanning Tree Algorithmus} (Weiterleitung nur entlang des Baums)
+		\item Umsetzung des Spanning Tree Algorithmus (STA)
+		\begin{itemize}
+			\item Brücken versenden \textit{Bridge Protocol Data Units} (BPDU) mit folgendem Inhalt: Kennung der sendenden Brücke; Kennung der Brücke, die als Root-Brücke angenommen wird; Padkosten von der sendenden Brücke zur Root-Brücke
+			\item Verfahren
+			\begin{itemize}
+				\item Initial: Brücken hab keine Topologieinformationen, erklären sich alle selbst temporär zur Root-Brücke und verschicken entsprechende BPDUs. Keine Weiterleitung "`normaler"' Pakete
+				\item Empfang einer BPDU mit niedrigerer Kennung: Brücke betrachtet sich selbst nicht mehr als Root-Brücke und versendet keine BPDUs mehr
+				\item Brücken speichern \textit{Designated Port} als Elternelement in Richtung Wurzel
+				\item Stabile Phase: Root-Brücke sendet periodisch BPDUs; aktive Brücken leiten diese weiter. Bei Ausbleiben von BPDUs erklären sich Brücken wieder selbst zu Root-Brücken und der Algorithmus startet von vorne
+			\end{itemize}
+			\item \textit{Spanning Tree Protocol} (STP): Umsetzung entsprechend dem SPA. Rekonfigurationsdauer allerdings sehr lange (30-50s) \(\rightarrow\) \textit{Rapid Spanning Tree Protocol} (RSTP) mit wenigen Sekunden Umschaltzeit
+			\item Wesnetliche Änderungen bei Rapid Spanning Tree Protocol (RSPT)
+			\begin{itemize}
+				\item Neue Portzustände: \textit{Alternate Port} (bester alternativer Pfad zur Root-Brücke); \textit{Backup Port} (alternativer Pfad zu einem Netz, zu dem eine Verbindung existiert)
+				\item Periodisches Senden von BPDUs als Keep-Alive Nachrichten and die nächste Hierarchiebene. Ausfallerkennung von Nachbarn möglich
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Ethernet++}
+
+
+\subsection{Schicht 2+}
+
+\subsubsection{LLC}
+
+\subsubsection{PPP}
