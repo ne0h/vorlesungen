@@ -541,6 +541,63 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \end{itemize}
 
 \subsubsection{Ethernet++}
+\begin{itemize}
+	\item \textbf{Fast Ethernet}
+	\begin{itemize}
+		\item 1995 als \texttt{IEEE 802.3u (100Base-TX)} mit einer Datenrate von \texttt{100 MBit/s} standardisiert (abwärtskompetibel zu \texttt{10 MBit/s})
+		\item Sterntopologie; halb- oder vollduplex; CSMA/CD als Zugriffsverfahren; Autonegotiation zum automatischen Festlegen von Datenrate, Kodierung, etc. (Komponenten sollen eigenständig erkennen mit welcher Datenrate/Kodierung Kommunikation möglich ist; Austausch zwischen Endsystem und zentralem Knoten)
+		\item Flusskontrolle
+		\begin{itemize}
+			\item \textit{Backpressure} bei halbduplex: Kollision herbeiführen oder Medium als belegt vortäuschen. In beiden Fällen greift CSMA/CD \(\rightarrow\) implizite Flusskontrolle
+			\item \textit{Halt-und-Weiter} bei duplex: Senden eines \texttt{PAUSE}-Paketes mit zeitlicher Angabe, wie lange der Sender pausieren soll. Löst das Problem längerfristiger Überlatung im Netz nicht
+			\item Einführung einer neuen, optionalen Teilschicht zur MAC-Kontrolle mit Kontrolldateneinheiten (unzuverlässiger Best-Effort-Dienst)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Gigabit Ethernet}
+	\begin{itemize}
+		\item Datenrate von \texttt{1 GBit/s} (abwärtskompatibel); Sterntopologie; halb- oder vollduplex; CSMA/CD
+		\item Problematisch: Kollisionserkennung bei schnellen Datenraten \(\rightarrow\) Anpassung der Segmentlänge oder der Größe der minimalen Dateneinheit nötig
+		\item \textit{Carrier Extension}: Künstliche Erhöhung der Übertragungszeit ohne die minimale Länge der Dateneinheit zu erhöhen \(\rightarrow\) soll Kollisionserkennung sicherstellen
+		\item \textit{Frame-Bursting}: Effiziente Übertragung kurzer Dateneinheiten durch Bursts (Stationen übertragen Dateneinheiten direkt hintereinander). Die erste Dateneinheit darf ggf. eine Extension beinhalten; die letzte Dateneinheit muss nach maximal 8092 Byte beginnen
+		\item 10 GBit Ethernet
+		\begin{itemize}
+			\item Datenrate von \texttt{10 GBit/s}; P2P-Verbindungen; vollduplex
+			\item Räumt mit Altlasten auf: Kein halbduplex; keine Hubs; kein CSMA/CD; kein Frame-Bursting; kein Carrier-Extension
+			\item Verschiedenste physische Verbindungsmöglichkeit/Medien für entsprechende Anforderungen
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Datacenter-Ethernet}
+	\begin{itemize}
+		\item Extrem hohe Anforderungen an Leistungsfähigkeit der Telekommunikationssysteme mit Lastspitzen im Bereich von \texttt{100 TBit/s}; Latenzen kritisch; verschiedene Verkehrstypen
+		\item Fat-Tree-Topologie: Typischer GBit-Top-of-the-Rack-Switches mit 10GBit-Uplink, die untereinander verbunden werden
+		\item Anforderung an Ethernet: Muss mit Mix an Verkehrstypen (SANs, HPC, etc.) zurecht kommen; alle Netzwerkpfade müssen genutzt werden können (Spanning-Tree-Algorithmus sorgt mit Schleifenfreiheit für Unterauslastung) \(\rightarrow\) Priorisierung im Ethernet-Header erforderlich
+		\item Converged Enhanced Ethernet
+		\begin{itemize}
+			\item Erweiterung zu Ethernet als Lösung für unterschiedlichste Anwendungen in Datenzentren
+			\item Prioritätsgesteuerte Flusskontrolle mit \texttt{PAUSE}-Dateneinheit um Datenverlust bei Verkehrsklassenüberlastung zu vermeiden. Pausenzeiten können pro Prioritätsstufe individuell gewählt werden
+			\item Enhanded Transmission Selection: Erweiterte Prioritätsbehandlung zum Reservieren von Bandbreite. Garantiert eine minimale Datenrate für Pioritätsgruppen
+			\item Staukontrolle auf Schicht 2, vergleichbar mit \texttt{TCP}: Stauerkennung mit Stärkenabschätzung und Verursacherbenachrichtigung (kann die Senderate limitieren)
+			\item Data Center Bridge Exchange: Soll Interoperabilität sicher stellen, in dem Fähigkeit/Konfiguration von Nachbarn automatisch erkannt wird (durch periodisches Broadcasten von Nachrichten)
+		\end{itemize}
+		\item Alternativen zum Spanning-Tree-Algorithmus
+		\begin{itemize}
+			\item Ziel: Mehr Flexibilität hinsichtlich der nutzbaren Netztopologie, beispielsweise durch Nutzung besserer Pfade; Loadbalancing; Fast Recovery bei Topologieänderungen
+			\item Einsatz eines Link-State-Routing-Protokolls zur Verbindung von Intermediate-Systemen (I2I)
+			\item Vorteile: Lernen der Topologie zur Berechnung kürzester Pfade/alternativer Pfade; Link-State-Datenbank relativ klein, da nur die involvierten Brücken enthalten sind
+			\item Abstrakte Sicht mit Intermediate Systemen, die sich nach außen als eine einzelne Brücke darstellen
+			\item Nachteile von IP-basiertem Routing: Wenig flexibel; kein Plug-and-Play; Routen müssen konfiguriert werden
+			\item Protokolle
+			\begin{itemize}
+				\item Shortest Path Bridging: Jeder Switch berechnet Spanning-Tree mit sich als Wurzel (PFad muss in beide Richtungen der selbe sein, dass MAC-Adressen gelernt werden können). Führt oftmals zu besseren Pfade; Switch kann redundante Pfade nutzen; Schleifenvermeidung zentral
+				\item Transparent Interconnection of Lots of Links (TRILL): Explizite Kapselung von Dateneinheiten
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Echtzeit-Ethernet}
+	\begin{itemize}
+		\item
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Schicht 2+}
