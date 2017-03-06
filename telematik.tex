@@ -588,20 +588,64 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 			\item Nachteile von IP-basiertem Routing: Wenig flexibel; kein Plug-and-Play; Routen müssen konfiguriert werden
 			\item Protokolle
 			\begin{itemize}
-				\item Shortest Path Bridging: Jeder Switch berechnet Spanning-Tree mit sich als Wurzel (PFad muss in beide Richtungen der selbe sein, dass MAC-Adressen gelernt werden können). Führt oftmals zu besseren Pfade; Switch kann redundante Pfade nutzen; Schleifenvermeidung zentral
+				\item Shortest Path Bridging: Jeder Switch berechnet Spanning-Tree mit sich als Wurzel (Pfad muss in beide Richtungen der selbe sein, dass MAC-Adressen gelernt werden können). Führt oftmals zu besseren Pfade; Switch kann redundante Pfade nutzen; Schleifenvermeidung zentral
 				\item Transparent Interconnection of Lots of Links (TRILL): Explizite Kapselung von Dateneinheiten
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Echtzeit-Ethernet}
 	\begin{itemize}
-		\item
+		\item Motivation: Verwendung als ausgereifte Technologie in "`komplexer"' Automatisierung (Industrieautomatisierung, innerhalb eines Fahrzeugs, etc.) \(\rightarrow\) \textit{Time-Triggered Ethernet} (TT-Ethernet)
+		\item Anforderungen: Kollisionsfreies Senden zeitkritischer Dateneinheiten; ratenbasierte Kommunikation; Kompatibilität zum Ethernet-Standard
+		\item Verkehrsklassen
+		\begin{itemize}
+			\item Zeitgesteuerte, hochpriore Dateneinheiten (time-triggered): Globale Zuweisung von Zeitschlitzen (Synchronisierung vorausgesetzt); Priorisierung gegenüber ratenlimitierten Datenströmen und Best-Effort-Dateneinheiten
+			\item Ratenlimitierte Datenströme (rate-constrained): Definition eines Datenstroms als \textit{Bandwidth Allocation Gap}; Einhaltung in Switches überwacht; Priorisierung gegenüber Best-Effort-Dateneinheiten
+			\item Best-Efford Verkehr (u.a. Standard-Ethernet): Standard-Ethernet; Daten  werden nur gesendet, wenn keine höherprioren Dateneinheiten vorhanden sind
+		\end{itemize}
+		\item Ethernet for Control Automation (EtherCAT): Steuerungsaufgaben auf Feldbus-Ebene zum effizienten Umgang mit kleinen/sehr zeitkritischen Anwendungen; kein Store-and-Forward sondern Verarbeitung während Durchlauf der Dateneinheiten durch Kontroller (Topologie ist ein logischer Ring)
+		\item Audio-Video-Bridging (AVB)
+		\begin{itemize}
+			\item Einsatzgebiete: Rundfunk, Veranstaltungstechnik, Fahrzeige
+			\item Anforderungen: Zeitsynchronisation zwischen AVB-Stationen; extrem kleine Zustellverzögerung/Jitter (Audiowiedergabe auf verschiedenen Lautsprechern) \(\rightarrow\) in Hardware integrierte Echtzeituhren mit Hardwarezeitstempeln und Prioritätsklassen
+			\item Reservierung von Bandbreite für Datenströme
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
 
 \subsection{Schicht 2+}
 
-\subsubsection{LLC}
+\subsubsection{Logical Link Control (LLC)}
+\begin{itemize}
+	\item Zusätzliche Subschicht auf Schicht zwei, oberhalb von MAC. Bietet verschiedene Diensttypen und Transparenz hinsichtlich Medienzuteilungsverfahren auf MAC-Schicht
+	\item Basiert auf \texttt{HDLC}
+	\item \textbf{Diensttypen}
+	\begin{description}
+		\item{LLC 1} Unzuverlässiger, verbindungsloser Dienst: Typischerweise in lokalen Netzen; höhere Schichten für Zuverlässigkeit verantwortlich
+		\item{LLC 2} Zuverlässiger, verbindungsorientierter Dienst: Verbindungsauf- und abbau; ACKs; garantierter Empfang und Reihenfolge; FLusskontrolle
+		\item{LLC 3} Bestätigter Verbindungsloser Dienst: Dateneinheiten können genau einmal bestätigt werden, keine Wiederholung von Bestätigungen \(\rightarrow\) unzuverlässig; kein Verbindungsauf- und abbau
+	\end{description}
+	\item \texttt{LLC-Protokoll}
+	\begin{itemize}
+		\item Unterschiede zu \texttt{HDLC}: Unterstützung von Managementfunktionen durch Kommandos, welche die Gegenstelle beantwortet
+		\item Datentransfer
+		\begin{description}
+			\item{LLC 1}: Verwendet \texttt{UI}-Dateneinheiten
+			\item{LLC 2}: Verwendet den \texttt{ABM}-Modus von \texttt{HDLC}
+			\item{LLC 3}: Führt zwei neue \texttt{UI}-Dateneinheiten
+		\end{description}
+	\end{itemize}
+\end{itemize}
 
-\subsubsection{PPP}
+\subsubsection{Point-to-Point-Protokoll (PPP)}
+\begin{itemize}
+	\item \textit{Das} Einwahlprotokoll für Endnutzer beim Internetprovider
+	\item Anforderungen: Transparente Unterstützung verschiedener Schicht-3-Protokolle; Betrieb über verschiedene Links (ISDN, ATM, DSL, etc.); Erkennung von Bitfehlern/Linkfehler
+	\item Transparenz von Schicht-3-Daten: Spezielles Kontrollbyte zum Erkennen von Anfang/Ende einer Dateneinheit trotz Transparenz-Paradigme notwendig. und ggf. Flags voranstellen und übertragen
+	\item \textbf{Link Control Protocol (LCP)}
+	\begin{itemize}
+		\item Aufgaben: Verbindungsaufbau/-abbau; Verbindungskonfiguration; optionale Authentifizierung; Erkennen von Linkfehlern
+		\item \texttt{LCP}-Dateneinheit wird via Protokollfeld der \texttt{PPP}-Dateneinheit identifiziert
+	\end{itemize}
+\end{itemize}
