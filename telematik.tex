@@ -27,7 +27,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Flusskontrolle zur Schutz des Empfängers vor zu hoher Last}
 	\begin{itemize}
 		\item Dynamische Anpassung des Empfangsfenster auf Empfängerseite, um die aktuelle verfügbare Puffergröße mitzuteilen. \texttt{RcvWindow} bezeichnet den Anteil des \texttt{RecvBuffer}, das frei ist (jeweils absolute Werte)
-		\item Problem: \textit{Zero Window Probing}. Empfänger meldet ein volles Empfangsfenster. Wie weis der Sender, ab wann er wieder senden darf? Empfänger muss daher auch bei vollem Empfangsfenster Dateneinheiten mit einem Byte Länge quittieren
+		\item Problem: Empfänger meldet ein volles Empfangsfenster. Woher weis der Sender, ab wann er wieder senden darf? \(\rightarrow\) Empfänger muss auch bei vollem Empfangsfenster Dateneinheiten mit einem Byte Länge quittieren (\textit{Zero Window Probing})
 	\end{itemize}
 	\item \textbf{Angriffe auf den Verbindungsaufbau: SYN-Flooding}
 	\begin{itemize}
@@ -37,7 +37,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 			\item Verhinderung der Zustandshaltung bis zum letztmöglichen Zeitpunkt: Beginn der Zustandhaltung erst bei Empfang des \texttt{ACK}
 			\item Realisierung: Ermittlung der Zustandsinformationen auf Empfängerseite anhand der Informationen aus \texttt{ACK(SYN=0,ACK=1,seq=client\_isn+1,ack=server\_isn+1)}
 			\item Kodierungsbeispiel: Zeitstempel zur Verhinderung von Replay-Attacken (5 Bit); ausgewählte MSS aus acht vordefinierten Werten (3 Bit); Hash über Quelladresse und -port sowie Zieladresse und -port, verifiziert dass der Client bereits \texttt{SYN} durchgeführt hat /24 Bit). Daraus entsteht die 32 Bit initiale Sequenznummer des Servers
-			\item Nachteil: Vergleichsweise kurze Sequenznummer reicht nicht für zusätzliche TCP-Optionen und limitiert MSS-Größen auf vordefinierte Werte
+			\item Nachteil: Vergleichsweise kurze Sequenznummer (32 Bit) reicht nicht für zusätzliche TCP-Optionen und limitiert MSS-Größen auf vordefinierte Werte
 			\item Idee: Cookie erst einsetzen, wenn nötig (volle Warteschlange oder Ressourcenengpass)
 		\end{itemize}
 	\end{itemize}
@@ -48,8 +48,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item Beobachtung: Unverhältnismäßiger Leistungseinbruch an Engstellen bei großem Datenaufkommen zwischen zwei schnelleren Netzen \(\rightarrow\) Warteschlangenmanagement notwendig
 	\item \textbf{Einfaches Warteschlangenmanagement}
 	\begin{itemize}
-		\item Puffer im Router voll, nächste Dateneinheit muss verworfen werden ("`Tail Drop"'
-		')
+		\item Puffer im Router voll, nächste Dateneinheit muss verworfen werden ("`Tail Drop"')
 		\item Retransmissiontimer im Client steuert Sendewiederholungen
 		\item Problem: Synchronisation. Dateineinheiten von mehreren Verbindungen werden quasi gleichzeitig verworfen
 	\end{itemize}
@@ -90,7 +89,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Fast Retransmit
 		\begin{itemize}
 			\item Beobachtung: Nicht jede nicht in Reihenfolge erhaltene Dateneinheit ist ein Indiz für eine Überlastung des Netzes
-			\item Mechanismus zur Staukontrolle: Sendewiederholung beim Empfangeiner defiierten Anzahl duplizierter Quittungen
+			\item Mechanismus zur Staukontrolle: Sendewiederholung beim Empfangeiner definierten Anzahl duplizierter Quittungen
 			\item Vorgehen: Warten auf Timerablauf, dann Sendewiederholung (Wartezeit größer Umlaufzeit \texttt{RTT})
 		\end{itemize}
 	\end{itemize}
@@ -147,6 +146,44 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \end{itemize}
 
 \subsection{Analyse und Randbedingungen}
+
+\subsubsection{Analyse von TCP: Modelle}
+\begin{itemize}
+	\item Analytische Beurteilung hinsichtlich Durchsatz und Latenz
+	\item Zentrale Fragen: Ist \texttt{TCP} für meine Zwecke geeignet?`Welche Leistung kann ich erwarten?
+	\item \texttt{Periodisches Modell}
+	\begin{itemize}
+		\item Vereinfachte Betrachtung des langfristigen Verhaltens ohne Slow-Start und Sendewiederholungen \(\rightarrow\) Staukontrollfenster bildet "`perfekte"' Sägezahnkurve mit periodischen Paketverlusten
+		\item Vorgehen: Berechne die Anzahl übertragender Dateneinheiten \(Y_i\) zwischen zwei aufeinenader folgenden Verlusten von Dateneinheiten (also in einem Durchlauf)
+		\item Durchschnittliche Übertragungsrate: \(X=\frac{1}{RTT}\cdot\sqrt{\frac{3}{2p}} = 1,22 \cdot \frac{1}{RTT\cdot\sqrt{p}}\)
+		% TODO: mehr?
+	\end{itemize}
+	\item \texttt{Detaillierstes Verlust-Modell}
+	\begin{itemize}
+		\item Unterschied zum periodischen Modell: Verluste nicht mehr periodisch \(\rightarrow\) Dauer der Durchläufe nicht mehr gleich lang
+		% TODO: mehr?
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Hohe Datenraten}
+
+\subsubsection{Kurze Latenzen}
+\begin{itemize}
+	\item \textbf{TCP und Web}
+	\begin{itemize}
+		\item Interaktiver Dienst, Besucher äußerst ungeduldig \(\rightarrow\) Antwortzeit entscheident
+		\item Verwendung von \texttt{HTTP} in \texttt{TCP} \(\rightarrow\) bei jedem Klick wird mindestens eine \texttt{TCP}-Verbindung aufgebaut \(\rightarrow\) sehr viele Verbindungsaufbauten für wenig Übertragung
+		\item Bei kleinen Objekten dominieren RTTs die Antwortzeit; Slow-Start hat entscheidenden Einfluss auf die Verzögerung
+		\item Möglichkeiten zur Verbesserung
+		\begin{itemize}
+			\item Größeres initiales Staukontrollfenster: Mindestens 10 \texttt{TCP}-Segmente mit \(\sim 15\) KByte, da 90\% aller Web-Objekte \(\le 16\) KByte sind
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{TCP und Web}
+	\begin{itemize}
+		\item
+	\end{itemize}
+\end{itemize}
 
 
 \subsection{Aktuelle Entwicklungen}
@@ -733,3 +770,32 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 	\item \texttt{m} werden als Block zusammengefasst und zu einem neuen Block der Länge \texttt{n} kodiert
 	\item Ziele: Ermöglichen von Taktrückgewinnung; Vermeiden der Ineffiziens des Manchestercodes
 \end{itemize}
+
+
+
+\section{Telekommunikationsnetze}
+Zweck: Austausch von Daten über "`größere"' Distanzen.
+
+\subsection{Integrated Services Digital Network (ISDN)}
+
+\subsubsection{Architektur}
+\begin{itemize}
+	\item Digital bis zum Teilnehmer mit Integration unterschiedlicher Dienste (Sprache, Daten, Bild, etc.) sowie Bereitstellung zusätzlicher Dienste (Wahlwiederholung, Direktwahl, Umleitung von Anrufen, etc.)
+	\item Trennung von Teilnehmer-Installation und Netzseite mit digitalen Orts- und Fernvermittlungsstellen
+\end{itemize}
+
+\subsubsection{Teilnehmeranschluss}
+
+\subsubsection{SS7}
+
+
+\subsection{DSL}
+
+
+\subsection{Label Switching}
+
+\subsubsection{Konzept}
+
+\subsubsection{ATM}
+
+\subsubsection{MPLS}
