@@ -649,3 +649,87 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item \texttt{LCP}-Dateneinheit wird via Protokollfeld der \texttt{PPP}-Dateneinheit identifiziert
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Digitale Leitungscodes}
+
+\subsection{Grundlagen}
+Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/Mediumwahl verantwortlich.
+
+\subsubsection{Störquellen}
+\begin{itemize}
+	\item Dämpfung (Attenuation): Singnalstärke sinkt mit zunehmender Distanz \(\rightarrow\) Singnalstärke muss groß genug sein, damit Empfänger das Signal empfangen/verwerten kann \(\rightarrow\) Signalaustärke muss ausreichend größer als Rauschen sein
+	\item Verzögerungsverzerrung (Delay Distortion): Überlappung aufeinander folgender Bits (\textit{Intersymbol-Interferenz}; ergibt sich aus der Signalausbreitungsverzögerung und variiert mit der Frequenz
+	\item Rauschen (Noise): Ursachen sind beispielsweise Thermisches Rauschen; Modulationsrauschen; Übersprechen; Impulsrauschen
+\end{itemize}
+
+\subsubsection{Baudrate vs. Datenrate}
+\begin{itemize}
+	\item Datenrate (Übertragungsgeschwindigkeit): Gemessen in Bit pro Sekunde. Annahme, dass alle Bits die gleiche Länge haben und "`kontinuierlich"' fließen
+	\item Baudrate (Schrittgeschwindikeit): Anzahl der Signalwechsel pro Sekunde
+\end{itemize}
+
+
+\subsection{Beispiele}
+
+\subsubsection{Binäre Leitungscodes}
+\begin{itemize}
+	\item Symbolwerte werden durch Signalwert bestimmt
+	\item \(\{0,1\}\) werden durch Pegel über das gesamte Interval festgelegt; Signalwechsel nur an den Intervalgrenzen
+	\item Nachteile: Taktrückgewinnung bei langen Folgen oder Wertänderung nicht möglich; Gleichstromkomponente
+\end{itemize}
+
+\subsubsection{Biphase Leitungscodes}
+\begin{itemize}
+	\item Symbolwerte werden durch Phasenwerte bestimmt
+	\item \textbf{NRZI}
+	\begin{itemize}
+		\item Idee: Erkennung durch Signalwechsel an Grenzen des Taktintervalls
+		\item \texttt{1}: Signalwechsel
+		\item \texttt{0}: Kein Signalwechsel
+		\item Nachteile: Taktrückgewinnung bei langen \texttt{0}-Folgen nicht möglich; Gleichstromkomponente
+		\item Verwendung beispielsweise bei Fast-Ethernet
+	\end{itemize}
+	\item \textbf{Manchesterkodierung}
+	\begin{itemize}
+		\item Idee: Signalerkennung durch Flankenwechsel in der Intervallmitte
+		\item \texttt{1}: Signalwechsel hoher Pegel \(\rightarrow\) niedriger Pegel
+		\item \texttt{0}: Signalwechsel niedriger Pegel \(\rightarrow\) hoher Pegel
+		\item Erzeugbar durch \texttt{XNOR} über Takt und NRZ-kodierten Daten
+		\item Vorteil: Taktrückgewinnung möglich; keine Gleichstromkomponente
+		\item Nachteil: Baudrate bei 1-und-0-Folgen doppelt so hoch wied Datenrate
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Ternäre Leitungscodes}
+\begin{itemize}
+	\item Die beiden Symbolwerte \texttt{0} und \texttt{1} werden auf drei Signalwerte (\texttt{-1}, \texttt{0}, \texttt{1}) abgebildet
+	\item \textbf{Return-to-Zero (RTZ)}
+	\begin{itemize}
+		\item \texttt{1}: Positiver Pegel in der ersten Takthälfte, 0-Pegel in der zweiten
+		\item \texttt{0}: Negativer Pegel in der ersten Takthälfte, 0-Pegel in der zweiten
+		\item Vorteile: Taktrückgewinnung
+		\item Nachteile: Baudrate doppelt so hoch wie Datenrate; Gleichstromanteil
+	\end{itemize}
+	\item \textbf{AMI}
+	\begin{itemize}
+		\item Signalerkennung durch Signalwert im Intervall. Verwendung beispielsweise bei \texttt{ISDN} oder \(S_0\)-Bus
+		\item \texttt{1}: Abwechseln positiver/negativer Pegel über das gesamte Interval
+		\item \texttt{0}: 0-Pegel
+		\item Vorteile: Gleichstromfrei; Baudrate
+		\item Nachteile: Tasktrückgewinnung bei langen 0-Folgen nicht möglich
+		\item Modifizierte \texttt{AMI}-Codes zur Taktrückgewinnung
+		\begin{itemize}
+			\item \texttt{B8ZS} (\texttt{ISDN} Nordamerika): Substitution durch Füllsequenz beim Auftreten von 8 Nullen
+			\item \texttt{HBD3} (\texttt{ISDN} Europa/Japan): Substitution durch Füllsequenz beim Auftreten von 4 Nullen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+% TODO: Mehr Blockcodes?
+\subsubsection{Blockcodes Leitungscodes}
+\begin{itemize}
+	\item \texttt{m} werden als Block zusammengefasst und zu einem neuen Block der Länge \texttt{n} kodiert
+	\item Ziele: Ermöglichen von Taktrückgewinnung; Vermeiden der Ineffiziens des Manchestercodes
+\end{itemize}
