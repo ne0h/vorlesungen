@@ -167,26 +167,96 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsubsection{Hohe Datenraten}
 
-\subsubsection{Kurze Latenzen}
+\subsubsection{Kurze Latenzen: TCP und Web}
 \begin{itemize}
-	\item \textbf{TCP und Web}
+	\item Interaktiver Dienst, Besucher äußerst ungeduldig \(\rightarrow\) Antwortzeit entscheident
+	\item Verwendung von \texttt{HTTP} in \texttt{TCP} \(\rightarrow\) bei jedem Klick/pro Objekt wird mindestens eine \texttt{TCP}-Verbindung aufgebaut \(\rightarrow\) sehr viele Verbindungsaufbauten für wenig Übertragung
+	\item Bei kleinen Objekten dominieren RTTs die Antwortzeit; Slow-Start hat entscheidenden Einfluss auf die Verzögerung
+	\item \textbf{Möglichkeiten zur Verbesserung}
 	\begin{itemize}
-		\item Interaktiver Dienst, Besucher äußerst ungeduldig \(\rightarrow\) Antwortzeit entscheident
-		\item Verwendung von \texttt{HTTP} in \texttt{TCP} \(\rightarrow\) bei jedem Klick wird mindestens eine \texttt{TCP}-Verbindung aufgebaut \(\rightarrow\) sehr viele Verbindungsaufbauten für wenig Übertragung
-		\item Bei kleinen Objekten dominieren RTTs die Antwortzeit; Slow-Start hat entscheidenden Einfluss auf die Verzögerung
-		\item Möglichkeiten zur Verbesserung
-		\begin{itemize}
-			\item Größeres initiales Staukontrollfenster: Mindestens 10 \texttt{TCP}-Segmente mit \(\sim 15\) KByte, da 90\% aller Web-Objekte \(\le 16\) KByte sind
-		\end{itemize}
-	\end{itemize}
-	\item \textbf{TCP und Web}
-	\begin{itemize}
-		\item
+		\item Größeres initiales Staukontrollfenster: Mindestens 10 \texttt{TCP}-Segmente mit \(\sim 15\) KByte, da 90\% aller Web-Objekte \(\le 16\) KByte sind. Google-Messungen (in kleiner Umgebung) bestätigen die Vermutung, wobei das initiale Staukontrollfenster auch nicht zu groß werden darf
+		\item TCP-Fast-Open (TFO): Verzögerungsreduzierung beim Verbindungsaufbau, in dem bereits im \texttt{SYN}-Paket Daten ausgeliefert werden, die allerdings erst nach dem kompletten Handshake an die Anwendung ausgeliefert werden \(\rightarrow\) verkürzt die Latenz um eine \texttt{RTT}, eröffnet aber auch die Möglichkeit für DoS-Attacken mittels \texttt{SYN}-Flooding \(\rightarrow\) TFO-Cookie als mögliche Lösung
 	\end{itemize}
 \end{itemize}
 
 
 \subsection{Aktuelle Entwicklungen}
+
+\subsubsection{Realität im Internet}
+\begin{itemize}
+	\item Datentransport nicht mehr nur klassischerweise zwischen Endgeräten, die über Routern kommunizieren. Paradigma: \texttt{IP}-Dateneinheiten wirden nicht modifiziert \(\rightarrow\) beliebige Transportprotokolle nutzbar
+	\item Praktisch greifen jede Menge Middleboxes in den E2E-Datenstrom ein und können fast alle Felder einer \texttt{TCP}-Dateneinheit verändern \(\rightarrow\) keine E2E-Transparenz mehr. Beispiele: Physikalische (Hardware-Firewall) oder virtuelle (NAT in Heimroutern, Software-Firewall) Einheiten. Datenpfade ohne Middleboxes eher die Ausnahme
+	\item Network Address Translation (NAT) für maskierte Netze. NAT-Router ersetzt ausgehende Pakete durch seine Adresse und speichert das Mapping zum Zuordnen von Antworten. NAT-Router muss hierfür das Transportprotokoll kennen
+	\item \textbf{Firewall}
+	\begin{itemize}
+		\item Untersuchen Dateneinheiten nach konfigurierten Regeln und verwerfen diese ggf.
+		\item \textit{Shallow Packet Insepction}: Bewertung anhand des \texttt{IP}-Kopfs und den Köpfen der Transportprotokolle
+		\item \textit{Deep Packet Inspection}: Anwendungsorientierte Bewertung, beispielsweise das Erkennen und Blockieren von Malware
+	\end{itemize}
+	\item \textbf{Proxy}
+	\begin{itemize}
+		\item Führen Kommunikation an statt des Clients durch
+		\item Können Ressourcen zwischenspeichern; Anfragen ablehnen/verändern; Logs anlegen
+		\item Häufig: Sperren mittels Firewalls, Erlauben mittels Proxys
+		\item Nicht-transparent (kann sich Servern gegenüber zu erkennen geben) oder transparent (benötigt Unterstützung der Netzwerkinfrastruktur, häufig zur Überwachung eingesetzt)
+	\end{itemize}
+	\item \textbf{Load-Balancer}
+	\begin{itemize}
+		\item Verteilt Anfragen/Berechnungen auf verschiedene, nachgelagerte Server, oft kombiniert mit vorgelagerten Caches
+		\item Erscheint als Ziel-Adresse eines Services ("`umgedrehtes"' NAT)
+	\end{itemize}
+	\item Cache: Schnelle Auslieferung häufig angefragter Daten, oft in Kombination mit einem Proxy
+	\item \textit{Head-of-Line Blocking}: Zuverlässiger Transportdienst blockiert auf Grund von fehlenden Dateneinheiten (Reihenfolgetreue) \(\rightarrow\) Daten werden nicht an Anwendung ausgeliefert. Bei Multimediakommunikation und im Web nicht erwünscht (interaktiver Dienst, Antwortzeit entscheident)
+	\item \textbf{SPDY und HTTP/2}
+	\begin{itemize}
+		\item \texttt{SPDY} zunächst von Google zum teilweise Ersetzen von \texttt{HTTP} (Weiterentwicklung durch \texttt{IETF} zu \texttt{HTTP/2})
+		\item Ziele
+		\begin{itemize}
+			\item Kurze Antwortzeiten: Eine dauerhafte \texttt{TCP}-Verbindung pro Server; Priorisierung von Anfragen; Server-Push; effizientere Header-Kodierung (verienfacht, binär und komprimiert)
+			\item Verbesserte Sicherheit: \texttt{TLS} verpflichtend 
+			\item Rückwärtskompatibilität
+		\end{itemize}
+		\item Probleme: Kleine initiale Staukontrollfenster behindern \texttt{SPDY}; Slow-Start-After-Idle ruiniert Langzeitverbindungen; Head-of-Line Blocking durch verlorene Dateneinheiten
+	\end{itemize}
+	\item \textbf{Quick UDP Internet Onnections (QUIC)}
+	\begin{itemize}
+		\item Ziele: Vermeidung von Head-of-Line Blocking; Reduzierung der \texttt{RTT}
+		\item Einbettung zwischen \texttt{UDP} und \texttt{SPDY} bzw. \texttt{HTTP/2}
+		\item Wichtige Eigenschaften: Schneller (\texttt{0-RTT}) Verbindungsaufbau; Vorwärtsfehlerkorrektur auf Ebene der Dateneinheiten; eigene Staukontrolle
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{TCP in Datenzentren}
+\begin{itemize}
+	\item Extrem hohe Anforderungen an Leistungsfähigkeit der Kommunikationssysteme; häufig Nutzung von Commodity-Netzen; Fat-Tree-Topologie (siehe Datacenter-Ethernet)
+	\item \textbf{Typische Eigenschaften}
+	\begin{itemize}
+		\item Geringe Umlaufzeit durch geografische Nähe
+		\item Incast-Kommunikation (Many-To-One): Mehrere Quellen senden zu einer Senke. Beim parallelen Laden zusammenhängender Daten bestimmt die langsamste Verbindung die Geschwindigkeit (Barrier Synchronization) \(\rightarrow\) Staugefahr am Switch
+		\item Multiple Paths zwischen Servern
+		\item Mischung von langen und kurzen Flows
+		\item Virtualisierung
+	\end{itemize}
+	\item Data-Center-TCP: Konstant kurze Warteschlangen bei Switches durch \texttt{ECN} imd reduzierte Staukontrollfenster beim Sender
+\end{itemize}
+
+\subsubsection{Multipath-TCP (MPTCP)}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Mobile Geräte haben typischerweise mehrere Netzwerkgeräte (WLAN, Ethernet, 3G, etc.); redundante Pfade in Datenzentren; Multi-Homing für Serverfarmen \(\rightarrow\) \texttt{TCP}-Verbindungen sollten zwischen Netzwerkgeräten migriert werden können
+		\item \texttt{TCP} ist durch statische Identifikation (Adressen, Ports) ein \textit{Single-Path Protokoll}
+	\end{itemize}
+	\item Ziel: \texttt{TCP} zur Nutzung mehrerer Pfade erweitern; Anwendungskompatibilität und Netzwerkompatibilität sollen erhalten bleiben
+	\item Herausforderung: Middleboxen, die Zustände halten
+	\item \textbf{Architektur}
+	\begin{description}
+		\item{\texttt{MPTCP}-Verbindung}: E2E-Kommunikationsbeziehung; besitzt ein oder mehrere \texttt{MPTCP}-Subflows
+		\item{\texttt{MPTCP}-Subflow}: Ein konkreter Pfad; entspricht einer "`regulären"' \texttt{TCP}-Verbindung; können dynamisch zu einer \texttt{MPTCP}-Verbindung hinzugefügt/gelöscht werden
+		\item{OSI-Schicht}: Neue Subschicht oberhalb von \texttt{TCP} ("`Manegement der Multipath-Verbindung"')
+	\end{description}
+	\item Weitere Details: Ein Gesamt-Eingangspuffer für alle Subflows; Subflow-Scheduling; Subflow-Staukontrolle
+\end{itemize}
 
 
 
