@@ -375,7 +375,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Aufteilung nach Funktion: Stub-AS (kleines Unternehmen mit einem Provider); Multihomed AS (große Unternehmen mit mehreren Providern); Transit AS (Provider)
 		\item Aufteilung nach Bedeutung: Transit AS/Tier-1 mit angeschlossenen Tier-2-Ebenen, etc.
 	\end{itemize}
-	\item Konnektivität und Transit: Übertragungspfade zu allen am Internet teilnehmenden ASen herstellen. AS-Betreiber kauft hierzu die Konnektivität zu einem/mehrerer ASen
+	\item Transit: Ziel ist Übertragungspfade zu allen am Internet teilnehmenden ASen herstellen. AS-Betreiber kauft hierzu die Konnektivität zu einem/mehrerer ASen ("`Durchgangsverkehr"' zu ASen, die nicht direkt angeschlossen werden können)
 	\item \textbf{Peering}
 	\begin{itemize}
 		\item Private Peering: Direktverbindung zweier ASe i.d.R. auf gleicher Ebene mit kostenneutralen Datenaustausch ohne Transitverkehr anderer ASe \(\rightarrow\) Einsparung von Transitkosten, da beide ASe profitieren. Sehr komplex durch unterschiedliche geografische Standorte
@@ -402,9 +402,10 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \begin{itemize}
 	\item \textbf{Routing Information Protocol (RIP)}
 	\begin{itemize}
-		\item Eines der ersten Routingprotokolle im Internet. Sehr eingach mit wenig Konfigurationsaufwand über
-		\item Periodisches Versenden (Advertisements, 30s-Takt) von Routinginformationen über UDP. Eine Route wird ungültig, wenn sie nach 180s nicht aufgefrischt worden ist (Wert wird auf \(unendlich\) gesetzt)
-		\item \(Distanze \in \{1,\dots,15\}\) entspricht der Hop-Anzahl zum Ziel. \(Distanz=16\) entspricht "`unendlich"'
+		\item Eines der ersten Routingprotokolle im Internet. Sehr einfach mit wenig Konfigurationsaufwand
+		\item Jeder Router kennt nur seine Nachbarn und die Links zu diesen. Periodisches Versenden (Advertisements, 30s-Takt) von Routinginformationen über UDP. Eine Route wird ungültig, wenn sie nach 180s nicht aufgefrischt worden ist (Wert wird auf \(unendlich\) gesetzt)
+		\item Lokal berechnete kürzeste Pfade werden an die direkten Nachbarn weitergeleitet \(\rightarrow\) Routen werden im Netz propagiert
+		\item \(Distance \in \{1,\dots,15\}\) entspricht der Hop-Anzahl zum Ziel. \(Distance=16\) entspricht "`unendlich"'
 		\item Verhalten bei eingehenden Routingnachrichten: Hinzufügen (wenn nicht vorhanden und Metrik nicht \(unendlich\)) oder aktualisieren (falls neue Route besser ist)
 		\item Spalten der Routingtabelle: \texttt{Zielnetz}, \texttt{Nächster Router}, \texttt{Anzahl Hops}
 		\item Spalten einer Routingnachrichtstabelle: \texttt{Zielnetz}, \texttt{Anzahl Hops}
@@ -412,9 +413,9 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Open Shortest Path First (OSPF)}
 	\begin{itemize}
 		\item Link-State-Protokoll mit globaler Netzwerksicht \(\rightarrow\) alle Router benötigen eine globale Sicht (abgelegt in Link-State-Datenbank)
-		\item Arbeitet direkt oberhalb von \texttt{IP} ohne Transportprotokoll
+		\item Arbeitet direkt oberhalb von \texttt{IP} ohne zwischengelagertes Transportprotokoll
 		\item Sychronisierung der Link-State-Database sobald sich zwei benachbarte Router kennenlernen; im weiter Verlauf lediglich Austausch von Updates
-		\item Flooding-Protokoll für Routing-Updates per Multicast mit Sequenznummer an alle direkten Nachbarn (Nachbarn aktualisieren nur wenn neu oder besser mit neueren Sequenznummer)
+		\item Flooding-Protokoll für Routing-Updates per Multicast mit Sequenznummer an alle direkten Nachbarn (Nachbarn aktualisieren nur, wenn Route neu oder besser mit neueren Sequenznummer)
 		\item Vermeidung von redundanten Informationsfluten bei Routingupdate: Explizite Auswahl eines \textit{Designated Router} (DR), der die Signalisierungsaufgabe übernimmt
 		\item Sicherung der Zuverlässigkeit der Routing-Updates: Pro-Hop-Quittungen mit Zeitgeber und Prüfsummen. Zusätzlich Authentifizierung möglich (beispielsweise durch IPSec auf IP-Ebene)
 		\item Format einer Routing-Nachricht: Header inklusive Anzahl an Updates (\textit{Link State Advertisements} LSAs)) mit den LSAs
@@ -435,14 +436,14 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item Weltweiter Einsatz als Basis des heutigen weltweiten Internetroutings zwischen Autonomen Systemen
 	\item Erweitertes Pfad-Vektor-Protokoll: Verbreitung von Pfaden statt Metriken \(\rightarrow\) garantiert Schleifenfreiheit
 	\item Entscheident für die Wegewahl: Netzbetreiberpolicies (hinsichtlich Wirtschaftlichkeit oder vertraglichen Vereinbarungen)
-	\item Einsparung von Routingnachrichten durch geschickt Präfixvergabe (Zusammenfassen von Adressbereichen)
+	\item Einsparung von Routingnachrichten durch geschickte Präfixvergabe (Zusammenfassen von Adressbereichen)
 	\item \textbf{Zusammenspiel von BGP und IGPs}
 	\begin{itemize}
 		\item Default-Route für unbekannte/externe Ziele zum nächsten BGP-Router. Nicht praktikabel für Transitverkehr
 		\item Veröffentlichung von externen Routen über IGP
 		\item IGP-Router auch BGP sprechen lassen. Oft bei großen Backbone-Providern der Fall
 	\end{itemize}
-	\item BGP-Sessions über TCP-Verbindungen. Routing dabei über IBGP oder über direkte pyhische Verbindungen (kein Routing nötig) oder manuell konfiguriert. Nachbarn werden \textit{Peers} genannt
+	\item BGP-Sessions über TCP-Verbindungen. Routing dabei über IBGP oder über direkte physische Verbindungen (kein Routing nötig) oder manuell konfiguriert. Nachbarn werden \textit{Peers} genannt
 	\item \textbf{Nachrichtentypen}
 	\begin{itemize}
 		\item \texttt{OPEN}: Aufbau einer Verbindung zum Peer. TCP-Verbindung muss bereits bestehen
@@ -556,7 +557,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Variabel}
 	\begin{itemize}
 		\item Keine festen Zeitschlitze \(\rightarrow\) bedarfsorientierte Nutzung
-		\item Kontrollierter Zugriff: Zuteilung durch Master order Berechtigungstoken
+		\item Kontrollierter Zugriff: Zuteilung durch Master oder Berechtigungstoken
 		\item Zufälliger Zugriff: Keinerlei Koordination. Reduzierung der Kollisionswahrscheinlichkeit durch Belegungsprüfung vor dem Senden
 	\end{itemize}
 \end{itemize}
@@ -844,7 +845,11 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 
 
 \section{Telekommunikationsnetze}
-Zweck: Austausch von Daten über "`größere"' Distanzen.
+\begin{itemize}
+	\item Zweck: Austausch von Daten über "`größere"' Distanzen
+	\item Strikte Trennung zwischen Teilnehmer- und Netzseite
+	\item Bis 1975 rein analoges Netz mit hierarchische Struktur: Zentralvermittlungsstellen (vollvermascht), Hauptvermittlungsstellen, Knotenvermittlungsstellen, Endvermittlungsstellen. Ziffernreihenfolge der Vorwahl entspricht der Wahlreihenfolge der Vermittlungstellen
+\end{itemize}
 
 \subsection{Integrated Services Digital Network (ISDN)}
 
@@ -852,14 +857,61 @@ Zweck: Austausch von Daten über "`größere"' Distanzen.
 \begin{itemize}
 	\item Digital bis zum Teilnehmer mit Integration unterschiedlicher Dienste (Sprache, Daten, Bild, etc.) sowie Bereitstellung zusätzlicher Dienste (Wahlwiederholung, Direktwahl, Umleitung von Anrufen, etc.)
 	\item Trennung von Teilnehmer-Installation und Netzseite mit digitalen Orts- und Fernvermittlungsstellen
+	\item Aufgaben des Netzabschlusses (NT): Übertragungstechnischer Abschluss; Speisung der Teilnehmerinstallation (Normalbetrieb und Notbetrieb); Erkennung von Rahmenfehlern
+	\begin{description}
+		\item{NT1}: Taktrückgewinnung Rahmen; Rahmensynchronisation; Echo-Kanal-Steuerung
+		\item{NT2}: Vermittlungsfunktionen; nur bei Telefonanlagen vorhanden (optional)
+	\end{description}
+	\item Aufgaben von ET (Exchange Termination) auf Schicht 1-3: Medienzugriff auf D-Kanal (Schicht 2); Signalisierung (Schicht 3); Multiplex/Demultiplex
+	\item Aufgaben von LT (Line Termination) auf Schicht 1: Umsetzung der Übertragungsverfahren; Regenerieren des Takts; Fernstromversorgung der Teilnehmer
+	\item \textbf{Kanäle}
+	\begin{description}
+		\item{B-Kanal}: Nutzdatenübertragung bei 64 kbit/s; mehrere unabhängige Kanäle möglich; Medienzuteilung
+		\item{D-Kanal}: Signalisierung bei 16 kbit/s zwischen Endsystem und NT; Medienzugriff (konkurrierende CSMA/CD-Variante); oft als Standleitung "`missbraucht"'
+		\item{E-Kanal}: Medienzugriff (CS, CD) NT zu Endsystem bei 16 kbit/s; Unterstützung des konkurrierenden Medienzugriffs auf D-Kanal (NT refkletiert D-Kanal in E-Kanal im ankommenden \(S_0\)-Rahmen)
+	\end{description} 
 \end{itemize}
 
 \subsubsection{Teilnehmeranschluss}
+\begin{itemize}
+	\item \textbf{Datenübertragung}
+	\begin{itemize}
+		\item Teilnehmer-Schnittstelle \(S_0\): Doppelader pro Übertragnungsrichtung (Vierdraht-Übertragungsverfahren) für verschiedene Topologien (im Folgenden: Bus); Raummultiplex (Trennung der Übertragungsrichtungen) oder Zeitmultiplex (Rahmenstruktur)
+		\item Rahmenerkennung durch gezielte Coderegelverletzung am Anfang und am Ende eines Rahmens
+		\item \(U_{k0}\)-Schnittstelle zwischen Teilnehmerinstallation und Ursprungsvermittlungsstelle (Zweidraht-Schnittstelle)
+		\begin{itemize}
+			\item Zeitgetrenntlageverfahren: Halbduplexbetrieb (gleiches Adernpaar für beide Übertragungsrichtungen) mit abwechselndem Senden/Empfangen (Ping-Pong-Verfahren); Vermittlungsstelle gibt Takt vor
+			\item Gleichlageverfahren mit Echokompensation: Gleiche Frquenz und Zeit bei der Übertragung, endkoppelt durch Gabelschaltung
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Medienzugriff über D-Kanal}
+	\begin{itemize}
+		\item Endsysteme greifen unabhängig von einander auf D-Kanal zu (beispielsweise um eine Verbindung zu etablieren); CSMA/CD-basiert; frei, falls für 8 Bit keine Aktivität erkennbar; Kollisionserkennung durch Abhören des E-Kanals
+		\item Kollisionserkennung bei gleichzeitigem Sendebeginn durch unterschiedliche Daten im Adressfeld
+	\end{itemize}
+	\item \textbf{D-Kanal-Signalisierung}
+	\begin{itemize}
+		\item Trennung: Signalisierung am Teilnehmeranschluss; Signalisierung im \texttt{ISDN}-Netz (separates Netz zur Signalisierung)
+		\item Signalisierung am Teilnehmeranschluss
+		\begin{itemize}
+			\item Schicht 3: \texttt{Q.931}-Protokoll zum Austausch von Signalisierungsinformationen zwischen Endsystemen. Eindeutige Identifikation der Endysteme durch \texttt{ISDN}-Adresse
+			\item Schicht 2: \texttt{LAP-D}-Protokoll zwischen Endsystem und erster Vermittlungsstelle
+		\end{itemize}
+		% TODO: Auf- und Abbau von Verbindungen?
+	\end{itemize}
+\end{itemize}
 
 \subsubsection{SS7}
+% TODO: Was davon ist wichtig?
 
 
-\subsection{DSL}
+\subsection{Digital Subscriber Line (DSL)}
+\begin{itemize}
+	\item Ziel: ISDN gefühlt zu langsam \(\rightarrow\) leistungsfähige Lösung für den Teilnehmeranschluss mit Unterstützung von Datendiensten mit höherer Datenrate
+	\item Grundlegende Varianten: Asymmetric DSL mit unterschiedlichen Datenraten im Up- und Download, typischerweise für Privathaushalte; Symmetric (DSL) als Standleitung für Geschäftskunden (meist wesentlich teurer, reine Datenanschluss ohne Telefonie)
+	\item Frequenzmultiplexen: Verschiedene Frequenzbereiche für Telefonie, Upstream, Downstream
+	\item Nutzbare Datenrate am Anschluss abhängig von der Dämpfung, bedingt durch Kabeldurchmesser (sinkt mir steigendem Kabeldurchmesser, Entfernung und Störungen
+\end{itemize}
 
 
 \subsection{Label Switching}
@@ -869,3 +921,7 @@ Zweck: Austausch von Daten über "`größere"' Distanzen.
 \subsubsection{ATM}
 
 \subsubsection{MPLS}
+
+
+
+\section{Formelsammlung}
