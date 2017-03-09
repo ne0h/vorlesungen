@@ -67,31 +67,31 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Self-Clocking}
 	\begin{itemize}
 		\item Szenario: Verbindung zweier Netze über langsames Weitverkehrsnetz. Dateneinheiten benötigen bei der langsamen Übertragung mehr Zeit als in den lokalen Netzen. Dadurch kommen sie verzögert beim Empfänger an, welcher sie entsprechend "`langsam"' quittiert. Durch den entstehenden Takt weis der Sender, wie schnell er senden kann. Aber: Wie soll die "`Uhr"' gestartet werden?
-		\item Wieso wird kein Gleichgewicht erreicht?
+		\item Wieso wird trotzdem kein Gleichgewicht erreicht?
 		\begin{itemize}
 			\item Verbindung kommt nicht ins Gleichgewicht. Mögliche Auslöser: Neue Verbindung/Neustart, automatische Anpassung der Datenrate und Verzögerung
 			\item Sender sendet neue Dateneinheiten zu früh
 			\item Ressourcenbeschränkungen verhindern Gleichgewicht
 		\end{itemize}
-		\item Slow-Start (Einzelverbindung)
-		\begin{itemize}
-			\item Erhöhung der Anzahl der gesendeten Dateneinheiten über die Zeit durch Einführung eines Staukontrollfensters (\texttt{Staukontrollfenster < Flusskontrollfenster}). Verhindert burstartiges Senden der Quelle, was zu vielen Sendewiederholungen führen würde
-			\item Bei Verbindungsstart oder Verlust einer Dateneinheit wird das Staukontrollfenster zurückgesetzt
-			\item Startverhalten ohne Slow-Start: Viele Sendewiederholungen durch Paketverluste. "`lineares Zickzackwachstum"', das weit hinter der verfügbaren Datenrate zurück bleibt (effektive Nutzung bei 35\%)
-			\item Startverhalten mit 2s Slow-Start: Keine Sendewiederholungen, Datenrate nahezu am verfügbaren Maximum. Effiziens abhängig von Vebrindungsdauer, da dann die langsame Slow-Start-Phase an Gewicht verliert
+	\item \textbf{Slow-Start (Einzelverbindung)}
+	\begin{itemize}
+		\item Erhöhung der Anzahl der gesendeten Dateneinheiten über die Zeit durch Einführung eines Staukontrollfensters (\texttt{Staukontrollfenster < Flusskontrollfenster}). Verhindert burstartiges Senden der Quelle, was zu vielen Sendewiederholungen führen würde
+		\item Bei Verbindungsstart oder Verlust einer Dateneinheit wird das Staukontrollfenster zurückgesetzt
+		\item Startverhalten ohne Slow-Start: Viele Sendewiederholungen durch Paketverluste. "`lineares Zickzackwachstum"', das weit hinter der verfügbaren Datenrate zurück bleibt (effektive Nutzung bei 35\%)
+		\item Startverhalten mit 2s Slow-Start: Keine Sendewiederholungen, Datenrate nahezu am verfügbaren Maximum. Effiziens abhängig von Vebrindungsdauer, da dann die langsame Slow-Start-Phase an Gewicht verliert
 		\end{itemize}
-		\item Congestion Avoidence (Simultane, konkurrierende Verbindungen)
-		\begin{itemize}
-			\item Ohne Congestion Avoidance: Sehr viele Sendewiederholungen (nahezu 50\% im Experiment), sehr unfaire Aufteilung
-			\item Mit Congestion Avoidance: Sehr wenige Sendewiederholungen, verschiedene Quittungsstrategien möglich
-			\item Zusammenfassung: Faire Aufteilung der verfügbaren Kapazität, langsames Herantasten durch lineares Erhöhen des Staukontrollfensters sowie kaum Sendewiederholungen
-		\end{itemize}
-		\item Fast Retransmit
-		\begin{itemize}
-			\item Beobachtung: Nicht jede nicht in Reihenfolge erhaltene Dateneinheit ist ein Indiz für eine Überlastung des Netzes
-			\item Mechanismus zur Staukontrolle: Sendewiederholung beim Empfangeiner definierten Anzahl duplizierter Quittungen
-			\item Vorgehen: Warten auf Timerablauf, dann Sendewiederholung (Wartezeit größer Umlaufzeit \texttt{RTT})
-		\end{itemize}
+	\end{itemize}
+	\item \textbf{Congestion Avoidence (Simultane, konkurrierende Verbindungen)}
+	\begin{itemize}
+		\item Ohne Congestion Avoidance: Sehr viele Sendewiederholungen (nahezu 50\% im Experiment), sehr unfaire Aufteilung
+		\item Mit Congestion Avoidance: Sehr wenige Sendewiederholungen, verschiedene Quittungsstrategien möglich
+		\item Zusammenfassung: Faire Aufteilung der verfügbaren Kapazität, langsames Herantasten durch lineares Erhöhen des Staukontrollfensters sowie kaum Sendewiederholungen
+	\end{itemize}
+	\item \textbf{Fast Retransmit}
+	\begin{itemize}
+		\item Beobachtung: Nicht jede nicht in Reihenfolge erhaltene Dateneinheit ist ein Indiz für eine Überlastung des Netzes
+		\item Mechanismus zur Staukontrolle: Sendewiederholung beim Empfang einer definierten Anzahl duplizierter Quittungen
+		\item Vorgehen: Warten auf Timerablauf, dann Sendewiederholung (Wartezeit größer Umlaufzeit \texttt{RTT})
 	\end{itemize}
 	\item \textbf{Staukontrolle}
 	\begin{itemize}
@@ -466,11 +466,11 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Nachteil: Aggregierung von Präfixen wird aufgebrochen \(\rightarrow\) Routenänderungen müssen schlimmstenfalls im ganzen Internet propagiert werden. Abhilfe möglicherweise \texttt{NOPEER}-Attribut: Schränkt die Propagierung von Änderungen am Rand des Internets ein
 	\end{itemize}
 	\item Exponentielles Größenwachstum der Routingtabellen durch zunehmendes Multi-Homing und Verkehrslastsenkung über BGP, da viele kleine Präfixe propagiert werden \(\rightarrow\) zunehmende Dynamik der Routen
-	\item Route Flap Damping: Temporäres Unterdrucken der Änderungen von instabilen Routen durch Erhöhen eines Strafwertes pro Update. Strafwert fällt exponentiell wird ab. Wird ein bestimmter Wert überschritten, werden die Updates unterdrückt. Kann zu Konnektivitätsverlust kommen
+	\item Route Flap Damping: Temporäres Unterdrücken von instabilen Routen durch Erhöhen eines Strafwertes pro Update. Strafwert fällt exponentiell wieder ab. Wird ein bestimmter Wert überschritten, werden die Updates unterdrückt. Kann zu Konnektivitätsverlust kommen
 	\item \textbf{Sicherheit des Inter-Domain-Routings}
 	\begin{itemize}
 		\item Probleme: Netzbetreiber verdienen mit der Bekanntgabe von Routinginformationen Geld; wie können die übermittelten Informationen geschützt werden?
-		\item Verschiedene Lösungsansätze verschiedener Hersteller zur Sicherung der Übertragung durch Authentifizierung/Verschlüsselung. Umsetzung scheitert bisher an fehledem Leidensdruck der Netzbetreiber
+		\item Verschiedene Lösungsansätze verschiedener Hersteller zur Sicherung der Übertragung durch Authentifizierung/Verschlüsselung. Umsetzung scheitert bisher an fehlendem Leidensdruck der Netzbetreiber
 	\end{itemize}
 	\item \textit{Cleaning Center} als Gegenmaßenahme für DDoS-Angriffe auf AS-Upstreams: Gibt den Präfix des betroffenen AS bekannt, filtert den legitimen Verkehrs heraus und schickt diesen per \textit{Clean Pipe} an as AS zurück. Hochleistungsinfrastruktur zum Entdecken von Attacken und Umleiten des Verkehrs erforderlich. Privatsphäreproblem: Dieses AS hat Zugriff auf den gesamten Verkehr (Ändern/Löschen/MitM/etc.)
 	\item \textbf{MitM Hijacking}
@@ -610,12 +610,12 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsubsection{Basics}
 \begin{itemize}
-	\item Kollisionsdomäne: Bereich des Netzes, der vom Auftreten einer Kollision betroffen ist
+	\item Kollisionsdomäne: Bereich des Netzes, der vom Auftreten einer Kollision betroffen ist. Gesamtes Netzsegment stellt die Kollisionsdomäne dar
 	\begin{itemize}
 		\item Repeater (Bus): Komplettes Netz
 		\item Brücke (Bus): Jeweils das komplette, durch Brücke abgetrennte Netz
 		\item Hub (Stern): Komplettes Netz
-		\item Switch (Stern): Jeweils die Verbindung zum Switch
+		\item Switch (Stern): Jeweils die Verbindung zum Switch. Bei Duplexbetrieb kein CSMA/CD nötig, da keine Kollisionen auftreten können
 	\end{itemize}
 	\item Kollisionserkennung bei Sternnetzen: CSMA/CD lediglich im halb-duplex-Modus erforderlich
 \end{itemize}
@@ -638,8 +638,9 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 				\item Brücken speichern \textit{Designated Port} als Elternelement in Richtung Wurzel
 				\item Stabile Phase: Root-Brücke sendet periodisch BPDUs; aktive Brücken leiten diese weiter. Bei Ausbleiben von BPDUs erklären sich Brücken wieder selbst zu Root-Brücken und der Algorithmus startet von vorne
 			\end{itemize}
+			\item Der resultierende Spanning Tree enthält alle Netze (LANs) und alle designated Brücken. Nicht benutzete Brücken werden ausgespart
 			\item \textit{Spanning Tree Protocol} (STP): Umsetzung entsprechend dem SPA. Rekonfigurationsdauer allerdings sehr lange (30-50s) \(\rightarrow\) \textit{Rapid Spanning Tree Protocol} (RSTP) mit wenigen Sekunden Umschaltzeit
-			\item Wesnetliche Änderungen bei Rapid Spanning Tree Protocol (RSPT)
+			\item Wesentliche Änderungen bei Rapid Spanning Tree Protocol (RSPT)
 			\begin{itemize}
 				\item Neue Portzustände: \textit{Alternate Port} (bester alternativer Pfad zur Root-Brücke); \textit{Backup Port} (alternativer Pfad zu einem Netz, zu dem eine Verbindung existiert)
 				\item Periodisches Senden von BPDUs als Keep-Alive Nachrichten and die nächste Hierarchiebene. Ausfallerkennung von Nachbarn möglich
@@ -781,7 +782,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 
 \subsection{Beispiele}
 
-\subsubsection{Binäre Leitungscodes}
+\subsubsection{Binäre Leitungscodes: Non-Return-To-Zero (NRZ)}
 \begin{itemize}
 	\item Symbolwerte werden durch Signalwert bestimmt
 	\item \(\{0,1\}\) werden durch Pegel über das gesamte Interval festgelegt; Signalwechsel nur an den Intervalgrenzen
@@ -802,8 +803,8 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 	\item \textbf{Manchesterkodierung}
 	\begin{itemize}
 		\item Idee: Signalerkennung durch Flankenwechsel in der Intervallmitte
-		\item \texttt{1}: Signalwechsel hoher Pegel \(\rightarrow\) niedriger Pegel
-		\item \texttt{0}: Signalwechsel niedriger Pegel \(\rightarrow\) hoher Pegel
+		\item \texttt{1}: Signalwechsel von hoher Pegel \(\rightarrow\) niedriger Pegel
+		\item \texttt{0}: Signalwechsel  vonniedriger Pegel \(\rightarrow\) hoher Pegel
 		\item Erzeugbar durch \texttt{XNOR} über Takt und NRZ-kodierten Daten
 		\item Vorteil: Taktrückgewinnung möglich; keine Gleichstromkomponente
 		\item Nachteil: Baudrate bei 1-und-0-Folgen doppelt so hoch wied Datenrate
@@ -813,7 +814,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 \subsubsection{Ternäre Leitungscodes}
 \begin{itemize}
 	\item Die beiden Symbolwerte \texttt{0} und \texttt{1} werden auf drei Signalwerte (\texttt{-1}, \texttt{0}, \texttt{1}) abgebildet
-	\item \textbf{Return-to-Zero (RTZ)}
+	\item \textbf{Return-to-Zero (RZ)}
 	\begin{itemize}
 		\item \texttt{1}: Positiver Pegel in der ersten Takthälfte, 0-Pegel in der zweiten
 		\item \texttt{0}: Negativer Pegel in der ersten Takthälfte, 0-Pegel in der zweiten
@@ -840,6 +841,9 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 \begin{itemize}
 	\item \texttt{m} werden als Block zusammengefasst und zu einem neuen Block der Länge \texttt{n} kodiert
 	\item Ziele: Ermöglichen von Taktrückgewinnung; Vermeiden der Ineffiziens des Manchestercodes
+	\item \texttt{4B/5B}: Verwendung bei \texttt{Fast Ethernet}
+	\item Vorteil: Bessere Taktrückgewinnung bei Folgen; höhere Gleichstromfreiheit
+	\item Nachteil: Kodierungsoverhead; teilweise Effiziensprobleme
 \end{itemize}
 
 
@@ -857,6 +861,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 \begin{itemize}
 	\item Digital bis zum Teilnehmer mit Integration unterschiedlicher Dienste (Sprache, Daten, Bild, etc.) sowie Bereitstellung zusätzlicher Dienste (Wahlwiederholung, Direktwahl, Umleitung von Anrufen, etc.)
 	\item Trennung von Teilnehmer-Installation und Netzseite mit digitalen Orts- und Fernvermittlungsstellen
+	\item Leitungsvermittlung mit dedizierter Signalisierung zur Ressourcenreservierung
 	\item Aufgaben des Netzabschlusses (NT): Übertragungstechnischer Abschluss; Speisung der Teilnehmerinstallation (Normalbetrieb und Notbetrieb); Erkennung von Rahmenfehlern
 	\begin{description}
 		\item{NT1}: Taktrückgewinnung Rahmen; Rahmensynchronisation; Echo-Kanal-Steuerung
@@ -868,7 +873,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 	\begin{description}
 		\item{B-Kanal}: Nutzdatenübertragung bei 64 kbit/s; mehrere unabhängige Kanäle möglich; Medienzuteilung
 		\item{D-Kanal}: Signalisierung bei 16 kbit/s zwischen Endsystem und NT; Medienzugriff (konkurrierende CSMA/CD-Variante); oft als Standleitung "`missbraucht"'
-		\item{E-Kanal}: Medienzugriff (CS, CD) NT zu Endsystem bei 16 kbit/s; Unterstützung des konkurrierenden Medienzugriffs auf D-Kanal (NT refkletiert D-Kanal in E-Kanal im ankommenden \(S_0\)-Rahmen)
+		\item{E-Kanal}: Medienzugriff (CS, CD) NT zu Endsystem bei 16 kbit/s; Unterstützung des konkurrierenden Medienzugriffs auf D-Kanal (NT reflektiert D-Kanal ankommenden \(S_0\)-Rahmen in E-Kanal)
 	\end{description} 
 \end{itemize}
 
@@ -910,18 +915,50 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 	\item Ziel: ISDN gefühlt zu langsam \(\rightarrow\) leistungsfähige Lösung für den Teilnehmeranschluss mit Unterstützung von Datendiensten mit höherer Datenrate
 	\item Grundlegende Varianten: Asymmetric DSL mit unterschiedlichen Datenraten im Up- und Download, typischerweise für Privathaushalte; Symmetric (DSL) als Standleitung für Geschäftskunden (meist wesentlich teurer, reine Datenanschluss ohne Telefonie)
 	\item Frequenzmultiplexen: Verschiedene Frequenzbereiche für Telefonie, Upstream, Downstream
-	\item Nutzbare Datenrate am Anschluss abhängig von der Dämpfung, bedingt durch Kabeldurchmesser (sinkt mir steigendem Kabeldurchmesser, Entfernung und Störungen
+	\item Nutzbare Datenrate am Anschluss abhängig von der Dämpfung, bedingt durch Kabeldurchmesser (sinkt mir steigendem Kabeldurchmesser, Entfernung und Störungen durch Aderanordnung im Kabel (\texttt{NEXT}, Sender stört Empfänger; \texttt{FEXT} Sender stören sich gegenseitig)
+	\texttt{Architektur}
+	\begin{itemize}
+		\item Broadband Remote Server (BRAS): Erster Router in Richtung Backbone; Aggregiert Verkehr und stellt Schicht-3-Konnektivität über PPP her; Authentifizierung/Autorisierung/Accounting via \texttt{RADIUS}-Protokoll
+		\item Weiterentwicklung: ADSL, VDSL
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{Label Switching}
 
 \subsubsection{Konzept}
+\begin{itemize}
+	\item Allgemeine Ziele: Schnelle Vermittlung; differenzierte Behandlung von Datenströmen; hohe Ressourcenauslastung
+	\item Idee: Switching auf Schicht 2 statt Routing auf Schicht 3 mit Hilfe lokal gültiger Kennungen (\textit{Labels})
+	\item Einfügen der Labels als zusätzlicher Header zwischen Schicht 2 und Schicht 3 \(\rightarrow\) effizienterer Zugriff möglich
+	\item \textit{Label-Forwarding -Information-Base} als Weiterleitungstabelle
+\end{itemize}
 
 \subsubsection{ATM}
+\begin{itemize}
+	\item Ziel/Aufgaben: Flexibles Transportprotokoll für verschiedene Inhalte (beispielsweise Audio, Video, Daten); Komplexitätsverlagerung in die Endsysteme (Fehler-/Flusskontrolle) \(\rightarrow\) einfache Verarbeitung in den Zwischensystemen; Segmentieren und Multiplexen verschieden getakteter Eingangssignale
+	\item Paketarchitektur: Header (Kennung, Virtueller Kanal, Virtueller Pfad, Prüfsumme; insgesamt 5 Bytes); Nutzdaten (48 Bytes)
+	\item \textbf{IP über ATM}
+	\begin{itemize}
+		\item \texttt{IP}-Router am Backbone-Rand haben \texttt{ATM}-Interface und nutzen häufig virtuelle Kanäle zu anderen \texttt{IP}-Routern
+		\item Router-Aufgaben: Adressumsetzung \(\big\lbrack\)\texttt{IP}-Paket \(\Leftrightarrow\) \texttt{ATM}-Paket\(\big\rbrack\) mit Routing und Segmentierung/Reassemblierung
+	\end{itemize}
+\end{itemize}
 
-\subsubsection{MPLS}
-
-
-
-\section{Formelsammlung}
+\subsubsection{Multiprotocol Label Switching (MPLS)}
+\begin{itemize}
+	\item Idee: Verwendung von Labels konstanter Länge um die Weiterleitungsleistung von IP-Routern zu erhöhen
+	\item Verwendung von \texttt{IP}; unabhängig von Schicht 2 und Hersteller (\texttt{IETF}-Standard)
+	\item \textbf{Komponenten}
+	\begin{itemize}
+		\item Label-Switching-Router (LSR): \texttt{IP}-Router mit \texttt{MPLS}-Fähigkeiten; kann \texttt{IP}-Adressen auf Basis von \texttt{IP}-Präfixen weiterleiten
+		\item MPLS-Knoten: Arbeitet nur auf Labels; keine \texttt{IP}-Weiterleitung möglich
+		\item Label-Edge-Router (LER): Router am Eingang/Ausgang einer \texttt{MPLS}-Domäne; klassifiziert Dateneinheiten beim Domäneneintritt
+	\end{itemize}
+	\item \textbf{Weiterleitungsklassen (Forwarding Equivalence Class)}
+	\begin{itemize}
+		\item Gleiche Klasse von Dateneinheiten, gleiche Behandlung
+		\item Granularität der Weiterleitungsklassen entscheident für schnelle Weiterleitung oder differenzierter Behandlung
+		\item Beispiele: Gleiches Präfix und gleiches \texttt{ToS}-Feld; gleiche \texttt{IP}-Adresse und gleiche Portnummer; gleicher Domänengrenzrouter
+	\end{itemize}
+\end{itemize}
