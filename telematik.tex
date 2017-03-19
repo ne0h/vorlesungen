@@ -36,7 +36,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\begin{itemize}
 			\item Verhinderung der Zustandshaltung bis zum letztmöglichen Zeitpunkt: Beginn der Zustandhaltung erst bei Empfang des \texttt{ACK}
 			\item Realisierung: Ermittlung der Zustandsinformationen auf Empfängerseite anhand der Informationen aus \texttt{ACK(SYN=0,ACK=1,seq=client\_isn+1,ack=server\_isn+1)}
-			\item Kodierungsbeispiel: Zeitstempel zur Verhinderung von Replay-Attacken (5 Bit); ausgewählte MSS aus acht vordefinierten Werten (3 Bit); Hash über Quelladresse und -port sowie Zieladresse und -port, verifiziert dass der Client bereits \texttt{SYN} durchgeführt hat /24 Bit). Daraus entsteht die 32 Bit initiale Sequenznummer des Servers
+			\item Kodierungsbeispiel: Zeitstempel zur Verhinderung von Replay-Attacken (5 Bit); ausgewählte MSS aus acht vordefinierten Werten (3 Bit); Hash über Quelladresse und -port sowie Zieladresse und -port, verifiziert, dass der Client bereits \texttt{SYN} durchgeführt hat /24 Bit). Daraus entsteht die 32 Bit initiale Sequenznummer des Servers
 			\item Nachteil: Vergleichsweise kurze Sequenznummer (32 Bit) reicht nicht für zusätzliche TCP-Optionen und limitiert MSS-Größen auf vordefinierte Werte
 			\item Idee: Cookie erst einsetzen, wenn nötig (volle Warteschlange oder Ressourcenengpass)
 		\end{itemize}
@@ -58,10 +58,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Router verwirft (randomisiert) Dateneinheiten, bevor die Warteschlange voll ist. Sorgt für Fairness und verhindert globale Synchronisation
 		\item Verfahren
 		\begin{itemize}
-			\item Konkrete Implementierung: Random Early Detection (RED)
-			\begin{itemize}
-				\item Wahrscheinlichkeit, dass eine Dateneinheit verworfen wird, steigt linear mit der Warteschlangenlänge
-			\end{itemize}
+			\item Konkrete Implementierung: Random Early Detection (RED). Wahrscheinlichkeit, dass eine Dateneinheit verworfen wird, steigt linear mit der Warteschlangenlänge
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Self-Clocking}: Verbindung zweier Netze über langsames Weitverkehrsnetz. Dateneinheiten benötigen bei der langsamen Übertragung mehr Zeit als in den lokalen Netzen. Dadurch kommen sie verzögert beim Empfänger an, welcher sie entsprechend "`langsam"' quittiert. Durch den entstehenden Takt weiß der Sender, wie schnell er senden kann. Aber: Wie soll die "`Uhr"' gestartet werden?
@@ -98,7 +95,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 			\begin{itemize}
 				\item Mechanismen: Slow Start, Timeout, Congestion Avoidance, Fast Retransmit
 				\item Nach Timeout oder Empfang duplizierter Quittungen: Beginn von Slow Start
-				\item Grundlegende Vorgehensweise: Additives Erhöhen des Congestion Window \texttt{CWnd}, multiplikatives Erniedrigen (\texttt{AIMD})
+				\item Grundlegende Vorgehensweise: Additives Erhöhen des Congestion Window \texttt{CWnd}, multiplikatives Verringern (\texttt{AIMD})
 			\end{itemize}
 			\item TCP-Reno
 			\begin{itemize}
@@ -134,7 +131,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsubsection{Fairness}
 \begin{itemize}
-	\item TCP-Verbindungen konkurrieren um Ressourcen des Netzes \(rightarrow\) faire Aufteilung angestrebt
+	\item TCP-Verbindungen konkurrieren um Ressourcen des Netzes \(\rightarrow\) faire Aufteilung angestrebt
 	\item \textbf{Probleme}
 	\begin{itemize}
 		\item "`Gierige Nutzer"': Faire Verteilung bezieht sich auf TCP-Verbindungen. Kann daher mehrere Verbindungen gleichzeitig öffnen. Gegenmaßnahme: Verteilung der Kapazität pro Benutzer
@@ -152,7 +149,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \subsubsection{Analyse von TCP: Modelle}
 \begin{itemize}
 	\item Analytische Beurteilung hinsichtlich Durchsatz und Latenz
-	\item Zentrale Fragen: Ist \texttt{TCP} für meine Zwecke geeignet?`Welche Leistung kann ich erwarten?
+	\item Zentrale Fragen: Ist \texttt{TCP} für meine Zwecke geeignet "`Welche Leistung kann ich erwarten?"'
 	\item \texttt{Periodisches Modell}
 	\begin{itemize}
 		\item Vereinfachte Betrachtung des langfristigen Verhaltens ohne Slow-Start und Sendewiederholungen \(\rightarrow\) Staukontrollfenster bildet "`perfekte"' Sägezahnkurve mit periodischen Paketverlusten
@@ -188,7 +185,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \subsubsection{Realität im Internet}
 \begin{itemize}
 	\item Datentransport nicht mehr nur klassischerweise zwischen Endgeräten, die über Routern kommunizieren. Paradigma: \texttt{IP}-Dateneinheiten werden nicht modifiziert \(\rightarrow\) beliebige Transportprotokolle nutzbar
-	\item Praktisch greifen jede Menge Middleboxes in den E2E-Datenstrom ein und können fast alle Felder einer \texttt{TCP}-Dateneinheit verändern \(\rightarrow\) keine E2E-Transparenz mehr. Beispiele: Physikalische (Hardware-Firewall) oder virtuelle (NAT in Heimroutern, Software-Firewall) modifizieren Einheiten. Datenpfade ohne Middleboxes eher die Ausnahme
+	\item Praktisch greifen jede Menge Middleboxes in den E2E-Datenstrom ein und können fast alle Felder einer \texttt{TCP}-Dateneinheit verändern \(\rightarrow\) keine E2E-Transparenz mehr. Beispiele: Physikalische (Hardware-Firewall) oder virtuelle (NAT in Heimroutern, Software-Firewall) Firewalls modifizieren Einheiten. Datenpfade ohne Middleboxes eher die Ausnahme
 	\item Network Address Translation (NAT) für maskierte Netze. NAT-Router ersetzt ausgehende Pakete durch seine Adresse und speichert das Mapping zum Zuordnen von Antworten. NAT-Router muss hierfür das Transportprotokoll kennen
 	\item \textbf{Firewall}
 	\begin{itemize}
@@ -337,7 +334,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 				\item Verteilter Puffer pro Knotenpunkt in Switch-Fabric: Höherer Speicherbedarf
 				\item Zentraler Puffer zur Konflikauflösung: Geringerer Speicher als bei den anderen Puffern nötig, allerfings höhere Anforderungen an die Speicherzugriffszeit 
 			\end{itemize}
-			\item Backpressur: Überlastsignalisierung an den Eingangsports \(\rightarrow\) Eingangsports reduzieren Last
+			\item Backpressur: Überlastsignalisierung an die Eingangsports \(\rightarrow\) Eingangsports reduzieren Last
 			\item Parallele Switch-Fabrics
 		\end{itemize}
 		\item Struktur der Switch-Fabric
@@ -365,7 +362,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Distanzvektor vs. Link-State}
 	\begin{itemize}
 		\item Distanzvektor-Algorithmus: Iterative Berechnung der kürzesten Pfade (beispielsweise via Bellman-Ford-Algorithmus). Umsetzung als \textit{Router Information Protocol} (RIP) im Internet. Routinginformationen werden auf Basis der Informationen von den Nachbarn berechnet und ausgetauscht
-		\item Link-State-Algorithmus: Globale Sicht zur Berechnung der kürzesten (Dijkstra-Algorithmus) \(\rightarrow\) jeder Router muss alle Links im Netz kennen \(\rightarrow\) Informationen über lokale Links eines Routers breiten sich im gesamten Netz aus; jeder Router berechnet kürzeste Wege selbstständig (replizierte Berechnung); im Internet als \textit{Open Shortest Path First} (OSPF) umgesetzt
+		\item Link-State-Algorithmus: Globale Sicht zur Berechnung der kürzesten Pfade (Dijkstra-Algorithmus) \(\rightarrow\) jeder Router muss alle Links im Netz kennen \(\rightarrow\) Informationen über lokale Links eines Routers breiten sich im gesamten Netz aus; jeder Router berechnet kürzeste Wege selbstständig (replizierte Berechnung); im Internet als \textit{Open Shortest Path First} (OSPF) umgesetzt
 	\end{itemize}
 	\item \textbf{Historisches}
 	\begin{description}
@@ -457,8 +454,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item Weltweiter Einsatz als Basis des heutigen weltweiten Internetroutings zwischen Autonomen Systemen
 	\item Erweitertes Pfad-Vektor-Protokoll: Verbreitung von Pfaden statt Metriken \(\rightarrow\) garantiert Schleifenfreiheit
 	\item Entscheident für die Wegewahl: Netzbetreiberpolicies (hinsichtlich Wirtschaftlichkeit oder vertraglichen Vereinbarungen)
-	\item Einsparung von Routingnachrichten durch geschickte Präfixvergabe (Zusammenfassen von Adressbereichen)
-	\item Aggregierung: Aus \texttt{204.71.0.0/24, 204.71.1.0/24,...,204.71.1.0/24} wird \texttt{204.71.0.0/16} \(\rightarrow\) verbessert Skalierung
+	\item Einsparung von Routingnachrichten durch geschickte Präfixvergabe (Aggregierung von Adressbereichen). Aus \texttt{204.71.0.0/24, 204.71.1.0/24,...,204.71.1.0/24} wird beispielsweise \texttt{204.71.0.0/16} \(\rightarrow\) verbessert Skalierung
 	\item \textbf{Externes BGP und internes BGP}
 	\begin{description}
 		\item{EBGP}: Informationsaustausch zwischen \texttt{BGP}-Routern benachbarter ASe
@@ -471,7 +467,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item IGP-Router auch BGP sprechen lassen. Oft bei großen Backbone-Providern der Fall
 	\end{itemize}
 	\item BGP-Sessions über TCP-Verbindungen. Routing dabei über IBGP oder über direkte physische Verbindungen (kein Routing nötig) oder manuell konfiguriert. Nachbarn werden \textit{Peers} genannt
-	\item Verbindungen bei \texttt{IBGP}: Im einfachsten Fall alle \texttt{BGP}-Router innerhalb eines ASes vollvermascht. Alternativ: Route-Reflektor als zentrale Vermittlungsstelle
+	\item Verbindungen bei \texttt{IBGP}: Im einfachsten Fall sind alle \texttt{BGP}-Router innerhalb eines ASes vollvermascht. Alternativ: Route-Reflektor als zentrale Vermittlungsstelle
 	\item \textbf{Nachrichtentypen}
 	\begin{itemize}
 		\item \texttt{OPEN}: Aufbau einer Verbindung zum Peer. TCP-Verbindung muss bereits bestehen
@@ -484,7 +480,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Kein Mechanismus zur Pfadwahl vorgegeben: Policies entscheident
 		\item \textit{Routing Information Base} (RIB) zur Verwaltung der Routen
 		\item Verarbeitung von Updates: \(\big\lbrack\)\textit{Input Policy Engine} \(\rightarrow\) \textit{Entscheidungsprozess} \(\rightarrow\) \textit{RIB} \(\rightarrow\) \textit{Output Policy Engine}\(\big\rbrack\)
-		\item Neben der eigentlichen Routingtabelle werden die empfangen/versendeten Routen pro eingehendem/ausgehenden Peer gespeichert
+		\item Neben der eigentlichen Routingtabelle werden die empfangen/versendeten Routen pro eingehendem/ausgehendem Peer gespeichert
 	\end{itemize}
 	\item Herausforderungen: Aufrechterhalten der Skalierbarkeit (Tabellenwachstum, Dynamik der Routingänderungen); Sicherheitprobleme
 	\item \textbf{Multi-Homing}
@@ -1025,12 +1021,25 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 
 
 
-\section{Appendix A: Abkürzungen und Variablen}
+\section{Appendix A: Formeln, Abkürzungen und Variablen}
+
+\subsection{Formeln}
+
+\subsubsection{Analyse von TCP: Periodisches Modell}
 \begin{description}
-	\item{CWnd, Congestion Window}
+	\item{Mittlere Übertragungsrate}: \(X = \frac{1}{RTT} \cdot \sqrt{\frac{3}{2p}} \approx 1,22 \cdot \frac{1}{RTT \cdot \sqrt{p}}\) (in Abhängigkeit von Verlustwahrscheinlichkeit \(p\))
+	\item{Maximale Größe des Staukontrollfensters}: \(W = \sqrt{\frac{8}{3p}}\) (in Abhängigkeit von Verlustwahrscheinlichkeit \(p\))
+\end{description}
+
+
+\subsection{Abkürzungen und Variablen}
+\begin{description}
+	\item{CWnd, Congestion Window}: Pro empfangener Quittung \(CWnd = CWnd + \frac{1}{CWnd}\) 
+	\item{FlightSize}: Daten, die gesendet, aber noch nicht quittiert wurden
+	\item{Inter-Frame-Space}: Minimaler zeitlicher Abstand zwischen zwei Datenpaketen auf dem Übertragungsmedium. Bei Ethernet \texttt{96 Bitzeiten}
 	\item{MSS, Maximum Segment Size}: Definiert die maximale Anzahl von Bytes, die als Nutzdaten in einem TCP-Segment versendet werden können\footnote{\url{https://de.wikipedia.org/wiki/Maximum\_Segment\_Size}}
 	\item{RTT, Round-Trip-Time}: Gibt die Zeit an, die ein Datenpaket benötigt, um von der Quelle zum Ziel und zurück zu reisen. Es handelt sich also um die Summe aus Laufzeit von Punkt A nach Punkt B und der Laufzeit von Punkt B nach Punkt A\footnote{\url{https://de.wikipedia.org/wiki/Paketumlaufzeit}}
 	\item{RcvBuffer}: Gesamter Pufferplatz für Datenempfang
 	\item{RcvWindow, Empfangsfenster}: Momentan freier Pufferplatz für Datenempfang
-	\item{SSTresh, Slow-Start-Schwellschwert}
+	\item{SSTresh, Slow-Start-Schwellschwert}: Größe von \texttt{CWnd}, bei dem der Wechsel von Slow-Start zu Congestion-Avoidance erfolgt. Inital auf "`unendlich"' gesetzt. Bei Timeout oder drei duplizierten Quittungen: \(SSTresh = max\big\{\frac{FlightSize}{2}, 2 \cdot MSS\big\}\)
 \end{description}
