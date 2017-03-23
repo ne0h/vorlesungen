@@ -705,7 +705,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Datenrate von \texttt{1 GBit/s} (abwärtskompatibel); Sterntopologie; halb- oder vollduplex; CSMA/CD
 		\item Problematisch: Kollisionserkennung bei schnellen Datenraten \(\rightarrow\) Anpassung der Segmentlänge oder der Größe der minimalen Dateneinheit nötig
 		\item \textit{Carrier Extension}: Künstliche Erhöhung der Übertragungszeit ohne die minimale Länge der Dateneinheit zu erhöhen \(\rightarrow\) soll Kollisionserkennung sicherstellen
-		\item \textit{Frame-Bursting}: Effiziente Übertragung kurzer Dateneinheiten durch Bursts (Stationen übertragen Dateneinheiten direkt hintereinander). Die erste Dateneinheit darf ggf. eine Extension beinhalten; die letzte Dateneinheit muss nach maximal 8092 Byte beginnen
+		\item \textit{Frame-Bursting}: Effiziente Übertragung kurzer Dateneinheiten durch Bursts (Stationen übertragen Dateneinheiten direkt hintereinander). Die erste Dateneinheit darf ggf. eine Extension beinhalten; die letzte Dateneinheit muss nach maximal 8192 Byte beginnen
 		\item 10 GBit Ethernet
 		\begin{itemize}
 			\item Datenrate von \texttt{10 GBit/s}; P2P-Verbindungen; vollduplex
@@ -789,7 +789,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \begin{itemize}
 	\item \textit{Das} Einwahlprotokoll für Endnutzer beim Internetprovider
 	\item Anforderungen: Transparente Unterstützung verschiedener Schicht-3-Protokolle; Betrieb über verschiedene Links (ISDN, ATM, DSL, etc.); Erkennung von Bitfehlern/Linkfehler
-	\item Transparenz von Schicht-3-Daten: Spezielles Kontrollbyte zum Erkennen von Anfang/Ende einer Dateneinheit trotz Transparenz-Paradigme notwendig. und ggf. Flags voranstellen und übertragen
+	\item Transparenz von Schicht-3-Daten: Spezielles Kontrollbyte zum Erkennen von Anfang/Ende einer Dateneinheit trotz Transparenz-Paradigma notwendig. Ggf. Flags voranstellen und übertragen
 	\item \textbf{Link Control Protocol (LCP)}
 	\begin{itemize}
 		\item Aufgaben: Verbindungsaufbau/-abbau; Verbindungskonfiguration; optionale Authentifizierung; Erkennen von Linkfehlern
@@ -1034,7 +1034,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 
 \subsection{Abkürzungen und Variablen}
 \begin{description}
-	\item{CWnd, Congestion Window}: Pro empfangener Quittung \(CWnd = CWnd + \frac{1}{CWnd}\) 
+	\item{CWnd, Congestion Window}: Pro empfangener Quittung \(CWnd = CWnd + 1\) \(\big\lbrack\)Slow Start\(\big\rbrack\) oder \(CWnd = CWnd + \frac{1}{CWnd}\) \(\big\lbrack\)Congestion Avoidance\(\big\rbrack\)
 	\item{FlightSize}: Daten, die gesendet, aber noch nicht quittiert wurden
 	\item{Inter-Frame-Space}: Minimaler zeitlicher Abstand zwischen zwei Datenpaketen auf dem Übertragungsmedium. Bei Ethernet \texttt{96 Bitzeiten}
 	\item{MSS, Maximum Segment Size}: Definiert die maximale Anzahl von Bytes, die als Nutzdaten in einem TCP-Segment versendet werden können\footnote{\url{https://de.wikipedia.org/wiki/Maximum\_Segment\_Size}}
