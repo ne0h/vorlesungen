@@ -16,21 +16,21 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 
 \subsection{Virtualisierung}
 \begin{itemize}
-	\item Isomorphismus zwischen Gast und Host: Gast-Operationen werden auf enstprechende Host-Operationen überführt und ausgeführt
+	\item Abstrakt: Isomorphismus zwischen Gast und Host: Gast-Operationen werden auf enstprechende Host-Operationen abgebildet
 	\item \textbf{Aufgaben der Virtualisierung}
 	\begin{itemize}
 		\item Zuordnung von virtuellen zu realen Ressourcen
 		\item Verwenden von realen Maschinenbefehlen oder System Calls um die Anweisungen aus dem Gastsystem auszuführen
 	\end{itemize}
-	\item \textbf{Prozess Virtuelle Maschinen}
+	\item \textbf{Process Virtual Machines}
 	\begin{itemize}
-		\item Abstrahiert \textbf{API} oder \textbf{ABI}
+		\item Abstrahiert \textbf{API} oder \textbf{ABI} \(\rightarrow\) simuliert ein Programm/Prozess
 		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via System Calls
 		\item Runtime zur Verwaltung der Gastprozesse \(\rightarrow\) Vermischung von Gast- und Hostprozessen
 		\item Beispiel: \textit{Wine}
 		\item Binary Translation
 		\begin{itemize}
-			\item Selbes Betriebssystem, verschiedene \texttt{ISAs}: EInführung einer Zwischenschicht zur Übersetzung der \texttt{ABI}-Befehle
+			\item Selbes Betriebssystem, verschiedene \texttt{ISAs}: Einführung einer Zwischenschicht zur Übersetzung der \texttt{ABI}-Befehle
 			\item Beispiel \texttt{Digital FX!32}: Erlaubt das Ausführen von Windows-Anwendungen, die für \texttt{x86} kompiliert worden sind, auf \texttt{Alpha}-Prozessoren
 			\item Beispiel \texttt{HP Dynamo}: Optimierung zur Laufzeit innerhalb der selben Umgebung
 		\end{itemize}
@@ -38,7 +38,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 	\end{itemize}
 	\item \textbf{System Virtuelle Maschinen}
 	\begin{itemize}
-		\item Abstrahiert die \textbf{ISA} des Hosts als separate virtuelle Maschinen
+		\item Abstrahiert die \textbf{ISA} des Hosts als separate virtuelle Maschinen \(\rightarrow\) simuliert kompletten PC
 		\item Interaktion über den \textit{Virtual Machine Monitor} (VMM)
 		\item Typen
 		\begin{itemize}
@@ -55,4 +55,31 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 			\item Möglichkeiten zur System-Analyse auf \texttt{ISA}-Ebene (Debugging, Malware-Analyse, Forschung)
 		\end{itemize}
 	\end{itemize}
+\end{itemize}
+
+
+
+\section{Emulation}
+\begin{itemize}
+	\item \textbf{Interpretation vs. Binary Translation}
+	\begin{itemize}
+		\item Interpretation
+		\begin{itemize}
+			\item Quellinstruktion wird analysiert, in Zielinstruktion überführt und ausgeführt
+			\item Einfach zu implementieren; allerdings mit hohen Ausführungskosten verbunden
+		\end{itemize}
+		\item Binary Translation
+		\begin{itemize}
+			\item Betrachtet immer einen Instruktionsblock, übersetzt diesen und cacht ihn
+			\item Kmplexer; beim Start höhere Ausführungskosten; allerdings geringe Ausführungskosten
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Aufbau einer Process VM}
+	\begin{itemize}
+		\item Emulation Engine: Emuliert die Instruktionen (wahlweise mittels Interpretation oder Binary Translation; verantwortlich für deren Auswahl)
+		\item Profile Database: Sammelt dynamisch Informationen zum laufenden Programm \(\rightarrow\) bildet Basis für Emulationstechnikentscheidungen und Optimierung im Translater
+		\item Code Cache: Verwaltet die zwischengespeicherten, bereits übersetzten Code-Fragmente. \textit{Code Cache Manager} entscheidet, ob Fragmente im Cache abgelegt werden
+		\item Interpreter: Für virtuelle Quell-CPU und die Speicherverwaltung verantwortlich
+	\end{itemize}
+	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise; dekodiert die Instruktionen und auf die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
 \end{itemize}
