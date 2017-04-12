@@ -60,3 +60,7 @@ swt2only:
 telematikonly:
 	pdflatex telematikonly.tex
 	pdflatex telematikonly.tex
+
+vsonly:
+	pdflatex vsonly.tex
+	pdflatex vsonly.tex

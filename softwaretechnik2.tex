@@ -149,10 +149,10 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 \subsection{Einführung}
 \begin{itemize}
-	\item 48 \% aller gescheiterten Softwareprojekte sind an mangelhafter Anforderungsdefinition gescheitert
+	\item 48 \% aller gescheiterten Softwareprojekte scheitern an mangelhafter Anforderungsdefinition
 	\item Beheben von falsch definierten Anforderungen in späteren Entwicklungsphasen kann extrem teuer sein
 	\item Beschreibungskriterien: Ausreichend, komplett, widerspruchsfrei, verständlich, eindeutig, überprüfbar, risikoadjustiert
-	\item Werden meist in Form von User-Stories (Agile) oder Anwendungsfälle (modellgetrieben) beschrieben
+	\item Werden meist in Form von User-Stories (Agile) oder Anwendungsfällen (modellgetrieben) beschrieben
 	\item \textbf{Typen von Anforderungen (concern-based Classification)}
 	\begin{itemize}
 		\item Funktionale Anforderungen (Functional Requirements): Verhalten der Software, beispielsweise bei der Eingabe von Daten; "`kann per Turing-Maschine beschrieben werden"'\footnote{Reussner, andere}
@@ -289,13 +289,13 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \begin{itemize}
 	\item \textbf{Eigenschaften von Enterprise Applications (EA)}
 	\begin{itemize}
-		\item Langlebige Daten: Daten bleiben länger als Anwendungen und Hardware erhalten \(\rightarrow\) müssen in Anwendungen integrierbar sein
+		\item Langlebige Daten: Daten bleiben länger als Anwendungen und Hardware erhalten \(\rightarrow\) oft Migration von Daten
 		\item Große Datenmengen mit meist mehreren Millionen Datensätzen \(\rightarrow\) effizienter Zugriff notwendig
-		\item Konkurrierender Zugriff \(\rightarrow\) Inkonsistenzen müssen verhindert werden
+		\item Konkurrierender Zugriff, Verhinderung von Inkonsistenzen notwendig
 	\end{itemize}
 	\item Viele verschiedene Systeme: Shop, Leasing-Management-System, Ausgabenüberwachungssystem
 	\item Web Shops: Viele parallele Anwender; einfache Logic
-	\item \textbf{Ebenen}
+	\item \textbf{Ebenen (Layers)}
 	\begin{itemize}
 		\item Präsentation: Benutzerinterface zur Informationsdarstellung und Eingabeverarbeitung
 		\item Domain: Logik, Berechnungen
@@ -307,7 +307,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \subsection{Patternfamilien}
 \begin{itemize}
 	\item Jede Familie beschäftigt sich mit einem Problem von EAs
-	\item Generell: Kein Pattern ist "`das beste"'. Wahl des Patterns aus einer Familie hängt von den konkreten Vorraussetzungen ab
+	\item Generell: Kein Pattern ist "`das beste"'. Wahl des Patterns aus einer Familie hängt von den konkreten Voraussetzungen ab
 \end{itemize}
 
 \subsubsection{Domain-Logik Patterns}
@@ -416,7 +416,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Mapping von OO-Strukturen zu relationalen Datenbanken (besonders bei \texttt{Domain Model} und \texttt{Data Mapper})
 	\item \textbf{Pattern: Single Table Inheritance}
 	\begin{itemize}
-		\item Verherbungshierarchie mehrerer Klassen wird in einer einzigen Klasse repräsentiert, die Spalten für alle Attribute der verschiedenen Klassen und eine Type-Spalte hat
+		\item Vererbungshierarchie mehrerer Klassen wird in einer einzigen Tabelle repräsentiert. Diese enthält Spalten für alle Attribute der verschiedenen Klassen sowie eine Type-Spalte
 		\item Vorteile: Einfaches Datenbankschema; keine \texttt{Joins} notwendig; Verschieben von Attributen innerhalb der Hierarchie erfordert kein Anpassen der Tabelle
 		\item Nachteile: Viele ungenutzte Attribute; Tabelle kann sehr groß werden; es gibt nur einen Namespace für alle Attribute (problematisch, falls mehrere Klassen gleiche Attributnamen für verschiedene Typen benutzen. Abhilfe: Naming Convention wie beispielsweise \texttt{[Classname]\_[Fieldname]})
 	\end{itemize}
@@ -528,19 +528,18 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \begin{enumerate}
 	\item \textbf{Single Responsibility Principle (SRP)}
 	\begin{itemize}
-		\item Klassen sollen lediglich eine Verantwortung haben (Definition "`Anzahl Verantwortung"' über die Anzahl der Änderungsgründe)
-		\item Bei komplexen Verantwortungen muss die Klasse ggf. aufgeteilt werden
+		\item Klassen sollen lediglich eine einzige Verantwortlichkeit haben (Definition "`Anzahl Verantwortung"' über die Anzahl der Änderungsgründe)
+		\item Ggf. müssen Klassen aufgeteilt werden
 		\item Verbessert die Lesbarkeit und verringert das Fehlerrisiko
 	\end{itemize}
 	\item \textbf{Open Closed Principle (OCP)}
 	\begin{itemize}
-		\item Softwareeinheiten sollen Erweiterungen möglich machen ohne ihr Verhalten zu verändern
-		\item Beispielsweise durch Vererben und Überschreiben von Methoden
-		\item Beispiel: Zeichnen verschiedener Grafikprimitiven
+		\item Softwareeinheiten sollen unkompliziert erweitert aber nicht verändert werden können: "`Verändern durch Ergänzen"'
+		\item Beispiel: Zeichnen verschiedener Grafikprimitive durch Strategy-Pattern
 	\end{itemize}
 	\item \textbf{Liskov Substitution Principle (LSP)}
 	\begin{itemize}
-		\item Ersetzbarkeitsprinzip fordert, dass eine Instanz einer abgeleiteten Klasse sich so verhalten muss, dass jemand, der meint, ein Objekt der Basisklasse vor sich zu haben, nicht durch unerwartetes Verhalten überrascht wird, wenn es sich dabei tatsächlich um ein Objekt eines Subtyps handelt\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Liskovsches_Substitutionsprinzip}}
+		\item Das Ersetzbarkeitsprinzip fordert, dass eine Instanz einer abgeleiteten Klasse sich so verhalten muss, dass jemand, der meint, ein Objekt der Basisklasse vor sich zu haben, nicht durch unerwartetes Verhalten überrascht wird, wenn es sich dabei tatsächlich um ein Objekt eines Subtyps handelt\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Liskovsches_Substitutionsprinzip}}
 		\item Verletzung des Prinzips häufig nicht auf den ersten Blick erkennbar
 	\end{itemize}
 	\item \textbf{Interface Segregation Principle (ISP)}
@@ -626,10 +625,11 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Statisch oder dynamisch
 		\item Beispiele
 		\begin{itemize}
-			\item \texttt{First In First Out (FIFO)}: dynamisch, non-preemtive, keine Prioritäten
-			\item \texttt{Fixed Priorities}: dynamisch, statische Prioritäten
-			\item \texttt{Earliest Deadline First (EDF)}: dynamisch, dynamische Prioritäten
-			\item \texttt{Least Laxity First (LLF)}: \(laxity = deadline-now-t_{remaining}\)
+			\item \texttt{First-In-First-Out (FIFO)}: dynamisch, non-preemtive, keine Prioritäten
+			\item \texttt{Fixed-Priorities}: dynamisch, statische Prioritäten
+			\item \texttt{Earliest-Deadline-First (EDF)}: dynamisch, dynamische Prioritäten
+			\item \texttt{Least-Laxity-First (LLF)}: \(laxity = deadline-now-t_{remaining\_processing\_time}\). Kein Kontextwechsel bei gleicher Laxity zweier Prozesse
+			\item \texttt{Time-Slice-Scheduling}: Iterativ mit Warteschlange und unterschiedlich langen Time-Slices pro Prozess. Neue Prozesse werden beim Eintreffen hinten die Warteschlange eingefügt
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -638,3 +638,10 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 \subsection{Sicherheits- und Zuverlässigkeitspatterns für Echtzeitsystem-Design}
+\begin{itemize}
+	\item \textbf{Channel (oder auch Pipe/Filter)}
+	\begin{itemize}
+		\item Fließbandartige Verarbeitung der Daten mit vielen Zwischenstationen, die jeweils eine abgeschlossene, triviale Operation übernehmen
+		\item Verbesserung: Verwendung mehrerer Channels für höhere Leistung und Zuverlässigkeit
+	\end{itemize}
+\end{itemize}

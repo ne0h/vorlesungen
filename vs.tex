@@ -1,0 +1,43 @@
+\chapter{Virtuelle Systeme}
+
+Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.\footnote{\url{https://os.itec.kit.edu/deutsch/3257_3261.php}}
+
+\section{Einführung}
+\begin{itemize}
+	\item Abstraktion: Versteckt Implementierungsdetails niedrigerer Ebenen und stellt vereinfachte Interfaces zu Ressourcen zur Verfügung \(\rightarrow\) vereinfacht das Design auf höheren Ebenen. Beispiel: Dateien als Abstraktion einer Festplatte mit Interface (\texttt{open, read, write})
+	\item \textbf{Interfaces}
+	\begin{itemize}
+		\item Instruction Set Architectur (ISA): Betriebssystemunabhängiges Interface für den Hardwarezugriff; beispielsweise \texttt{IA-32}
+		\item Application Binary Interface (ABI): Interface für den Hardwarezugriff, das vom Betriebssystem zur Verfügung gestellt wird; beispielsweise \textit{system calls}
+		\item Nachteile: Eventuell schlechte Portabilität, da höhere Ebenen von entsprechenden Interfaces abhängig sind; beispielsweise ist Software an bestimmte ISAs und OSe gebunden
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Virtualisierung}
+\begin{itemize}
+	\item Isomorphismus zwischen Gast und Host: Gast-Operationen werden auf enstprechende Host-Operationen überführt und ausgeführt
+	\item \textbf{Aufgaben der Virtualisierung}
+	\begin{itemize}
+		\item Zuordnung von virtuellen zu realen Ressourcen
+		\item Verwenden von realen Maschinenbefehlen oder System Calls um die Anweisungen aus dem Gastsystem auszuführen
+	\end{itemize}
+	\item \textbf{Prozess Virtuelle Maschinen}
+	\begin{itemize}
+		\item Ausführen von Anwendungen mit der selben oder einer anderen \textbf{API}, \textbf{ABI} oder \textbf{ISA} als die Hostplatform
+		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via System Calls
+		\item Runtime zur Verwaltung der Gastprozesse \(\rightarrow\) Vermischung von Gast- und Hostprozessen
+		\item Beispiel: \textit{Wine}
+		\item Binary Translation
+		\begin{itemize}
+			\item Selbes Betriebssystem, verschiedene \texttt{ISAs}: EInführung einer Zwischenschicht zur Übersetzung der \texttt{ABI}-Befehle
+			\item Beispiel \texttt{Digital FX!32}: Erlaubt das Ausführen von Windows-Anwendungen, die für \texttt{x86} kompiliert worden sind, auf \texttt{Alpha}-Prozessoren
+			\item Beispiel \texttt{HP Dynamo}: Optimierung zur Laufzeit innerhalb der selben Umgebung
+		\end{itemize}
+		\item Anwendungsbeispiel Java Virtual Maschine: Spezifizierung eines high-level Interfaces. Das Betriebssystem wird als Standard-Bibliothek abstrahiert
+	\end{itemize}
+	\item \textbf{System Virtuelle Maschinen}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
