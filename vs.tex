@@ -61,6 +61,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 
 \section{Emulation}
 \begin{itemize}
+	\item Ziel: Implementieren von Interface/Funktionalität eines Systems auf einem anderen System
 	\item \textbf{Interpretation vs. Binary Translation}
 	\begin{itemize}
 		\item Interpretation
@@ -82,4 +83,44 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Interpreter: Für virtuelle Quell-CPU und die Speicherverwaltung verantwortlich
 	\end{itemize}
 	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise; dekodiert die Instruktionen und auf die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
+	\item \textbf{Optimierungsmöglichkeiten des Interpreters}: Ausführen einer einzigen Quellinstruktion benötigt ein Vielfaches "`multiple tens"' an Instruktionen auf dem Host \(\rightarrow\) extrem ineffizient
+	\begin{enumerate} % TODO
+		\item Treaded Interpretation: Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
+		\item Predecoding: Aufbereitung der Quellinstruktionen (Opcode, Operanden, etc.) für einfachere Zugriffe auf die Instruktionen zur Laufzeit \(\rightarrow\) vereinfacht die Dekodierroutine
+		\item Direct Threaded Interpretation (Kombination aus Erstgenannten): Speichere Adresse der Dispatch-Routine statt Opcode \(\rightarrow\) benötigt keine Sprungroutine und vermeidet Indirektionen 
+	\end{enumerate}
+	\item Dynamic Binary Translation (BDT): Benötigt keine Dispatch-Routinen; erlaubt Optimierungen der Ziel-Instruktionen
+	\item \textbf{Probleme bei Binary Translation}
+	\begin{itemize}
+		\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig
+		\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Traget Instruction Pointer)
+	\end{itemize}
 \end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
