@@ -111,6 +111,43 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 	\item \textbf{Code-Cache-Management}
 	\begin{itemize}
 		\item Herausforderungen: Variabel lange Blöcke; Abhängigkeiten zwischen Blöcken; Blöcke müssen bei Verdrängung aus dem Cache neu generiert werden \(\rightarrow\) unterscheiden sich von typischen Hardware-Caches wie CPU-Caches oder TLBs
+		\item Ersetzungsstrategien
+		\begin{itemize}
+			\item Least Recently Used (LRU): Probleme durch Verwaltungsoverhead (Nutzungsverhalten der Blöcke); bei Verdrängung Aktualisierung der Verknüpfungen mit anderen Blöcken notwendig (Speicherung von Back-Pointern); variabel große Blöcke führen zu Cache-Fragmentierung
+			\item Flush When Full (FwF)
+			\begin{itemize}
+				\item Vorteile: Einfach; Berücksichtigt Dependencies und Fragmentierung
+				\item Nachteil: Regenerierung der gelöschten Blöcke teuer
+				\item Defaulteinstellung bei \texttt{QEMU} mit 16 MB Cache
+			\end{itemize}
+			\item Preemptive Flush
+			\begin{itemize}
+				\item Viele Programme weisen Phasenverhalten auf (Initialisierung, schrittweise Berechnungen, etc.) \(\rightarrow\) Instruction Working Set wechselt
+				\item Idee: Flush, wenn Phasenwechsel erkannt (an Hand Burst neuer Instruktionen)
+			\end{itemize}
+			\item First In First Out (FIFO)
+			\begin{itemize}
+				\item Der/die älteste(n) Blöcke werden entfernt
+				\item Vorteile: Berücksichtigt zeitliche Lokalität; kein Verwaltungsoverhead zum Nutzungsverhalten der Blöcke (siehe LRU)
+				\item Nachteil: Back-Pointer notwendig
+				\item Variante Coarse-Grainied FIFO: Code-Cache wird partitioniert, es werden immer ganze Partitionen gelöscht; keine Verkettung zwischen Partitionen
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Gastarbeitsspeicherverwaltung}
+	\begin{itemize}
+		\item Gast erhält einen Teil des Adressbereichs des Hosts; zuverlässige Isolierung notwendig (Gast darf nicht auf den Speicher, den der Host für sich nutzt, zugreifen können)
+		\item Runtime verwaltet Zuordnungstabelle
+	\end{itemize}
+	\item \textbf{Exception Handling}
+	\begin{itemize}
+		\item Direkt: Interpreter erkennt Exceptions und springt zu einem \textit{Runtime Trap Handler}
+		\item Indirekt: Host-ISA erkennt die Exception. Signal wird durch das Host-OS an den Runtime Handler weitergegeben (beispielsweise Division durch \texttt{0})
+	\end{itemize}
+	\item \textbf{Operating System Calls}
+	\begin{itemize}
+		\item Wrapper übersetzt Quell-System-Call zu Ziel-System-Call; eventuell muss zwischen Calling Conventions übersetzt werden
+		\item Manche Calls können vom Gastsystem selbst behandelt werden (beispielsweise Signal Handler Registrierung, oder Speichermanagement)
 	\end{itemize}
 \end{itemize}
 
