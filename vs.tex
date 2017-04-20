@@ -153,6 +153,19 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 
 
 
+\section{System VMs}
+\begin{itemize}
+	\item Ziel: Unterstützung mehrerer Gast-Betriebsssteme auf einem System
+	\item Virtual Machine Monitor (VMM): "`Besitzer"' der Hardware-Ressourcen; läuft im privilegierten Modus (Gäste im Gastmodus); verwaltet Allokation/Zugriff auf die Ressourcen
+	\item VMM wechselt zur Ausführung der Gäste zwischen diesen (vglbar mit Timesharing zwischen Anwendungen eines Betriebssystems). Gäste dürfen dazu weder selbst Timer-Interrupts setzen noch die echten Timer-Interrupt Werte lesen (wird vom VMM emuliert) % What? Wieso?
+	\item \textbf{State Management}
+	\begin{itemize}
+		\item Alle Gästen benötigen individuelle (exklusive oder versteckte) Hardware-Ressourcen wie beispielsweise Festplatten (können rein virtuell sein); alle nicht-exklusiven, die virtualisiert werden, müssen entsprechend verwaltet werden (Partitionierung oder Sharing)
+	\end{itemize}
+\end{itemize}
+
+
+
 
 
 
