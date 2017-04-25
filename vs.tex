@@ -161,6 +161,49 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 	\item \textbf{State Management}
 	\begin{itemize}
 		\item Alle Gästen benötigen individuelle (exklusive oder versteckte) Hardware-Ressourcen wie beispielsweise Festplatten (können rein virtuell sein); alle nicht-exklusiven, die virtualisiert werden, müssen entsprechend verwaltet werden (Partitionierung oder Sharing)
+		\item Wechsel zwischen den States mehrerer VMs
+		\begin{itemize}
+			\item Indirection: Zustand der Gäste wird im RAM des VMM vorgehalten; Pointer wechselt zwischen den Gästen. Beispielsweise gut geeignet für Page Directory; ungeeignet für Registersätze % Wieso? Viele langsame Speicherzugriffe?
+			\item Copying: Zustand der Gäste wird jeweils aus dem RAM des VMM in den Register Block des Prozessors kopiert. Beispielsweise gut geeignet für Registersätze; ungeeignet für Page Directory
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Virtualisierung des Prozessors}
+	\begin{itemize}
+		\item Generelle Techniken
+		\begin{itemize}
+			\item Full Emulation: Immer möglich; ISA des Gasts muss nicht ISA des Hosts entsprechen; langsam
+			\item Direct Native Execution: Nahezu native Ausführungsgeschwindigkeit; ISA des Gasts \textit{muss} der des Hosts entsprechen
+		\end{itemize}
+		\item Direct Native Execution
+		\begin{itemize}
+			\item \textit{Trap'n'emulate}: Gastinstruktionen werden direkt ausgeführt; "`Trap"' bei privilegierten Instruktionen, diese werden vom Dispatcher emuliert. Letzterer ruft die entsprechende \textit{Interpreterroutine} auf. Beispiele für pivilegierte Instruktionen: \texttt{IN}, \texttt{OUT}, \texttt{Write TLB}
+			\item Aufgabenverteilung
+			\begin{itemize}
+				\item Dispatcher: Übergeordnete Komponente; entscheidet welche Komponente aufgerufen werden soll
+				\item Allocator: Verwaltet Ressourcen, die sich die VMs teilen
+				\item Interpreter Routines: Existiert pro privilegierter Instruktion; emuliert den Befehl auf virtuellen Ressourcen % TODO
+			\end{itemize}
+			\item Gastbetriebssystem: Da nur der VMM im Kernelmodus läuft "`fallen"' alle privilegierten Instruktionen in den VMM Dispatcher
+			\item Gastanwendungen: Da \texttt{SYSCALL} auf \texttt{x86}-Systemen keine privilegierte Instruktion ist muss der VMM diese speziell abfangen, damit sie korrekt emuliert werden können
+			\item Weitere wichtige Instruktionen: Instruction Types
+			\begin{itemize}
+				\item Definitionen
+				\begin{itemize}
+					\item Control sensitive instructions: Alle Instruktionen, welche die Ressourcenkonfiguration verändern. Beispiel: Page Directory Pointer (\texttt{CR3}) auf \texttt{x86} aktualisieren
+					\item Behavior sensitive instructions: Alle Instruktionen, deren Verhalten/Ergebnis konfigurationsabhängig ist. Beispiel: Pop flags register (\texttt{POPF}) auf \texttt{x86}
+					\item Privileged instructions: Alle Instruktionen, die trappen (müssen), wenn sie im User Mode ausgeführt werden. Beispiel: Load processor status word (\texttt{LPSW}) auf \texttt{System/370}. Vorsicht: Lehrstuhlspezifische Definition; schließt \texttt{SYSCALL} hier mit ein
+					\item Innocuous instructions ("`harmlose"'): Weder control- noch behavior-sensitiv
+				\end{itemize}
+				\item \textit{Efficient Virtual Machines Theorem}: Alle sensitiven Instruktionen, die eine Teilmenge der privilegierten Instruktionen bilden, können effizient ausgeführt werden
+				\item Critical Instructions
+				\begin{itemize}
+					\item Sensitiv aber nicht priviligiert. Bei \texttt{x86} gibt es beispielsweise 17
+					\item Lösung: Kritische Instruktionen werden gepacht. Dazu scannt der VMM den Code des Gasts vor der Ausführung und wandelt alle kritischen Instruktionen in Traps um
+					\item Umsetzung mittels \textit{Dynamic-binary-translation}-Techniken: Instruction stream wird in Blöcke aufgteilt und gepatcht. Am Ende des Blocks wird eine zusätzliche Trap eingefügt, damit der VMM die Kontrolle zurückerlangt
+					\item Generelles Problem mit Traps: Sehr teuer
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
