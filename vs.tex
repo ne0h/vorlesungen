@@ -167,7 +167,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 			\item Copying: Zustand der Gäste wird jeweils aus dem RAM des VMM in den Register Block des Prozessors kopiert. Beispielsweise gut geeignet für Registersätze; ungeeignet für Page Directory
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{Virtualisierung des Prozessors}
+	\item \textbf{Virtualisierung von CUPs}
 	\begin{itemize}
 		\item Generelle Techniken
 		\begin{itemize}
@@ -192,7 +192,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 					\item Control sensitive instructions: Alle Instruktionen, welche die Ressourcenkonfiguration verändern. Beispiel: Page Directory Pointer (\texttt{CR3}) auf \texttt{x86} aktualisieren
 					\item Behavior sensitive instructions: Alle Instruktionen, deren Verhalten/Ergebnis konfigurationsabhängig ist. Beispiel: Pop flags register (\texttt{POPF}) auf \texttt{x86}
 					\item Privileged instructions: Alle Instruktionen, die trappen (müssen), wenn sie im User Mode ausgeführt werden. Beispiel: Load processor status word (\texttt{LPSW}) auf \texttt{System/370}. Vorsicht: Lehrstuhlspezifische Definition; schließt \texttt{SYSCALL} hier mit ein
-					\item Innocuous instructions ("`harmlose"'): Weder control- noch behavior-sensitiv
+					\item Innocuous instructions ("`harmlose"' Instruktion): Weder control- noch behavior-sensitiv
 				\end{itemize}
 				\item \textit{Efficient Virtual Machines Theorem}: Alle sensitiven Instruktionen, die eine Teilmenge der privilegierten Instruktionen bilden, können effizient ausgeführt werden
 				\item Critical Instructions
@@ -203,6 +203,60 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 					\item Generelles Problem mit Traps: Sehr teuer
 				\end{itemize}
 			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Virtualisierung von Arbeitsspeicher}
+	\begin{itemize}
+		\item Betriebssysteme gehen davon aus, die vollständige Kontrolle über Speicher zu haben. Dies beinhaltet die Verwaltung und die Fähigkeit jede virtuelle Page auf jeden physikalischen Frame abbilden zu können
+		\item VMM muss allerdings die Kontrolle über den Speicher behalten, partitioniert den Adresseraum und übernimmt das Mapping [Page \(\rightarrow\) Frame]. TLBs verstärken das Problem
+		\item Abstraktionsebenen
+		\begin{itemize}
+			\item Physikalischer Speicher des Hosts: "`Realer"' Arbeitsspeicher. Kann von VMM mehrfach vergeben werden
+			\item Physikalischer Speicher des Gasts: Speicherabstraktion, die der Host dem Gast zur Verfügung gestellt wird. Wird vom Gast als zusammenhängender, physikalischer Speicher wahrgenommen
+			\item Virtueller Speicher des Gasts: Standard \(2^{32/64}\), virtueller Adressraum
+		\end{itemize}
+		\item Page-Table-Typen
+		\begin{itemize}
+			\item Guest virtual page table: Einmal pro Gastprozess vorhanden; [Guest virtual \(\rightarrow\) Guest physical]; vom Gastsystem verwaltet; im RAM des Gasts gespeichert
+			\item Guest physical page table: Einmal pro Gast vorhanden; [Guest physical \(\rightarrow\) Host physical]; vom VMM verwaltet; im RAM des Hosts gespeichert
+			\item Shadow page table: Einmal pro Gastprozess; [Guest virtual \(\rightarrow\) Host physical]; vom VMM verwaltet; im RAM des VMM gespeichert. Problem dabei: VMM muss darauf achten, dass shadow page tables und guest physical page table konsistent bleiben. Dazu mappt der VMM OS page tables read-only in guest physical page tables
+		\end{itemize}
+		\item Speicherallokation
+		\begin{itemize}
+			\item Meist triviale Allokationsstrategien mit statischer Zuweisung ohne Swapping
+			\item Mehrfachvergabe mit \textit{Balloon driver}: Nicht genutzter Speicher einer VM kann anderen VMs durch den VMM zur Verfügung gestellt werden
+			\item Mehrfachvergabe mit Speicherdeduplitzierung: Gleiche Frames werden per \texttt{Copy-on-write} zusammengefasst
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Virtualisierung von Input/Output}
+	\begin{itemize}
+		\item Schwierig zur virtualisieren, da viele verschiedenen Typen/Geräte mit unterschiedlichen Treibern vorhanden. Darüber hinaus müssen neue Geräte kompatibel sein
+		\item Vorgehen: Erstellen einer virtuellen Version des Gerätes sowie Virtualisieren der I/O-Aktivität des Gerätes
+		\item Gerätetypen
+		\begin{itemize}
+			\item Dedicated: Geräte müssen nicht virtualisiert werden, werden allerdings trotzdem vom VMM kontrolliert, da sie im privilegierten Modus laufen (beispielsweise Maus/Monitor/Tastertur)
+			\item Partitioned: Es werden mehrere, kleinere, virtualisierte Versionen angelegt; VMM übersetzt zwischen virtualiserten und physikalischem Gerät (beispielsweise Festplatten)
+			\item Shared: VMM verwaltet den virtuellen Status und übersetzt [virtuelle Anfrage \(\leftrightarrow\) physikalische Anfrage] (beispielsweise Netzwerkadapter)
+			\item Spooled: Grobkörnig geshared (beispielsweise Drucker)
+			\item Non-existent: Nur die virtuellen Versionen werden implementiert \(\rightarrow\) VMs auf dem selben Host können kommunizieren (beispielsweise dedizierte, virtuelle Netzwerkgeräte)
+		\end{itemize}
+		\item Reguläre Geräteanfragen
+		\begin{enumerate}
+			\item Betriebssystem verwaltet Geräteressourcen (Speicherallokation, serialisieren von Anfragen, etc.)
+			\item Anwendungen führen Standard-I/O-Anfragen mit \texttt{System Calls} durch
+			\item Betriebssystem konvertiert I/O-Anfragen zu Treiberanfragen
+			\item Treiber erzeugt gerätespezifische I/O-Operationen
+		\end{enumerate}
+		\item \texttt{System-Call}-Level
+		\begin{itemize}
+			\item Gast trappt in VMM, dieser interpretiert den \texttt{System Call} und erzeugt Treiberanfragen \(\rightarrow\) komplette I/O-Behandlung im VMM
+			\item Problem: VMM muss alle I/O-\texttt{System Calls} aller VMs behandlen
+		\end{itemize}
+		\item Treiberschnittstelle (paravirtualisiert)
+		\begin{itemize}
+			\item Gast-Betriebssystem verfügt über Treiber-Stubs; generische I/O-Operationen werden an den VMM übergeben und von diesem in reale Treiberanfragen umgewandelt
+			\item Probleme: VMM muss Zugang zu den realen Treibern sowie einen generischen Treiber für alle Gastbetriebssysteme haben
+			\item Beispiel: \texttt{XEN}
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
