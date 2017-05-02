@@ -4,53 +4,63 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 
 \section{Einführung}
 \begin{itemize}
-	\item Abstraktion: Versteckt Implementierungsdetails niedrigerer Ebenen und stellt vereinfachte Interfaces zu Ressourcen zur Verfügung \(\rightarrow\) vereinfacht das Design auf höheren Ebenen. Beispiel: Dateien als Abstraktion einer Festplatte mit Interface (\texttt{open, read, write})
-	\item \textbf{Interfaces}
+	\item "`Computer sind komplex"': Vereinfachung durch Abstraktionsebenen and wohldefinierten Schnittstellen
+	\item Abstraktion: Versteckt Implementierungsdetails niedrigerer Ebenen und stellt vereinfachte Schnittstellen zu Ressourcen zur Verfügung \(\rightarrow\) vereinfacht das Design auf höheren Ebenen. Beispiel: Dateien als Abstraktion einer Festplatte mit einfachter, allgemeiner Schnittstelle (\texttt{open, read, write})
+	\item \textbf{Schnittstellen}
 	\begin{itemize}
-		\item Instruction Set Architectur (ISA): Betriebssystemunabhängiges Interface für den Hardwarezugriff; beispielsweise \texttt{IA-32}
-		\item Application Binary Interface (ABI): Interface für den Hardwarezugriff, das vom Betriebssystem zur Verfügung gestellt wird; beispielsweise \textit{system calls}
-		\item Nachteile: Eventuell schlechte Portabilität, da höhere Ebenen von entsprechenden Interfaces abhängig sind; beispielsweise ist Software an bestimmte ISAs und OSe gebunden
+		\item Instruction Set Architectur (ISA): Betriebssystemunabhängige Schnittstelle für den Hardwarezugriff; beispielsweise \texttt{IA-32}
+		\item Application Binary Interface (ABI): Interface für den Hardwarezugriff, das vom Betriebssystem zur Verfügung gestellt wird; beispielsweise \texttt{System Calls}
+		\item Nachteile: Eventuell schlechte Portabilität, da höhere Ebenen von entsprechenden Schnittstellen abhängig sind; beispielsweise ist Software an bestimmte ISAs und Betriebssysteme gebunden
 	\end{itemize}
+	\item Generelles Problem: Software an bestimmte \texttt{ISA} und Betriebssystem gebunden; Betriebssystem an bestimmte Hardwaretypen und Systemschnittstellen gebunden \(\rightarrow\) Reduzierung der Interoperabilität
 \end{itemize}
 
 
 \subsection{Virtualisierung}
 \begin{itemize}
-	\item Abstrakt: Isomorphismus zwischen Gast und Host: Gast-Operationen werden auf enstprechende Host-Operationen abgebildet
+	\item Abstrakt: Isomorphismus zwischen Gast und Host (Gast-Operationen werden auf enstprechende Host-)Operationen abgebildet
 	\item \textbf{Aufgaben der Virtualisierung}
 	\begin{itemize}
 		\item Zuordnung von virtuellen zu realen Ressourcen
-		\item Verwenden von realen Maschinenbefehlen oder System Calls um die Anweisungen aus dem Gastsystem auszuführen
+		\item Verwenden von realen Maschinenbefehlen oder \texttt{System Calls} um die Anweisungen aus dem Gastsystem auszuführen
 	\end{itemize}
 	\item \textbf{Process Virtual Machines}
 	\begin{itemize}
-		\item Abstrahiert \textbf{API} oder \textbf{ABI} \(\rightarrow\) simuliert ein Programm/Prozess
-		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via System Calls
-		\item Runtime zur Verwaltung der Gastprozesse \(\rightarrow\) Vermischung von Gast- und Hostprozessen
-		\item Beispiel: \textit{Wine}
-		\item Binary Translation
+		\item Simuliert ein Programm/Prozess: Führt Anwendungen für die selbe oder eine andere \texttt{API}, \texttt{ABI} oder \texttt{ISA} aus \(\rightarrow\) abstrahiert \texttt{API}, \texttt{ABI} oder \texttt{ISA}
+		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via \texttt{System Calls}
+		\item Runtime zur Verwaltung der Gastprozesse \(\rightarrow\) Gastprozesse existieren parallel zu den Hostprozessen
+		\item OS Compatibility Layer (emuliert \texttt{ABI} und \texttt{API})
+		\begin{itemize}
+			\item Virtualisiert Software: Bibliothek um von Gast-\texttt{API} nach Host-\texttt{API} übersetzen zu können
+			\item Beispiel: \textit{Wine}
+		\end{itemize}
+		\item Binary Translation (emuliert \texttt{ISA} und \texttt{ABI})
 		\begin{itemize}
 			\item Selbes Betriebssystem, verschiedene \texttt{ISAs}: Einführung einer Zwischenschicht zur Übersetzung der \texttt{ABI}-Befehle
 			\item Beispiel \texttt{Digital FX!32}: Erlaubt das Ausführen von Windows-Anwendungen, die für \texttt{x86} kompiliert worden sind, auf \texttt{Alpha}-Prozessoren
-			\item Beispiel \texttt{HP Dynamo}: Optimierung zur Laufzeit innerhalb der selben Umgebung
+			\item Binary Optimization: Optimierung zur Laufzeit innerhalb der selben Umgebung (beispielsweise \texttt{HP Dynamo})
 		\end{itemize}
-		\item Anwendungsbeispiel Java Virtual Maschine: Spezifizierung eines high-level Interfaces. Das Betriebssystem wird als Standard-Bibliothek abstrahiert
+		\item High-level Language Runtime (emuliert \texttt{ISA}, \texttt{ABI} und \texttt{API})
+		\begin{itemize}
+			\item Stellt eine komplette virtuelle Umgebung zur Verfügung
+			\item Spezifizierung eines high-level Interfaces. Das Betriebssystem wird als Standard-Bibliothek abstrahiert (beispielsweise \texttt{JVM})
+		\end{itemize}
 	\end{itemize}
-	\item \textbf{System Virtuelle Maschinen}
+	\item \textbf{System Virtual Machines}
 	\begin{itemize}
-		\item Abstrahiert die \textbf{ISA} des Hosts als separate virtuelle Maschinen \(\rightarrow\) simuliert kompletten PC
+		\item Abstrahiert die \textbf{ISA} des Hosts als separate, virtuelle Maschinen \(\rightarrow\) simuliert kompletten PC
 		\item Interaktion über den \textit{Virtual Machine Monitor} (VMM)
 		\item Typen
 		\begin{itemize}
-			\item Nativ System VM: VMM im privilegierten Modues; Gast im Benutzermodus; beispielsweise \texttt{Xen} oder \texttt{Hyper-V}
-			\item Hostet System VM: VMM und Gast im Benutzermodus; beispielsweise \texttt{VirtualBox} oder \texttt{QEMU}
+			\item Native System VM: VMM im privilegierten Modues; Gast im Benutzermodus; beispielsweise \texttt{Xen} oder \texttt{Hyper-V}
+			\item Hosted System VM: VMM und Gast im Benutzermodus; beispielsweise \texttt{VirtualBox} oder \texttt{QEMU}
 			\item Dual-Mode System VM: VMM teilweise im privilegierten Modus; beispielsweise \texttt{QEMU} mit \texttt{KVM}
 		\end{itemize}
 		\item Vorteile System VM
 		\begin{itemize}
 			\item Erhöhte Kompatibilität
-			\item Höhere Effizienz, da mehrere virtuelle Maschinen auf einer physischen laufen können
-			\item Zuverlässigkeit und Verfügbarkeit wird durch Replikation- und Migrationsmöglichkeiten erhöht
+			\item Höhere Effizienz, da mehrere virtuelle Maschinen auf einer physikalischen laufen können
+			\item Zuverlässigkeit und Verfügbarkeit wird durch Replikations- und Migrationsmöglichkeiten erhöht
 			\item Sicherheit durch Isolierung zwischen den Gästen
 			\item Möglichkeiten zur System-Analyse auf \texttt{ISA}-Ebene (Debugging, Malware-Analyse, Forschung)
 		\end{itemize}
@@ -71,21 +81,21 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\end{itemize}
 		\item Binary Translation
 		\begin{itemize}
-			\item Betrachtet immer einen Instruktionsblock, übersetzt diesen und cacht ihn
-			\item Kmplexer; beim Start höhere Ausführungskosten; allerdings geringe Ausführungskosten
+			\item Betrachtet immer einen ganzen Instruktionsblock, übersetzt diesen und speichert ihn zwischen
+			\item Komplexer; beim Start höhere Ausführungskosten; allerdings geringe Ausführungskosten
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Aufbau einer Process VM}
 	\begin{itemize}
-		\item Emulation Engine: Emuliert die Instruktionen (wahlweise mittels Interpretation oder Binary Translation; verantwortlich für deren Auswahl)
+		\item Emulation Engine: Emuliert die Instruktionen (wahlweise mittels Interpretation oder Binary Translation; verantwortlich für die Auswahl der Emulationstechnik)
 		\item Profile Database: Sammelt dynamisch Informationen zum laufenden Programm \(\rightarrow\) bildet Basis für Emulationstechnikentscheidungen und Optimierung im Translater
 		\item Code Cache: Verwaltet die zwischengespeicherten, bereits übersetzten Code-Fragmente. \textit{Code Cache Manager} entscheidet, ob Fragmente im Cache abgelegt werden
 		\item Interpreter: Für virtuelle Quell-CPU und die Speicherverwaltung verantwortlich
 	\end{itemize}
-	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise; dekodiert die Instruktionen und auf die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
+	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise; dekodiert die Instruktionen und ruft die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
 	\item \textbf{Optimierungsmöglichkeiten des Interpreters}: Ausführen einer einzigen Quellinstruktion benötigt ein Vielfaches "`multiple tens"' an Instruktionen auf dem Host \(\rightarrow\) extrem ineffizient
 	\begin{enumerate} % TODO
-		\item Treaded Interpretation: Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
+		\item Threaded Interpretation: Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
 		\item Predecoding: Aufbereitung der Quellinstruktionen (Opcode, Operanden, etc.) für einfachere Zugriffe auf die Instruktionen zur Laufzeit \(\rightarrow\) vereinfacht die Dekodierroutine
 		\item Direct Threaded Interpretation (Kombination aus Erstgenannten): Speichere Adresse der Dispatch-Routine statt Opcode \(\rightarrow\) benötigt keine Sprungroutine und vermeidet Indirektionen 
 	\end{enumerate}
@@ -93,7 +103,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 	\item \textbf{Probleme bei Binary Translation}
 	\begin{itemize}
 		\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig (Instruktionen und Opcodes unterschiedlich lange; u.U. Daten in Instruction Stream eingebettet; Padding; indirekte Sprünge \(\rightarrow\) Sprungziel erst zur Laufzeit bekannt)
-		\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Traget Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet werden
+		\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Traget Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet wird
 	\end{itemize}
 	\item \textbf{Dynamic Translation}
 	\begin{itemize}
@@ -123,7 +133,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 			\item Preemptive Flush
 			\begin{itemize}
 				\item Viele Programme weisen Phasenverhalten auf (Initialisierung, schrittweise Berechnungen, etc.) \(\rightarrow\) Instruction Working Set wechselt
-				\item Idee: Flush, wenn Phasenwechsel erkannt (an Hand Burst neuer Instruktionen)
+				\item Idee: Flush, wenn Phasenwechsel erkannt (anhand Burst neuer Instruktionen)
 			\end{itemize}
 			\item First In First Out (FIFO)
 			\begin{itemize}
@@ -144,7 +154,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Direkt: Interpreter erkennt Exceptions und springt zu einem \textit{Runtime Trap Handler}
 		\item Indirekt: Host-ISA erkennt die Exception. Signal wird durch das Host-OS an den Runtime Handler weitergegeben (beispielsweise Division durch \texttt{0})
 	\end{itemize}
-	\item \textbf{Operating System Calls}
+	\item \textbf{Operating \texttt{System Calls}}
 	\begin{itemize}
 		\item Wrapper übersetzt Quell-System-Call zu Ziel-System-Call; eventuell muss zwischen Calling Conventions übersetzt werden
 		\item Manche Calls können vom Gastsystem selbst behandelt werden (beispielsweise Signal Handler Registrierung, oder Speichermanagement)
@@ -157,13 +167,13 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 \begin{itemize}
 	\item Ziel: Unterstützung mehrerer Gast-Betriebsssteme auf einem System
 	\item Virtual Machine Monitor (VMM): "`Besitzer"' der Hardware-Ressourcen; läuft im privilegierten Modus (Gäste im Gastmodus); verwaltet Allokation/Zugriff auf die Ressourcen
-	\item VMM wechselt zur Ausführung der Gäste zwischen diesen (vglbar mit Timesharing zwischen Anwendungen eines Betriebssystems). Gäste dürfen dazu weder selbst Timer-Interrupts setzen noch die echten Timer-Interrupt Werte lesen (wird vom VMM emuliert) % What? Wieso?
+	\item VMM wechselt zur Ausführung der Gäste zwischen diesen (vergleichbar mit Timesharing zwischen Anwendungen eines Betriebssystems). Gäste dürfen dazu weder selbst Timer-Interrupts setzen noch die echten Timer-Interrupt-Werte lesen (wird vom VMM emuliert), da der VMM den Host-Timer zum Wechseln zwischen VMs und dem Host verwendet wird (Probleme durch Manipulation: "`unfaire"' Verteilung von Rechenzeit, DoS-Angriffe)
 	\item \textbf{State Management}
 	\begin{itemize}
-		\item Alle Gästen benötigen individuelle (exklusive oder versteckte) Hardware-Ressourcen wie beispielsweise Festplatten (können rein virtuell sein); alle nicht-exklusiven, die virtualisiert werden, müssen entsprechend verwaltet werden (Partitionierung oder Sharing)
+		\item Alle Gästen benötigen individuelle (exklusive oder versteckte) Hardware-Ressourcen wie beispielsweise Festplatten (können rein virtuell sein); alle nicht-exklusiven Ressourcen, die virtualisiert werden, müssen entsprechend verwaltet werden (Partitionierung oder Sharing)
 		\item Wechsel zwischen den States mehrerer VMs
 		\begin{itemize}
-			\item Indirection: Zustand der Gäste wird im RAM des VMM vorgehalten; Pointer wechselt zwischen den Gästen. Beispielsweise gut geeignet für Page Directory; ungeeignet für Registersätze % Wieso? Viele langsame Speicherzugriffe?
+			\item Indirection: Zustand der Gäste wird im RAM des VMM vorgehalten; Pointer wechselt zwischen den Gästen. Beispielsweise gut geeignet für Page Directory; ungeeignet für Registersätze
 			\item Copying: Zustand der Gäste wird jeweils aus dem RAM des VMM in den Register Block des Prozessors kopiert. Beispielsweise gut geeignet für Registersätze; ungeeignet für Page Directory
 		\end{itemize}
 	\end{itemize}
@@ -181,10 +191,10 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 			\begin{itemize}
 				\item Dispatcher: Übergeordnete Komponente; entscheidet welche Komponente aufgerufen werden soll
 				\item Allocator: Verwaltet Ressourcen, die sich die VMs teilen
-				\item Interpreter Routines: Existiert pro privilegierter Instruktion; emuliert den Befehl auf virtuellen Ressourcen % TODO
+				\item Interpreter Routines: Existiert pro privilegierter Instruktion; emuliert den Befehl auf virtuellen Ressourcen
 			\end{itemize}
-			\item Gastbetriebssystem: Da nur der VMM im Kernelmodus läuft "`fallen"' alle privilegierten Instruktionen in den VMM Dispatcher
-			\item Gastanwendungen: Da \texttt{SYSCALL} auf \texttt{x86}-Systemen keine privilegierte Instruktion ist muss der VMM diese speziell abfangen, damit sie korrekt emuliert werden können
+			\item Gastbetriebssystem: Da nur der VMM im Kernelmodus läuft "`fallen"' (trappen) alle privilegierten Instruktionen in den VMM Dispatcher
+			\item Gastanwendungen: Da \texttt{SYSCALL} auf \texttt{x86}-Systemen keine privilegierte Instruktion ist muss der VMM diese speziell abfangen, damit sie korrekt emuliert werden kann
 			\item Weitere wichtige Instruktionen: Instruction Types
 			\begin{itemize}
 				\item Definitionen
@@ -192,14 +202,14 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 					\item Control sensitive instructions: Alle Instruktionen, welche die Ressourcenkonfiguration verändern. Beispiel: Page Directory Pointer (\texttt{CR3}) auf \texttt{x86} aktualisieren
 					\item Behavior sensitive instructions: Alle Instruktionen, deren Verhalten/Ergebnis konfigurationsabhängig ist. Beispiel: Pop flags register (\texttt{POPF}) auf \texttt{x86}
 					\item Privileged instructions: Alle Instruktionen, die trappen (müssen), wenn sie im User Mode ausgeführt werden. Beispiel: Load processor status word (\texttt{LPSW}) auf \texttt{System/370}. Vorsicht: Lehrstuhlspezifische Definition; schließt \texttt{SYSCALL} hier mit ein
-					\item Innocuous instructions ("`harmlose"' Instruktion): Weder control- noch behavior-sensitiv
+					\item Innocuous instructions ("`harmlose"' Instruktionen): Weder control- noch behavior-sensitiv
 				\end{itemize}
 				\item \textit{Efficient Virtual Machines Theorem}: Alle sensitiven Instruktionen, die eine Teilmenge der privilegierten Instruktionen bilden, können effizient ausgeführt werden
 				\item Critical Instructions
 				\begin{itemize}
 					\item Sensitiv aber nicht priviligiert. Bei \texttt{x86} gibt es beispielsweise 17
-					\item Lösung: Kritische Instruktionen werden gepacht. Dazu scannt der VMM den Code des Gasts vor der Ausführung und wandelt alle kritischen Instruktionen in Traps um
-					\item Umsetzung mittels \textit{Dynamic-binary-translation}-Techniken: Instruction stream wird in Blöcke aufgteilt und gepatcht. Am Ende des Blocks wird eine zusätzliche Trap eingefügt, damit der VMM die Kontrolle zurückerlangt
+					\item Lösung: Kritische Instruktionen werden gepatcht. Dazu scannt der VMM den Code des Gasts vor der Ausführung und wandelt alle kritischen Instruktionen in Traps um
+					\item Umsetzung mittels \textit{Dynamic-binary-translation}-Techniken: \textit{Instruction stream} wird in Blöcke aufgteilt und gepatcht. Am Ende des Blocks wird eine zusätzliche Trap eingefügt, damit der VMM die Kontrolle zurückerlangt
 					\item Generelles Problem mit Traps: Sehr teuer
 				\end{itemize}
 			\end{itemize}
@@ -207,13 +217,13 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 	\end{itemize}
 	\item \textbf{Virtualisierung von Arbeitsspeicher}
 	\begin{itemize}
-		\item Betriebssysteme gehen davon aus, die vollständige Kontrolle über Speicher zu haben. Dies beinhaltet die Verwaltung und die Fähigkeit jede virtuelle Page auf jeden physikalischen Frame abbilden zu können
-		\item VMM muss allerdings die Kontrolle über den Speicher behalten, partitioniert den Adresseraum und übernimmt das Mapping [Page \(\rightarrow\) Frame]. TLBs verstärken das Problem
+		\item Betriebssysteme gehen davon aus, die vollständige Kontrolle über den Speicher zu haben. Dies beinhaltet die Verwaltung und die Fähigkeit, jede virtuelle Page auf jeden physikalischen Frame abbilden zu können
+		\item VMM muss allerdings die Kontrolle über den Speicher behalten, partitioniert den Adresseraum und übernimmt das Mapping [Page \(\rightarrow\) Frame]. TLBs verstärken das Problem, da diese bei einem Miss automatisch Frames nachschlagen
 		\item Abstraktionsebenen
 		\begin{itemize}
 			\item Physikalischer Speicher des Hosts: "`Realer"' Arbeitsspeicher. Kann von VMM mehrfach vergeben werden
-			\item Physikalischer Speicher des Gasts: Speicherabstraktion, die der Host dem Gast zur Verfügung gestellt wird. Wird vom Gast als zusammenhängender, physikalischer Speicher wahrgenommen
-			\item Virtueller Speicher des Gasts: Standard \(2^{32/64}\), virtueller Adressraum
+			\item Physikalischer Speicher des Gasts: Speicherabstraktion, die der Host dem Gast zur Verfügung stellt. Wird vom Gast als zusammenhängender, physikalischer Speicher wahrgenommen
+			\item Virtueller Speicher des Gasts: Standard \(2^{32/64}\)-virtueller Adressraum
 		\end{itemize}
 		\item Page-Table-Typen
 		\begin{itemize}
@@ -260,31 +270,3 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
