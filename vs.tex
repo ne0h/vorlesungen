@@ -5,11 +5,11 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 \section{Einführung}
 \begin{itemize}
 	\item "`Computer sind komplex"': Vereinfachung durch Abstraktionsebenen and wohldefinierten Schnittstellen
-	\item Abstraktion: Versteckt Implementierungsdetails niedrigerer Ebenen und stellt vereinfachte Schnittstellen zu Ressourcen zur Verfügung \(\rightarrow\) vereinfacht das Design auf höheren Ebenen. Beispiel: Dateien als Abstraktion einer Festplatte mit einfachter, allgemeiner Schnittstelle (\texttt{open, read, write})
+	\item Abstraktion: Versteckt Implementierungsdetails niedrigerer Ebenen und stellt vereinfachte Schnittstellen zu Ressourcen zur Verfügung \(\rightarrow\) vereinfacht das Design auf höheren Ebenen. Beispiel: Dateien als Abstraktion einer Festplatte mit einfacher, allgemeiner Schnittstelle (\texttt{open, read, write})
 	\item \textbf{Schnittstellen}
 	\begin{itemize}
 		\item Instruction Set Architectur (ISA): Betriebssystemunabhängige Schnittstelle für den Hardwarezugriff; beispielsweise \texttt{IA-32}
-		\item Application Binary Interface (ABI): Interface für den Hardwarezugriff, das vom Betriebssystem zur Verfügung gestellt wird; beispielsweise \texttt{System Calls}
+		\item Application Binary Interface (ABI): Interface für den Hardwarezugriff, das vom Betriebssystem zur Verfügung gestellt wird; beispielsweise \texttt{SYSCALL}
 		\item Nachteile: Eventuell schlechte Portabilität, da höhere Ebenen von entsprechenden Schnittstellen abhängig sind; beispielsweise ist Software an bestimmte ISAs und Betriebssysteme gebunden
 	\end{itemize}
 	\item Generelles Problem: Software an bestimmte \texttt{ISA} und Betriebssystem gebunden; Betriebssystem an bestimmte Hardwaretypen und Systemschnittstellen gebunden \(\rightarrow\) Reduzierung der Interoperabilität
@@ -18,16 +18,16 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 
 \subsection{Virtualisierung}
 \begin{itemize}
-	\item Abstrakt: Isomorphismus zwischen Gast und Host (Gast-Operationen werden auf enstprechende Host-)Operationen abgebildet
+	\item Abstrakt: Isomorphismus zwischen Gast und Host (Gastoperationen werden auf enstprechende Hostoperationen abgebildet)
 	\item \textbf{Aufgaben der Virtualisierung}
 	\begin{itemize}
 		\item Zuordnung von virtuellen zu realen Ressourcen
-		\item Verwenden von realen Maschinenbefehlen oder \texttt{System Calls} um die Anweisungen aus dem Gastsystem auszuführen
+		\item Verwendung von realen Maschinenbefehlen oder \texttt{SYSCALL} um die Anweisungen des Gastsystem auszuführens
 	\end{itemize}
 	\item \textbf{Process Virtual Machines}
 	\begin{itemize}
 		\item Simuliert ein Programm/Prozess: Führt Anwendungen für die selbe oder eine andere \texttt{API}, \texttt{ABI} oder \texttt{ISA} aus \(\rightarrow\) abstrahiert \texttt{API}, \texttt{ABI} oder \texttt{ISA}
-		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via \texttt{System Calls}
+		\item Interaktion mit dem Host-Betriebssystem zur Laufzeit via \texttt{SYSCALL}
 		\item Runtime zur Verwaltung der Gastprozesse \(\rightarrow\) Gastprozesse existieren parallel zu den Hostprozessen
 		\item OS Compatibility Layer (emuliert \texttt{ABI} und \texttt{API})
 		\begin{itemize}
@@ -52,7 +52,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Interaktion über den \textit{Virtual Machine Monitor} (VMM)
 		\item Typen
 		\begin{itemize}
-			\item Native System VM: VMM im privilegierten Modues; Gast im Benutzermodus; beispielsweise \texttt{Xen} oder \texttt{Hyper-V}
+			\item Native System VM: VMM im privilegierten Modus; Gast im Benutzermodus; beispielsweise \texttt{Xen} oder \texttt{Hyper-V}
 			\item Hosted System VM: VMM und Gast im Benutzermodus; beispielsweise \texttt{VirtualBox} oder \texttt{QEMU}
 			\item Dual-Mode System VM: VMM teilweise im privilegierten Modus; beispielsweise \texttt{QEMU} mit \texttt{KVM}
 		\end{itemize}
@@ -92,30 +92,34 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Code Cache: Verwaltet die zwischengespeicherten, bereits übersetzten Code-Fragmente. \textit{Code Cache Manager} entscheidet, ob Fragmente im Cache abgelegt werden
 		\item Interpreter: Für virtuelle Quell-CPU und die Speicherverwaltung verantwortlich
 	\end{itemize}
-	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise; dekodiert die Instruktionen und ruft die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
+	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise in einer zentralen Schleife; dekodiert die Instruktionen und ruft die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
 	\item \textbf{Optimierungsmöglichkeiten des Interpreters}: Ausführen einer einzigen Quellinstruktion benötigt ein Vielfaches "`multiple tens"' an Instruktionen auf dem Host \(\rightarrow\) extrem ineffizient
 	\begin{enumerate} % TODO
-		\item Threaded Interpretation: Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
+		\item Threaded Interpretation: Ersetzt die Hauptschleife. Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
 		\item Predecoding: Aufbereitung der Quellinstruktionen (Opcode, Operanden, etc.) für einfachere Zugriffe auf die Instruktionen zur Laufzeit \(\rightarrow\) vereinfacht die Dekodierroutine
 		\item Direct Threaded Interpretation (Kombination aus Erstgenannten): Speichere Adresse der Dispatch-Routine statt Opcode \(\rightarrow\) benötigt keine Sprungroutine und vermeidet Indirektionen 
 	\end{enumerate}
-	\item Dynamic Binary Translation (BDT): Benötigt keine Dispatch-Routinen; erlaubt Optimierungen der Ziel-Instruktionen
-	\item \textbf{Probleme bei Binary Translation}
+	\item Dynamic Binary Translation (BDT)
 	\begin{itemize}
-		\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig (Instruktionen und Opcodes unterschiedlich lange; u.U. Daten in Instruction Stream eingebettet; Padding; indirekte Sprünge \(\rightarrow\) Sprungziel erst zur Laufzeit bekannt)
-		\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Traget Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet wird
-	\end{itemize}
-	\item \textbf{Dynamic Translation}
-	\begin{itemize}
-		\item Zunächst Interpretation mit Code Discovery
-		\item Der Code wird schrittweise übersetzt und blockweise im Code-Cache gespeichert. Zusätzlich wird das IP-Mapping im \textit{SIP-To-TIP}-Cache gespeichert
-		\item Problem dabei: Wie wird der Folgeblock identifiziert? \(\rightarrow\) speichere zusätzlich den SIP zur Folgeinstruktion. Dieser kann im SIP-to-TIP-Cache nachgeschlagen werden
-		\item Optimierung \textit{Translation Block Chaining}
+		\item Benötigt keine Dispatch-Routinen; erlaubt Optimierungen der Ziel-Instruktionen
+		\item Quellinstruktionen werden direkt in Zielinstruktionen umgewandelt
+		\item Probleme bei Binary Translation
 		\begin{itemize}
-			\item Vermeidet Rücksprünge zum Emulation Manager; der nächste Block wird direkt im Block davor gespeichert. Bei Sprüngen werden verschiedene mögliche Ziele gespeichert
-			\item Unconditional Jump: Direkter Sprung zum nächsten Block
-			\item Conditional Jump: Jeder Folgeblock wird separat gelinkt
-			\item Indirect Jump: Immer zurück zum Emulation Manager
+			\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig (Instruktionen und Opcodes unterschiedlich lange; u.U. Daten in \textit{Instruction Stream} eingebettet; Padding; indirekte Sprünge \(\rightarrow\) Sprungziel erst zur Laufzeit bekannt)
+			\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Target Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet wird
+		\end{itemize}
+		\item Lösung: Dynamic Translation
+		\begin{itemize}
+			\item Zunächst Interpretation mit Code Discovery
+			\item Der Code wird schrittweise übersetzt und blockweise im Code-Cache gespeichert. Zusätzlich wird das IP-Mapping im \textit{SIP-To-TIP}-Cache gespeichert
+			\item Problem dabei: Wie wird der Folgeblock identifiziert? \(\rightarrow\) speichere zusätzlich den SIP zur Folgeinstruktion. Dieser kann im SIP-to-TIP-Cache nachgeschlagen werden
+			\item Optimierung: \textit{Translation Block Chaining}
+			\begin{itemize}
+				\item Vermeidet Rücksprünge zum Emulation Manager; der nächste Block wird direkt im Block davor gespeichert. Bei Sprüngen werden verschiedene mögliche Ziele gespeichert
+				\item Unconditional Jump: Direkter Sprung zum nächsten Block
+				\item Conditional Jump: Jeder Folgeblock wird separat gelinkt
+				\item Indirect Jump: Immer zurück zum Emulation Manager
+			\end{itemize}
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Code-Cache-Management}
@@ -154,7 +158,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Direkt: Interpreter erkennt Exceptions und springt zu einem \textit{Runtime Trap Handler}
 		\item Indirekt: Host-ISA erkennt die Exception. Signal wird durch das Host-OS an den Runtime Handler weitergegeben (beispielsweise Division durch \texttt{0})
 	\end{itemize}
-	\item \textbf{Operating \texttt{System Calls}}
+	\item \textbf{Operating \texttt{SYSCALL}}
 	\begin{itemize}
 		\item Wrapper übersetzt Quell-System-Call zu Ziel-System-Call; eventuell muss zwischen Calling Conventions übersetzt werden
 		\item Manche Calls können vom Gastsystem selbst behandelt werden (beispielsweise Signal Handler Registrierung, oder Speichermanagement)
@@ -253,14 +257,14 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Reguläre Geräteanfragen
 		\begin{enumerate}
 			\item Betriebssystem verwaltet Geräteressourcen (Speicherallokation, serialisieren von Anfragen, etc.)
-			\item Anwendungen führen Standard-I/O-Anfragen mit \texttt{System Calls} durch
+			\item Anwendungen führen Standard-I/O-Anfragen mit \texttt{SYSCALL} durch
 			\item Betriebssystem konvertiert I/O-Anfragen zu Treiberanfragen
 			\item Treiber erzeugt gerätespezifische I/O-Operationen
 		\end{enumerate}
 		\item \texttt{System-Call}-Level
 		\begin{itemize}
-			\item Gast trappt in VMM, dieser interpretiert den \texttt{System Call} und erzeugt Treiberanfragen \(\rightarrow\) komplette I/O-Behandlung im VMM
-			\item Problem: VMM muss alle I/O-\texttt{System Calls} aller VMs behandlen
+			\item Gast trappt in VMM, dieser interpretiert den \texttt{SYSCALL} und erzeugt Treiberanfragen \(\rightarrow\) komplette I/O-Behandlung im VMM
+			\item Problem: VMM muss alle I/O-\texttt{SYSCALL} aller VMs behandlen
 		\end{itemize}
 		\item Treiberschnittstelle (paravirtualisiert)
 		\begin{itemize}
