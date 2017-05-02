@@ -92,33 +92,39 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item Code Cache: Verwaltet die zwischengespeicherten, bereits übersetzten Code-Fragmente. \textit{Code Cache Manager} entscheidet, ob Fragmente im Cache abgelegt werden
 		\item Interpreter: Für virtuelle Quell-CPU und die Speicherverwaltung verantwortlich
 	\end{itemize}
-	\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise in einer zentralen Schleife; dekodiert die Instruktionen und ruft die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
-	\item \textbf{Optimierungsmöglichkeiten des Interpreters}: Ausführen einer einzigen Quellinstruktion benötigt ein Vielfaches "`multiple tens"' an Instruktionen auf dem Host \(\rightarrow\) extrem ineffizient
-	\begin{enumerate} % TODO
-		\item Threaded Interpretation: Ersetzt die Hauptschleife. Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
-		\item Predecoding: Aufbereitung der Quellinstruktionen (Opcode, Operanden, etc.) für einfachere Zugriffe auf die Instruktionen zur Laufzeit \(\rightarrow\) vereinfacht die Dekodierroutine
-		\item Direct Threaded Interpretation (Kombination aus Erstgenannten): Speichere Adresse der Dispatch-Routine statt Opcode \(\rightarrow\) benötigt keine Sprungroutine und vermeidet Indirektionen 
-	\end{enumerate}
-	\item Dynamic Binary Translation (BDT)
+	\item \textbf{Techniken}
 	\begin{itemize}
-		\item Benötigt keine Dispatch-Routinen; erlaubt Optimierungen der Ziel-Instruktionen
-		\item Quellinstruktionen werden direkt in Zielinstruktionen umgewandelt
-		\item Probleme bei Binary Translation
+		\item Interpretation
 		\begin{itemize}
-			\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig (Instruktionen und Opcodes unterschiedlich lange; u.U. Daten in \textit{Instruction Stream} eingebettet; Padding; indirekte Sprünge \(\rightarrow\) Sprungziel erst zur Laufzeit bekannt)
-			\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Target Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet wird
+			\item Decode-Dispatch-Interpretation: Interpreter betrachter das Quell-Programm schrittweise in einer zentralen Schleife; dekodiert die Instruktionen und ruft die Dispatch-Routine auf. Diese liest/modifiziert den Gast-Zustand
+			\item Optimierungsmöglichkeiten des Interpreters: Ausführen einer einzigen Quellinstruktion benötigt ein Vielfaches "`multiple tens"' an Instruktionen auf dem Host \(\rightarrow\) extrem ineffizient
+			\begin{enumerate} % TODO
+				\item Threaded Interpretation: Ersetzt die Hauptschleife. Kopiere Dekoderlogik ans Ende von jeder Dispatch-Routine; verwende Sprungtabellen statt switch-case-Statements \(\rightarrow\) vermeidet teure Branches
+				\item Predecoding: Aufbereitung der Quellinstruktionen (Opcode, Operanden, etc.) für einfachere Zugriffe auf die Instruktionen zur Laufzeit \(\rightarrow\) vereinfacht die Dekodierroutine
+				\item Direct Threaded Interpretation (Kombination aus Erstgenannten): Speichere Adresse der Dispatch-Routine statt Opcode \(\rightarrow\) benötigt keine Sprungroutine und vermeidet Indirektionen 
+			\end{enumerate}
 		\end{itemize}
-		\item Lösung: Dynamic Translation
+		\item Dynamic Binary Translation (BDT)
 		\begin{itemize}
-			\item Zunächst Interpretation mit Code Discovery
-			\item Der Code wird schrittweise übersetzt und blockweise im Code-Cache gespeichert. Zusätzlich wird das IP-Mapping im \textit{SIP-To-TIP}-Cache gespeichert
-			\item Problem dabei: Wie wird der Folgeblock identifiziert? \(\rightarrow\) speichere zusätzlich den SIP zur Folgeinstruktion. Dieser kann im SIP-to-TIP-Cache nachgeschlagen werden
-			\item Optimierung: \textit{Translation Block Chaining}
+			\item Benötigt keine Dispatch-Routinen; erlaubt Optimierungen der Ziel-Instruktionen
+			\item Quellinstruktionen werden direkt in Zielinstruktionen umgewandelt
+			\item Probleme bei Binary Translation
 			\begin{itemize}
-				\item Vermeidet Rücksprünge zum Emulation Manager; der nächste Block wird direkt im Block davor gespeichert. Bei Sprüngen werden verschiedene mögliche Ziele gespeichert
-				\item Unconditional Jump: Direkter Sprung zum nächsten Block
-				\item Conditional Jump: Jeder Folgeblock wird separat gelinkt
-				\item Indirect Jump: Immer zurück zum Emulation Manager
+				\item Code Discovery Problem: Finden des Einsprungpunkts bei Quell-Instruktionen ggf. schwierig (Instruktionen und Opcodes unterschiedlich lange; u.U. Daten in \textit{Instruction Stream} eingebettet; Padding; indirekte Sprünge \(\rightarrow\) Sprungziel erst zur Laufzeit bekannt)
+				\item Code Location Problem: Fehlerhafte SIP-TIP-Beziehung (Source/Target Instruction Pointer). Kann beispielsweise entstehen, wenn eine Quell-Instruktion auf mehrere Zielinstruktionen abgebildet wird
+			\end{itemize}
+			\item Lösung: Dynamic Translation
+			\begin{itemize}
+				\item Zunächst Interpretation mit Code Discovery
+				\item Der Code wird schrittweise übersetzt und blockweise im Code-Cache gespeichert. Zusätzlich wird das IP-Mapping im \textit{SIP-To-TIP}-Cache gespeichert
+				\item Problem dabei: Wie wird der Folgeblock identifiziert? \(\rightarrow\) speichere zusätzlich den SIP zur Folgeinstruktion. Dieser kann im SIP-to-TIP-Cache nachgeschlagen werden
+				\item Optimierung: \textit{Translation Block Chaining}
+				\begin{itemize}
+					\item Vermeidet Rücksprünge zum Emulation Manager; der nächste Block wird direkt im Block davor gespeichert. Bei Sprüngen werden verschiedene mögliche Ziele gespeichert
+					\item Unconditional Jump: Direkter Sprung zum nächsten Block
+					\item Conditional Jump: Jeder Folgeblock wird separat gelinkt
+					\item Indirect Jump: Immer zurück zum Emulation Manager
+				\end{itemize}
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
