@@ -32,7 +32,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 		\item OS Compatibility Layer (emuliert \texttt{ABI} und \texttt{API})
 		\begin{itemize}
 			\item Virtualisiert Software: Bibliothek um von Gast-\texttt{API} nach Host-\texttt{API} übersetzen zu können
-			\item Beispiel: \textit{Wine}
+			\item Beispiel: \texttt{Wine}
 		\end{itemize}
 		\item Binary Translation (emuliert \texttt{ISA} und \texttt{ABI})
 		\begin{itemize}
@@ -150,7 +150,7 @@ Zusammenfassung der Vorlesung "`Virtuelle Systeme"' aus dem Wintersemester 2016.
 				\item Der/die älteste(n) Blöcke werden entfernt
 				\item Vorteile: Berücksichtigt zeitliche Lokalität; kein Verwaltungsoverhead zum Nutzungsverhalten der Blöcke (siehe LRU)
 				\item Nachteil: Back-Pointer notwendig
-				\item Variante Coarse-Grainied FIFO: Code-Cache wird partitioniert, es werden immer ganze Partitionen gelöscht; keine Verkettung zwischen Partitionen
+				\item Variante Coarse-Grained FIFO: Code-Cache wird partitioniert, es werden immer ganze Partitionen gelöscht; keine Verkettung zwischen Partitionen
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
