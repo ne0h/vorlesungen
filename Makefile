@@ -41,6 +41,10 @@ netzsicherheitfragenonly:
 	pdflatex netzsicherheitfragenonly.tex
 	pdflatex netzsicherheitfragenonly.tex
 
+pmonly:
+	pdflatex pmonly.tex
+	pdflatex pmonly.tex
+
 propaonly:
 	pdflatex propaonly.tex
 	pdflatex propaonly.tex

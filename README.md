@@ -33,6 +33,7 @@ Aktuell enthalten
 * Netzsicherheit
 * Netzsicherheit - Fragenkatalog
 * Rechnerstrukturen
+* Powermanagement
 * Sicherheit - Verfahren und Formelsammlung
 * Softwaretechnik 2
 * Telematik

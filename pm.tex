@@ -1,0 +1,49 @@
+\chapter{Powermanagement}
+
+Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\footnote{\url{https://os.itec.kit.edu/deutsch/3257_3262.php}}
+
+\section{Einführung}
+\begin{itemize}
+	\item Energiedichte eines modernen \texttt{Core i7 Duo Mobile} vergleichbar mit einer Kochplatte. Energiedichte eines \texttt{Core i7 Hexa} sogar fünf Mal höher
+	\item CPUs werden i.d.R. nicht gleichmäßig heiß, nutzungsabhängig entstehen verschieden heiße Teilbereiche
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Erhöhung der Lebensdauer der Akkus durch Effizienzverbesserung der Verbraucher: CPU-Scaling, Speicherenergiemanagement, I/O-Energiemanagement, Display-Energiemanagement, Ausschalten von Festplatten
+		\item Task-spezifisches Powermanagement
+		\item Einhalten eines Energieplans
+		\item Vermeiden von Energiespitzen, da bestimmte Energiequellen ein definiertes Maximum liefern
+		\item Bestimmte Temperatur darf nicht überschritten werden
+		\item Energy-Accounting
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{CPU Powermanagement}
+
+\subsection{Accounting}
+\begin{itemize}
+	\item \textbf{Methoden zur Feststellung des Energieverbauchs}
+	\begin{itemize}
+		\item Messung des Eingangsstroms an der CPU (Spannung ist bekannt): Hochfrequente, präzise Messung notwendig; bei \textit{SoCs} nicht möglich
+		\item Simulation der CPU: Extrem langsam (\(4000-10.000.000\)-mal langsamer als das Zielsystem); meist kein genaues Energiemodell des Zielprozessors vorhanden
+		\item Auswerten der Energiezähler im Prozessor
+		\begin{itemize}
+			\item Ausmessen des Energieverbrauchs verschiedener Aktionen (Data/Instruction-Cache-Miss, Speicherzugriff, Cycle, Branch, etc.)
+			\item Mit Prozessorregistern
+			\item Mit dediziertem Co-Prozessor: Wenig Overhead durch das Betriebssystem; minimale Seiteneffekte; in \textit{SoCs} integrierbar
+			\item Vorteile: Wenig Overhead; hohe Auflösung; Prozess-granulare Messungen möglich
+			\item Anwendungsbeispiel \texttt{P4}: Vergleichsweise genaue Messungen mit relativen Fehlern von \(< 10\%\) möglich
+		\end{itemize}
+	\end{itemize}
+	\item Accounting muss alle beteiligten Komponenten erfassen: CPU-Zeit, Speicher, etc.
+	\item Virtuelle Umgebungen: Accounting muss weitere Komponenten wie Zeit im Hyperviser (beispielsweise Treiberzugriffe) berücksichtigen
+	\item Client-Server-Accounting: Ggf. mehrere Prozesse an Aufgabenerfüllung beteiligt
+	\item \textbf{Resource Containers}
+\end{itemize}
+
+
+\subsection{Wärmemanagement}
+
+
+\subsection{DVS}
