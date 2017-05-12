@@ -25,13 +25,13 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 \begin{itemize}
 	\item \textbf{Methoden zur Feststellung des Energieverbauchs}
 	\begin{itemize}
-		\item Messung des Eingangsstroms an der CPU (Spannung ist bekannt): Hochfrequente, präzise Messung notwendig; bei \textit{SoCs} nicht möglich
-		\item Simulation der CPU: Extrem langsam (\(4000-10.000.000\)-mal langsamer als das Zielsystem); meist kein genaues Energiemodell des Zielprozessors vorhanden
+		\item Messung des Eingangsstroms an der CPU (Spannung ist bekannt): Hochfrequente, präzise Messung mit Messwiderstand notwendig; Auswertungsoverhead muss beachtet werden (Implementierung per Inline Assembler); CPU-Features (Turbo Boosts, Hyperthreading, etc.) sollten abgeschaltet werden; bei \textit{SoCs} nicht möglich
+		\item Simulation der CPU: Extrem langsam (\(4000-10.000.000\)-mal langsamer als das Zielsystem); auf Schaltoperations- oder Instruktionslevel möglich; meist allerdings kein genaues Energiemodell des Zielprozessors vorhanden (lediglich \texttt{Reverse Engineertes})
 		\item Auswerten der Energiezähler im Prozessor
 		\begin{itemize}
 			\item Ausmessen des Energieverbrauchs verschiedener Aktionen (Data/Instruction-Cache-Miss, Speicherzugriff, Cycle, Branch, etc.)
-			\item Mit Prozessorregistern
-			\item Mit dediziertem Co-Prozessor: Wenig Overhead durch das Betriebssystem; minimale Seiteneffekte; in \textit{SoCs} integrierbar
+			\item Möglichkeit 1: Auslesen der Ereigniszähler im Prozessor; meist allerdings zu wenige vorhanden
+			\item Möglichkeit 2: Mit dediziertem Co-Prozessor; wenig Overhead durch das Betriebssystem; minimale Seiteneffekte; in \textit{SoCs} integrierbar
 			\item Vorteile: Wenig Overhead; hohe Auflösung; Prozess-granulare Messungen möglich
 			\item Anwendungsbeispiel \texttt{P4}: Vergleichsweise genaue Messungen mit relativen Fehlern von \(< 10\%\) möglich
 		\end{itemize}
@@ -40,10 +40,99 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\item Virtuelle Umgebungen: Accounting muss weitere Komponenten wie Zeit im Hyperviser (beispielsweise Treiberzugriffe) berücksichtigen
 	\item Client-Server-Accounting: Ggf. mehrere Prozesse an Aufgabenerfüllung beteiligt
 	\item \textbf{Resource Containers}
+	\begin{itemize}
+		\item Ziel: Ermitteln des "`Gesamtaufwands"' eines Services
+		\item Accounting von CPU-Zeit (Userspace und Kernelmode) und Kernel-Objekte (Scokets, Netzwerkpuffer, etc.) nach Netzwerkverbindungen (Clients); Verwendung von Kontextinformationen des Schedulers
+		\item Implementierung
+		\begin{itemize}
+			\item Via \texttt{File Descriptor} hierarchisch referenziert
+			\item Attribute: Ressourcenverbrauch/-limitierung, Scheduling-Parameter, Zugriffsrechte, etc.
+			\item Dynamische Bindung von Threads an Resource Containers
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Energy Containers}
+	\begin{itemize}
+		\item Erweitern Resource Containers um ereignisgetriebenen Energiemessungen
+		\item Stellen Informationen für Powermanagementrichtlinien zur Verfügung
+		\item Beispiel: Limitierung des kurzfrisitigen, durchschnittlichen Energieverbauchs
+	\end{itemize}
+	\item Energy Inversion Problem: Das Energiebudget eines Clients wird aufgebraucht während dieser eine kritische Ressource hält (Client-Verbindung "`wird angehalten"' und die Ressource nicht freigegeben) \(\rightarrow\) Server ist blockiert bis die Energiebudgets aktualisiert werden
 \end{itemize}
 
 
 \subsection{Wärmemanagement}
+\begin{itemize}
+	\item \textbf{Vorteile, Chancen}
+	\begin{itemize}
+		\item Höhere Zuverlässigkeit der gekühlten Komponenten; Lüfterlautstärke/-geschwindigkeit kann reguliert werden; reduzierte Kosten
+		\item Abwägung zwischen Systemleistung, Luftfluss und Bodenplatz
+		\item Generelles Problem: Individuelle Lüftersteuerungen einzelner Server stören das Gesamtkühlkonzept im Rechenzentrum (beispielsweise durch Rückflüsse. Mögliche Gegenmaßnahme: Gangüberdachungen)
+		\item Dynamische Verteilung/Reduzierung rechenintensiver Aufgaben
+		\begin{itemize}
+			\item Reduziert notwendige Kühlleistung
+			\item Höhere Verfügbarkeit ohne Notwendigkeit einer redundanten Kühlung
+		\end{itemize}
+	\end{itemize}
+	\item Vergleich \(P_{max}\) und \(P_{tdp}\): Wachsender Unterschied seit 1985, da Prozessoren verstärkt Wärmemanagement betreiben (beispielsweise können Komponenten auf der CPU abgeschaltet werden)
+	\item Mehr Leistung durch Kühlung: Maximale Taktfrequenz stark von der Chip-Temperatur abhängig
+	\item \textbf{Drosseln}
+	\begin{itemize}
+		\item Nicht sofort spürbar (Messung außerhalb der Funktionalen Einheiten, langsamer Zugriff am Temperatursensoren) \(\rightarrow\) frühzeitige Reaktion notwendig
+		\item Strategien
+		\begin{itemize}
+			\item HLT-Cylces: Anhalten der CPU bis zum nächsten Interrupt (typischerweise \(1-10s\), spezielle Instruktion); schnelle Reaktions; bei vielen Interrupt keine präzise Steuerung möglich
+			\item Dynamic Clock Modulation: Reduzierung der internen Taktfrequenz durch Überlagerung des normalen Takts durch zweiten, langsameren Takt
+			\item Instruction decode throttling: Drosselung der weitergeleiteten Instruktion aus dem L1-Instruction-Cache in den Instruction-Buffer; schnelle Reaktionszeit; einfach in Hardware zu implementieren
+			\item Dynamic Frequency and Voltage Scaling: \(P=C \cdot V_{cc}^2 \cdot F\) \(\rightarrow\) Reduzierung von Spannung oder Frequenz führt zu niedrigerer Energieaufnahme
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
-\subsection{DVS}
+\subsection{Dynamic Frquency and Voltage Scaling (DVS)}
+\begin{itemize}
+	\item \textbf{Beobachtungen/Messungen}
+	\begin{itemize}
+		\item Frequenzdrosselung bei Speicher-Zugriffe irrelevant, da ohnehin auf den Speicher gewartet werden muss
+		\item Idealerweise sollte die Energieersparnis die Laufzeiteinbußen übertreffen
+		\item Schnellerer Prozessortakt führt zu weniger Hauptspeicherenergiebedarf (Lokalisationsprinzip)
+		\item Nicht immer ist bei Speicher die langsamste Frequenz die beste (abhängig vom Zugriffsmuster), ggf. braucht eine Task auf langsamerer Taktfrequenz mehr Leistung
+	\end{itemize}
+	\item \textbf{Richtlinien}
+	\begin{description}
+		\item{Policy \#1: PAST}
+		\begin{itemize}
+			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf der vergangenen Auslastung
+			\item Soll die Anzahl der Geschwindigkeitswechsel verringern
+			\item Schlechte Leistung in vielen realistischen Scenarios (beispielsweise bursty Tasks)
+		\end{itemize}
+		\item{Policy \#2: Vertigo}
+		\begin{itemize}
+			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf Event-/Task-Einstufung
+			\item Aufbau des Algorithmus
+			\begin{itemize}
+				\item Unten: Algorithmische Bestimmung der zukünftigen Auslastung, basierend auf der vergangenen Auslastung. Pro Task werden Auslastung und Auslastungfenster festgelegt
+				\item Mittig: Anwendungsabhängige Schicht zur Anmeldung von Leistungsbedarf (müssen die Anwendungen unterstützen)
+				\item Oben: Automatische Ermittlung des Leistungsbedarfs interaktiver Anwendungen
+			\end{itemize}
+		\end{itemize}
+		\item{Policy \#3: Process Cruise Control}
+		\begin{itemize}
+			\item Prinzip: Die Häufigkeit mit der Ereignisse auftreten hängen von einem spezifischen Leitungs- und Energieeffizienzprofil ab \(\rightarrow\) Ergeignis-basierte Charakterisierung: Sinkende Ereignisrate als Indikator für Durchsatzverlust
+			\item Herausforderungen: Auswahl der geeigneten Ereignistypen; Finden des Zusammenhangs [Ereignisrate \(\leftrightarrow\) Energiebedarf]
+			\item Limitierungen des Models: (Meist) zu geringe Anzahl an Ereigniszählern; Auswahl von Ereignissen mit Fokus auf Leistung (nicht auf Energy Profiling)
+		\end{itemize}
+	\end{description}
+\end{itemize}
+
+
+
+\section{Appendix A: Begriffe}
+
+\subsection{Wärmemanagement}
+\begin{itemize}
+	\item Maximale Leistung \(P_{max}\): Theoretischer Maximalwert, in der Praxis kaum erreicht
+	\item Thermal Design Power \(P_{tdp}\): Meist etwas unterdimensioniert
+	\item Aktive Leistung \(P_{active}\): Meist beschönigt bzw. unter unrealistischen Bedingungen gemessen
+	\item Leerlaufleistung \(P_{idle}\): Häufig als Referenz genommen, meist realistisch. Temperatur muss beachtet werden
+\end{itemize}
