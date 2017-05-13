@@ -127,6 +127,116 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 
 
+\section{Speicher Powermanagement} % TODO
+
+\subsection{Charakteristik von DRAM}
+\begin{itemize}
+	\item Hintergrund: Leistungsfähigkeit vieler Komponenten (CPU, Grafikkarte, etc.) hängt von der Speicherperformance ab; Speicher macht bei mobilen Geräten \(>50\%\) des Energieverbrauchs aus
+	\item Energieverbrauch bei DRAM: Refresh der Kondensatoren; Decoding; Datentransfer
+	\item Vollgepufferte DIMMs: Zusätzlich \(4W\) Energieverbrauch
+	\item Mobile DRAM
+	\begin{itemize}
+		\item Temperatur Compensated Self Refresh (TCSR): Refresh-Interval an Temperatur angepasst
+		\item Partial Array Self Refresh (PASR): Nur Bereiche, die Daten enthalten, werden refresht
+		\item Deep Power-Down (DPD): Array wird komplet abgeschalten; keine Datenspeicherung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{DRAM Powermanagement}
+\begin{itemize}
+	\item Setup: Aufteilung des Speichers in Module; keine Speicherverschränkung\footnote{Aufeinander folgende Speicherworte werden zyklisch in aufeinander folgenden Speicherbänken abgespeichert. (Wikipedia)}; individuell angepasste Energielevel pro Modul
+	\item Festlegen des Energieniveaus
+	\begin{itemize}
+		\item Wird automatisch vom Speichercontroller festgelegt: Zustandswechsel (beispielsweise von \texttt{Performancemodus} zu \texttt{Schlafzustand}), wenn innerhalb einer definierten Zeitspanne keine Anfragen kommen (\textit{Gaptime})
+		\item Herausforderung: Gaptime gut wählen, da sonst viel Zeit/Energie für Zustandswechsel verbraucht wird. Abschätzung beispielsweise über Performancecounter, allerdings stark abhängig von Referenzmuster
+		\item "`Intelligenter Speicherkontroller"'
+		\begin{itemize}
+			\item Kennt Zugriffsmuster/Dringlichkeiten/Prioritäten und verteilt die Daten entsprechend ( Lokalität ausnutzen)
+			\item Kann zu Benachteiligung von Anfragen/Daten speichern. Gegenmaßnahme beispielsweise: Echtzeitrelevante Daten priorisieren. Idealerweise taggen von allen physischen Seiten (gap distribution, priorities, realtime, ...)
+		\end{itemize}
+	\end{itemize}
+	\item Allgemeiner Trend: Anforderungen an Speichercontroller wachsen (Fehlererkennung/-maskierung, variable Geschwindigkeiten, etc.)
+\end{itemize}
+
+
+\subsection{Strategien für Page Allocation}
+\begin{itemize}
+	\item \textbf{Speicherallokationsstrategien (Software)}
+	\begin{itemize}
+		\item Ziel: Erhöhen der Gaptime der meisten Speichermodule
+		\item Sequential First-Touch Allocation: Pages werden nach Möglichkeit in einem Modul allokiert, das schon Daten hält
+		\item DLL Aggregation: Dediziertes Modul für gemeinsam genutzte Objekte (Shared Memory, Shared Libraries, Pipes, etc.)
+	\end{itemize}
+	\item \textbf{Speichermigrationsstrategien (Software)}
+	\begin{itemize}
+		\item Ziel: Erhöhen der Gaptime der meisten Speichermodule
+		\item Idee: Erlaube (beschränktes) Verschieben von allokierten Pages; Zusammenfassen des aktiven Speichers in möglichst wenig Modulen
+		\item Problem: Finden der Zugriffsfrequenzen
+		\item Lösung: Protokollieren der Exceptions, die der Lastlevelcache wirft, wenn er voll ist \(\rightarrow\) ergibt welche Seiten wie oft referenziert worden sind. Mit extem hohem Aufwand verbunden 
+		\item Shared Pages generelles Problem bei Migration
+		\item Anwendung: Energiegewahres Garbage Collection, da diesem die Objektreferenzen bekannt sind. GC kann selbstständig Objekte verschieben
+	\end{itemize}
+	\item \textbf{Nachteile bei Page-Migrationen durch das Betriebssystem}
+	\begin{itemize}
+		\item MMU des Prozessors: TLBs benötigen viel Energie (zusätzlich noch mehr bei Miss durch Page-Table-Walk); Hardwarearchitektur der Caches nicht zum Speichern zusätzlicher Informationen (Referenzzähler, \#Einträge, etc.) geeignet
+		\item Prozessor/DMA-Controller muss Transfers durchführen
+		\item Komplexe Verwaltung muss vom Betriebssystem bewältigt werden können (dieses steuert die MMU)
+	\end{itemize}
+	\item \textbf{MMC: Trennung von Sicherung und Zuordnung}
+	\begin{itemize}
+		\item MMC-TLB: Speichert zusätzlich Anzahl der Lese-/Schreibzugriffe zu jeder Frame-Adresse; konfigurierbar (Anzahl Einträge, Assoziativität, etc.)
+		\item Energiegewahre MMU mit dedizierter Speicherverschiebeeinheit
+		\item Zusätzliche Funktionen
+		\begin{itemize}
+			\item Speicher-Controller kann Pages in persistentem Speicher backuppen
+			\item Speicher-Controller kann virtuellen physikalischen Speicher "`anbieten"'
+			\item Speicher-Controller unterstützt Hardware-Support für Speicherkomprimierung
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Speicherkomprimierung}
+\begin{itemize}
+	\item Hardware-unterstützte Komprimierung
+	\begin{itemize}
+		\item Dedizierte Hardware zum feingranularen (de-)komprimieren von Daten und Instruktionen
+		\item Möglichkeiten von Energiesparen: Weniger Speicherzugriffe; weniger Anfragen auf dem Speicherbus; geringere Cache-/Speichergröße notwendig
+	\end{itemize}
+	\item Software-seitige Komprimierung
+	\begin{itemize}
+		\item Aufteilung in (un-) (Bsp.: Working Set)/komprimierte (nicht benutzte Pages) Speicherbereiche
+		\item (De-)Komprimierungsgeschwindigkeit (asymmetrischer Algorithmus) entscheident
+		\item Möglichkeiten zum Energiesparen: Geringere Speichergröße notwendig; die meisten Speichermodule können im Standby bleiben; Speicherkomprimierung kann DVS-optimal betrieben werden
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Fortgeschrittene Speichertechnologien (nicht-flüchtig)}
+\begin{itemize}
+	\item \textbf{Ferroelectric RAM (FRAM)}
+	\begin{itemize}
+		\item Ferroelektrizität: Beschreibt das Phänomen, dass Stoffe mit einem elektrischen Dipolmoment durch das Anlegen eines äußeren elektrischen Feldes die Richtung der spontanen Polarisation ändern\footnote{\url{https://de.wikipedia.org/wiki/Ferroelektrikum}}
+		\item Latenz beim Lesen typischerweise \(20-100ns\), hält die Daten allerdigns extrem lange (\(>10 Jahre\)); begrenze Anzahl Schreibzyklen (1012-1015)
+		\item Sehr teuer (und wird auch teuer bleiben) \(\rightarrow\) wird nur für Spezialanwendungen mit langer Vorhaltezeit verwendet
+	\end{itemize}
+	\item \textbf{Spin Transfer Torque Memory (SPRAM)}
+	\begin{itemize}
+		\item Magnetic Tunnel Junction (MTJ): Ausrichtung einer Magnetische Schicht in einem magnetischen Tunnel kann mit einem drehpolarisierten Strom festgelegt werden
+		\item Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10 Jahre\))
+		\item Stapelbar \(\rightarrow\) hohe Dichte/Bandbreite möglich
+	\end{itemize}
+	\item \textbf{Phase Change Memory (PRAM)}
+	\begin{itemize}
+		\item Wirkprinzip: Die Änderung des elektrischen Widerstandes des Speichermaterials in Abhängigkeit davon, ob es in amorpher (hoher Widerstand / RESET state) oder in kristalliner (niedriger Widerstand / SET state) Phase vorliegt\footnote{\url{https://de.wikipedia.org/wiki/Phase-change_random_access_memory}}
+		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit 500x schneller
+		\item 100 Millitonen Schreibzyklen mit \(>300 Jahren\) Haltungszeit möglich
+	\end{itemize}
+\end{itemize}
+
+
+
 \section{Appendix A: Begriffe}
 
 \subsection{Wärmemanagement}
