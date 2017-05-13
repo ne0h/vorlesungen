@@ -223,13 +223,16 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\end{itemize}
 	\item \textbf{Spin Transfer Torque Memory (SPRAM)}
 	\begin{itemize}
-		\item Magnetic Tunnel Junction (MTJ): Ausrichtung einer Magnetische Schicht in einem magnetischen Tunnel kann mit einem drehpolarisierten Strom festgelegt werden
+		\item Widerstand ändert sich in Abhängigkeit der Magnetorientierung
+		\item Kann wie normale Schaltlogik produziert werden (weil CMOS) \(\rightarrow\) kann direkt in Chips integriert werden. Beispielsweise zwischen Funktionale Einheiten, da der Speicher nicht so heiß wird wie die Funktionalen Einheiten selbst
+		\item Fertigung gut bekannt/erforscht sowie gute Leistungscharakteristik: Vmtl bald mehr als ein Bit pro Zelle möglich (multibit), wird eventuell DRAM mittelfristig ersetzen
 		\item Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10 Jahre\))
 		\item Stapelbar \(\rightarrow\) hohe Dichte/Bandbreite möglich
 	\end{itemize}
 	\item \textbf{Phase Change Memory (PRAM)}
 	\begin{itemize}
-		\item Wirkprinzip: Die Änderung des elektrischen Widerstandes des Speichermaterials in Abhängigkeit davon, ob es in amorpher (hoher Widerstand / RESET state) oder in kristalliner (niedriger Widerstand / SET state) Phase vorliegt\footnote{\url{https://de.wikipedia.org/wiki/Phase-change_random_access_memory}}
+		\item Kristalin mit unterschiedlicher Widerstand durch Erhitzung und Abkühlung; Neuschreiben durch starkes Erhitzen
+		\item Byteadressierbar mit gleichem Interface/Verhalten wie Flash; kann bereits vergleichsweise günstig produziert werden \(\rightarrow\) wird Flashspeicher irgendwann ablösen
 		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit 500x schneller
 		\item 100 Millitonen Schreibzyklen mit \(>300 Jahren\) Haltungszeit möglich
 	\end{itemize}
