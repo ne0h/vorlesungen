@@ -127,18 +127,24 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 
 
-\section{Speicher Powermanagement} % TODO
+\section{Speicher Powermanagement}
+
+\subsubsection{Einführung}
+\begin{itemize}
+	\item Speicherperformance entwickelt sich signifikant schlechter als Prozessorperformance
+	\item Leistungsfähigkeit vieler Komponenten (CPU, Grafikkarte, etc.) hängt allerdings von der Speicherperformance ab
+	\item Speicher macht bei mobilen Geräten \(>50\%\) des Energieverbrauchs aus
+\end{itemize}
 
 \subsection{Charakteristik von DRAM}
 \begin{itemize}
-	\item Hintergrund: Leistungsfähigkeit vieler Komponenten (CPU, Grafikkarte, etc.) hängt von der Speicherperformance ab; Speicher macht bei mobilen Geräten \(>50\%\) des Energieverbrauchs aus
 	\item Energieverbrauch bei DRAM: Refresh der Kondensatoren; Decoding; Datentransfer
 	\item Vollgepufferte DIMMs: Zusätzlich \(4W\) Energieverbrauch
-	\item Mobile DRAM
+	\item \textbf{Techniken zur Reduzierung des DRAMs bei mobilen Geräten}
 	\begin{itemize}
 		\item Temperatur Compensated Self Refresh (TCSR): Refresh-Interval an Temperatur angepasst
 		\item Partial Array Self Refresh (PASR): Nur Bereiche, die Daten enthalten, werden refresht
-		\item Deep Power-Down (DPD): Array wird komplet abgeschalten; keine Datenspeicherung
+		\item Deep Power-Down (DPD): Array wird komplett abgeschalten; keine Datenspeicherung
 	\end{itemize}
 \end{itemize}
 
@@ -148,12 +154,12 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\item Setup: Aufteilung des Speichers in Module; keine Speicherverschränkung\footnote{Aufeinander folgende Speicherworte werden zyklisch in aufeinander folgenden Speicherbänken abgespeichert. (Wikipedia)}; individuell angepasste Energielevel pro Modul
 	\item Festlegen des Energieniveaus
 	\begin{itemize}
-		\item Wird automatisch vom Speichercontroller festgelegt: Zustandswechsel (beispielsweise von \texttt{Performancemodus} zu \texttt{Schlafzustand}), wenn innerhalb einer definierten Zeitspanne keine Anfragen kommen (\textit{Gaptime})
-		\item Herausforderung: Gaptime gut wählen, da sonst viel Zeit/Energie für Zustandswechsel verbraucht wird. Abschätzung beispielsweise über Performancecounter, allerdings stark abhängig von Referenzmuster
+		\item Wird automatisch vom Speichercontroller festgelegt: Zustandswechsel (beispielsweise von \texttt{Performancemodus} zu \texttt{Schlafmodus}), wenn innerhalb einer definierten Zeitspanne keine Anfragen kommen (\textit{Gaptime})
+		\item Herausforderung: \textit{Gaptime} gut wählen, da sonst viel Zeit/Energie für Zustandswechsel verbraucht wird. Abschätzung beispielsweise über Performancecounter (\(t_{gap}=\frac{t_{cycle} \cdot instructions}{cache~misses}\)); allerdings stark abhängig vom Referenzmuster
 		\item "`Intelligenter Speicherkontroller"'
 		\begin{itemize}
-			\item Kennt Zugriffsmuster/Dringlichkeiten/Prioritäten und verteilt die Daten entsprechend ( Lokalität ausnutzen)
-			\item Kann zu Benachteiligung von Anfragen/Daten speichern. Gegenmaßnahme beispielsweise: Echtzeitrelevante Daten priorisieren. Idealerweise taggen von allen physischen Seiten (gap distribution, priorities, realtime, ...)
+			\item Kennt Zugriffsmuster/Dringlichkeiten/Prioritäten und verteilt die Daten entsprechend (ausnutzen von Lokalität)
+			\item Kann zur Benachteiligung von Anfragen/Daten speichern. Gegenmaßnahme beispielsweise: Echtzeitrelevante Daten priorisieren. Idealerweise taggen von allen physischen Seiten (gap distribution, priorities, realtime, ...)
 		\end{itemize}
 	\end{itemize}
 	\item Allgemeiner Trend: Anforderungen an Speichercontroller wachsen (Fehlererkennung/-maskierung, variable Geschwindigkeiten, etc.)
@@ -162,30 +168,41 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 \subsection{Strategien für Page Allocation}
 \begin{itemize}
-	\item \textbf{Speicherallokationsstrategien (Software)}
+	\item \textbf{Software-seitiger Lösungsansatz}
 	\begin{itemize}
-		\item Ziel: Erhöhen der Gaptime der meisten Speichermodule
-		\item Sequential First-Touch Allocation: Pages werden nach Möglichkeit in einem Modul allokiert, das schon Daten hält
-		\item DLL Aggregation: Dediziertes Modul für gemeinsam genutzte Objekte (Shared Memory, Shared Libraries, Pipes, etc.)
+		\item Speicherallokationsstrategien
+		\begin{itemize}
+			\item Ziel: Erhöhen der Gaptime möglichst vieler Speichermodule
+			\item Policy
+			\begin{itemize}
+				\item Aktives Working Set eines Prozesses wird in möglichst wenigen Modulen allokiert. Beim Kontextwechsel werden nicht-verwendete Module deaktiviert
+				\item Um Latenz zu sparen werden die verwendeten Module direkt beim Kontextwechsel aktiviert
+				\item Erweitwerung zur weiteren Reduzierung der Aktivierungslatenz: Aktiviere zusätzlich die Module des "`zweitbesten"' Prozesses (in Abhängigkeit der Scheduling-Strategie), da dieser "`wahrscheinlich"' direkt danach ausgeführt werden wird
+			\end{itemize}
+			\item Sequential First-Touch Allocation: Pages werden nach Möglichkeit in einem Modul allokiert, das schon Daten hält. Kann verteilt-allokierten Shared Libraries führen
+			\item Verbesserung: DLL Aggregation. Dediziertes Modul für gemeinsam genutzte Objekte (Shared Memory, Shared Libraries, Pipes, etc.)
+			\item Evaluiert: Beide Allokationsstrategien in der Praxis unbrauchbar
+		\end{itemize}
+		\item Speichermigrationsstrategien
+		\begin{itemize}
+			\item Ziel: Erhöhen der Gaptime möglichst vieler Speichermodule
+			\item Idee: Erlaube eingeschränkt das Verschieben von allokierten Pages; Zusammenfassen des Working Set in möglichst wenig Modulen
+			\item Problem: Finden der Zugriffsfrequenzen
+			\item Lösung: Offline Analyse bei Embedded Systems; sonst kurze Sample-Phase zum Auswerten der Exceptions, die der Lastlevelcache wirft, wenn er voll ist \(\rightarrow\) ergibt welche Seiten wie oft referenziert worden sind \(\rightarrow\) extem hoher Aufwand
+			\item Hoher Migrationsaufwand \(\rightarrow\) lohnt sich nur bei langlebigen Tasks
+			\item Shared Pages generelles Problem bei Migration
+			\item Anwendung: Energiegewahre Garbage Collection, da diesem die Objektreferenzen bekannt sind. GC kann selbstständig Objekte verschieben
+		\end{itemize}
+		\item Nachteile bei Page-Migrationen durch das Betriebssystem
+		\begin{itemize}
+			\item MMU des Prozessors: TLB-Latenz muss zur Cache-Latenz passen; TLBs benötigen viel Energie (zusätzlich noch mehr bei Miss durch Page-Table-Walk); Hardwarearchitektur der Caches nicht zum Speichern zusätzlicher Informationen (Referenzzähler, \#Einträge, etc.) geeignet
+			\item Prozessor/DMA-Controller muss zusätzliche Transfers durchführen
+			\item Komplexe Verwaltung muss vom Betriebssystem bewältigt werden können (dieses steuert die MMU)
+		\end{itemize}
 	\end{itemize}
-	\item \textbf{Speichermigrationsstrategien (Software)}
+	\item \textbf{MMC: Trennung von Speicherung und Zuordnung (Hardware-seitiger Lösungsansatz)}
 	\begin{itemize}
-		\item Ziel: Erhöhen der Gaptime der meisten Speichermodule
-		\item Idee: Erlaube (beschränktes) Verschieben von allokierten Pages; Zusammenfassen des aktiven Speichers in möglichst wenig Modulen
-		\item Problem: Finden der Zugriffsfrequenzen
-		\item Lösung: Protokollieren der Exceptions, die der Lastlevelcache wirft, wenn er voll ist \(\rightarrow\) ergibt welche Seiten wie oft referenziert worden sind. Mit extem hohem Aufwand verbunden 
-		\item Shared Pages generelles Problem bei Migration
-		\item Anwendung: Energiegewahres Garbage Collection, da diesem die Objektreferenzen bekannt sind. GC kann selbstständig Objekte verschieben
-	\end{itemize}
-	\item \textbf{Nachteile bei Page-Migrationen durch das Betriebssystem}
-	\begin{itemize}
-		\item MMU des Prozessors: TLBs benötigen viel Energie (zusätzlich noch mehr bei Miss durch Page-Table-Walk); Hardwarearchitektur der Caches nicht zum Speichern zusätzlicher Informationen (Referenzzähler, \#Einträge, etc.) geeignet
-		\item Prozessor/DMA-Controller muss Transfers durchführen
-		\item Komplexe Verwaltung muss vom Betriebssystem bewältigt werden können (dieses steuert die MMU)
-	\end{itemize}
-	\item \textbf{MMC: Trennung von Sicherung und Zuordnung}
-	\begin{itemize}
-		\item MMC-TLB: Speichert zusätzlich Anzahl der Lese-/Schreibzugriffe zu jeder Frame-Adresse; konfigurierbar (Anzahl Einträge, Assoziativität, etc.)
+		\item MMC-TLB: Ergänzt Page-Adress um Anzahl der Lese-/Schreibzugriffe; konfigurierbar (Anzahl Einträge, Assoziativität, etc.)
 		\item Energiegewahre MMU mit dedizierter Speicherverschiebeeinheit
 		\item Zusätzliche Funktionen
 		\begin{itemize}
@@ -197,7 +214,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 \end{itemize}
 
 
-\subsection{Speicherkomprimierung}
+\subsection{Speicherkomprimierung} % TODO
 \begin{itemize}
 	\item Hardware-unterstützte Komprimierung
 	\begin{itemize}
@@ -213,7 +230,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 \end{itemize}
 
 
-\subsection{Fortgeschrittene Speichertechnologien (nicht-flüchtig)}
+\subsection{Moderne, persistente Speichertechnologien}
 \begin{itemize}
 	\item \textbf{Ferroelectric RAM (FRAM)}
 	\begin{itemize}
@@ -225,15 +242,15 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\begin{itemize}
 		\item Widerstand ändert sich in Abhängigkeit der Magnetorientierung
 		\item Kann wie normale Schaltlogik produziert werden (weil CMOS) \(\rightarrow\) kann direkt in Chips integriert werden. Beispielsweise zwischen Funktionale Einheiten, da der Speicher nicht so heiß wird wie die Funktionalen Einheiten selbst
-		\item Fertigung gut bekannt/erforscht sowie gute Leistungscharakteristik: Vmtl bald mehr als ein Bit pro Zelle möglich (multibit), wird eventuell DRAM mittelfristig ersetzen
-		\item Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10 Jahre\))
+		\item Fertigung gut bekannt/erforscht sowie gute Leistungscharakteristik: Vmtl bald mehr als ein Bit pro Zelle möglich (multibit), wird eventuell DRAM ersetzen
+		\item Sehr geringe Energiemenge zum Schreiben notwendig (\(0,06pJ/Bit\)); Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10 Jahre\))
 		\item Stapelbar \(\rightarrow\) hohe Dichte/Bandbreite möglich
 	\end{itemize}
 	\item \textbf{Phase Change Memory (PRAM)}
 	\begin{itemize}
 		\item Kristalin mit unterschiedlicher Widerstand durch Erhitzung und Abkühlung; Neuschreiben durch starkes Erhitzen
 		\item Byteadressierbar mit gleichem Interface/Verhalten wie Flash; kann bereits vergleichsweise günstig produziert werden \(\rightarrow\) wird Flashspeicher irgendwann ablösen
-		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit 500x schneller
+		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit allerdings 500x so schnell
 		\item 100 Millitonen Schreibzyklen mit \(>300 Jahren\) Haltungszeit möglich
 	\end{itemize}
 \end{itemize}
