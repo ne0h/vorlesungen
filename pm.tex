@@ -257,6 +257,64 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 
 
+\section{Batterien}
+\begin{itemize}
+	\item "`Battery Gap"': Energiedichte entwickelt sich langsamer als der Energiebedarf
+	\item \textbf{Technologien}
+	\begin{itemize}
+		\item Verschiedene Technologien, die stetig besser werden; Verbesserungen im niedrigen einstelligen Bereich
+		\item Einsatzbereich entscheident über Auswahl des Batterietyps: Wasserstoffzelle schlecht bei Peakleistungen allerdings hohe Dauerbelastung möglich; Gegenteil: Bleiakkus
+		\item Vergleichsmaß: Wattstunden/Liter zu Wattstunden/Kilogramm
+	\end{itemize}
+	\item \textbf{Nicht-lineares Verhalten von Li-Ionen-Akkus}
+	\begin{itemize}
+		\item Rate Capacity Effect
+		\begin{itemize}
+			\item Bei langsamer Entlandung insgesamt mehr Stromabgabe möglich (effektive Batteriekapazität, kann \(20\%\) ausmachen)
+			\item Formalisiert als \textit{Peukert's Law}: \(C=T \cdot I^\alpha\) mit \(\alpha=1,16\) bei \texttt{IBM Thinkpad T30}
+			\item 2-Batteriesystem: Paralleles Entladen beider Batterien, so dass einzelne Entladung geringer ist und so beide Batterien länger halten. Im Beispiel 8-9\% Effekt gegenüber sequentiellem Entladen, "`vage Geschichte"'
+			\item Auswirkungen von Spitzenströmen fatal
+		\end{itemize}
+		\item Temperatureffekt: Energiemenge abhängig von Außentemperatur. Meist ideal: 30-40 Grad Celsius
+		\item Capacity Fading: Durch häufige Ladezyklen (und dem Ladestrom: Bei hohen Strömen sinkt die Kapazität) altert die Batterie. Schnelladefunktion beim Smartphone reduziert Gesamtbatterieleistung um bis zu 10\%. Aktuell: Entwicklung von Steuerungen für idealen, situationsabhängigen Ladestrom
+	\end{itemize}
+	\item \textbf{Sonstige Effekte}
+	\begin{itemize}
+		\item Recovery Effect: Batterie erholt sich durch hinreichend viele Ruhephasen (Kapazität steigt wieder)
+		\item Strom reduzieren und Ruhephasen: Deutlich höhere Laufzeit der Batterie
+	\end{itemize}
+	\item \textbf{Heute: Smart Battery Systems}
+	\begin{itemize}
+		\item Zusätzliche Steuereinheit zum Beobachten der Batterie (Temperatur, Ladezyklen, etc)
+		\item Funktionen: Teile der Batterie können be-/entladen werden - je nach aktuellem Zustand; Verschieben von Energie möglich
+		\item Problem: Kein standardisiertes Betriebsystem-Interface
+	\end{itemize}
+	\item \textbf{Batterie-getriebenes, dynamisches Energiemanagement}
+	\begin{itemize}
+		\item Je höher die Taktfrequenz, desto schneller wird die Batterie entladen
+		\item Bei vielen Speicherzugriffen benötigt DRAM weniger Energie, da Speicherzellenzeilen wiederverwendet werden können \(\rightarrow\) langsamste CPU-Frequenz eventuell nachteilig für die Leistungsaufnahme
+		\item Alle Computereffekte zusammen betrachten, um ideale Policy zu bestimmen. Überlagerung von CPU-, DRAM-, Recovery-, Rate-Capacity-Effekten \(\rightarrow\) situationsabhängig
+	\end{itemize}
+	\item \textbf{Batterie-gewahres Scheduling}
+	\begin{itemize}
+		\item Open-Loop Policies
+		\begin{itemize}
+			\item Reduzieren des Stroms innerhalb eines Sliding Windows (ist der Strom verbraucht so pausiert das System)
+			\item Mehrere stromintensive Hardware-Komponenten: Vermeiden von Parallelbetrieb stromintensiver Tasks (CPU-intensive Berechnung vs. Festplattenzugriff) 
+		\end{itemize}
+		\item Closed-Loop Policies
+		\begin{itemize}
+			\item Unwichtige Prozesse dürfen nicht mehr laufen, wenn die Restkapazität unter eine festgelegte Grenze fällt
+			\item Taktfrequenz sinkt mit sinkender Restkapazität
+			\item Eingehende Anfragen werden verzögert ausgeführt \(\rightarrow\) Nutzen des Recovery Effects
+			\item Energie-gewahres Routing bei Sensornetzen
+		\end{itemize}
+	\end{itemize}
+	% TODO: EGGS14
+\end{itemize}
+
+
+
 \section{Appendix A: Begriffe}
 
 \subsection{Wärmemanagement}
