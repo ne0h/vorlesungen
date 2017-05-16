@@ -287,7 +287,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\begin{itemize}
 		\item Zusätzliche Steuereinheit zum Beobachten der Batterie (Temperatur, Ladezyklen, etc)
 		\item Funktionen: Teile der Batterie können be-/entladen werden - je nach aktuellem Zustand; Verschieben von Energie möglich
-		\item Problem: Kein standardisiertes Betriebsystem-Interface
+		\item Problem: Kein standardisiertes Betriebssystem-Interface
 	\end{itemize}
 	\item \textbf{Batterie-getriebenes, dynamisches Energiemanagement}
 	\begin{itemize}
@@ -315,6 +315,102 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 
 
+\section{Advanced Configuration and Power Interface Specification (ACPI)}
+\begin{itemize}
+	\item Standardisierte Schnittstellenspezifikation zum betriebssystemseitigen Konfigurieren und Energieverwalten des kompletten Systems oder einzelnen Komponenten (Eiinbeziehung aller Systemklassen)
+	\item \textbf{Ziele}
+	\begin{itemize}
+		\item Energiesparen: Komponenten oder das Gesamtsystem können zum Energiesparen in verschiedene Betriebsmodi mit reduzierter Energieaufnahme versetzt werden
+		\item Schnittstellenspezifikation: Enthält Verhaltensbeschreibungen für Hard-/Software-Elemente und verankert diese Verfahren im Betriebssystem \(\rightarrow\) fördert energiebewusste Betriebssysteme
+		\begin{itemize}
+			\item Informationen über Anwendungen/Hardware auf Betriebssystemebene verfügbar \(\rightarrow\) komplexe Verfahren möglich
+			\item Vereinheitlichung von Energiesparverfahren verschiedener Geräte möglich; keine Konflikte zwischen Firmware und Betriebssystem
+			\item Berücksichtigt Energie-relevante Erweiterungen eines Erstausrüsters\footnote{\textit{Original Equipment Manufacturer} (OEM)}
+			\item Gesamtsystem-umfassende Entscheidungen möglich
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Laufzeitkomponenten}
+	\begin{itemize}
+		\item ACPI System Description Tables: Schnittstellenbeschreibung zur Hardware; können Prozeduren der Pseudocode-Sprache \textit{ACPI Machine Language} (AML) enthalten
+		\item ACPI Register: Hardwarezugriff; Beschreibung in den \textit{System Description Tables}
+		\item ACPI System Firmware: Firmware, die mit der Spezifikation kompatibel ist; booten des Systems; Schnittstelle für \texttt{sleep}, \texttt{wake}, \texttt{restart}
+	\end{itemize}
+	\item \textbf{ACPI-Unterstützung von Betriebssystem-Policies}
+	\begin{itemize}
+		\item System-Power-Management: System schlafen-legen/reaktivieren
+		\item Device-Powermanagement: Verwaltung der Betriebsmodi aller Geräte
+		\item Processor-Power-Management: Energiesparmodi des Prozessors (variable Taktfrequenz)
+		\item Device-and-Processor-Performance-Management: Balance zwischen Energieverbrauch und Performance
+		\item Plug-and-Play: Hierarchische Informationsstruktur über Geräte; a-priori-Wissen, welche Geräte durch Anschluss/Entfernen eines Gerätes betroffen sind
+		\item System Events: ALlgemeiner Ereignismechanismus für Temperatur-/Powermanagement-/Plug\&Play-Informationen
+		\item Battery-Management
+		\begin{itemize}
+			\item \textit{Smart Battery Subsystem}: Verwaltung durch das Betriebssystem via \textit{embedded controller interface} (EC)
+			\item \textit{Control Method Battery}: Verwaltung über ACOI AML-Code
+		\end{itemize}
+		\item Thermal-Management mit einfachem Temperaturmodell
+	\end{itemize}
+	\item \textbf{Geräteklassen}
+	\begin{itemize}
+		\item Audio, I/O, Storage, etc.
+		\item Default-Geräteklasse mit minimaler Definition \texttt{\big\{D0 (an), D3 (aus)\big\}}
+		\item Geräte zur Datensicherung (beispielsweise Festplatten)
+		\begin{description}
+			\item{D0}: Aktiver-/Idle-Modus
+			\item{D1}: Motor aus; max. 5s um Modus zu erreichen; Stromverbrauch um \(>20\%\) reduziert (Standy-Modus)
+			\item{D3}: Sleep-Modus, Stromverbrauch \(<10\%\)
+		\end{description}
+	\end{itemize}
+	\item \textbf{Temperaturmanagement}
+	\begin{itemize}
+		\item Definition von Temperaturzonen, beispielsweise pro Gerät
+		\item Berücksichtigen der thermischen Nachbarschaft von Geräten
+		\item Modi und Temperaturlevel
+		\begin{description}
+			\item{\texttt{\_PSV}}: Passive Kühlung; Leistungsverlust um Temperatur zu senken
+			\item{\texttt{\_ACx}}: Aktive Kühlung; höher System-/Kühlleistung; meist Geräuschentwicklung
+			\item{\texttt{\_HOT}}: System wird in Schlafzustand \texttt{S4} versetzt
+			\item{\texttt{\_CRT}}: Sofortiges Herunterfahren des Systems
+		\end{description}
+		\item Erkennen von Temperaturänderungen: Pollen; "`intelligente"' Hardware
+	\end{itemize}
+	\item \textbf{Schnittstellen zur Hardware}
+	\begin{itemize}
+		\item Bottom-Sicht: Powermanagement-Eigenschaften und -Funktionalität der Hardware
+		\item ACPI Source Language (ASL)
+		\begin{itemize}
+			\item Definition von ACPI-Objekten und Steuerroutinen
+			\item Compiler erzeugt daraus ACPI-Machine Language (AML)
+			\begin{itemize}
+				\item Kompakte Interpretersprache zur Anstrahierung der Hardware von der Energieverwaltung des Systems
+				\item Code zur Geräteverwaltung unabhängig von der Betriebssystem-Implementierung
+				\item ACPI-kompatible Betriebssysteme müssen AML unterstützen
+			\end{itemize}
+			\item Beispiel\\\\
+				\begin{minipage}{\textwidth}
+				Vertex-Shader
+				\begin{lstlisting}[frame=single,numbers=left,mathescape]
+Method(_ON) {
+	Store (One, GIO.IDEP)		// assert power
+	Sleep (10)			// wait 10ms
+	Store (One, GIO.IDER)		// de-assert reset
+	Stall (10)			// wait 10us
+	Store (Zero, GIO.IDEI)		// de-assert isolation
+}
+				\end{lstlisting}
+				\end{minipage}
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Implementierung: ACPI Component Architecture (ACPI-CA)}
+	\begin{itemize}
+		\item ASL-Compiler und AML-Disassembler von Intel
+		\item Implementierung einer AML-Interpreters für jedes Betriebssystem
+		\item Infrastruktur um ACPI-Tabellen zu lokalisieren und Informationen über Ressourcenverbrauch zu verwalten
+	\end{itemize}
+\end{itemize}
+
+
+
 \section{Appendix A: Begriffe}
 
 \subsection{Wärmemanagement}
@@ -323,4 +419,37 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\item Thermal Design Power \(P_{tdp}\): Meist etwas unterdimensioniert
 	\item Aktive Leistung \(P_{active}\): Meist beschönigt bzw. unter unrealistischen Bedingungen gemessen
 	\item Leerlaufleistung \(P_{idle}\): Häufig als Referenz genommen, meist realistisch. Temperatur muss beachtet werden
+\end{itemize}
+
+
+\subsection{ACPI-Zustände}
+\begin{itemize}
+	\item \textbf{Globale Zustände}
+	\begin{description}
+		\item{G0}: Working
+		\item{G1}: Sleeping; Software wird nicht ausgeführt
+		\item{G2, S5}: Soft-Off, Neustart notwendig
+		\item{G3}: Mechanical-Off
+	\end{description}
+	\item \textbf{Ruhezustände}
+	\begin{description}
+		\item{S0}: System aktiv, kein Ruhezustand
+		\item{S1}: Prozessor inaktiv, System-Kontext vollständig erhalten
+		\item{S2}: Prozessor-/Cache-Kontext geht verloren
+		\item{S3}: Nur Speicher bleibt erhalten, restlicher Systemkontext verloren
+		\item{S4}: Alle Geräte deaktiviert, Plattform-Kontext erhalten
+		\item{S5}: Soft-Off, kein Kontext erhalten, Neustart notwendig
+	\end{description}
+	\item \textbf{Prozessorzustände}
+	\begin{description}
+		\item{C0}: Verschiedene Performance-Zustände, realisiert durch Thorttling (beispielsweise \texttt{STPCLK}: kurzzeitiges Ausschalten des Prozessor-Taktgebers)
+		\item{C1}: Prozessor inaktiv (\texttt{HALT}-Instruktion)
+		\item{C2, C3}: Verschiedene weitere Ruhezustände (optional)
+		\item{C4, ... , \(C_n\)}: Weitere optionale Ruhezustände
+	\end{description}
+	\item \textbf{Gerätezustände}
+	\begin{description}
+		\item{D0}: An
+		\item{D1, ... , D3}: Aus
+	\end{description}
 \end{itemize}
