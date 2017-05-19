@@ -411,6 +411,39 @@ Method(_ON) {
 
 
 
+\section{Powermanagement bei Festplatten}
+
+\subsection{Charakterisierung von Festplattenenergie}
+\begin{itemize}
+	\item \textbf{Betriebsmodi}
+	\begin{itemize}
+		\item Mehrere Betriebsmodi mit niedriger Energieaufnahme (durch Zugriffverzögerung erkauft)
+		\item Typische Modi: \texttt{Active} (ca. \(2-5W\)); \texttt{Active Idle} (Köpfe nahe der Mitte, Serversteuerung aus: ca. \(<1W\)); \texttt{Low-Power Idle} (Köpfe entladen und geparkt: ca. \(<0,7W)\); \texttt{Standby} (Laufwerksmotor aus: ca. \(0,25W\)); \texttt{Sleep} (fast gesamte Elektronik aus: ca. \(0,1W\))
+		\item Moduswechsel verursacht Kosten: Parken/Positionieren der Köpfe; Stoppen und Wiederanfahren des Laufwerksmotors (Wiederanfahren in den Beispielen etwa \(2-5W\) für mehrere Sekunden)
+	\end{itemize}
+	\item Break-even-Zeit: Zeitspanne zwischen zwei Zugriffen (\textit{Idle-Zeit}); ein Moduswechsel führt nur zu Energieeinsparung, wenn die Energie, die zum Wechseln benötigt wird, die Energieeinsparung im Stromsparmodus nicht übersteigt \(\rightarrow\) Zeitspanne im Stromsparmodus entscheident
+	\item \textbf{Weitere Eigenschaften}
+	\begin{itemize}
+		\item Bremsen und Wiederanfahren reduziert die Lebensdauer (Laufwerksversagen) \(\rightarrow\) Abwägen zwischen Energiesparen/Verzögerungsvermeidung/Lebenszeit notwendig
+		\item Alternativ: Anpassen der Rotationsgeschwindigkeit denkbar
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Spin-Down-Verfahren}
+\begin{itemize}
+	\item Ausnutzen der verschiedenen Stromsparmodi im laufenden Betrieb mit selbständigem Umschalten zwischen den Modi (Firmware oder Betriebssystem)
+	\item \textbf{Optimale Verfahren (offline)}
+	\begin{itemize}
+		\item Benötigit Zeitpunkte zukünftiger Zugriffe (sinnvoll bei Systemen mit statischen Ablaufplänen)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Energiebewusste Dateisysteme}
+
+
+
 \section{Appendix A: Begriffe}
 
 \subsection{Wärmemanagement}
