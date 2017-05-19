@@ -8,7 +8,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\item CPUs werden i.d.R. nicht gleichmäßig heiß, nutzungsabhängig entstehen verschieden heiße Teilbereiche
 	\item \textbf{Motivation}
 	\begin{itemize}
-		\item Erhöhung der Lebensdauer der Akkus durch Effizienzverbesserung der Verbraucher: CPU-Scaling, Speicherenergiemanagement, I/O-Energiemanagement, Display-Energiemanagement, Ausschalten von Festplatten
+		\item Erhöhung der Lebensdauer der Akkus durch Effizienzverbesserung der Verbraucher: CPU-Scaling, Speicherenergiemanagement, \texttt{I/O}-Energiemanagement, Display-Energiemanagement, Ausschalten von Festplatten
 		\item Task-spezifisches Powermanagement
 		\item Einhalten eines Energieplans
 		\item Vermeiden von Energiespitzen, da bestimmte Energiequellen ein definiertes Maximum liefern
@@ -352,7 +352,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\end{itemize}
 	\item \textbf{Geräteklassen}
 	\begin{itemize}
-		\item Audio, I/O, Storage, etc.
+		\item Audio, \texttt{I/O}, Storage, etc.
 		\item Default-Geräteklasse mit minimaler Definition \texttt{\big\{D0 (an), D3 (aus)\big\}}
 		\item Geräte zur Datensicherung (beispielsweise Festplatten)
 		\begin{description}
@@ -435,12 +435,59 @@ Method(_ON) {
 	\item Ausnutzen der verschiedenen Stromsparmodi im laufenden Betrieb mit selbständigem Umschalten zwischen den Modi (Firmware oder Betriebssystem)
 	\item \textbf{Optimale Verfahren (offline)}
 	\begin{itemize}
-		\item Benötigit Zeitpunkte zukünftiger Zugriffe (sinnvoll bei Systemen mit statischen Ablaufplänen)
+		\item Benötigt Zeitpunkte zukünftiger Zugriffe (sinnvoll bei Systemen mit statischen Ablaufplänen)
+		\item \textit{best fixed time-out}: Berechnet die Wartezeit mit der größten Energieeinsparung für alle Zugriffe; optimales, nicht-adaptives Verfahren
+		\item \textit{oracle algorithm}: Sofort herunterfahren, wenn Idle-Zeit größer als break-even-Zeit mit rechtzeitigem Wiederanfahren; optimales, adaptives Verfahren mit minimalem Energieverbrauch
+	\end{itemize}
+	\item Verfahren mit fester Wartezeit: Festplatte wechselt nach vorgegebener Zeit in den Standy-Modus; unnötiger Energieverbrauch bis Wartezeit abgelaufen
+	\item \textbf{Konkurrenzanalyse}
+	\begin{itemize}
+		\item Um wieviel ist der online-Algorithmus höchstens schlechter als der offline-Algorithmus? (worst-case Betrachtung)
+		\item Theoretische Untergrenze: \(\frac{e}{e-1} \approx 1,6\)
+		\item Einfacher, adaptiver Algorithmus (3-kompetitiv) trifft Entscheidung basierend auf den letzten beiden Anfragezeitpunkten; in der Praxis deutlich bessere Ergebnisse als nicht-adaptive Verfahren
+	\end{itemize}
+	\item \textbf{Adaptives "`Experten"'-Verfahren}
+	\begin{itemize}
+		\item Eingabe: Verhersagen einer beliebigen Menge von Algorithmen ("`Experten"'), die gewichtet kombiniert werden
+		\item Gewichte werden pro Runde neu berechnet; Algorithmen mit guter (schlechter) Empfehlung werden aufgewertet (abgewertet)
+	\end{itemize}
+	\item \textbf{Vorhersageverfahren}
+	\begin{itemize}
+		\item Idee: Vorhersagen anhand bisheriger Idle-Zeiten; Vorteil: kein unnötiges Warten im Idle-Modus
+		\item Verschiedene Verfahren möglich, beispielsweise \textit{L-shape policy}, \textit{Adaptive Learning Tree}, \textit{Exponential Average}
+	\end{itemize}
+	\item \textbf{Stochastische Verfahren}
+	\begin{itemize}
+		\item Verwendugn stochastischer Prozesse zur Modellierung von Ankunftszeiten/Zeitspannen/Moduswechselwahrscheinlichkeiten/etc.
+		\item Berechnung beispielsweise mittels (stationären) Markow-Prozessen; Berechnung allerdings aufwendig und in der Praxis zu ineffizient
 	\end{itemize}
 \end{itemize}
 
 
 \subsection{Energiebewusste Dateisysteme}
+\begin{itemize}
+	\item Zugriffszeit: Seek-Time (Köpfe zum Zylinder bewegen) + Rotationslatenz
+	\item \textbf{Verfahren zur Performancesteigerung}
+	\begin{itemize}
+		\item Zero-latency Access: Firmare liest Sektoren in beliebiger Reihenfolge in internen Puffer \(\rightarrow\) keine Verzögerung durch Rotationslatenz
+		\item Track-aware Access: Vermeidung von Spurwechseln; möglich bei Dateisystemen, die mit Sektoren variabler Länge arbeiten
+		\item Request-Scheduling: Umordnen von Zugriffen; realisiert durch Firmware oder Betriebssystem
+		\item Caching: Verzögertes Schreiben zum Glätten von Schreibzugriffen; Nachteil: Ggf. erst Daten, die älter als \(35s\) (Linux) sind, auf der Festplatte
+		\item Prefetching: Weiterlesen bei sequentiellem Datenzugriff
+		\item File Prediction: Anwendung beispielsweise vom Laden aller Daten des aktuellen Verzeichnisses
+	\end{itemize}
+	\item \textbf{Cooperative \texttt{I/O}}
+	\begin{itemize}
+		\item Verzögerbare und unterbrechbare \texttt{I/O}-Operationen: Operation wird erst ausgeführt, wenn die Festplatte im aktiven Modus ist (ggf. mit Timeout, nach dem die Festplatte zwangsweise aufgeweckt wird)
+		\item Erlaubt (zeitliches) Zusammenfassen von Laufwerkszugriffen unter Einbindung aller Abstraktionsschichten (Hardware \(\rightarrow\) Anwendung)
+		\item Implementierung
+		\begin{enumerate}
+			\item Wechsel in den Standy-Modus bei Inaktivität
+			\item Energiebewusstes Caching-Verfahren zum Zusammenfassen von Laufwerkszugriffen
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{Anwendungsunterstützung}
+\end{itemize}
 
 
 
