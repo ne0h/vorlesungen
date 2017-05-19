@@ -252,6 +252,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\item Byteadressierbar mit gleichem Interface/Verhalten wie Flash; kann bereits vergleichsweise günstig produziert werden \(\rightarrow\) wird Flashspeicher irgendwann ablösen
 		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit allerdings 500x so schnell
 		\item 100 Millitonen Schreibzyklen mit \(>300 Jahren\) Haltungszeit möglich
+		\item Stapelbar für hohe Integrationsdichte
 	\end{itemize}
 \end{itemize}
 
@@ -483,10 +484,33 @@ Method(_ON) {
 		\item Implementierung
 		\begin{enumerate}
 			\item Wechsel in den Standy-Modus bei Inaktivität
-			\item Energiebewusstes Caching-Verfahren zum Zusammenfassen von Laufwerkszugriffen
+			\item Energiebewusstes Caching-Verfahren zum Zusammenfassen von Laufwerkszugriffen (\textit{Request Scheduling})
 		\end{enumerate}
 	\end{itemize}
 	\item \textbf{Anwendungsunterstützung}
+	\begin{itemize}
+		\item Source-Code-Transformationen um Idle-Zeiten zu verlängern
+		\begin{itemize}
+			\item Verfügbaren Speicher abfragen und möglichst viel Speicher anfordern
+			\item Zugriff gruppieren (\textit{Request-Clustering})
+			\item Daten im Hauptspeicher zwischenspeichern (\textit{buffered I/O})
+			\item Bei Streaming nur begrenzt möglich
+		\end{itemize}
+		\item Betriebssystem über die Länge der folgenden Idle-Zeit informieren
+		\item Automatisches Optimieren durch den Compiler
+		\item Optimierungen im Betriebssystem
+		\begin{itemize}
+			\item Anfragen mit flexiblen oder periodischen Timern, beispielsweise für Streaming
+			\item \texttt{SYSCALLS} mit Timern
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Disk Energy Accounting}
+	\begin{itemize}
+		\item Ziel: Kostenerfassung zur Laufzeit; Rechnungsstellung
+		\item Probleme dabei: Asynchrone Zugriffe; Abrechnung von Moduswechsel; Abrechnung von Zugriffen, die im Cache landen
+		\item Einfache Ansätze: Mitzählen von Zugriffen; Kosten für einen Moduswechsel werden nicht berechnet oder dem unmittelbaren Verursacher in Rechnung gestellt (ggf. ungerecht)
+		\item Kosten für einen Moduswechsel können auf alle Prozesse verteilt werden, die innerhalb des Zustands auf die Festplatte zugreifen
+	\end{itemize}
 \end{itemize}
 
 
