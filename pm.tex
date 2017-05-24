@@ -80,12 +80,13 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\item Nicht sofort spürbar (Messung außerhalb der Funktionalen Einheiten, langsamer Zugriff am Temperatursensoren) \(\rightarrow\) frühzeitige Reaktion notwendig
 		\item Strategien
 		\begin{itemize}
-			\item HLT-Cylces: Anhalten der CPU bis zum nächsten Interrupt (typischerweise \(1-10s\), spezielle Instruktion); schnelle Reaktions; bei vielen Interrupt keine präzise Steuerung möglich
-			\item Dynamic Clock Modulation: Reduzierung der internen Taktfrequenz durch Überlagerung des normalen Takts durch zweiten, langsameren Takt
-			\item Instruction decode throttling: Drosselung der weitergeleiteten Instruktion aus dem L1-Instruction-Cache in den Instruction-Buffer; schnelle Reaktionszeit; einfach in Hardware zu implementieren
-			\item Dynamic Frequency and Voltage Scaling: \(P=C \cdot V_{cc}^2 \cdot F\) \(\rightarrow\) Reduzierung von Spannung oder Frequenz führt zu niedrigerer Energieaufnahme
+			\item \texttt{HLT-Cycles}: Anhalten der CPU bis zum nächsten Interrupt (typischerweise \(1-10s\), spezielle Instruktion); schnelle Reaktions; bei vielen Interrupt keine präzise Steuerung möglich
+			\item \textit{Dynamic Clock Modulation}: Reduzierung der internen Taktfrequenz durch Überlagerung des normalen Takts durch zweiten, langsameren Takt
+			\item \textit{Instruction Decode Throttling}: Drosselung der weitergeleiteten Instruktion aus dem L1-Instruction-Cache in den Instruction-Buffer; schnelle Reaktionszeit; einfach in Hardware zu implementieren
+			\item \textit{Dynamic Frequency and Voltage Scaling}: \(P=C \cdot V_{cc}^2 \cdot f\) \(\rightarrow\) Reduzierung von Spannung oder Frequenz führt zu niedrigerer Energieaufnahme
 		\end{itemize}
 	\end{itemize}
+	\item \textit{Thermal Balancing}: Rechenintensive Tasks werden mit weniger-rechenintensiven Tasks kombiniert \(\rightarrow\) weniger Wäremeentwicklung \(\rightarrow\) weniger Kühlung/Drosselung notwendig 
 \end{itemize}
 
 
