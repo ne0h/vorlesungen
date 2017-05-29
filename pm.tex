@@ -103,25 +103,29 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\begin{description}
 		\item{Policy \#1: PAST}
 		\begin{itemize}
-			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf der vergangenen Auslastung
+			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf der bisherigen Auslastung: Algorithmus betrachtet ein Sliding Window, bestehend aus \texttt{run\_cycles}, \texttt{idle\_cycles} und \texttt{excess\_cycles} (Zeit hat nicht mehr zum Ausführen dieser Cycles gereicht)
+			\item \texttt{PAST} geht davon aus, dass die bisherige Auslastung der zukünftigen entspricht \(\rightarrow\) Interval wird als \textit{busy} oder \textit{idle} deklariert und die Taktfrequenz entsprechend angepasst
 			\item Soll die Anzahl der Geschwindigkeitswechsel verringern
 			\item Schlechte Leistung in vielen realistischen Scenarios (beispielsweise bursty Tasks)
 		\end{itemize}
 		\item{Policy \#2: Vertigo}
 		\begin{itemize}
+			\item Powermanagement-Erweiterung in Linux; beinhaltet verschiedene Algorithmen, die koordiniert zusammenarbeiten
 			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf Event-/Task-Einstufung
-			\item Aufbau des Algorithmus
+			\item Algorithmen
 			\begin{itemize}
+				\item Höhere Algorithmen können die Entscheidungen niedrigerer Algorithmen überschreiben
 				\item Unten: Algorithmische Bestimmung der zukünftigen Auslastung, basierend auf der vergangenen Auslastung. Pro Task werden Auslastung und Auslastungfenster festgelegt
-				\item Mittig: Anwendungsabhängige Schicht zur Anmeldung von Leistungsbedarf (müssen die Anwendungen unterstützen)
-				\item Oben: Automatische Ermittlung des Leistungsbedarfs interaktiver Anwendungen
+				\item Mittig: Anwendungsabhängige Schicht; Anwendungen können Informationen zu ihrem Leistungsbedarf angeben (muss von den Anwendungen unterstützt werden)
+				\item Oben: Automatische Ermittlung des Leistungsbedarfs interaktiver Anwendungen; stellt u.a. die User-Experience sicher (es wird geprüft, ob Anwendungen verzögerungsfrei ausgeführt werden)
 			\end{itemize}
 		\end{itemize}
 		\item{Policy \#3: Process Cruise Control}
 		\begin{itemize}
-			\item Prinzip: Die Häufigkeit mit der Ereignisse auftreten hängen von einem spezifischen Leitungs- und Energieeffizienzprofil ab \(\rightarrow\) Ergeignis-basierte Charakterisierung: Sinkende Ereignisrate als Indikator für Durchsatzverlust
+			\item Threadspezifische Energieanalyse auf Basis von Ereigniszählern zur Bestimmung der idealen Taktfrequenz
+			\item Prinzip: Die Häufigkeit mit der Ereignisse auftreten hängen von einem spezifischen Leitungs- und Energieeffizienzprofil pro Thread ab \(\rightarrow\) Ergeignis-basierte Charakterisierung: Sinkende Speicheranforderungsrate/Ereignisrate als Indikatoren für Leistungsverlust
 			\item Herausforderungen: Auswahl der geeigneten Ereignistypen; Finden des Zusammenhangs [Ereignisrate \(\leftrightarrow\) Energiebedarf]
-			\item Limitierungen des Models: (Meist) zu geringe Anzahl an Ereigniszählern; Auswahl von Ereignissen mit Fokus auf Leistung (nicht auf Energy Profiling)
+			\item Limitierungen des Models: (Meist) zu geringe Anzahl an Ereigniszählern; Auswahl von Ereignissen mit Fokus auf Leistung (nicht auf Energy Profiling) \(\rightarrow\) gut geeignet für best-effort Abschätzung, allerdings ungeeignet zum Einhalten quantitativer Garantien
 		\end{itemize}
 	\end{description}
 \end{itemize}
@@ -153,14 +157,14 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 \subsection{DRAM Powermanagement}
 \begin{itemize}
 	\item Setup: Aufteilung des Speichers in Module; keine Speicherverschränkung\footnote{Aufeinander folgende Speicherworte werden zyklisch in aufeinander folgenden Speicherbänken abgespeichert. (Wikipedia)}; individuell angepasste Energielevel pro Modul
-	\item Festlegen des Energieniveaus
+	\item \textbf{Festlegen des Energieniveaus}
 	\begin{itemize}
 		\item Wird automatisch vom Speichercontroller festgelegt: Zustandswechsel (beispielsweise von \texttt{Performancemodus} zu \texttt{Schlafmodus}), wenn innerhalb einer definierten Zeitspanne keine Anfragen kommen (\textit{Gaptime})
 		\item Herausforderung: \textit{Gaptime} gut wählen, da sonst viel Zeit/Energie für Zustandswechsel verbraucht wird. Abschätzung beispielsweise über Performancecounter (\(t_{gap}=\frac{t_{cycle} \cdot instructions}{cache~misses}\)); allerdings stark abhängig vom Referenzmuster
 		\item "`Intelligenter Speicherkontroller"'
 		\begin{itemize}
 			\item Kennt Zugriffsmuster/Dringlichkeiten/Prioritäten und verteilt die Daten entsprechend (ausnutzen von Lokalität)
-			\item Kann zur Benachteiligung von Anfragen/Daten speichern. Gegenmaßnahme beispielsweise: Echtzeitrelevante Daten priorisieren. Idealerweise taggen von allen physischen Seiten (gap distribution, priorities, realtime, ...)
+			\item Kann zur Benachteiligung von Anfragen/Daten führen. Gegenmaßnahme beispielsweise: Echtzeitrelevante Daten priorisieren, idealerweise werden alle physischen Seiten entsprechend getaggt (\texttt{gap distribution}, \texttt{priorities}, \texttt{realtime}, ...)
 		\end{itemize}
 	\end{itemize}
 	\item Allgemeiner Trend: Anforderungen an Speichercontroller wachsen (Fehlererkennung/-maskierung, variable Geschwindigkeiten, etc.)
@@ -176,34 +180,39 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 			\item Ziel: Erhöhen der Gaptime möglichst vieler Speichermodule
 			\item Policy
 			\begin{itemize}
-				\item Aktives Working Set eines Prozesses wird in möglichst wenigen Modulen allokiert. Beim Kontextwechsel werden nicht-verwendete Module deaktiviert
+				\item Aktives \textit{Working Set} eines Prozesses wird innerhalb möglichst weniger Modulen allokiert. Beim Kontextwechsel werden nicht-verwendete Module deaktiviert
 				\item Um Latenz zu sparen werden die verwendeten Module direkt beim Kontextwechsel aktiviert
-				\item Erweitwerung zur weiteren Reduzierung der Aktivierungslatenz: Aktiviere zusätzlich die Module des "`zweitbesten"' Prozesses (in Abhängigkeit der Scheduling-Strategie), da dieser "`wahrscheinlich"' direkt danach ausgeführt werden wird
+				\item Erweiterung zur weiteren Reduzierung der Aktivierungslatenz: Aktiviere zusätzlich die Module des "`zweitbesten"' Prozesses (in Abhängigkeit der Scheduling-Strategie), da dieser "`wahrscheinlich"' direkt danach ausgeführt werden wird
 			\end{itemize}
-			\item Sequential First-Touch Allocation: Pages werden nach Möglichkeit in einem Modul allokiert, das schon Daten hält. Kann verteilt-allokierten Shared Libraries führen
+			\item Sequential First-Touch Allocation: Pages werden nach Möglichkeit in einem Modul allokiert, das schon Daten hält. Kann zu verteilt-allokierten Shared Libraries führen; problematisch bei Nebenläufigkeit
 			\item Verbesserung: DLL Aggregation. Dediziertes Modul für gemeinsam genutzte Objekte (Shared Memory, Shared Libraries, Pipes, etc.)
 			\item Evaluiert: Beide Allokationsstrategien in der Praxis unbrauchbar
 		\end{itemize}
 		\item Speichermigrationsstrategien
 		\begin{itemize}
 			\item Ziel: Erhöhen der Gaptime möglichst vieler Speichermodule
-			\item Idee: Erlaube eingeschränkt das Verschieben von allokierten Pages; Zusammenfassen des Working Set in möglichst wenig Modulen
-			\item Problem: Finden der Zugriffsfrequenzen
-			\item Lösung: Offline Analyse bei Embedded Systems; sonst kurze Sample-Phase zum Auswerten der Exceptions, die der Lastlevelcache wirft, wenn er voll ist \(\rightarrow\) ergibt welche Seiten wie oft referenziert worden sind \(\rightarrow\) extem hoher Aufwand
-			\item Hoher Migrationsaufwand \(\rightarrow\) lohnt sich nur bei langlebigen Tasks
+			\item Idee: Erlaube eingeschränkt das Verschieben von allokierten Pages, beispielsweise zum Zusammenfassen von \textit{Working Sets} in möglichst wenigen Modulen
+			\item Problem: Finden von Zugriffsmustern
+			\item Lösung: Offline Analyse bei Embedded Systems; sonst kurze Sample-Phase beim Programmstart zum Auswerten der Exceptions, die der Lastlevelcache wirft, wenn er voll ist \(\rightarrow\) ergibt welche Seiten wie oft referenziert worden sind \(\rightarrow\) extem hoher Aufwand
+			\item Hoher Overhead durch Kopieren von Pages \(\rightarrow\) lohnt sich nur bei langlebigen Tasks
 			\item Shared Pages generelles Problem bei Migration
 			\item Anwendung: Energiegewahre Garbage Collection, da diesem die Objektreferenzen bekannt sind. GC kann selbstständig Objekte verschieben
 		\end{itemize}
 		\item Nachteile bei Page-Migrationen durch das Betriebssystem
 		\begin{itemize}
-			\item MMU des Prozessors: TLB-Latenz muss zur Cache-Latenz passen; TLBs benötigen viel Energie (zusätzlich noch mehr bei Miss durch Page-Table-Walk); Hardwarearchitektur der Caches nicht zum Speichern zusätzlicher Informationen (Referenzzähler, \#Einträge, etc.) geeignet
-			\item Prozessor/DMA-Controller muss zusätzliche Transfers durchführen
-			\item Komplexe Verwaltung muss vom Betriebssystem bewältigt werden können (dieses steuert die MMU)
+			\item Hardwarearchitektur des TLB nicht zum Speichern zusätzlicher Informationen (Referenzzähler, \#Einträge, etc.) geeignet
+			\item MMU des Prozessors: TLB-Latenz muss zur Cache-Latenz passen; TLBs benötigen viel Energie (zusätzlich noch mehr bei Miss durch Page-Table-Walk)
+			\item Kopieraufwand durch Verschieben von Pages: Prozessor/DMA-Controller muss zusätzliche Transfers durchführen
+			\item Betriebssystem muss die MMU verwalten
+			\begin{itemize}
+				\item Energiegewahre MMU und energiegewahre Anwendungen interferieren
+				\item Betriebssystem muss Eigenschaften von energiegewahrem Speicher kennen/berücksichtigen
+			\end{itemize}
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{MMC: Trennung von Speicherung und Zuordnung (Hardware-seitiger Lösungsansatz)}
+	\item \textbf{Hardware-seitiger Lösungsansatz: Trennung von Speicherung und Übersetzung (MMC)}
 	\begin{itemize}
-		\item MMC-TLB: Ergänzt Page-Adress um Anzahl der Lese-/Schreibzugriffe; konfigurierbar (Anzahl Einträge, Assoziativität, etc.)
+		\item MMC-TLB: Ergänzt Page-Adresse um Anzahl der Lese-/Schreibzugriffe; konfigurierbar (Anzahl Einträge, Assoziativität, etc.)
 		\item Energiegewahre MMU mit dedizierter Speicherverschiebeeinheit
 		\item Zusätzliche Funktionen
 		\begin{itemize}
@@ -212,14 +221,22 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 			\item Speicher-Controller unterstützt Hardware-Support für Speicherkomprimierung
 		\end{itemize}
 	\end{itemize}
+	\item \textbf{Memory Access Profiler}
+	\begin{itemize}
+		\item Diplomarbeit von 2009\footnote{\url{https://os.itec.kit.edu/downloads/sa_2009_mueller-sergej_memory-access-profiles.pdf}}
+		\item Memory Profiler schlägt dem Betriebssystem auf Anfrage verschiedene, gut geeignete Migrations-Kandidaten vor
+		\item Verschiedene Strategien programmierbar (beispielsweise \textit{Least Recently Used})
+	\end{itemize}
 \end{itemize}
 
 
-\subsection{Speicherkomprimierung} % TODO
+\subsection{Speicherkomprimierung}
 \begin{itemize}
+	\item Viele Möglichkeiten zur Speicherkomprimierung: Wiederholtes Auftreten von Mustern bei Integers, Branches, Datenstrukturen (beispielsweise \texttt{Structs})
 	\item Hardware-unterstützte Komprimierung
 	\begin{itemize}
 		\item Dedizierte Hardware zum feingranularen (de-)komprimieren von Daten und Instruktionen
+		\item Problem: Finden des Einsprungpunkts bei komprimiertem Speicher
 		\item Möglichkeiten von Energiesparen: Weniger Speicherzugriffe; weniger Anfragen auf dem Speicherbus; geringere Cache-/Speichergröße notwendig
 	\end{itemize}
 	\item Software-seitige Komprimierung
@@ -236,15 +253,15 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\item \textbf{Ferroelectric RAM (FRAM)}
 	\begin{itemize}
 		\item Ferroelektrizität: Beschreibt das Phänomen, dass Stoffe mit einem elektrischen Dipolmoment durch das Anlegen eines äußeren elektrischen Feldes die Richtung der spontanen Polarisation ändern\footnote{\url{https://de.wikipedia.org/wiki/Ferroelektrikum}}
-		\item Latenz beim Lesen typischerweise \(20-100ns\), hält die Daten allerdigns extrem lange (\(>10 Jahre\)); begrenze Anzahl Schreibzyklen (1012-1015)
+		\item Latenz beim Lesen typischerweise \(20-100ns\), hält die Daten allerdigns extrem lange (\(>10~Jahre\)); begrenze Anzahl Schreibzyklen (1012-1015)
 		\item Sehr teuer (und wird auch teuer bleiben) \(\rightarrow\) wird nur für Spezialanwendungen mit langer Vorhaltezeit verwendet
 	\end{itemize}
 	\item \textbf{Spin Transfer Torque Memory (SPRAM)}
 	\begin{itemize}
-		\item Widerstand ändert sich in Abhängigkeit der Magnetorientierung
+		\item Widerstand ändert sich in Abhängigkeit von Magnetorientierung
 		\item Kann wie normale Schaltlogik produziert werden (weil CMOS) \(\rightarrow\) kann direkt in Chips integriert werden. Beispielsweise zwischen Funktionale Einheiten, da der Speicher nicht so heiß wird wie die Funktionalen Einheiten selbst
 		\item Fertigung gut bekannt/erforscht sowie gute Leistungscharakteristik: Vmtl bald mehr als ein Bit pro Zelle möglich (multibit), wird eventuell DRAM ersetzen
-		\item Sehr geringe Energiemenge zum Schreiben notwendig (\(0,06pJ/Bit\)); Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10 Jahre\))
+		\item Sehr geringe Energiemenge zum Schreiben notwendig (\(0,06\frac{pJ}{Bit}\)); Latenz beim Lesen \(< 50ns\); unbegrenzte Anzahl Schreibzugriffe; extrem lange Haltezeit der Daten (\(>10~Jahre\))
 		\item Stapelbar \(\rightarrow\) hohe Dichte/Bandbreite möglich
 	\end{itemize}
 	\item \textbf{Phase Change Memory (PRAM)}
@@ -252,7 +269,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\item Kristalin mit unterschiedlicher Widerstand durch Erhitzung und Abkühlung; Neuschreiben durch starkes Erhitzen
 		\item Byteadressierbar mit gleichem Interface/Verhalten wie Flash; kann bereits vergleichsweise günstig produziert werden \(\rightarrow\) wird Flashspeicher irgendwann ablösen
 		\item Leistung: Schreibenergie vergleichbar mit Flashspeicher, Schreibgeschwindigkeit allerdings 500x so schnell
-		\item 100 Millitonen Schreibzyklen mit \(>300 Jahren\) Haltungszeit möglich
+		\item 100 Millionen Schreibzyklen mit \(>300~Jahren\) Haltezeit möglich
 		\item Stapelbar für hohe Integrationsdichte
 	\end{itemize}
 \end{itemize}
@@ -280,16 +297,13 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\item Temperatureffekt: Energiemenge abhängig von Außentemperatur. Meist ideal: 30-40 Grad Celsius
 		\item Capacity Fading: Durch häufige Ladezyklen (und dem Ladestrom: Bei hohen Strömen sinkt die Kapazität) altert die Batterie. Schnelladefunktion beim Smartphone reduziert Gesamtbatterieleistung um bis zu 10\%. Aktuell: Entwicklung von Steuerungen für idealen, situationsabhängigen Ladestrom
 	\end{itemize}
-	\item \textbf{Sonstige Effekte}
-	\begin{itemize}
-		\item Recovery Effect: Batterie erholt sich durch hinreichend viele Ruhephasen (Kapazität steigt wieder)
-		\item Strom reduzieren und Ruhephasen: Deutlich höhere Laufzeit der Batterie
-	\end{itemize}
+	\item Recovery Effect: Batterie erholt sich durch hinreichend viele Ruhephasen (Kapazität steigt wieder)
 	\item \textbf{Heute: Smart Battery Systems}
 	\begin{itemize}
-		\item Zusätzliche Steuereinheit zum Beobachten der Batterie (Temperatur, Ladezyklen, etc)
+		\item In \texttt{ACPI} spezifiziert
+		\item Zusätzliche Steuereinheit zum Beobachten der Batterie (Temperatur, Ladezyklen, etc.)
 		\item Funktionen: Teile der Batterie können be-/entladen werden - je nach aktuellem Zustand; Verschieben von Energie möglich
-		\item Problem: Kein standardisiertes Betriebssystem-Interface
+		\item Problem: Eventuell kein standardisiertes Betriebssystem-Interface
 	\end{itemize}
 	\item \textbf{Batterie-getriebenes, dynamisches Energiemanagement}
 	\begin{itemize}
@@ -301,7 +315,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\begin{itemize}
 		\item Open-Loop Policies
 		\begin{itemize}
-			\item Reduzieren des Stroms innerhalb eines Sliding Windows (ist der Strom verbraucht so pausiert das System)
+			\item Stromaufnahme innerhalb eines Sliding Window begrenzt (ist der Strom verbraucht so pausiert das System)
 			\item Mehrere stromintensive Hardware-Komponenten: Vermeiden von Parallelbetrieb stromintensiver Tasks (CPU-intensive Berechnung vs. Festplattenzugriff) 
 		\end{itemize}
 		\item Closed-Loop Policies
@@ -319,7 +333,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 
 \section{Advanced Configuration and Power Interface Specification (ACPI)}
 \begin{itemize}
-	\item Standardisierte Schnittstellenspezifikation zum betriebssystemseitigen Konfigurieren und Energieverwalten des kompletten Systems oder einzelnen Komponenten (Eiinbeziehung aller Systemklassen)
+	\item Standardisierte Schnittstellenspezifikation zum betriebssystemseitigen Konfigurieren und Energieverwalten des kompletten Systems oder einzelnen Komponenten (Einbeziehung aller Systemklassen)
 	\item \textbf{Ziele}
 	\begin{itemize}
 		\item Energiesparen: Komponenten oder das Gesamtsystem können zum Energiesparen in verschiedene Betriebsmodi mit reduzierter Energieaufnahme versetzt werden
@@ -344,11 +358,11 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\item Processor-Power-Management: Energiesparmodi des Prozessors (variable Taktfrequenz)
 		\item Device-and-Processor-Performance-Management: Balance zwischen Energieverbrauch und Performance
 		\item Plug-and-Play: Hierarchische Informationsstruktur über Geräte; a-priori-Wissen, welche Geräte durch Anschluss/Entfernen eines Gerätes betroffen sind
-		\item System Events: ALlgemeiner Ereignismechanismus für Temperatur-/Powermanagement-/Plug\&Play-Informationen
+		\item System Events: Allgemeiner Ereignismechanismus für Temperatur-/Powermanagement-/Plug\&Play-Informationen
 		\item Battery-Management
 		\begin{itemize}
 			\item \textit{Smart Battery Subsystem}: Verwaltung durch das Betriebssystem via \textit{embedded controller interface} (EC)
-			\item \textit{Control Method Battery}: Verwaltung über ACOI AML-Code
+			\item \textit{Control Method Battery}: Verwaltung über ACPI AML-Code
 		\end{itemize}
 		\item Thermal-Management mit einfachem Temperaturmodell
 	\end{itemize}
@@ -390,7 +404,6 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 			\end{itemize}
 			\item Beispiel\\\\
 				\begin{minipage}{\textwidth}
-				Vertex-Shader
 				\begin{lstlisting}[frame=single,numbers=left,mathescape]
 Method(_ON) {
 	Store (One, GIO.IDEP)		// assert power
@@ -423,7 +436,7 @@ Method(_ON) {
 		\item Typische Modi: \texttt{Active} (ca. \(2-5W\)); \texttt{Active Idle} (Köpfe nahe der Mitte, Serversteuerung aus: ca. \(<1W\)); \texttt{Low-Power Idle} (Köpfe entladen und geparkt: ca. \(<0,7W)\); \texttt{Standby} (Laufwerksmotor aus: ca. \(0,25W\)); \texttt{Sleep} (fast gesamte Elektronik aus: ca. \(0,1W\))
 		\item Moduswechsel verursacht Kosten: Parken/Positionieren der Köpfe; Stoppen und Wiederanfahren des Laufwerksmotors (Wiederanfahren in den Beispielen etwa \(2-5W\) für mehrere Sekunden)
 	\end{itemize}
-	\item Break-even-Zeit: Zeitspanne zwischen zwei Zugriffen (\textit{Idle-Zeit}); ein Moduswechsel führt nur zu Energieeinsparung, wenn die Energie, die zum Wechseln benötigt wird, die Energieeinsparung im Stromsparmodus nicht übersteigt \(\rightarrow\) Zeitspanne im Stromsparmodus entscheident
+	\item Break-even-Zeit: Zeitspanne, ab wann sich ein Abschalten zwischen zwei Zugriffen (\textit{Idle-Zeit}) lohnt; ein Moduswechsel führt nur zu Energieeinsparung, wenn die Energie, die zum Wechseln benötigt wird, die Energieeinsparung im Stromsparmodus nicht übersteigt \(\rightarrow\) Zeitspanne im Stromsparmodus entscheident
 	\item \textbf{Weitere Eigenschaften}
 	\begin{itemize}
 		\item Bremsen und Wiederanfahren reduziert die Lebensdauer (Laufwerksversagen) \(\rightarrow\) Abwägen zwischen Energiesparen/Verzögerungsvermeidung/Lebenszeit notwendig
@@ -474,7 +487,7 @@ Method(_ON) {
 		\item Zero-latency Access: Firmare liest Sektoren in beliebiger Reihenfolge in internen Puffer \(\rightarrow\) keine Verzögerung durch Rotationslatenz
 		\item Track-aware Access: Vermeidung von Spurwechseln; möglich bei Dateisystemen, die mit Sektoren variabler Länge arbeiten
 		\item Request-Scheduling: Umordnen von Zugriffen; realisiert durch Firmware oder Betriebssystem
-		\item Caching: Verzögertes Schreiben zum Glätten von Schreibzugriffen; Nachteil: Ggf. erst Daten, die älter als \(35s\) (Linux) sind, auf der Festplatte
+		\item Caching: Verzögertes Schreiben zum Glätten von Schreibzugriffen; Nachteil: Daten ggf. erst bis zu \(35s\) (Linux) verspätet auf der Festplatte
 		\item Prefetching: Weiterlesen bei sequentiellem Datenzugriff
 		\item File Prediction: Anwendung beispielsweise vom Laden aller Daten des aktuellen Verzeichnisses
 	\end{itemize}
