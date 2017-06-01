@@ -37,12 +37,12 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\end{itemize}
 	\end{itemize}
 	\item Accounting muss alle beteiligten Komponenten erfassen: CPU-Zeit, Speicher, etc.
-	\item Virtuelle Umgebungen: Accounting muss weitere Komponenten wie Cpu-Zeit im Hyperviser (beispielsweise Treiberzugriffe) berücksichtigen
+	\item Virtuelle Umgebungen: Accounting muss weitere Komponenten wie CPU-Zeit im Hyperviser (beispielsweise Treiberzugriffe) berücksichtigen
 	\item Client-Server-Accounting: Ggf. mehrere Prozesse an Aufgabenerfüllung beteiligt
 	\item \textbf{Resource Containers}
 	\begin{itemize}
 		\item Ziel: Ermitteln des "`Gesamtaufwands"' eines Services
-		\item Accounting von CPU-Zeit (Userspace und Kernelmode) und Kernel-Objekte (Scokets, Netzwerkpuffer, etc.) nach Netzwerkverbindungen (Clients); Verwendung von Kontextinformationen des Schedulers
+		\item Accounting von CPU-Zeit (Userspace und Kernelmode) und Kernel-Objekte (Sockets, Netzwerkpuffer, etc.), getrennt nach Netzwerkverbindungen (Clients); Verwendung von Kontextinformationen des Schedulers
 		\item Implementierung
 		\begin{itemize}
 			\item Via \texttt{File Descriptor} hierarchisch referenziert
@@ -90,7 +90,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 \end{itemize}
 
 
-\subsection{Dynamic Frquency and Voltage Scaling (DVS)}
+\subsection{Dynamic Frequency and Voltage Scaling (DVS)}
 \begin{itemize}
 	\item \textbf{Beobachtungen/Messungen}
 	\begin{itemize}
@@ -103,7 +103,7 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 	\begin{description}
 		\item{Policy \#1: PAST}
 		\begin{itemize}
-			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf der bisherigen Auslastung: Algorithmus betrachtet ein Sliding Window, bestehend aus \texttt{run\_cycles}, \texttt{idle\_cycles} und \texttt{excess\_cycles} (Zeit hat nicht mehr zum Ausführen dieser Cycles gereicht)
+			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf der bisherigen Auslastung: Algorithmus betrachtet ein Sliding Window, bestehend aus \texttt{run\_cycles}, \texttt{idle\_cycles} und \texttt{excess\_cycles} (Zeit hat nicht mehr zum Ausführen dieser Cycles gereicht). \texttt{PAST} nimmt an, die typische Anzahl Cycles pro Interval zu kennen (z.B. durch Tracing)
 			\item \texttt{PAST} geht davon aus, dass die bisherige Auslastung der zukünftigen entspricht \(\rightarrow\) Interval wird als \textit{busy} oder \textit{idle} deklariert und die Taktfrequenz entsprechend angepasst
 			\item Soll die Anzahl der Geschwindigkeitswechsel verringern
 			\item Schlechte Leistung in vielen realistischen Scenarios (beispielsweise bursty Tasks)
@@ -112,12 +112,12 @@ Zusammenfassung der Vorlesung "`Powermanagement"' aus dem Wintersemester 2016.\f
 		\begin{itemize}
 			\item Powermanagement-Erweiterung in Linux; beinhaltet verschiedene Algorithmen, die koordiniert zusammenarbeiten
 			\item Dynamisch, systemweit, intervalbasiert; Entscheidung basiert auf Event-/Task-Einstufung
+			\item Höhere Algorithmen können die Entscheidungen niedrigerer Algorithmen überschreiben
 			\item Algorithmen
 			\begin{itemize}
-				\item Höhere Algorithmen können die Entscheidungen niedrigerer Algorithmen überschreiben
-				\item Unten: Algorithmische Bestimmung der zukünftigen Auslastung, basierend auf der vergangenen Auslastung. Pro Task werden Auslastung und Auslastungfenster festgelegt
-				\item Mittig: Anwendungsabhängige Schicht; Anwendungen können Informationen zu ihrem Leistungsbedarf angeben (muss von den Anwendungen unterstützt werden)
 				\item Oben: Automatische Ermittlung des Leistungsbedarfs interaktiver Anwendungen; stellt u.a. die User-Experience sicher (es wird geprüft, ob Anwendungen verzögerungsfrei ausgeführt werden)
+				\item Mittig: Anwendungsabhängige Schicht; Anwendungen können Informationen zu ihrem Leistungsbedarf angeben (muss von den Anwendungen unterstützt werden)
+				\item Unten: Algorithmische Bestimmung der zukünftigen Auslastung, basierend auf der vergangenen Auslastung. Pro Task wird basierend auf vergangenen Zeitschlitzen (Sliding Window) die zukünftige Auslastung abgeschätzt
 			\end{itemize}
 		\end{itemize}
 		\item{Policy \#3: Process Cruise Control}
