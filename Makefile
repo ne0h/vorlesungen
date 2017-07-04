@@ -68,3 +68,7 @@ telematikonly:
 vsonly:
 	pdflatex vsonly.tex
 	pdflatex vsonly.tex
+
+wasa2only:
+	pdflatex wasa2only.tex
+	pdflatex wasa2only.tex

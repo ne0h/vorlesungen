@@ -38,3 +38,4 @@ Aktuell enthalten
 * Softwaretechnik 2
 * Telematik
 * Virtuelle Systeme
+* Web-Anwendungen und Serviceorientierte Architekturen (II)

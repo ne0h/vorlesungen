@@ -1,0 +1,148 @@
+\chapter{Web-Anwendungen und Serviceorientierte Architekturen (II)}
+
+Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekturen (II)"' aus dem Sommersemester 2017.\footnote{\url{https://cm.tm.kit.edu/study_wasa2p.php}}
+
+\section{C\&M-Software-Entwicklung}
+\begin{itemize}
+	\item Ziele: Stetige Weiterentwicklung der praktizierten Software-Entwicklung; 
+\end{itemize}
+
+
+
+\section{Domain Modeling}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Domain-Driven Design (DDD)}
+
+
+\subsection{Anwendungen in der Software-Entwicklung}
+
+
+
+\section{Microservices and Web APIs}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Motivation
+	\begin{itemize}
+		\item Monolithische Software-Systeme werden immer größer (siehe "`Software-Krise"' von 1968) und komplexer
+		\item \textit{System-Zentrierung}: Software-Entwicklung, da hier immer ein Software-System realisiert wird
+		\item \textit{Prozess-Zentrierung}: SOA-Entwicklung, da Geschäftsprozesse unterstützt werden sollen
+	\end{itemize}
+	\item Feingranulare, kooperierende Services, die jeweils individuelle Teilaufgaben übernehmen und individuell entwickelt und deployt werden
+	\item \textbf{Beeinflusst durch:}
+	\begin{itemize}
+		\item Domain-Driven Design
+		\item Hexagonale Architektur
+		\begin{itemize}
+			\item Ziel: Anwendung soll unabhängig von ihrer Laufzeitumgebung testbar sein \(\rightarrow\) Trennung von Geschäftslogik und externen Abhängigkeiten. Funktionalität soll ausschließlich über \texttt{APIs} angesprochen werden können
+			\item Hexagonale Darstellung symbolisiert die Schnittstellen ("`Ports and Adapters"'). \textit{Adapter} konvertieren die \textit{Events}, die an den \textit{Ports} eintreffen in Prozeduren
+		\end{itemize}
+		\item Continuous Delivery (CD) und Build Pipelines
+		\begin{itemize}
+			\item Jeder Repository-Checkin wird als Release Candidate behandelt, automatisch gebaut und automatisiert getestet
+			\item Visualisierung des Zustands
+			\item Eine Pipeline pro Microservice
+		\end{itemize}
+		\item Virtualisierung
+		\begin{itemize}
+			\item System-Virtualisierung: Hyperviser verwaltet die Gastressourcen. Pro VM ein Betriebssystem mit eigenem Kernel
+			\item Container-Virtualisierung: Prozessvirtualisierung mit separatem Prozess pro Container. Ohne Hypervisor; erlaubt schnelleres Provisioning; Container teilen sich den Kernel
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Beziehung zu \texttt{SOA}}
+	\begin{itemize}
+		\item Microservices bilden einen bestimmten Ansatz um \texttt{SOA} umzusetzen
+		\item Verwendung von Shared Libraries empfehlenswert, erhöhen allerdings auch die Kopplung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Grundlagen}
+\begin{itemize}
+	\item \textbf{Eigenschaften/Ziele}
+	\begin{itemize}
+		\item "`Single-Responsible-Principle"': Jeder Microservice implementiert einen bestimmten Prozess. Idealerweise ein Microservice pro Team, Entwicklungsaufwand sollte zwei Wochen nicht übersteigen
+		\item Selbstständigkeit: Ein Microservice pro Gerät \(\rightarrow\) Änderungen am Microservice bleiben auf eine Maschine beschränkt
+		\item Kommunikation über \texttt{APIs}
+		\item Lose Kopplung: Änderungen an einem Service dürfen keine Auswirkungen auf andere Services haben \(\rightarrow\) reduziert den Verwaltungsaufwand
+		\item Hohe Kohäsion: Für jede Aufgabe ist genau ein Service zuständig \(\rightarrow\) Änderungen betreffen lediglich einen Service (siehe "`Single-Responsible-Principle"')
+	\end{itemize}
+	\item \textbf{Backends for Frontends (BFFs)}
+	\begin{itemize}
+		\item Serverseitige Backends für UIs (ein Backend pro UI), die unabhängig von einander entwickelt werden können
+		\item Weiterentwicklung von API-Gateways
+		\item Idealerweise ein Backend pro Team
+	\end{itemize}
+	\item \textbf{Kommunikationsmöglichkeiten}
+	\begin{itemize}
+		\item Request-Response-basiert
+		\begin{itemize}
+			\item Remote Procedure Call (RPC): Stub-basierter Zugriff auf eine entfernte Ressource. Bsp.: \texttt{SOAP}
+			\item REpresentational State Transfer (REST): Ressourcen-orientiert und vom internen Speicher entkoppelt; basiert auf \texttt{HTTP}. RESTful \texttt{APIs} müssen die fünf REST-Prinzipien erfüllen
+		\end{itemize}
+		\item Event-basiert (Producer-Consumer-Schema): \textit{Message-Brokers} verteilten Event-Nachrichten. Beispiele: \texttt{RabbitMQ} oder \texttt{Apache Kafka}
+	\end{itemize}
+	\item \textbf{Klassifizierung von \texttt{APIs} nach Richardson}
+	\begin{itemize}
+		\item Vier verschiedene, hierarchisch angeordnete Typen, die jeweils auf den untergeordneten basieren
+		\begin{description}
+			\item{Level 3:} Hypermedia (Hypermedia-orientiert)
+			\item{Level 2:} Protocol Properties (Ressourcen-orientiert)
+			\item{Level 1:} Resources (Ressourcen-orientiert)
+			\item{Level 0:} Plain Old XML
+		\end{description}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Design von Web APIs}
+\begin{itemize}
+	\item Qualitätskriterien: Einfach zu verstehen; Technologie-unabhängig; konsistent; erweiterbar; weiterentwickelbar
+	\item \texttt{API} sollte Startpunkt der Entwicklung sein ("`\texttt{API} first"'); Design-Guidelines aufstellen und umsetzen
+	\item \textbf{Entwicklungsstrategie: \texttt{API} First}
+	\begin{enumerate}
+		\item Anforderungen an den Service aufstellen (ableiten aus Analysephase)
+		\item Iterativ: Entwickeln/Verbessern der \texttt{API}; Reviewen der \texttt{API}
+		\item Service und Consumer entwickeln
+	\end{enumerate}
+	\item \textbf{\texttt{API} Guideline-Sammlung}
+	\begin{itemize}
+		\item Ressourcen-orientiert mit einheitlichem Look-and-Feel
+		\item Einheitliche Namenssyntax, beispielsweise bei \texttt{HTTP}-Headern oder \texttt{JavaScript}-Objekten
+		\item Selbsterklärende Beschreibungen bei URLs zur Ressourcen-Identifikation
+		\item Sinnvolle Objektfilter. Bsp.: \texttt{/sales-orders/?filter=(creation\_date=20151106)}
+		\item Korrekte Verwendung der \texttt{HTTP}-Methoden
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{API Management}
+
+
+
+\section{Connectedcar}
+
+
+
+\section{Web Services with Quality}
+
+
+
+\section{API-Spezifikationen}
+
+
+
+\section{Scrum}
+
+
+
+\section{Sicherheit}
