@@ -88,6 +88,13 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\begin{itemize}
 			\item Remote Procedure Call (RPC): Stub-basierter Zugriff auf eine entfernte Ressource. Bsp.: \texttt{SOAP}
 			\item REpresentational State Transfer (REST): Ressourcen-orientiert und vom internen Speicher entkoppelt; basiert auf \texttt{HTTP}. RESTful \texttt{APIs} müssen die fünf REST-Prinzipien erfüllen
+			\begin{enumerate}
+				\item Adressierbarkeit von Ressourcen über eindeutige \texttt{URLs}
+				\item Veränderungen von Daten nur über eine Repräsentation
+				\item Zustandslose Kommunikation
+				\item Verschiedene Repräsentationen pro Ressource in Abhängigkeit des Anfragenden
+				\item Navigation ausschließlich über \texttt{URLs}, die vom Server bereitgestellt werden
+			\end{enumerate}
 		\end{itemize}
 		\item Event-basiert (Producer-Consumer-Schema): \textit{Message-Brokers} verteilten Event-Nachrichten. Beispiele: \texttt{RabbitMQ} oder \texttt{Apache Kafka}
 	\end{itemize}
@@ -122,10 +129,52 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Sinnvolle Objektfilter. Bsp.: \texttt{/sales-orders/?filter=(creation\_date=20151106)}
 		\item Korrekte Verwendung der \texttt{HTTP}-Methoden
 	\end{itemize}
+	\item \textbf{OpenAPI}
+	\begin{itemize}
+		\item Spezifikation zur Definition von RESTful \texttt{APIs}; unterstützt von einigen IT-Konzernen; aus Swagger abgeleitet
+		\item \texttt{JSON}- oder \texttt{YAML}-Bschreibung
+		\begin{description}
+			\item[info:] Metainformationen
+			\item[paths:] Endpunkte und Methoden
+			\item[definitions:] Zur Wiederverwendung von Objekten
+		\end{description}
+	\end{itemize}
+	\item \textbf{Swagger}
+	\begin{itemize}
+		\item Stellt Werkzeuge zum Testen und zur Dokumentation von OpenAPI-beschriebenen \texttt{APIs} zur Verfügung
+		\item Swagger Editor: Erstellen/Verändern von \texttt{APIs}
+		\item Swappger Codegen: Erstellen von Software-Stubs
+		\item Swagger UI: Automatisches Erzeugen von Dokumentation
+	\end{itemize}
+	\item \textbf{Schematischer Ansatz zum Entwickeln von Web \texttt{APIs}}
+	\begin{itemize}
+		\item Grundlage: Domänen-Modell, Feature-Liste, UI-Entwürfe
+		\item Identifikation von Ressourcen: Jedes Domänen-Objekt ist eine potentielle Ressource
+		\item Abgleich mit der \textit{Humane Service Registry} zum Wiederverwenden existierender \texttt{APIs}
+		\item Implementierung der Ressourcen-CRUD-Methoden mittels \texttt{HTTP}-Methoden
+		\item Implementierung von URL-Attributen zum Sortieren, Filtern, etc.
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{API Management}
+\begin{itemize}
+	\item Motivation: ZentralesVerwalten, Dokumentieren, Weiterentwickeln, Wiederverwenden von \texttt{APIs}
+	\item \textbf{Service Registry}
+	\begin{itemize}
+		\item Zentrale Verwaltungskomponente; \textit{Service Provider} publisht \texttt{APIs}, \textit{Service Consumer} sucht \texttt{APIs}
+		\item Beispiel: \textit{Humane Service Registry} (HSR) aller \texttt{APIs}, die bei C\&M entwickelt worden sind. Attribute sind u.a. Name, Beschreibung und Service-Gruppe
+	\end{itemize}
+	\item Bestandteile einer \texttt{API}-Managementumgebung: Management, Administrationsportal, Entwicklerportal, \texttt{API}-Microgateway
+	\item \texttt{API}-Lifecycle: Design, Secure, Deploy, Publish, Analyze, Operate
+	\item \textbf{\texttt{API}-Proxy}
+	\begin{itemize}
+		\item Verbindet \texttt{API} und Anwendung
+		\item Policies: Sicherheit, Traffic-Management, Vermittlung, Erweiterungen
+		\item Anwedungsfälle: JSON-Threat-Protection, Quotas, Caching, Frontend einer Microservice-Umgebung, Anfragenlimitierung (Consumer muss ggf. bekannt sein)
+		\item Kann Authentifizierung per (externem) \texttt{OAuth2.0}-Server vornehmen
+	\end{itemize}
+\end{itemize}
 
 
 
