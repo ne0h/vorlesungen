@@ -178,7 +178,61 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 
 
-\section{Connectedcar}
+\section{ConnectedCar}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Trends im Automotive-Geschäftsbreich: Viele "`Innovative"' Lösungen rund um das vernetzte Fahrzeug; technologischer Fortschritt (Hardware, Sensorik, Software, etc.); IT-Unternehmen drängen in den Markt
+	\item Herausforderungen: Echtzeitereignisprocessing, Sicherheit, IAM
+	\item \texttt{HERE}: Entwicklung von Schnittstellenspezifikation für ConnctedCars. Beispiele: Real Time Traffic; On-Street Parking; Road Signs; Hazard Warnings
+	\item \textbf{Gefahrenwarndienst: HazardWarningServiceGroup (HazSG)}
+	\begin{itemize}
+		\item Warnt vor potentiellen Gefahren (Aquaplaning, Blitzeis, Verkehrsstaus, Unfälle, etc.)
+		\item Dienst erhält Ereignisse vom Fahrzeug und sendet im Gegenzug Gehfahreninformationen
+	\end{itemize}
+	\item \textbf{Complex Event Processing (CEP)}
+	\begin{itemize}
+		\item Definition Ereignis: "`feingranulare, diskrete Ereignisse"' (bspw. Temperaturveränderung) versus "`grobgranulares Ereignis"' (Glatteiswarnung, Umleitungsempfehlung)
+		\item Typisierung von Ereignissen
+		\item Verarbeitung von kontinuierlichen Ereignissen in Echtzeit
+		\item Mustererkennung: \texttt{[Temperatur < 0]} \(+\) \texttt{[Räder blockieren]} \(\rightarrow\) \texttt{[Blitzeis]}
+		\item Esper: CEP-System für Java
+		\begin{itemize}
+			\item Untersuchen von Datenströmen mittels Event-Processing-Language oder Pattern Matching
+			\item Erzeugen von komplexen (kompositen) Ereignistypen
+			\item Dynamische Veränderung der Informationsauswertung zur Laufzeit
+		\end{itemize}
+		\item Aufbau eines \texttt{CEP}-Systems
+		\begin{itemize}
+			\item Ereignismodell: Definiert Typen und Attribute von Ereignissen
+			\item Übertragungskanäle: Verschiedene Technologien möglich, i.d.R. ereignisgetriebene Subscriber-Publisher-Systeme. Beipsielsweise \texttt{RabbitMQ} oder Apache Kafka
+			\item Ereignisverarbeitung durch \textit{Event Processing Agents} (EPA): Durchsuchen den Ereignisstrom nach Mustern
+		\end{itemize}
+		\item Streaming Technologien
+		\begin{itemize}
+			\item Apache Kafka: Topic-gestützte Verteilung von Ereignisobjekten von Quellen auf Konsumenten; Zusammenfassen von Konsumenten zu \textit{Consumer Groups}
+			\item Spring Cloud Stream: Framework für ereignisgesteuerte Microservices. Abstrahiert die Streaming-Middleware (beispielsweise Apache Kafka); direkte Verbindung zwischen Anwendungen möglich (steigert die Effizienz)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Ergeignisverarbeitung in der ConnectedCar-Domäne}
+	\begin{itemize}
+		\item Im Fahrzeug: Entlastung des Backends; Echtzeitanforderungen; Hochverfügbarkeit; Datenschutz
+		\item Im Backend: Kombinierbarkeit mit anderen Fahrzeugen; Änderung der Verfahren; Hinzuziehen weiterer Quellen
+		\item Ereignisvorverarbeitung im Fahrzeug: Entlastung von Infrastruktur/Backend; dynamische Konfigurierbarkeit durch das Backend möglich (beispielsweise durch gezielte Anfragen)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Analyse und Entwurf}
+\begin{itemize}
+	\item Domänenmodell als Grundlage zur Web-\texttt{APIs}, die für den \texttt{HazardWarningService} notwendig sind
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item Kapselung des Domänenmodells in Services
+		\item Ermittlung der notwendigen Service-Operationen pro Service (statische \texttt{API}-Spezifikation)
+		\item Ergänzen der dynamischen Inhalte, bei beispielsweise ablaufbeschreibende Diagramme (dynamische \texttt{API}-Spezifikation)
+	\end{enumerate}
+\end{itemize}
 
 
 
