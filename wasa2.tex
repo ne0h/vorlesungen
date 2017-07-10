@@ -238,6 +238,64 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \section{Web Services with Quality}
 
+\subsection{Softwarequalität}
+\begin{itemize}
+	\item \textbf{Motivation}
+	\begin{itemize}
+		\item Definition: Grad, zu dem Software die Erwartungen unter bestimmten Bedingungen erfüllt
+		\item Wichtig um ein gegebenes Problem zu lösen; Katastrophen zu verhindern; Wartungskosten einzusparen
+	\end{itemize}
+	\item \textbf{Produktqualitätsmodel (ISO/IEC 25010:2011)}
+	\begin{itemize}
+		\item Klassifizierung von acht Haupteigenschaften, die weiter unterteilt werden
+		\item Eigenschaften
+		\begin{itemize}
+			\item Funktionale Eignung: Zu welchem Grad werden die Voraussetzungen erfüllt
+			\item Leistungsfähigkeit
+			\item Benutzbarkeit: Wirksamkeit, Effizienz, Zufriedenheit
+			\item Kompatibilität: Zusammenarbeit mit anderen Produkten
+			\item Zuverlässigkeit: Unter bestimmten Bedingungen für einen vorgegebenen Zeitraum
+			\item Sicherheit: IAM
+			\item Wartbarkeit
+			\item Portierbarkeit
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Qualitätsmetamodell}
+	\begin{itemize}
+		\item \textit{Quality Characteristic}: Kategorie von Qualitätsattributen (beispielsweise Wartbarkeit); kann in mehrere \textit{Quality sub-characteristics} unterteilt werden
+		\item \textit{Quality Attribute}: \texttt{[1..*]} quantifizieren eine \textit{Quality Characteristic}
+		\item \textit{Quality Criterion}: Zufriedenheitsschwelle pro \textit{Quality Attribute}
+		\item \textit{Quality indicator}: Weist auf die Umsetzung von \textit{Quality Attributes} hin; kann aus Design Pattern, Best Practices, etc. abgeleitet werden
+		\item \textit{Quality Metric}: Formalisiert \textit{Quality Indicators}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Qualitätsindikatoren für Webservices}
+\begin{itemize}
+	\item \textbf{Best Pratices für RESTful Webservices}
+	\begin{itemize}
+		\item Fokus auf Wartbarkeit/Benutzbarkeit
+		\item Versionierung
+		\begin{itemize}
+			\item Möglichkeiten: Eingebettet in die URL; Verwendung des \texttt{HTTP}-Headers
+			\item RESTful Webservices müssen nicht versioniert werden (wegen des Hypermedia-Gedankens)
+		\end{itemize}
+		\item Beschreiben von Ressourcen
+		\begin{itemize}
+			\item Verwendung von domänenspezifischen Substantiven, beispielsweise in Anlehnung an die \texttt{Javascript}-Nameconventions
+			\item Vermeiden von unnötigen Bezeichnungen/Ressourcen
+			\item Vermeiden Plural-Singular-Mischformen
+		\end{itemize}
+		\item Fehlerbehandlung
+		\begin{itemize}
+			\item Fehlermeldungen müssen klar und verständlich sein
+			\item Spezifische Nutzung von \texttt{HTTP}-Fehlercodes ("`Antwort-Code"')
+			\item Inhalt einer Fehlermeldung: Separate Meldung für Entwickler und Benutzer; anwendungsspezifischer Fehlercode ("`Fehler-Code"'); Link zu weiteren Informationen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
 
 
 \section{API-Spezifikationen}
