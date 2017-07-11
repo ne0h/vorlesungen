@@ -387,9 +387,62 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 
 \subsection{Meetings}
+\begin{itemize}
+	\item \textbf{Sprint Planning I (Was?)}
+	\begin{itemize}
+		\item Formulierung des Sprint-Ziels sowie Auswahl der UserStories (nach "`Bauchgefühl"') \(\rightarrow\) Erstellen des \textit{Sprint-Backlogs}
+		\item Festlegen der Akzeptanzkriterien
+		\item Detailliertes Verständnis für den Kundenwunsch nötig
+	\end{itemize}
+	\item \textbf{Sprint Planning II (Wie?)}
+	\begin{itemize}
+		\item Ziel: Design und Entwurf für das Produktinkrement
+		\item Folgt am gleichen Tag
+		\item Ableiten von Aufgaben aus den UserStories sowie Abschätzen des Zeitaufwands
+	\end{itemize}
+	\item \textbf{Daily Scrum}
+	\begin{itemize}
+		\item Tägliches Meeting zur Synchronisation
+		\item Nicht länger als 15 min; idealerweise stehend; keine Problemlösungen
+		\item ScrumMaster moderiert und achtet auf Regeleinhaltung
+	\end{itemize}
+	\item \textbf{Sprint Review}
+	\begin{itemize}
+		\item Ziel: Abschluss des Sprints, meist mit Kunde
+		\item Analyse des Inkrements unter Einhaltung der Abnahmekriterien
+		\item Feedbacksammlung zur Produktverbesserung
+	\end{itemize}
+	\item Sprint Retrospektive: Optimierung der Zusammenarbeit und der Entwicklungsprozesse ohne den Kunden
+\end{itemize}
 
 
 \subsection{Agile Entwicklung mit Scrum}
+\begin{itemize}
+	\item Managementwerkzeug ohne Vorgabe von Entwicklungspraktiken \(\rightarrow\) Team entscheidet darüber eigenverantwortlich (Vermeidung von "`technische Schulden"')
+	\item Gemeinsames Verständnis inklusive grober, gemeinsamer Architekturvision
+	\item \textbf{CAS-Eigenschaften einer Architekturvision}
+	\begin{description}
+		\item[Clear:] Darstellung der Umsetzung von nicht-funktionalen Anforderungen; Einsatz einer Modellierungssprache
+		\item[Accepted:] Von allen mitgetragen; keine architektonischen Alleingänge
+		\item[Short:] Kein vollständiges Modell
+	\end{description}
+	\item Collective Ownership: Gemeinsame Verantwortung des Teams für den gesammten Quellcode
+	\item Pair Programming: Zwei Entwickler arbeiten zusammen an einem Computer; regelmäßiger Rollenwechsel nach mehreren Minuten
+	\item Refactoring: Code-Updates ohne das externe Verhalten zu ändern; lauffähige Testfälle wichtig
+	\item \textbf{Inkrementeller Entwurf}
+	\begin{itemize}
+		\item Entwicklung erfolgt in kleinen Teilen \(\rightarrow\) flache Aufwandskurve für neue Features \(\rightarrow\) Code muss leicht änderbar/wartbar sein
+		\item Einhaltung der SOLID-Entwurfskriterien
+	\end{itemize}
+	\item Testgetriebene Entwicklung: Testfälle werden vor der eigentlichen Entwicklung geschrieben
+	\item \textbf{Verhaltensgetriebene Entwicklung}
+	\begin{itemize}
+		\item Ziel: Automatisierte Überprüfung der Anforderungen
+		\item Während der Anforderungserhebung in "`natürlicher"' Sprache definiert (beispielsweise \texttt{Gherkin})
+		\item Erleichtert den Übergang von Anforderungssprache zu Implementierungssprache
+	\end{itemize}
+	\item Continuous Integration
+\end{itemize}
 
 
 
