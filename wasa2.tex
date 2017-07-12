@@ -447,3 +447,102 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 
 \section{Sicherheit}
+
+\subsection{Sicherheitsorientierter Entwicklungsprozess}
+\begin{itemize}
+	\item Informationssicherheit: Schutz von Informationen, insbesondere der Systeme, die sie benutzen, speichern und übermitteln
+	\item Sicherheit wird meist nur zweitrangig betrachtet. Histrorische Systeme waren lange isoliert, erst durch das Internet stieg das Schutzbedürfnis
+	\item \textbf{Schutzziele}
+	\begin{itemize}
+		\item CIA: Confidentiality (Vertraulichkeit), Integrity (Integrität) und Availability (Verfügbarkeit)
+		\item Viele weitere Schutzziele möglich, beispielsweise Authentizität, Nachweisbarkeit, Verantwortlichkeit, Datenschutz
+	\end{itemize}
+	\item \textbf{Identity and Access Management (IAM)}
+	\begin{itemize}
+		\item Ziel: Schutz der Integrität. \textit{Wer} darf \textit{welche} Ressourcen \textit{wie} nutzen?
+		\item IAM regelt den Ressourcenzugriff
+		\item Trennung in Enterprise und Consumer IAM
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Authentifizierung und Autorisierung in Web-Anwendungen}
+\begin{itemize}
+	\item \textbf{Ablauf}
+	\begin{enumerate}
+		\item Benutzer sendet Authentifizierungsdaten an die Web-Anwendung mit Referenzmonitor
+		\item Web-Anwendung authentifiziert Benutzer am Benutzerverzeichnis, dieses erzeugt ein Token, das an den Benutzer übergeben wird
+		\item Benutzer sendet das Token an die Web-Anwendung. Diese prüft die dazugehörigen Berechtigungen über den Autorisierungsserver
+		\item Autorisierungsserver validiert das Token am Benutzerverzeichnis
+		\item Autorisierungsserver antwortet der Web-Anwendung
+	\end{enumerate}
+	\item Absicherung traditioneller, monolithischer Web-Anwendungen: Abfangen von Anfragen durch zentrale Komponente
+	\item Probleme bei MicroServices: Zugriffskontrolle muss in jedem MicroService implementiert werden; Anfragen durch Weitergabe der Anmeldedaten des Benutzers
+	\item \textbf{Ablauf beim Servicezugriff}
+	\begin{itemize}
+		% TODO: Wo ist effektiv der Unterschied?
+		\item Im Namen des Benutzers
+		\item Im eigenen Namen
+	\end{itemize}
+	\item \textbf{Tokens}
+	\begin{itemize}
+		\item Idee: Token als Autorisierungsnachweis bei Anfragen
+		\item Typen
+		\begin{itemize}
+			\item By-Reference-Token: Beinhaltet keine zusätzlichen Informationen außerhalb des Netzwerks
+			\item By-Value-Token: Beinhaltet alle notwendigen Informationen
+		\end{itemize}
+		\item Profile
+		\begin{itemize}
+			\item Bearer-Token: Kann von jedem benutzt werden (vgl. Bargeld)
+			\item Holder-of-Key-Token: Kann nur durch authentifizierten Benutzer genutzt werden (vgl. Krditkarte)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Einsatz von Sicherheitsmustern beim Systementwurf}
+\begin{itemize}
+	\item Sicherheitsmuster: Strukturierte Beschreibung von Sicherheitswissen; bekannte und erprobte Lösungen für Sicherheitsprobleme auf unterschiedlichen Abstraktionsebenen
+	\item Sicherheitsanforderungen lassen sich auf Schutzziele zurückführen; Sicherheitsmuster zur Erfüllung von Sicherheitsanforderungen verfügbar
+	\item \textbf{Zugriffskontrolle}
+	\begin{itemize}
+		\item Referenzmonitor: Bindeglied zwischen Authentifizierung und Autorisierung
+		\item Sicherheitsmuster für Authentifizierung: Wissen, Besitz, Sein
+		\item Sicherheitsmuster für Autorisierung: Attributbasiert, rollenbasiert, identitätsbasiert, etc.
+	\end{itemize}
+	\item \textbf{Beispiele}
+	\begin{itemize}
+		\item Referenzmonitor
+		\begin{itemize}
+			\item Fängt alle Ressourcenanfragen ab und prüft, ob diese autorisiert sind und leitet im Erfolgsfall an das geschützte Objekt weiter
+			\item Sehr allgemeingehalten; keine Vorgaben hinsichtlich Authentifizierung und Autorisierung
+		\end{itemize}
+		\item Identitätsbasierte Zugriffskontrolle: Zugriffsmatrix in der Form \(\lbrack Subjekt, Ressource \rbrack \longrightarrow Recht\)
+		\item Rollenbasierte Zugriffskontrolle
+		\begin{itemize}
+			\item Rollen: Rechte/Pflichten, die zusammengefasst einer Tätigkeit zugeordnet werden
+			\item Werden Personen oder Gruppen zugeordnet
+			\item Meist nur auf einzelne Systeme beschränkt
+		\end{itemize}
+		\item Attributsbasierte Zugriffskontrolle: An boolesche Algebra angelehnt; Nutzung von Umweltinformationen möglich
+		\item Authentifizierung: Prüfung einer digitalen Identität; Auswahl des Verfahrens wird durch den Schutzbedarf bestimmt; Mehr-Faktor-Authentifizierung möglich
+		\item Authrntifizierungsmethoden im Consumer IAM
+		\begin{itemize}
+			\item Über soziales Netzwerk
+			\item Risikobasiert: Authentzitätswahrscheinlichkeit auf Basis gesammelter Daten berechnen
+			\item QR-Codes
+			\item Mobile Anwendung: Zusenden von Anmeldelinks
+			\item Videokonferenz mit Personalausweis
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+
