@@ -13,17 +13,104 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \subsection{Einführung}
 \begin{itemize}
-	\item \textbf{Motivation}
+	\item Motivation: Die Komplexität von Domänen-Wissen erschwert die Software-Entwicklung
+	\item \textbf{Änderungen am konventionellen Entwicklungprozess}
+	\begin{description}
+		\item[Design:] Domain-Modelling findet vor dem eigentlichen Design-Vorgang statt (nach der Analyse-Phase)
+		\item[Implementierung:] Bildet die Geschäftslogik im Backend zwischen Infrastruktur-Ebene und Backend-Service-API
+	\end{description}
+	\item \textbf{"`Knowledge Crunching"'}
 	\begin{itemize}
-		\item 
+		\item Domänenexperte und Entwickler erarbeiten gemeinsam ein Modell
+		\item Best Practices
+		\begin{itemize}
+			\item Entwickeln von Prototypen zur Verständnisvalidierung
+			\item Entwickeln einer domänen-spezifischen "`Sprache"'
+			\item Verhaltensmodellierung, nicht nur Datenmodellierung
+			\item Dynamischer Prozess, der iteratives Diskutieren und Testen beinhaltet
+		\end{itemize}
+	\end{itemize}
+	\item Ubiquitous Language: Gemeinsame Sprache, die technische und betriebswirtschaftliche Ausdrücke vereint (Schnittmenge); wird von allen Teammitgliedern verwendet; oft mehrere verschiedene Diagramme zum Beschreiben eines Sachverhalts notwendig
+	\item \textbf{Hexagonale Architektur}
+	\begin{itemize}
+		\item Ziel: Isoliertes Entwickeln und Testen von Anwendungen, ohne Geräte/Datenbanken/Benutzern \(\rightarrow\) Trennung zwischen Geschäftslogik und externen Entitäten
+		\item Realisiert mittels Ports und Adaptern
 	\end{itemize}
 \end{itemize}
 
 
 \subsection{Domain-Driven Design (DDD)}
+\begin{itemize}
+	\item Wiederverwendung existierender Konzepte (Objektorientierung, Responsibility-Driven-Design, etc.)
+	\item \textbf{Pattern: Layered Architecture}
+	\begin{itemize}
+		\item Ziel: Sepraierung der Geschäftslogik von anderen Komponenten \(\rightarrow\) einfache Wartbarkeit der Geschäftslogik
+		\item Kommunikation bei Schichtenarchitekturen: Direkte Aufruf der darutner liegenden Schicht; indirekte Kommunikation mit der Schicht darüber (Callbacks, Observer-Pattern, etc.)
+		\item Die Schichten
+		\begin{description}
+			\item[User Interface:] Benutzeransicht mit Kommondoeingabe
+			\item[Application Layer:] Aufgabenkoordinierung
+			\item[Domain Layer:] Geschäftslogik mit Informationsspeicher
+			\item[Infrastructure:] Technische Infrastruktur
+		\end{description}
+		\item Anforderungen an die Schichtenarchitektur
+		\begin{itemize}
+			\item Lose Koppling der Schichten: Abhängigkeiten nur nach unten
+			\item Trennung der Domänenschicht von den anderen
+			\item Trennung von Infratrukturschicht und Domänenschicht
+			\item Gezielte Auswahl von Frameworks
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Entity, Value, Object, Service und Module}
+	\begin{itemize}
+		\item Objekttypen
+		\begin{description}
+			\item[Entity:] Attributobjekt, das zur Identifikation eines Objekts benutzt werden kann (\texttt{objectId}, etc.)
+			\item[Value Object:] Attributobjekt, das weitergehende Informationen speichert, die nicht ur Identifikation benutzt werden können (\texttt{address}, etc.)
+		\end{description}
+		\item Service: Zustandslose Operation, die von einem Interface bereitgestellt wird
+		\item Module: Fasst Teile der Domäne lose gekoppelt zusammen
+	\end{itemize}
+	\item \textbf{Aggregate}
+	\begin{itemize}
+		\item Fasst Objekte zu einem komplexen Objekt zusammen
+		\item Zugriff auf das Aggregat lediglich über das Root-Element (vgl. Interface)
+	\end{itemize}
+\end{itemize}
 
 
-\subsection{Anwendungen in der Software-Entwicklung}
+\subsection{Anwendung in der Software-Entwicklung}
+\begin{itemize}
+	\item \textbf{Domain Modeling Guideline}
+	\begin{itemize}
+		\item Ziel: Organisationseinheitliche Anwendung von DDD-Pattern
+		\item Beinhaltet: Repository-Struktur der Artefakte inklsuive Werkzeuge zum Ändern der Artefakte; strukturelle Beschreibung der Modellierungsschritte
+	\end{itemize}
+	\item \textbf{Strukturierung einer Domäne}
+	\begin{itemize}
+		\item Unterteilung in Sub-Domänen (Pakete). Beispiele: \texttt{HazardWarningGroup} beinhaltet die Sub-Domänen \texttt{Hazard} und \texttt{Vehicle}
+		\item Beziehungen zwischen Paketen werden durch geteilte Objekte (Entities oder Value Objects) ausgedrückt (beispielsweise Typ \texttt{Event})
+	\end{itemize}
+	\item \textbf{Domain Objekten}
+	\begin{itemize}
+		\item Verwendung von \textit{Domänen Objekten} um die Domäne zu modellierung
+		\item Beziehungstypen: Association, Aggregation (Ziel kann alleine existieren), Composition (Ziel kann nicht alleine existieren), Generalization (Vererbung)
+	\end{itemize}
+	\item \textbf{Domain Views}
+	\begin{itemize}
+		\item Ziel: Modellierung einer Domain aus verschiedenen Perspektiven
+		\item Statische Aspekte
+		\begin{description}
+			\item[Relation View:] Statische Konzepte der Domänen-Objekte
+			\item[Domain Object View:] Detailliere Informationen zu Domänen-Objekten
+			\item[Interaction View:] Statische Beschreibung der Beziehungen zwischen Domänen-Objekten
+		\end{description}
+		\item Dynamische Aspekte
+		\begin{description}
+			\item[Process View:] Zeitliche Aspekte von Interaktionen zwischen Domänen-Objekten. Beispielsweise ein Sequenzdiagramm, das den Benutzeranlege-Prozess beschreibt
+		\end{description}
+	\end{itemize}
+\end{itemize}
 
 
 
@@ -44,7 +131,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Hexagonale Architektur
 		\begin{itemize}
 			\item Ziel: Anwendung soll unabhängig von ihrer Laufzeitumgebung testbar sein \(\rightarrow\) Trennung von Geschäftslogik und externen Abhängigkeiten. Funktionalität soll ausschließlich über \texttt{APIs} angesprochen werden können
-			\item Hexagonale Darstellung symbolisiert die Schnittstellen ("`Ports and Adapters"'). \textit{Adapter} konvertieren die \textit{Events}, die an den \textit{Ports} eintreffen in Prozeduren
+			\item Hexagonale Darstellung symbolisiert die Schnittstellen ("`Ports and Adapters"'). \textit{Adapter} konvertieren die \textit{Events}, die an den \textit{Ports} eintreffen, in Prozeduren
 		\end{itemize}
 		\item Continuous Delivery (CD) und Build Pipelines
 		\begin{itemize}
@@ -537,12 +624,3 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
-
-
-
-
-
-
-
-
-
