@@ -4,7 +4,37 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \section{C\&M-Software-Entwicklung}
 \begin{itemize}
-	\item Ziele: Stetige Weiterentwicklung der praktizierten Software-Entwicklung; 
+	\item Ziele: Stetige Weiterentwicklung der praktizierten Software-Entwicklung; nachvollziehbar, modellgestütz, agil
+	\item Artefakte, die während den Entwicklungsphasen entstehen: Sammlungen, Domänenmodelle, API-Spezifikationen, Qualitätsberichte, Implementierungen
+	\item Jedes Artefakt wird auf verschiedenen Abstraktionsebenen dokumentiert (Entwicklungsdokument, Artefakt-Dokument, Entwicklungswerkzeug)
+	\item \textbf{Schichtenmodell und eingesetzte Technologien}
+	\begin{description}
+		\item[Frontend:] Angular, Bootstrap
+		\begin{description}
+			\item[] Präsentation
+			\item[] Präsentationslogik
+		\end{description}
+		\item[Backend-For-Frontend:] Spring
+		\begin{description}
+			\item[] Anwendungslogik
+		\end{description}
+		\item[Backend:] Spring
+		\begin{description}
+			\item[] Domänenlogik
+			\item[] Datenhaltung
+		\end{description}
+	\end{description}
+	\item \textbf{Entwicklungsumgebung}
+	\begin{itemize}
+		\item C\&M-Team-Server: Dokumentenablage, Backlog, Profile, Termin-Kalender
+		\item C\&M-Team-Foundation-Server: Backlogs mit UserStories, Code-Verwaltung (Git)
+		\item IDE: Eclipse mit Git-Client
+		\item Werkzeuge: MS Office, UI-Werkzeuge, Enterprise Architect
+	\end{itemize}
+	\item Rollen und Aufgaben in der Software-Entwicklung: Betruer, BA/MA-SeniorStudent, JuniorStudent
+	\item Humane Service Registry: Zentrale Übersicht aller Services
+	\item Leitfaden: C\&M-konformes Dokument zur praktischen Einführung in eine Technologie/Service/Konzept; beinhalten Technologiegrundlagen und Umsetzungsbeispiele
+	\item Eigenentwicklungsdokument (EED): Am Lehrstuhl entwickelte Software
 \end{itemize}
 
 
@@ -230,7 +260,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\begin{itemize}
 		\item Stellt Werkzeuge zum Testen und zur Dokumentation von OpenAPI-beschriebenen \texttt{APIs} zur Verfügung
 		\item Swagger Editor: Erstellen/Verändern von \texttt{APIs}
-		\item Swappger Codegen: Erstellen von Software-Stubs
+		\item Swagger Codegen: Erstellen von Software-Stubs
 		\item Swagger UI: Automatisches Erzeugen von Dokumentation
 	\end{itemize}
 	\item \textbf{Schematischer Ansatz zum Entwickeln von Web \texttt{APIs}}
