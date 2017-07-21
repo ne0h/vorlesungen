@@ -51,7 +51,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\end{description}
 	\item \textbf{"`Knowledge Crunching"'}
 	\begin{itemize}
-		\item Domänenexperte und Entwickler erarbeiten gemeinsam ein Modell
+		\item Domänenexperten und Entwickler erarbeiten gemeinsam ein Modell
 		\item Best Practices
 		\begin{itemize}
 			\item Entwickeln von Prototypen zur Verständnisvalidierung
@@ -64,7 +64,9 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{Hexagonale Architektur}
 	\begin{itemize}
 		\item Ziel: Isoliertes Entwickeln und Testen von Anwendungen, ohne Geräte/Datenbanken/Benutzern \(\rightarrow\) Trennung zwischen Geschäftslogik und externen Entitäten
-		\item Realisiert mittels Ports und Adaptern
+		\item Anwendung soll unabhängig von ihrer Laufzeitumgebung testbar sein
+		\item Realisiert mittels \textit{Ports} und \textit{Adaptern}: \textit{Adapter} konvertieren \textit{Events}, die an \textit{Ports} eintreffen in Methoden
+		\item Hexagonale Darstellung symbolisiert die verschiedenen Schnittstellen
 	\end{itemize}
 \end{itemize}
 
@@ -74,7 +76,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item Wiederverwendung existierender Konzepte (Objektorientierung, Responsibility-Driven-Design, etc.)
 	\item \textbf{Pattern: Layered Architecture}
 	\begin{itemize}
-		\item Ziel: Sepraierung der Geschäftslogik von anderen Komponenten \(\rightarrow\) einfache Wartbarkeit der Geschäftslogik
+		\item Ziel: Separierung der Geschäftslogik von anderen Komponenten \(\rightarrow\) einfache Wartbarkeit der Geschäftslogik
 		\item Kommunikation bei Schichtenarchitekturen: Direkte Aufruf der darutner liegenden Schicht; indirekte Kommunikation mit der Schicht darüber (Callbacks, Observer-Pattern, etc.)
 		\item Die Schichten
 		\begin{description}
@@ -96,7 +98,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Objekttypen
 		\begin{description}
 			\item[Entity:] Attributobjekt, das zur Identifikation eines Objekts benutzt werden kann (\texttt{objectId}, etc.)
-			\item[Value Object:] Attributobjekt, das weitergehende Informationen speichert, die nicht ur Identifikation benutzt werden können (\texttt{address}, etc.)
+			\item[Value Object:] Attributobjekt, das weitergehende Informationen speichert, die nicht zur Identifikation benutzt werden können (\texttt{address}, etc.)
 		\end{description}
 		\item Service: Zustandslose Operation, die von einem Interface bereitgestellt wird
 		\item Module: Fasst Teile der Domäne lose gekoppelt zusammen
@@ -114,7 +116,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{Domain Modeling Guideline}
 	\begin{itemize}
 		\item Ziel: Organisationseinheitliche Anwendung von DDD-Pattern
-		\item Beinhaltet: Repository-Struktur der Artefakte inklsuive Werkzeuge zum Ändern der Artefakte; strukturelle Beschreibung der Modellierungsschritte
+		\item Beinhaltet: Repository-Struktur der Artefakte inklusive Werkzeuge zum Ändern der Artefakte; strukturelle Beschreibung der Modellierungsschritte
 	\end{itemize}
 	\item \textbf{Strukturierung einer Domäne}
 	\begin{itemize}
@@ -144,25 +146,21 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 
 
-\section{Microservices and Web APIs}
+\section{Microservices und Web-\texttt{APIs}}
 
 \subsection{Einführung}
 \begin{itemize}
 	\item Motivation
 	\begin{itemize}
-		\item Monolithische Software-Systeme werden immer größer (siehe "`Software-Krise"' von 1968) und komplexer
+		\item Monolithische Software-Systeme werden immer größer und komplexer (siehe "`Software-Krise"' von 1968)
 		\item \textit{System-Zentrierung}: Software-Entwicklung, da hier immer ein Software-System realisiert wird
 		\item \textit{Prozess-Zentrierung}: SOA-Entwicklung, da Geschäftsprozesse unterstützt werden sollen
 	\end{itemize}
 	\item Feingranulare, kooperierende Services, die jeweils individuelle Teilaufgaben übernehmen und individuell entwickelt und deployt werden
-	\item \textbf{Beeinflusst durch:}
+	\item \textbf{Ursprünge}
 	\begin{itemize}
 		\item Domain-Driven Design
 		\item Hexagonale Architektur
-		\begin{itemize}
-			\item Ziel: Anwendung soll unabhängig von ihrer Laufzeitumgebung testbar sein \(\rightarrow\) Trennung von Geschäftslogik und externen Abhängigkeiten. Funktionalität soll ausschließlich über \texttt{APIs} angesprochen werden können
-			\item Hexagonale Darstellung symbolisiert die Schnittstellen ("`Ports and Adapters"'). \textit{Adapter} konvertieren die \textit{Events}, die an den \textit{Ports} eintreffen, in Prozeduren
-		\end{itemize}
 		\item Continuous Delivery (CD) und Build Pipelines
 		\begin{itemize}
 			\item Jeder Repository-Checkin wird als Release Candidate behandelt, automatisch gebaut und automatisiert getestet
@@ -207,10 +205,10 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 			\item REpresentational State Transfer (REST): Ressourcen-orientiert und vom internen Speicher entkoppelt; basiert auf \texttt{HTTP}. RESTful \texttt{APIs} müssen die fünf REST-Prinzipien erfüllen
 			\begin{enumerate}
 				\item Adressierbarkeit von Ressourcen über eindeutige \texttt{URLs}
-				\item Veränderungen von Daten nur über eine Repräsentation
+				\item Triviale Verwaltungsmethoden von Ressourcen: \texttt{CRUD}
 				\item Zustandslose Kommunikation
-				\item Verschiedene Repräsentationen pro Ressource in Abhängigkeit des Anfragenden
-				\item Navigation ausschließlich über \texttt{URLs}, die vom Server bereitgestellt werden
+				\item Verschiedene Repräsentationen der Ressourcen, beispielsweise \texttt{HTML}, \texttt{JSON}, \texttt{XML}, etc; definierbar via \texttt{Content-Type} im \texttt{HTTP}-Header
+				\item Navigation ausschließlich über \texttt{URLs}, die vom Server bereitgestellt werden (Hypermedia) \(\rightarrow\) lose Kopplung, da hartkodierte Pfade vermieden werden
 			\end{enumerate}
 		\end{itemize}
 		\item Event-basiert (Producer-Consumer-Schema): \textit{Message-Brokers} verteilten Event-Nachrichten. Beispiele: \texttt{RabbitMQ} oder \texttt{Apache Kafka}
@@ -220,9 +218,9 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Vier verschiedene, hierarchisch angeordnete Typen, die jeweils auf den untergeordneten basieren
 		\begin{description}
 			\item{Level 3:} Hypermedia (Hypermedia-orientiert)
-			\item{Level 2:} Protocol Properties (Ressourcen-orientiert)
-			\item{Level 1:} Resources (Ressourcen-orientiert)
-			\item{Level 0:} Plain Old XML
+			\item{Level 2:} Protocol Properties (Ressourcen-orientiert; eindividuelle \texttt{URLs}, Nutzung der \texttt{HTTP}-Methoden)
+			\item{Level 1:} Resources (Ressourcen-orientiert; individuelle \texttt{URL} pro Ressource, aller per \texttt{POST})
+			\item{Level 0:} Plain Old XML; einzelne \texttt{URL}, aller per \texttt{POST}
 		\end{description}
 	\end{itemize}
 \end{itemize}
@@ -236,7 +234,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\begin{enumerate}
 		\item Anforderungen an den Service aufstellen (ableiten aus Analysephase)
 		\item Iterativ: Entwickeln/Verbessern der \texttt{API}; Reviewen der \texttt{API}
-		\item Service und Consumer entwickeln
+		\item Implementierung von Service und ServiceConsumer
 	\end{enumerate}
 	\item \textbf{\texttt{API} Guideline-Sammlung}
 	\begin{itemize}
@@ -264,23 +262,23 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Swagger UI: Automatisches Erzeugen von Dokumentation
 	\end{itemize}
 	\item \textbf{Schematischer Ansatz zum Entwickeln von Web \texttt{APIs}}
-	\begin{itemize}
+	\begin{enumerate}
 		\item Grundlage: Domänen-Modell, Feature-Liste, UI-Entwürfe
 		\item Identifikation von Ressourcen: Jedes Domänen-Objekt ist eine potentielle Ressource
 		\item Abgleich mit der \textit{Humane Service Registry} zum Wiederverwenden existierender \texttt{APIs}
 		\item Implementierung der Ressourcen-CRUD-Methoden mittels \texttt{HTTP}-Methoden
-		\item Implementierung von URL-Attributen zum Sortieren, Filtern, etc.
-	\end{itemize}
+		\item Implementierung von URL-Attributen für Sortierungen, Filter, Paging etc.
+	\end{enumerate}
 \end{itemize}
 
 
 \subsection{API Management}
 \begin{itemize}
-	\item Motivation: ZentralesVerwalten, Dokumentieren, Weiterentwickeln, Wiederverwenden von \texttt{APIs}
+	\item Motivation: Zentrales Verwalten, Dokumentieren, Weiterentwickeln, Wiederverwenden von \texttt{APIs}
 	\item \textbf{Service Registry}
 	\begin{itemize}
 		\item Zentrale Verwaltungskomponente; \textit{Service Provider} publisht \texttt{APIs}, \textit{Service Consumer} sucht \texttt{APIs}
-		\item Beispiel: \textit{Humane Service Registry} (HSR) aller \texttt{APIs}, die bei C\&M entwickelt worden sind. Attribute sind u.a. Name, Beschreibung und Service-Gruppe
+		\item Beispiel: \textit{Humane Service Registry} (HSR) aller \texttt{APIs}, die bei C\&M entwickelt worden sind. Attribute sind u.a. Name, Beschreibung, Service-Gruppe und Ansprechpartner/Verantwortlicher
 	\end{itemize}
 	\item Bestandteile einer \texttt{API}-Managementumgebung: Management, Administrationsportal, Entwicklerportal, \texttt{API}-Microgateway
 	\item \texttt{API}-Lifecycle: Design, Secure, Deploy, Publish, Analyze, Operate
@@ -291,6 +289,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Anwedungsfälle: JSON-Threat-Protection, Quotas, Caching, Frontend einer Microservice-Umgebung, Anfragenlimitierung (Consumer muss ggf. bekannt sein)
 		\item Kann Authentifizierung per (externem) \texttt{OAuth2.0}-Server vornehmen
 	\end{itemize}
+	\item {API}-Gateway: Serverseitiger Layer zum Umbauen, Aggregieren, Autorisieren, etc. von \texttt{API}-Aufrufen
 \end{itemize}
 
 
@@ -305,29 +304,29 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{Gefahrenwarndienst: HazardWarningServiceGroup (HazSG)}
 	\begin{itemize}
 		\item Warnt vor potentiellen Gefahren (Aquaplaning, Blitzeis, Verkehrsstaus, Unfälle, etc.)
-		\item Dienst erhält Ereignisse vom Fahrzeug und sendet im Gegenzug Gehfahreninformationen
+		\item Dienst erhält Ereignisse vom Fahrzeug und sendet im Gegenzug Gefahreninformationen
 	\end{itemize}
 	\item \textbf{Complex Event Processing (CEP)}
 	\begin{itemize}
-		\item Definition Ereignis: "`feingranulare, diskrete Ereignisse"' (bspw. Temperaturveränderung) versus "`grobgranulares Ereignis"' (Glatteiswarnung, Umleitungsempfehlung)
+		\item Definition Ereignis: "`Feingranulare, diskrete Ereignisse"' (bspw. Temperaturveränderung) versus "`grobgranulare, kompositäre Ereignise"' (Glatteiswarnung, Umleitungsempfehlung)
 		\item Typisierung von Ereignissen
 		\item Verarbeitung von kontinuierlichen Ereignissen in Echtzeit
 		\item Mustererkennung: \texttt{[Temperatur < 0]} \(+\) \texttt{[Räder blockieren]} \(\rightarrow\) \texttt{[Blitzeis]}
 		\item Esper: CEP-System für Java
 		\begin{itemize}
 			\item Untersuchen von Datenströmen mittels Event-Processing-Language oder Pattern Matching
-			\item Erzeugen von komplexen (kompositen) Ereignistypen
+			\item Erzeugen von komplexen (kompositären) Ereignistypen
 			\item Dynamische Veränderung der Informationsauswertung zur Laufzeit
 		\end{itemize}
 		\item Aufbau eines \texttt{CEP}-Systems
 		\begin{itemize}
 			\item Ereignismodell: Definiert Typen und Attribute von Ereignissen
-			\item Übertragungskanäle: Verschiedene Technologien möglich, i.d.R. ereignisgetriebene Subscriber-Publisher-Systeme. Beipsielsweise \texttt{RabbitMQ} oder Apache Kafka
-			\item Ereignisverarbeitung durch \textit{Event Processing Agents} (EPA): Durchsuchen den Ereignisstrom nach Mustern
+			\item Übertragungskanäle: Verschiedene Technologien möglich, i.d.R. ereignisgetriebene Subscriber-Publisher-Systeme. Beispielsweise \texttt{RabbitMQ} oder Apache Kafka
+			\item Ereignisverarbeitung durch \textit{Event Processing Agents} (EPA): Diese durchsuchen den Ereignisstrom nach Mustern
 		\end{itemize}
 		\item Streaming Technologien
 		\begin{itemize}
-			\item Apache Kafka: Topic-gestützte Verteilung von Ereignisobjekten von Quellen auf Konsumenten; Zusammenfassen von Konsumenten zu \textit{Consumer Groups}
+			\item Apache Kafka: Topic-gestützte Verteilung von Ereignisobjekten von Quellen zu Konsumenten; Zusammenfassen von Konsumenten zu \textit{ConsumerGroups}
 			\item Spring Cloud Stream: Framework für ereignisgesteuerte Microservices. Abstrahiert die Streaming-Middleware (beispielsweise Apache Kafka); direkte Verbindung zwischen Anwendungen möglich (steigert die Effizienz)
 		\end{itemize}
 	\end{itemize}
@@ -342,7 +341,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \subsection{Analyse und Entwurf}
 \begin{itemize}
-	\item Domänenmodell als Grundlage zur Web-\texttt{APIs}, die für den \texttt{HazardWarningService} notwendig sind
+	\item Domänenmodell als Grundlage für Web-\texttt{APIs}, die für den \texttt{HazardWarningService} notwendig sind
 	\item \textbf{Vorgehen}
 	\begin{enumerate}
 		\item Kapselung des Domänenmodells in Services
@@ -359,7 +358,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 \begin{itemize}
 	\item \textbf{Motivation}
 	\begin{itemize}
-		\item Definition: Grad, zu dem Software die Erwartungen unter bestimmten Bedingungen erfüllt
+		\item Definition Qualität: Grad, zu dem Software die Erwartungen unter bestimmten Bedingungen erfüllt
 		\item Wichtig um ein gegebenes Problem zu lösen; Katastrophen zu verhindern; Wartungskosten einzusparen
 	\end{itemize}
 	\item \textbf{Produktqualitätsmodel (ISO/IEC 25010:2011)}
@@ -382,7 +381,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item \textit{Quality Characteristic}: Kategorie von Qualitätsattributen (beispielsweise Wartbarkeit); kann in mehrere \textit{Quality sub-characteristics} unterteilt werden
 		\item \textit{Quality Attribute}: \texttt{[1..*]} quantifizieren eine \textit{Quality Characteristic}
 		\item \textit{Quality Criterion}: Zufriedenheitsschwelle pro \textit{Quality Attribute}
-		\item \textit{Quality indicator}: Weist auf die Umsetzung von \textit{Quality Attributes} hin; kann aus Design Pattern, Best Practices, etc. abgeleitet werden
+		\item \textit{Quality Indicator}: Weist auf die Umsetzung von \textit{Quality Attributes} hin; kann aus Design Pattern, Best Practices, etc. abgeleitet werden
 		\item \textit{Quality Metric}: Formalisiert \textit{Quality Indicators}
 	\end{itemize}
 \end{itemize}
@@ -427,10 +426,10 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Konsistent und erweiterbar (iterative Entwicklung mit Experten)
 	\end{itemize}
 	\item Unterscheidung zwischen Backend-Service-APIs (kapseln Geschäftslogik) und Backend-For-Frontend-APIs (kapseln mehrere Backend-Service-APIs: Feature-orientiert, UI-orientiert)
-	\item Hpermedia-Aspekt wird meist ignoriert: Pfadtypen werden "`hard-codiert"'
+	\item Hypermedia-Aspekt wird meist ignoriert: Pfade werden "`hard-codiert"'
 \end{itemize}
 
-\subsection{Entwurf von Backend-Service-APIs}
+\subsection{Entwurf von Backend-Service-\texttt{APIs}}
 \begin{enumerate}
 	\item Analysieren der bestehenden Analyse-und Entwicklungsartefakte
 	\item Identifikation von Ressourcen
@@ -474,7 +473,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\begin{description}
 			\item[Details:] Hinreichend detailliert
 			\item[Estimated:] Geschäftswert schätzbar
-			\item[Emergent:] Wachstum und Veränderung
+			\item[Emergent:] Liste wird dynamisch verändert/aktualisiert
 			\item[Prioritized:] Nach Priorisierung sortiert
 		\end{description}
 		\item Überarbeitung der Sortierung in \textit{Grooming-Meetings} (kein offizieller Bestandteil von Scum)
@@ -536,13 +535,16 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 \subsection{Agile Entwicklung mit Scrum}
 \begin{itemize}
 	\item Managementwerkzeug ohne Vorgabe von Entwicklungspraktiken \(\rightarrow\) Team entscheidet darüber eigenverantwortlich (Vermeidung von "`technische Schulden"')
-	\item Gemeinsames Verständnis inklusive grober, gemeinsamer Architekturvision
-	\item \textbf{CAS-Eigenschaften einer Architekturvision}
-	\begin{description}
-		\item[Clear:] Darstellung der Umsetzung von nicht-funktionalen Anforderungen; Einsatz einer Modellierungssprache
-		\item[Accepted:] Von allen mitgetragen; keine architektonischen Alleingänge
-		\item[Short:] Kein vollständiges Modell
-	\end{description}
+	\item \textbf{Architekturvision}
+	\begin{itemize}
+		\item Gemeinsames Verständnis inklusive grober, gemeinsamer Architekturvision
+		\item CAS-Eigenschaften einer Architekturvision
+		\begin{description}
+			\item[Clear:] Darstellung der Umsetzung von nicht-funktionalen Anforderungen; Einsatz einer Modellierungssprache
+			\item[Accepted:] Von allen mitgetragen; keine architektonischen Alleingänge
+			\item[Short:] Kein vollständiges Modell
+		\end{description}
+	\end{itemize}
 	\item Collective Ownership: Gemeinsame Verantwortung des Teams für den gesammten Quellcode
 	\item Pair Programming: Zwei Entwickler arbeiten zusammen an einem Computer; regelmäßiger Rollenwechsel nach mehreren Minuten
 	\item Refactoring: Code-Updates ohne das externe Verhalten zu ändern; lauffähige Testfälle wichtig
@@ -624,17 +626,17 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item Sicherheitsanforderungen lassen sich auf Schutzziele zurückführen; Sicherheitsmuster zur Erfüllung von Sicherheitsanforderungen verfügbar
 	\item \textbf{Zugriffskontrolle}
 	\begin{itemize}
-		\item Referenzmonitor: Bindeglied zwischen Authentifizierung und Autorisierung
+		\item Referenzmonitor
+		\begin{itemize}
+			\item Fängt alle Ressourcenanfragen ab und prüft, ob diese autorisiert sind und leitet im Erfolgsfall an das geschützte Objekt weiter
+			\item Sehr allgemeingehalten; keine Vorgaben hinsichtlich Authentifizierung und Autorisierung
+		\end{itemize}
 		\item Sicherheitsmuster für Authentifizierung: Wissen, Besitz, Sein
 		\item Sicherheitsmuster für Autorisierung: Attributbasiert, rollenbasiert, identitätsbasiert, etc.
 	\end{itemize}
 	\item \textbf{Beispiele}
 	\begin{itemize}
 		\item Referenzmonitor
-		\begin{itemize}
-			\item Fängt alle Ressourcenanfragen ab und prüft, ob diese autorisiert sind und leitet im Erfolgsfall an das geschützte Objekt weiter
-			\item Sehr allgemeingehalten; keine Vorgaben hinsichtlich Authentifizierung und Autorisierung
-		\end{itemize}
 		\item Identitätsbasierte Zugriffskontrolle: Zugriffsmatrix in der Form \(\lbrack Subjekt, Ressource \rbrack \longrightarrow Recht\)
 		\item Rollenbasierte Zugriffskontrolle
 		\begin{itemize}
@@ -644,7 +646,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\end{itemize}
 		\item Attributsbasierte Zugriffskontrolle: An boolesche Algebra angelehnt; Nutzung von Umweltinformationen möglich
 		\item Authentifizierung: Prüfung einer digitalen Identität; Auswahl des Verfahrens wird durch den Schutzbedarf bestimmt; Mehr-Faktor-Authentifizierung möglich
-		\item Authrntifizierungsmethoden im Consumer IAM
+		\item Authentifizierungsmethoden im \textit{Consumer IAM}
 		\begin{itemize}
 			\item Über soziales Netzwerk
 			\item Risikobasiert: Authentzitätswahrscheinlichkeit auf Basis gesammelter Daten berechnen
