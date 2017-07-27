@@ -31,7 +31,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item IDE: Eclipse mit Git-Client
 		\item Werkzeuge: MS Office, UI-Werkzeuge, Enterprise Architect
 	\end{itemize}
-	\item Rollen und Aufgaben in der Software-Entwicklung: Betruer, BA/MA-SeniorStudent, JuniorStudent
+	\item Rollen und Aufgaben in der Software-Entwicklung: Betreuer, BA/MA-SeniorStudent, JuniorStudent
 	\item Humane Service Registry: Zentrale Übersicht aller Services
 	\item Leitfaden: C\&M-konformes Dokument zur praktischen Einführung in eine Technologie/Service/Konzept; beinhalten Technologiegrundlagen und Umsetzungsbeispiele
 	\item Eigenentwicklungsdokument (EED): Am Lehrstuhl entwickelte Software
@@ -77,7 +77,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{Pattern: Layered Architecture}
 	\begin{itemize}
 		\item Ziel: Separierung der Geschäftslogik von anderen Komponenten \(\rightarrow\) einfache Wartbarkeit der Geschäftslogik
-		\item Kommunikation bei Schichtenarchitekturen: Direkte Aufruf der darutner liegenden Schicht; indirekte Kommunikation mit der Schicht darüber (Callbacks, Observer-Pattern, etc.)
+		\item Kommunikation bei Schichtenarchitekturen: Direkte Aufruf der darunter liegenden Schicht; indirekte Kommunikation mit der Schicht darüber (Callbacks, Observer-Pattern, etc.)
 		\item Die Schichten
 		\begin{description}
 			\item[User Interface:] Benutzeransicht mit Kommondoeingabe
@@ -89,7 +89,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\begin{itemize}
 			\item Lose Koppling der Schichten: Abhängigkeiten nur nach unten
 			\item Trennung der Domänenschicht von den anderen
-			\item Trennung von Infratrukturschicht und Domänenschicht
+			\item Trennung von Infrastrukturschicht und Domänenschicht
 			\item Gezielte Auswahl von Frameworks
 		\end{itemize}
 	\end{itemize}
@@ -125,7 +125,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\end{itemize}
 	\item \textbf{Domain Objekten}
 	\begin{itemize}
-		\item Verwendung von \textit{Domänen Objekten} um die Domäne zu modellierung
+		\item Verwendung von \textit{Domänen Objekten}, um die Domäne zu modellieren
 		\item Beziehungstypen: Association, Aggregation (Ziel kann alleine existieren), Composition (Ziel kann nicht alleine existieren), Generalization (Vererbung)
 	\end{itemize}
 	\item \textbf{Domain Views}
@@ -207,8 +207,8 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 				\item Adressierbarkeit von Ressourcen über eindeutige \texttt{URLs}
 				\item Triviale Verwaltungsmethoden von Ressourcen: \texttt{CRUD}
 				\item Zustandslose Kommunikation
-				\item Verschiedene Repräsentationen der Ressourcen, beispielsweise \texttt{HTML}, \texttt{JSON}, \texttt{XML}, etc; definierbar via \texttt{Content-Type} im \texttt{HTTP}-Header
-				\item Navigation ausschließlich über \texttt{URLs}, die vom Server bereitgestellt werden (Hypermedia) \(\rightarrow\) lose Kopplung, da hartkodierte Pfade vermieden werden
+				\item Verschiedene Repräsentationen der Ressourcen, beispielsweise \texttt{HTML}, \texttt{JSON} oder \texttt{XML}; definierbar via \texttt{Content-Type} im \texttt{HTTP}-Header
+				\item Navigation ausschließlich über \texttt{URLs}, die vom Server bereitgestellt werden (Hypermedia) \(\rightarrow\) erhöht die lose Kopplung, da hartkodierte Pfade vermieden werden
 			\end{enumerate}
 		\end{itemize}
 		\item Event-basiert (Producer-Consumer-Schema): \textit{Message-Brokers} verteilten Event-Nachrichten. Beispiele: \texttt{RabbitMQ} oder \texttt{Apache Kafka}
@@ -226,7 +226,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 \end{itemize}
 
 
-\subsection{Design von Web APIs}
+\subsection{Design von Web-APIs}
 \begin{itemize}
 	\item Qualitätskriterien: Einfach zu verstehen; Technologie-unabhängig; konsistent; erweiterbar; weiterentwickelbar
 	\item \texttt{API} sollte Startpunkt der Entwicklung sein ("`\texttt{API} first"'); Design-Guidelines aufstellen und umsetzen
@@ -286,7 +286,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\begin{itemize}
 		\item Verbindet \texttt{API} und Anwendung
 		\item Policies: Sicherheit, Traffic-Management, Vermittlung, Erweiterungen
-		\item Anwedungsfälle: JSON-Threat-Protection, Quotas, Caching, Frontend einer Microservice-Umgebung, Anfragenlimitierung (Consumer muss ggf. bekannt sein)
+		\item Anwedungsfälle: JSON-Threat-Protection, Quota, Caching, Frontend einer Microservice-Umgebung, Anfragenlimitierung (Consumer muss ggf. bekannt sein)
 		\item Kann Authentifizierung per (externem) \texttt{OAuth2.0}-Server vornehmen
 	\end{itemize}
 	\item {API}-Gateway: Serverseitiger Layer zum Umbauen, Aggregieren, Autorisieren, etc. von \texttt{API}-Aufrufen
@@ -298,7 +298,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Trends im Automotive-Geschäftsbreich: Viele "`Innovative"' Lösungen rund um das vernetzte Fahrzeug; technologischer Fortschritt (Hardware, Sensorik, Software, etc.); IT-Unternehmen drängen in den Markt
+	\item Trends im Automotive-Geschäftsbreich: Viele "`innovative"' Lösungen rund um das vernetzte Fahrzeug; technologischer Fortschritt (Hardware, Sensorik, Software, etc.); IT-Unternehmen drängen in den Markt
 	\item Herausforderungen: Echtzeitereignisprocessing, Sicherheit, IAM
 	\item \texttt{HERE}: Entwicklung von Schnittstellenspezifikation für ConnctedCars. Beispiele: Real Time Traffic; On-Street Parking; Road Signs; Hazard Warnings
 	\item \textbf{Gefahrenwarndienst: HazardWarningServiceGroup (HazSG)}
@@ -364,7 +364,6 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{Produktqualitätsmodel (ISO/IEC 25010:2011)}
 	\begin{itemize}
 		\item Klassifizierung von acht Haupteigenschaften, die weiter unterteilt werden
-		\item Eigenschaften
 		\begin{itemize}
 			\item Funktionale Eignung: Zu welchem Grad werden die Voraussetzungen erfüllt
 			\item Leistungsfähigkeit
@@ -418,7 +417,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Motivation: Wichtiges Unternehmensgut; kann nicht mehr verwendet werden, wenn veröffentlicht (ggf. hohe Supportkosten)
+	\item Motivation: Wichtiges Unternehmensgut; kann nicht mehr ohne Weiteres geändert werden, wenn veröffentlicht (ggf. hohe Supportkosten)
 	\item \textbf{Qualitätsmerkmale}
 	\begin{itemize}
 		\item Kundensicht: Einfach zu verstehen/nutzen
@@ -458,7 +457,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 \begin{itemize}
 	\item ProductOwner: Verantwortlich für Rentabilität; Produktvision; Überwachen der Qualität; Produktpflege; Releases. Allerdings kein Projektleiter
 	\item ScrumMaster: Teamcoach, der das Entwicklungsteam extern vertritt und für das Gelingen verantwortlich ist. Verwaltet das \textit{Impediment Backlog}
-	\item Entwicklungsteam: Selbstorganisierte Umsetzung der Softwareanforderungen in Teams von zwei bis 7 Personen; Verantwortlich für Qualität. Auch kein Projektleiter
+	\item Entwicklungsteam: Selbstorganisierte Umsetzung der Softwareanforderungen in Teams von 7 \(\pm\) 2 Personen; Verantwortlich für Qualität. Auch kein Projektleiter
 \end{itemize}
 
 
@@ -481,12 +480,12 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 	\item \textbf{User Stories}
 	\begin{itemize}
 		\item Feature aus User-Sicht in ein bis zwei kurzen Sätzen: Wer?, Was?, Warum?
-		\item Bestandteile: Id, Aufwand in \textit{Story Points}, Akzeptanzkriterien
+		\item Bestandteile: Id, Aufwand in \textit{StoryPoints}, Akzeptanzkriterien
 	\end{itemize}
 	\item \textbf{Planning Poker}
 	\begin{itemize}
 		\item Aufwandschätzung einer UserStory; kein spezifische Methode von Scrum vorgschrieben, \textit{Planning Poker} wird häufig eingesetzt
-		\item Alle Teammitglieder geben unabhängig Schätzungen ab; Extrema müssen ihren Standpunkt erklären; Wiederholen bis Konsens gefunden
+		\item Alle Teammitglieder geben unabhängig Schätzungen ab; Extrema müssen ihren Standpunkt erklären; wiederholen bis Konsens gefunden
 	\end{itemize}
 	\item \textbf{Sprint Backlog}
 	\begin{itemize}
@@ -546,7 +545,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\end{description}
 	\end{itemize}
 	\item Collective Ownership: Gemeinsame Verantwortung des Teams für den gesammten Quellcode
-	\item Pair Programming: Zwei Entwickler arbeiten zusammen an einem Computer; regelmäßiger Rollenwechsel nach mehreren Minuten
+	\item Pair Programming: Zwei Entwickler arbeiten zusammen an einem Computer; periodischer Rollenwechsel nach mehreren Minuten
 	\item Refactoring: Code-Updates ohne das externe Verhalten zu ändern; lauffähige Testfälle wichtig
 	\item \textbf{Inkrementeller Entwurf}
 	\begin{itemize}
@@ -570,7 +569,7 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 \subsection{Sicherheitsorientierter Entwicklungsprozess}
 \begin{itemize}
 	\item Informationssicherheit: Schutz von Informationen, insbesondere der Systeme, die sie benutzen, speichern und übermitteln
-	\item Sicherheit wird meist nur zweitrangig betrachtet. Histrorische Systeme waren lange isoliert, erst durch das Internet stieg das Schutzbedürfnis
+	\item Sicherheit wird meist nur zweitrangig betrachtet. Historische Systeme waren lange isoliert, erst durch das Internet stieg das Schutzbedürfnis
 	\item \textbf{Schutzziele}
 	\begin{itemize}
 		\item CIA: Confidentiality (Vertraulichkeit), Integrity (Integrität) und Availability (Verfügbarkeit)
@@ -595,11 +594,10 @@ Zusammenfassung der Vorlesung "`Web-Anwendungen und Serviceorientierte Architekt
 		\item Autorisierungsserver validiert das Token am Benutzerverzeichnis
 		\item Autorisierungsserver antwortet der Web-Anwendung
 	\end{enumerate}
-	\item Absicherung traditioneller, monolithischer Web-Anwendungen: Abfangen von Anfragen durch zentrale Komponente
+	\item Absicherung traditioneller, monolithischer Web-Anwendungen: Abfangen von Anfragen durch zentrale Komponente (beispielweise Referenzmonitor)
 	\item Probleme bei MicroServices: Zugriffskontrolle muss in jedem MicroService implementiert werden; Anfragen durch Weitergabe der Anmeldedaten des Benutzers
 	\item \textbf{Ablauf beim Servicezugriff}
 	\begin{itemize}
-		% TODO: Wo ist effektiv der Unterschied?
 		\item Im Namen des Benutzers
 		\item Im eigenen Namen
 	\end{itemize}
