@@ -13,6 +13,10 @@ algo2only:
 	pdflatex algo2only.tex
 	pdflatex algo2only.tex
 
+assetpricingonly:
+	pdflatex assetpricingonly.tex
+	pdflatex assetpricingonly.tex
+
 cgonly:
 	pdflatex cgonly.tex
 	pdflatex cgonly.tex

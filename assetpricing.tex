@@ -1,0 +1,90 @@
+\chapter{BWL: Asset Pricing}
+
+Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\footnote{\url{https://derivate.fbv.kit.edu/942.php}}
+
+\section{Stochastischer Diskontfaktor (SDF)}
+
+\subsection{Berechnung des SDF in einer Ökonomie mit zwei Zuständen}
+Gleichsetzen von Formel \ref{eq:E} und Formel \ref{eq:p} zum Berechnen von \(m_u\) und \(m_d\).
+
+
+\subsection{Risikoneutrale Wahrscheinlichkeiten}
+\begin{itemize}
+	\item Beinhalten eine Risikoadjustierung
+\end{itemize}
+
+
+
+\section{Fama-French-Dreifaktorenmodell}
+\begin{itemize}
+	\item Erweitert CAPM um zwei weitere Faktoren, um die Rendite eines Papiers mit der Marktrendite zu erklären
+	\item \textbf{\textit{high (Buch-Marktwert-Verhältnis) minus low} (HML)}
+	\begin{itemize}
+		\item Renditedifferenz zwischen Value- und Growthaktien
+		\item Renditedifferenz zwischen Aktien mit hohem und niedrigem \textit{Buchwert-zu-Marktwert-Verhältnis}
+		\item Interpretation
+		\begin{description}
+			\item[Hoch:] Asset-lastige Industrie
+			\item[Niedrig:] Hohes Wachstumspotential
+		\end{description}
+	\end{itemize}
+	\item \textbf{\textit{small (Marktkapitalisierung) minus big} (SMB)}
+	\begin{itemize}
+		\item Renditedifferenz zwischen kleinen und großen Aktien
+		\item Renditedifferenz von Aktien mit geringem und hohem Marktwert des Eigenkapitals
+		\item Interpretation
+		\begin{description}
+			\item[Hoch:] Junge Unternehmen; Nischenmarkt
+			\item[Niedrig:]
+		\end{description}
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{Appendix A: Formelsammlung}
+
+\subsection{Grundlagen}
+
+\begin{equation}
+	\mathbb{E} \big\lbrack m \big\rbrack = \pi_u \cdot m_u + \pi_d \cdot m_d = \frac{1}{R^f} \label{eq:E}
+\end{equation}
+
+\begin{equation}
+	p = \mathbb{E} \big\lbrack m x \big\rbrack = \pi_u \cdot m_u \cdot x_u + \pi_d \cdot m_d \cdot x_d = \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack + cov\big(m,x\big) = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{R^f} + cov\big(m,x\big) \label{eq:p}
+\end{equation}
+
+\begin{equation}
+	cov\big(m,x\big) = \mathbb{E} \big\lbrack m x \big\rbrack - \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack
+\end{equation}
+
+\begin{equation}
+	m_{t_1,t_2} = \beta^{t_2 - t_1} \cdot \frac{u^\prime(c_{t_2})}{u^\prime(c_{t_1})} \label{eq:m}
+\end{equation}
+
+\begin{equation}
+	R^f_{t_1, t_2} = \frac{1}{\mathbb{E} \big\lbrack m_{t_1,t_2} \big\rbrack} = \frac{1}{\beta^{t_2-t_1}} \cdot \mathbb{E} \Bigg\lbrack \frac{u^\prime(c_{t_2})}{u^\prime(c_{t_1})} \Bigg\rbrack^{-1} = \frac{1}{\beta^{t_2-t_1}} \cdot \mathbb{E} \Bigg\lbrack \bigg( \frac{c_{t_2}}{c_{t_1}} \bigg)^{-\gamma} \Bigg\rbrack^{-1} \label{eq:rf}
+\end{equation}
+
+
+\subsection{Risikoneutrale Wahrscheinlichkeiten}
+
+\begin{equation}
+	\pi^*_u = \frac{m_u}{\mathbb{E} \big\lbrack m \big\rbrack} \cdot \pi_u = \frac{m_u}{m_u \cdot \pi_u + m_d + \pi_u} \cdot \pi_u
+\end{equation}
+
+\begin{equation}
+	\pi^*_d = 1 - \pi^*_u
+\end{equation}
+
+\begin{equation}
+	p^* = \frac{\mathbb{E}^x \big\lbrack x \big\rbrack}{R^f} = \frac{\pi^*_u \cdot x_u + \pi^*_d \cdot x_d}{R^f}
+\end{equation}
+
+
+\subsection{Fama-French}
+
+\(\lambda_M\), \(\lambda_{SMB}\) und \(\lambda_{HML}\) bezeichnen individuelle Marktrisokoprämien.
+\begin{equation}
+	r = R^f + \beta_M \cdot \lambda_M + \beta_{SMB} \cdot \lambda_{SMB} + \beta_{HML} \cdot \lambda_{HML} \label{eq:ff}
+\end{equation}

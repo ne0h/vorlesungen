@@ -26,6 +26,7 @@ Aktuell enthalten
 
 ### Master
 
+* BWL: Asset Pricing
 * BWL: Derivate
 * Internet of Everything
 * Internet of Everything - Fragenkatalog
