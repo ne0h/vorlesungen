@@ -3,21 +3,131 @@
 Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\footnote{\url{https://derivate.fbv.kit.edu/942.php}}
 
 \section{Stochastischer Diskontfaktor (SDF)}
-
-\subsection{Berechnung des SDF in einer Ökonomie mit zwei Zuständen}
-Gleichsetzen von Formel \ref{eq:E} und Formel \ref{eq:p} zum Berechnen von \(m_u\) und \(m_d\).
-
-
-\subsection{Risikoneutrale Wahrscheinlichkeiten}
 \begin{itemize}
-	\item Beinhalten eine Risikoadjustierung
+	\item Häufig als \textit{reale} Größe modelliert, da Konsum üblicherweise als \textit{reale} Größe gemessen wird
+\end{itemize}
+
+\subsection{Powernutzenfunktion}
+\begin{itemize}
+	\item \textbf{Anforderungen}
+	\begin{itemize}
+		\item Positiver Grenznutzen: \(u^\prime(c)>0\); "`mehr ist besser als weniger"' (nicht-gesättigter Investor)
+		\item Abnehmender Grenznutzen: \(u^{\prime\prime}(c)<0\); je höher der Konsum, desto geringer ist der weitere Nutzenzuwachs
+	\end{itemize}
+	\item \textbf{Interpretation von \(\gamma\)}
+	\begin{description}
+		\item[\(\gamma<0\):] Risikofreudig; kleineres \(\gamma\) bedeutet höhere Risikofreudigkeit
+		\item[\(\gamma=0\):] Risikoneutral
+		\item[\(\gamma>0\):] Risikoavers; höheres \(\gamma\) bedeudetet höhere Risikoaversion und höhere Krümmung der Funktion \(\rightarrow\) höhere Risikovergütung gefordert
+	\end{description}
+\end{itemize}
+
+\subsection{Zentrale Bewertungsgleichung mit SDF}
+\begin{itemize}
+	\item Zentrale Bewertungsgleichung: \(p=\mathbb{E} \big\lbrack \beta \frac{u^\prime(c_{t+1})}{u^\prime(c_t)} \cdot x_{t+1} \big\rbrack\)
+	\item \(m_{t+1} = \beta \cdot \frac{u^\prime(c_{t+1})}{u^\prime(c_t)}\) (SDF) vereinfacht die zentrale Bewertungsgleichung zu \(p=\mathbb{E} \big\lbrack m_{t+1} x_{t+1} \big\rbrack\)
+	\item SDF ist zufällig und für alle Assets und Cash Flows identisch
+\end{itemize}
+
+\subsubsection{Beispiele für Preise und Zahlungen}
+\begin{itemize}
+	\item Aktieninvestment: Preis \(p_t\) setzt sich zusammen aus Preis \(p_{t+1}\) und Dividendenzahlung \(d_{t+1}\) (siehe \ref{eq:paktie})
+	\item Erwartete Rendite: Berechnung des Preises nach \ref{eq:p}
+	\item Brutto-Rendite: Berechnung des anteiligen "`Gewinnzuwachses"' im Erfolgsfall
 \end{itemize}
 
 
 
-\section{Fama-French-Dreifaktorenmodell}
+\section{Klassische Theorien}
+
+\subsection{Ökonomie der Zinsen}
+\begin{itemize}
+	\item Zentrale Bewertungsbeziehung für das Geldmarktkonto: \ref{eq:rf}
+	\item \textbf{Erkenntnisse}
+	\begin{itemize}
+		\item Realzinsen sind hoch, wenn Investoren ungeduldig sind (niedriges \(\beta\)) oder wenn das Konsumwachstum hoch ist
+		\item Realzinsen reagieren sensitiver bei hoher Risikoaversion (hohes \(\gamma\)) auf Änderungen des Konsumwachstums
+		\item Konsumwachstum ist hoch, wenn die Zinsen hoch sind (bei hohen Zinsen wird mehr gespart)
+		\item In unsicheren Zeiten wird mehr gespart \(\rightarrow\) niedrigere Zinsen ("`Precautionary Savings"')
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Risikoanpassung}
+\begin{itemize}
+	\item Für Assets, die mehr zur Konsumglättung beitragen, werden höhere Preise bezahlt
+	\item Preis wird nach oben korrigiert, falls Payoff in schlechten Zeiten hoch ist (Versicherungsidee)
+	\item Wieso Kovarianz statt Varianz relevant? - Investor interessiert sich nicht für Volatilität eines einzelnen Papiers, sondern für den resultierenden Konsum
+	\item Überrendite: Wertpapiere, deren Returns positiv mit Konsum variieren, führen zu volatilerem Konsum \(\rightarrow\) liefern höherere erwartete Returns (und umgekehrt)
+\end{itemize}
+
+
+\subsection{Unsystematisches Risiko}
+\begin{itemize}
+	\item Mit SDF unkorrelierte Zahlungen (\(Cov(m,x)=0\)) erfordern keine Risikokorrektur im Preis \(\rightarrow\) unsystematisches Risiko wird nicht vergütet
+	\item Erwartete Rendite entspricht der risikolosen Rendite
+\end{itemize}
+
+
+\subsection{Der \(\mu\)-\(\sigma\)-Rand}
+\begin{itemize}
+	\item Investments auf dem \(\mu\)-\(\sigma\)-Rand: Alle Investments, die perfekt negativ mit dem SDF korrelieren (maximal riskant; höchste Rendite; maximale Konsumschwankung)
+	\begin{description}
+		\item[Oberer Rand:] Maximal riskant; maximaler Ertrag
+		\item[Unterer Rand:] Bestmögliche Versicherung gegen Konsumschwankungen
+	\end{description}
+	\item Erwartete Rendite besteht aus \textit{risikoloser Rendite} \(R^f\) und \textit{Risikoprämie} \(\beta_{i,mv}\lambda\)
+\end{itemize}
+
+
+
+\section{Contingent Claims}
+
+\subsubsection{Wann sind Märkte vollständig?}
+\begin{itemize}
+	\item Anzahl zukünftiger Umweltzustände sind gleich der Dimension des Vektorraums
+	\item Auszahlungsvektoren in den Umweltzuständen sind linear unabhängig
+\end{itemize}
+
+
+\subsection{Diskontfaktor im vollständigen Markt}
+
+
+\subsection{Risikoneutrale Wahrscheinlichkeiten}
+\begin{itemize}
+	\item Der Wert eines Derivats in der realen Welt, in der Anwender sich nicht risikoneutral verhalten, muss identisch sein zum Wert des gleichen Derivats in einer hypothetischen, risikoneutralen Welt\footnote{\url{https://de.wikipedia.org/wiki/Risikoneutrale_Bewertung}} \(\rightarrow\) Bewertung erfolgt als wären Akteure risikoneutral
+	\item Zukünftige Zahlungen werden mit risikolosem Zinssatz diskontiert
+	\item Zustände mit überdurchshcnittlich hohem Grenznutzen werden stärker gewichtet
+	\item Bei Risikoaversion werden "`schlechte"' Zustände stärker gewichtet
+	\item Anwendung Derivatebewertung: Unterstelle Verteilung für Underlying und bestimme im aktuellen Underlying-Preis implizite risikoneutrale Wahrscheinlichkeiten
+\end{itemize}
+
+
+
+\section{Faktormodelle}
+
+\subsection{Grundidee der Faktormodelle}
+\begin{itemize}
+	\item Ersetze konsumbasierten Ausdruck für Grenznutzen durch lineares Faktormodell (siehe \ref{eq:lfm})
+	\item \textbf{Grundsätzliches Vorgehen zur Berechnung der erwarteten Rendite}
+	\begin{itemize}
+		\item Berechnung der Risikoexposition mittels Zeitreihendaten
+		\item Berechnung der Risikoprämien durch Querschnittsregression
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Arbitragepreistheorie}
+\begin{itemize}
+	\item Aus dem CAPM entwickelt, fordert allerdings kein Marktgleichgewicht sondern lediglich Arbitragefreiheit
+	\item Besteht aus Faktoren, denen jeweils Risikoprämien zugeordnet werden (siehe \ref{eq:apt})
+	\item Betrachtet idosynkratisches Risiko als nicht bewertungsrelevant
+\end{itemize}
+
+\subsection{Fama-French-Dreifaktorenmodell}
 \begin{itemize}
 	\item Erweitert CAPM um zwei weitere Faktoren, um die Rendite eines Papiers mit der Marktrendite zu erklären
+	\item Long und Short in ähnlichen Firmen \(\rightarrow\) keine Risikoexposition gegenüber Markt \(\rightarrow\) reine \(\alpha\)-Strategie (möglichst niedrig zu wählen)
 	\item \textbf{\textit{high (Buch-Marktwert-Verhältnis) minus low} (HML)}
 	\begin{itemize}
 		\item Renditedifferenz zwischen Value- und Growthaktien
@@ -39,31 +149,72 @@ Gleichsetzen von Formel \ref{eq:E} und Formel \ref{eq:p} zum Berechnen von \(m_u
 		\end{description}
 	\end{itemize}
 \end{itemize}
-
+\newpage
 
 
 \section{Appendix A: Formelsammlung}
 
 \subsection{Grundlagen}
 
+\subsubsection{Erwartete Rendite}
+\begin{equation}
+	\mathbb{E} \big\lbrack R \big\rbrack = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{p} = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{\mathbb{E} \big\lbrack mx \big\rbrack}
+\end{equation}
+
+\subsubsection{Varianz}
+\begin{equation}
+	Var(m) = \pi_u \Big(m_u - \mathbb{E} \big\lbrack m_u \big\rbrack\Big)^2 + \pi_d \Big(m_d - \mathbb{E} \big\lbrack m_d \big\rbrack\Big)^2
+\end{equation}
+
+\subsubsection{Kovarianz}
+\begin{equation}
+	Cov\big(m,x\big) = \mathbb{E} \big\lbrack m x \big\rbrack - \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack
+\end{equation}
+
+\subsubsection{Standardabweichung \(\sigma\)}
+\begin{equation}
+	\sigma = \sqrt{Var}
+\end{equation}
+
+
+\subsection{Stochastischer Diskontfaktor (Grenzrate der Substitution)}
+\begin{equation}
+	m_{t_1,t_2} = \beta^{t_2 - t_1} \cdot \frac{u^\prime(c_{t_2})}{u^\prime(c_{t_1})} = \beta^{t_2 - t_1} \cdot \bigg(\frac{c_{t_2}}{c_{t_1}}\bigg)^{-\gamma} \label{eq:m}
+\end{equation}
+
+\subsubsection{Preis}
+\begin{equation}
+	p = \sum^n_1 \mathbb{E} \big\lbrack m_{0,i} x_i \big\rbrack = \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack + Cov\big(m,x\big) = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{R^f} + Cov\big(m,x\big) \label{eq:p}
+\end{equation}
+\paragraph{Für \(n=1\)}
+\begin{equation}
+	p = \sum^1_1 \mathbb{E} \big\lbrack m x \big\rbrack = \pi_u \cdot m_u \cdot x_u + \pi_d \cdot m_d \cdot x_d
+\end{equation}
+
+\subsubsection{Aktieninvestment}
+\begin{equation}
+	p_t = \mathbb{E} \big\lbrack m \cdot (p_{t+1} + d_{t+1}) \big\rbrack \label{eq:paktie}
+\end{equation}
+
+\subsubsection{Risikoloser Zinssatz}
 \begin{equation}
 	\mathbb{E} \big\lbrack m \big\rbrack = \pi_u \cdot m_u + \pi_d \cdot m_d = \frac{1}{R^f} \label{eq:E}
 \end{equation}
-
-\begin{equation}
-	p = \mathbb{E} \big\lbrack m x \big\rbrack = \pi_u \cdot m_u \cdot x_u + \pi_d \cdot m_d \cdot x_d = \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack + cov\big(m,x\big) = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{R^f} + cov\big(m,x\big) \label{eq:p}
-\end{equation}
-
-\begin{equation}
-	cov\big(m,x\big) = \mathbb{E} \big\lbrack m x \big\rbrack - \mathbb{E} \big\lbrack m \big\rbrack \cdot \mathbb{E} \big\lbrack x \big\rbrack
-\end{equation}
-
-\begin{equation}
-	m_{t_1,t_2} = \beta^{t_2 - t_1} \cdot \frac{u^\prime(c_{t_2})}{u^\prime(c_{t_1})} \label{eq:m}
-\end{equation}
-
 \begin{equation}
 	R^f_{t_1, t_2} = \frac{1}{\mathbb{E} \big\lbrack m_{t_1,t_2} \big\rbrack} = \frac{1}{\beta^{t_2-t_1}} \cdot \mathbb{E} \Bigg\lbrack \frac{u^\prime(c_{t_2})}{u^\prime(c_{t_1})} \Bigg\rbrack^{-1} = \frac{1}{\beta^{t_2-t_1}} \cdot \mathbb{E} \Bigg\lbrack \bigg( \frac{c_{t_2}}{c_{t_1}} \bigg)^{-\gamma} \Bigg\rbrack^{-1} \label{eq:rf}
+\end{equation}
+
+
+\subsection{Beta als Risikomaß}
+
+\subsubsection{Risikomenge}
+\begin{equation}
+	\beta_{i,m} = \frac{Cov(m,R_i)}{Var(m)}
+\end{equation}
+
+\subsubsection{Preis des Risikos}
+\begin{equation}
+	\lambda_m = - \frac{Var(m)}{\mathbb{E} \big\lbrack m \big\rbrack}
 \end{equation}
 
 
@@ -78,13 +229,65 @@ Gleichsetzen von Formel \ref{eq:E} und Formel \ref{eq:p} zum Berechnen von \(m_u
 \end{equation}
 
 \begin{equation}
-	p^* = \frac{\mathbb{E}^x \big\lbrack x \big\rbrack}{R^f} = \frac{\pi^*_u \cdot x_u + \pi^*_d \cdot x_d}{R^f}
+	p^* = \frac{\mathbb{E}^* \big\lbrack x \big\rbrack}{R^f} = \frac{\pi^*_u \cdot x_u + \pi^*_d \cdot x_d}{R^f}
+\end{equation}
+
+\subsubsection{Berechnung von Calls und Puts}
+
+\paragraph{Call (\(S_d\) wird Null)}
+\begin{equation}
+	C_t = \frac{\pi^*_u \cdot \big( S_{u,t+1} - Ausuebungspreis \big)}{R^f}
 \end{equation}
 
 
-\subsection{Fama-French}
+\paragraph{Call (\(S_u\) wird Null)}
+\begin{equation}
+	P_t = \frac{\pi^*_d \cdot \big( Ausuebungspreis - S_{d,t+1} \big)}{R^f}
+\end{equation}
+
+
+\subsection{Abritragepreistheorie}
+\begin{equation}
+	\mathbb{E} \big\lbrack r \big\rbrack = R^f + \beta_1 \cdot \lambda_1 \dots \beta_n \cdot \lambda_n \label{eq:apt}
+\end{equation}
+
+
+\subsection{Equity Premium Puzzle}
+
+\subsubsection{Sharpe-Ratio}
+\begin{equation}
+	SR = \frac{\mathbb{E} \big\lbrack R^i \big\rbrack - R^f}{\sigma \big\lbrack R^i \big\rbrack}
+\end{equation}
+
+\subsubsection{Maximale Sharpe-Ratio}
+\begin{equation}
+	SR_{max} = \frac{\sqrt{Var \big( m \big)}}{\mathbb{E} \big\lbrack m \big\rbrack}
+\end{equation}
+
+
+\subsection{Faktormodelle}
+
+\subsubsection{Lineares Faktormodell}
+\begin{equation}
+	m_{t+1} = a + b^\prime f_{t+1} \label{eq:lfm}
+\end{equation}
+
+\subsubsection{Fama-French-Dreifaktorenmodell}
 
 \(\lambda_M\), \(\lambda_{SMB}\) und \(\lambda_{HML}\) bezeichnen individuelle Marktrisokoprämien.
 \begin{equation}
 	r = R^f + \beta_M \cdot \lambda_M + \beta_{SMB} \cdot \lambda_{SMB} + \beta_{HML} \cdot \lambda_{HML} \label{eq:ff}
+\end{equation}
+
+\subsubsection{Berechnen der Marktrisikoprämien}
+\begin{equation}
+	\lambda_M = \mathbb{E} \big\lbrack R^M - R^f \big\rbrack = (Ueberrendite~des~Marktes) \cdot (Handelstage~pro~Jahr)
+\end{equation}
+
+\begin{equation}
+	\lambda_{SMB} = \mathbb{E} \big\lbrack R^S - R^B \big\rbrack = (Durchschnittswerte) \cdot (Handelstage~pro~Jahr)
+\end{equation}
+
+\begin{equation}
+	\lambda_{HML} = \mathbb{E} \big\lbrack R^H - R^L \big\rbrack = (Durchschnittswerte) \cdot (Handelstage~pro~Jahr)
 \end{equation}
