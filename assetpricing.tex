@@ -2,9 +2,25 @@
 
 Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\footnote{\url{https://derivate.fbv.kit.edu/942.php}}
 
-\section{Stochastischer Diskontfaktor (SDF)}
+
+
+\section{Einführung}
 \begin{itemize}
+	\item \textbf{Kovarianz zweier Zufallsvariablen \(X\) und \(Y\)}
+	\begin{description}
+		\item[Kovarianz ist positiv:] Monotoner Zusammenhang \(\rightarrow\) Werte von \(X\) und \(Y\) sind entweder beide hoch oder beide niedrig
+		\item[Kovarianz ist negativ:] Gegensinniger monotoner Zusammenhang \(\rightarrow\) Wert von \(X\) ist hoch, Wert von \(Y\) ist niedrig (und umgekehrt)
+		\item[Kovarianz ist Null:] Kein monotoner Zusammenhang
+	\end{description}
+\end{itemize}
+
+
+
+\section{Stochastischer Diskont-Faktor Ansatz}
+\begin{itemize}
+	\item SDF ist zufällig und für alle Assets identisch
 	\item Häufig als \textit{reale} Größe modelliert, da Konsum üblicherweise als \textit{reale} Größe gemessen wird
+	\item In schlechten Zuständen hoch, da eine Zahlung dann besonders wertvoll ist
 \end{itemize}
 
 \subsection{Powernutzenfunktion}
@@ -14,11 +30,11 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 		\item Positiver Grenznutzen: \(u^\prime(c)>0\); "`mehr ist besser als weniger"' (nicht-gesättigter Investor)
 		\item Abnehmender Grenznutzen: \(u^{\prime\prime}(c)<0\); je höher der Konsum, desto geringer ist der weitere Nutzenzuwachs
 	\end{itemize}
-	\item \textbf{Interpretation von \(\gamma\)}
+	\item \textbf{Interpretation von \(\gamma\) ("`Krümmungsparameter"')}
 	\begin{description}
 		\item[\(\gamma<0\):] Risikofreudig; kleineres \(\gamma\) bedeutet höhere Risikofreudigkeit
 		\item[\(\gamma=0\):] Risikoneutral
-		\item[\(\gamma>0\):] Risikoavers; höheres \(\gamma\) bedeudetet höhere Risikoaversion und höhere Krümmung der Funktion \(\rightarrow\) höhere Risikovergütung gefordert
+		\item[\(\gamma>0\):] Risikoavers; höheres \(\gamma\) bedeutet höhere Risikoaversion und höhere Krümmung der Funktion \(\rightarrow\) höhere Risikovergütung gefordert (verdeutlicht durch die Krümmung)
 	\end{description}
 \end{itemize}
 
@@ -32,8 +48,11 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \subsubsection{Beispiele für Preise und Zahlungen}
 \begin{itemize}
 	\item Aktieninvestment: Preis \(p_t\) setzt sich zusammen aus Preis \(p_{t+1}\) und Dividendenzahlung \(d_{t+1}\) (siehe \ref{eq:paktie})
-	\item Erwartete Rendite: Berechnung des Preises nach \ref{eq:p}
-	\item Brutto-Rendite: Berechnung des anteiligen "`Gewinnzuwachses"' im Erfolgsfall
+	\item Brutto-Return: Berechnung des anteiligen "`Gewinnzuwachses"' im Erfolgsfall (siehe \ref{eq:br})
+	\item Überschuss-Return: Zahlung eines Portfolios ohne Kapitaleinsatz mit \(p_t=0\) (siehe \ref{eq:uer})
+	\item Einperiodige Anleihe: Anleihepreis in \(t\), Rückzahlung \(x_{t+1}=1\) (siehe \ref{eq:an})
+	\item Geldmarktkonto: siehe \ref{eq:gmk}
+	\item Kaufoption: siehe \ref{eq:ko}
 \end{itemize}
 
 
@@ -45,7 +64,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 	\item Zentrale Bewertungsbeziehung für das Geldmarktkonto: \ref{eq:rf}
 	\item \textbf{Erkenntnisse}
 	\begin{itemize}
-		\item Realzinsen sind hoch, wenn Investoren ungeduldig sind (niedriges \(\beta\)) oder wenn das Konsumwachstum hoch ist
+		\item Realzinsen sind hoch, wenn Investoren ungeduldig sind (niedriges \(\beta\)) oder wenn das Konsumwachstum hoch ist. Grafisch: Zinsen entsprechen der Steigung der Indifferenzkurve \(\rightarrow\) höheres Konsumverhalten \(\rightarrow\) höhere Steigung \(\rightarrow\) höhere Zinsen
 		\item Realzinsen reagieren sensitiver bei hoher Risikoaversion (hohes \(\gamma\)) auf Änderungen des Konsumwachstums
 		\item Konsumwachstum ist hoch, wenn die Zinsen hoch sind (bei hohen Zinsen wird mehr gespart)
 		\item In unsicheren Zeiten wird mehr gespart \(\rightarrow\) niedrigere Zinsen ("`Precautionary Savings"')
@@ -55,10 +74,20 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 
 \subsection{Risikoanpassung}
 \begin{itemize}
+	\item \textbf{Preis ergibt sich aus:}
+	\begin{itemize}
+		\item Diskontierung des erwarteten Payoffs mit dem risikolosen Zinssatz. Kovarianz wird \(0\), wenn eine der Komponenten sicher und damit \(0\) ist
+		\begin{description}
+			\item[Sicherheit:] \(x\) ist konstant
+			\item[Risikoneutralität:] \(m\) ist konstant
+		\end{description}
+		\item Risikokorrektur über Kovarianzterm: Je stärker Kovarianz mit SDF, desto höher der Preis
+	\end{itemize}
 	\item Für Assets, die mehr zur Konsumglättung beitragen, werden höhere Preise bezahlt
 	\item Preis wird nach oben korrigiert, falls Payoff in schlechten Zeiten hoch ist (Versicherungsidee)
 	\item Wieso Kovarianz statt Varianz relevant? - Investor interessiert sich nicht für Volatilität eines einzelnen Papiers, sondern für den resultierenden Konsum
 	\item Überrendite: Wertpapiere, deren Returns positiv mit Konsum variieren, führen zu volatilerem Konsum \(\rightarrow\) liefern höherere erwartete Returns (und umgekehrt)
+	\item Beispiel Sicherheitsgedanke: "`Lieber im schlechten Fall mehr, als wenn ich ohnehin schon viel habe"' \(\rightarrow\) für Assets, die mehr zur Konsumglättung beitragen, werden höhere Preise bezahlt
 \end{itemize}
 
 
@@ -69,14 +98,31 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \end{itemize}
 
 
+\subsection{Beta als Risikomaß}
+\begin{itemize}
+	\item \(\beta_i\): Sensitivität der Rendite von Wertpapier \(i\) gegenüber der Marktrendite (siehe \ref{eq:beta})
+	\item Klassisches (systematisches) Risikomaß der Finanzwertschaft, typischerweise anhand des CAPM bestimmt
+\end{itemize}
+
+
 \subsection{Der \(\mu\)-\(\sigma\)-Rand}
 \begin{itemize}
-	\item Investments auf dem \(\mu\)-\(\sigma\)-Rand: Alle Investments, die perfekt negativ mit dem SDF korrelieren (maximal riskant; höchste Rendite; maximale Konsumschwankung)
+	\item Alle erreichbaren Kombinationen liegen zwingend in kegelförmigen Bereich
+	\item \textbf{Investments auf dem \(\mu\)-\(\sigma\)-Rand}
 	\begin{description}
-		\item[Oberer Rand:] Maximal riskant; maximaler Ertrag
-		\item[Unterer Rand:] Bestmögliche Versicherung gegen Konsumschwankungen
+		\item[Oberer Rand:] Alle Investments, die perfekt negativ mit dem SDF korrelieren \(\rightarrow\) maximal riskant; höchste Rendite; maximale Konsumschwankung; maximale Sharpe-Ratio
+		\item[Unterer Rand:] Bestmögliche Versicherung gegen Konsumschwankungen; perfekt positiv mit dem SDF korreliert \(\rightarrow\) zahlt Wert des SDF
 	\end{description}
 	\item Erwartete Rendite besteht aus \textit{risikoloser Rendite} \(R^f\) und \textit{Risikoprämie} \(\beta_{i,mv}\lambda\)
+\end{itemize}
+
+
+\subsection{Equity Premium Puzzle}
+\begin{itemize}
+	\item Übermäßig hoher Unterschied zwischen den Renditen von Wertpapieren mit hohen Risiken im Vergleich zu niedrigen
+	\item Tatsächliche Unterschiede deutlich größer als durch theoretische Modelle vorausgesagt
+	\item Verschiedene Erklärungsversuche: Aktienrenditen purer Zufall?; Investoren risikoaverser als angenommen?; Teile der Modelle falsch?
+	\item Letzterer Gegenstand aktueller Forschung
 \end{itemize}
 
 
@@ -89,17 +135,30 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 	\item Auszahlungsvektoren in den Umweltzuständen sind linear unabhängig
 \end{itemize}
 
+\subsubsection{Berechnen von Arrow-Debreu-Preisen}
+\begin{enumerate}
+	\item Aufteilung des Papiers in zwei Papiere, die jeweils in genau einem Zustand \(S\) eine Einheit auszahlen
+	\item Berechnen von \(\Delta\) und \(k\) (siehe \ref{eq:adp1} und \ref{eq:adp2})
+	\item Arbitrage-Tableau für \(S_u = \begin{pmatrix} 1 \\ 0 \end{pmatrix}\): Verkauf von \(\Delta\) Einheiten \(WP_1\); Kauf entsprechender Anzahl Bonds; Preis des Arrow-Debreu-Papiers aus dieser Differenz berechenbar
+	\item Arbitrage-Tableau für \(S_d = \begin{pmatrix} 0 \\ 1 \end{pmatrix}\): Kauf von \(\Delta\) Einheiten \(WP_2\); Verkauf entsprechender Anzahl Bonds; Preis des Arrow-Debreu-Papiers aus dieser Differenz berechenbar
+	\item Berechnung von \(m_u\) und \(m_d\) (siehe \ref{eq:adpm})
+\end{enumerate}
+
 
 \subsection{Diskontfaktor im vollständigen Markt}
+\begin{itemize}
+	\item Heutiger Preis \(p\) setzt sich aus Wert der einzelnen Contingent Claims zusammen
+\end{itemize}
 
 
 \subsection{Risikoneutrale Wahrscheinlichkeiten}
 \begin{itemize}
 	\item Der Wert eines Derivats in der realen Welt, in der Anwender sich nicht risikoneutral verhalten, muss identisch sein zum Wert des gleichen Derivats in einer hypothetischen, risikoneutralen Welt\footnote{\url{https://de.wikipedia.org/wiki/Risikoneutrale_Bewertung}} \(\rightarrow\) Bewertung erfolgt als wären Akteure risikoneutral
-	\item Zukünftige Zahlungen werden mit risikolosem Zinssatz diskontiert
-	\item Zustände mit überdurchshcnittlich hohem Grenznutzen werden stärker gewichtet
+	\item Zukünftige Zahlungen müssen nur noch mit risikolosem Zinssatz diskontiert werden (siehe \ref{eq:prn})
+	\item Zustände mit überdurchschnittlich hohem Grenznutzen werden stärker gewichtet
 	\item Bei Risikoaversion werden "`schlechte"' Zustände stärker gewichtet
 	\item Anwendung Derivatebewertung: Unterstelle Verteilung für Underlying und bestimme im aktuellen Underlying-Preis implizite risikoneutrale Wahrscheinlichkeiten
+	\item Interpretation im gesamtökonomischen Kontext: Bei \(\pi^*_i < \pi_i\) handelt es sich um einen ökonomisch guten Zustand, da die risikoneutrale Eintrittswahrscheinlichkeit nach unten korrigiert ist
 \end{itemize}
 
 
@@ -109,11 +168,26 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \subsection{Grundidee der Faktormodelle}
 \begin{itemize}
 	\item Ersetze konsumbasierten Ausdruck für Grenznutzen durch lineares Faktormodell (siehe \ref{eq:lfm})
+	\item \textbf{Zentrale Frage: Wie soll \(f_{t+1}\) gewählt werden?}
+	\begin{itemize}
+		\item Faktoren sollen gute/schlechte Zustände der Ökonomie anzeigen bzw. eine gute Näherung mit dem Konsumwachstum liefern (siehe \ref{eq:lff})
+		\item Prognosegehalt
+		\item Veränderungen und keine Levels
+		\item Gute Datenverfügbarkeit
+	\end{itemize}
+	\item Unternehmensspezifische Charakteristika können \textit{nie} als Faktor verwendet werden, da sonst durch die Differenz von geündelten Papieren und einzelnen Papieren des Unternehmens ein Arbitrage-Gewinn möglich wäre
 	\item \textbf{Grundsätzliches Vorgehen zur Berechnung der erwarteten Rendite}
 	\begin{itemize}
 		\item Berechnung der Risikoexposition mittels Zeitreihendaten
 		\item Berechnung der Risikoprämien durch Querschnittsregression
 	\end{itemize}
+\end{itemize}
+
+
+\subsection{Capital Asset Pricing Modell}
+\begin{itemize}
+	\item Brühmtes, weit verbreitetes Gleichgewichtsmodell
+	\item Diskontfaktor wird an Return des Marktportfolios geknüpft (siehe)
 \end{itemize}
 
 
@@ -163,7 +237,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 
 \subsubsection{Varianz}
 \begin{equation}
-	Var(m) = \pi_u \Big(m_u - \mathbb{E} \big\lbrack m_u \big\rbrack\Big)^2 + \pi_d \Big(m_d - \mathbb{E} \big\lbrack m_d \big\rbrack\Big)^2
+	Var(m) = \pi_u \Big(m_u - \mathbb{E} \big\lbrack m_u \big\rbrack\Big)^2 + \pi_d \Big(m_d - \mathbb{E} \big\lbrack m_d \big\rbrack\Big)^2 = \mathbb{E} \big\lbrack x^2 \big\rbrack - \Big( \mathbb{E} \big\lbrack x \big\rbrack \Big)^2
 \end{equation}
 
 \subsubsection{Kovarianz}
@@ -174,6 +248,19 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \subsubsection{Standardabweichung \(\sigma\)}
 \begin{equation}
 	\sigma = \sqrt{Var}
+\end{equation}
+
+\subsubsection{Korrelation}
+\begin{equation}
+	\rho_{x,y} = \frac{Cov(x,y)}{\sqrt{Var(x) \cdot Var(y)}} = \frac{\sigma_{x,y}}{\sigma_x \cdot \sigma_y}
+\end{equation}
+
+\subsubsection{Ökonomie charakterisieren}
+\begin{equation}
+	\frac{\mathbb{E} \big\lbrack x \big\rbrack}{R^f} < p \Rightarrow oberer~Zustant~der~bessere
+\end{equation}
+\begin{equation}
+	\frac{\mathbb{E} \big\lbrack x \big\rbrack}{R^f} > p \Rightarrow unterer~Zustant~der~bessere
 \end{equation}
 
 
@@ -196,6 +283,36 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 	p_t = \mathbb{E} \big\lbrack m \cdot (p_{t+1} + d_{t+1}) \big\rbrack \label{eq:paktie}
 \end{equation}
 
+\subsubsection{Brutto-Return}
+\begin{equation}
+	1 = \mathbb{E} \big\lbrack m \cdot R \big\rbrack \Leftrightarrow R = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{p} \label{eq:br}
+\end{equation}
+
+\subsubsection{Effektiver Zinssatz (Bruttorendite, falls das Papier auszahlt}
+\begin{equation}
+	R^{eff} = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{p}
+\end{equation}
+
+\subsubsection{Überschuss-Return}
+\begin{equation}
+	0 = \mathbb{E} \big\lbrack m \cdot (R_a - R_b) \big\rbrack \label{eq:uer}
+\end{equation}
+
+\subsubsection{Einperiodige Anleihe}
+\begin{equation}
+	p_t = \mathbb{E} \big\lbrack m \big\rbrack \label{eq:an}
+\end{equation}
+
+\subsubsection{Geldmarktkonto}
+\begin{equation}
+	1 = \mathbb{E} \big\lbrack m \cdot R^f \big\rbrack \label{eq:gmk}
+\end{equation}
+
+\subsubsection{Kaufoption}
+\begin{equation}
+	p_t = \mathbb{E} \big\lbrack m \cdot (max(S-K,0)) \big\rbrack \label{eq:ko}
+\end{equation}
+
 \subsubsection{Risikoloser Zinssatz}
 \begin{equation}
 	\mathbb{E} \big\lbrack m \big\rbrack = \pi_u \cdot m_u + \pi_d \cdot m_d = \frac{1}{R^f} \label{eq:E}
@@ -209,46 +326,12 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 
 \subsubsection{Risikomenge}
 \begin{equation}
-	\beta_{i,m} = \frac{Cov(m,R_i)}{Var(m)}
+	\beta_{i,m} = \frac{Cov(m,R_i)}{Var(m)}\label{eq:beta}
 \end{equation}
 
 \subsubsection{Preis des Risikos}
 \begin{equation}
 	\lambda_m = - \frac{Var(m)}{\mathbb{E} \big\lbrack m \big\rbrack}
-\end{equation}
-
-
-\subsection{Risikoneutrale Wahrscheinlichkeiten}
-
-\begin{equation}
-	\pi^*_u = \frac{m_u}{\mathbb{E} \big\lbrack m \big\rbrack} \cdot \pi_u = \frac{m_u}{m_u \cdot \pi_u + m_d + \pi_u} \cdot \pi_u
-\end{equation}
-
-\begin{equation}
-	\pi^*_d = 1 - \pi^*_u
-\end{equation}
-
-\begin{equation}
-	p^* = \frac{\mathbb{E}^* \big\lbrack x \big\rbrack}{R^f} = \frac{\pi^*_u \cdot x_u + \pi^*_d \cdot x_d}{R^f}
-\end{equation}
-
-\subsubsection{Berechnung von Calls und Puts}
-
-\paragraph{Call (\(S_d\) wird Null)}
-\begin{equation}
-	C_t = \frac{\pi^*_u \cdot \big( S_{u,t+1} - Ausuebungspreis \big)}{R^f}
-\end{equation}
-
-
-\paragraph{Call (\(S_u\) wird Null)}
-\begin{equation}
-	P_t = \frac{\pi^*_d \cdot \big( Ausuebungspreis - S_{d,t+1} \big)}{R^f}
-\end{equation}
-
-
-\subsection{Abritragepreistheorie}
-\begin{equation}
-	\mathbb{E} \big\lbrack r \big\rbrack = R^f + \beta_1 \cdot \lambda_1 \dots \beta_n \cdot \lambda_n \label{eq:apt}
 \end{equation}
 
 
@@ -259,9 +342,52 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 	SR = \frac{\mathbb{E} \big\lbrack R^i \big\rbrack - R^f}{\sigma \big\lbrack R^i \big\rbrack}
 \end{equation}
 
-\subsubsection{Maximale Sharpe-Ratio}
+\subsubsection{Maximale Sharpe-Ratio (Steigung des oberen \(\mu\)-\(\sigma\)-Rands)}
 \begin{equation}
 	SR_{max} = \frac{\sqrt{Var \big( m \big)}}{\mathbb{E} \big\lbrack m \big\rbrack}
+\end{equation}
+
+
+\subsection{Contingent Claims}
+
+\subsubsection{Arrow-Debreu-Preise}
+\begin{equation}
+	\Delta S_u + k \cdot 1 = 1 \label{eq:adp1}
+\end{equation}
+\begin{equation}
+	\Delta S_d + k \cdot 1 = 0 \label{eq:adp2}
+\end{equation}
+\begin{equation}
+	m(s) = \frac{pc(s)}{\pi(s)} \label{eq:adpm}
+\end{equation}
+\paragraph{Risikoloser Zinssatz}
+\begin{equation}
+	R^f = \frac{1}{\mathbb{E} \big\lbrack m \big\rbrack} = \frac{1}{pc(s_1) + \dots + pc(s_n)} = \frac{1}{\sum_s pc(s_i)}
+\end{equation}
+\paragraph{Heutiger Preis als Summe der Contingent Claims}
+\begin{equation}
+	p(s) = \sum pc(s)\cdot x(s)
+\end{equation}
+
+\subsubsection{Risikoneutrale Wahrscheinlichkeiten}
+\begin{equation}
+	\pi^*_u = \frac{m_u}{\mathbb{E} \big\lbrack m \big\rbrack} \cdot \pi_u = \frac{m_u}{m_u \cdot \pi_u + m_d + \pi_u} \cdot \pi_u
+\end{equation}
+\begin{equation}
+	\pi^*_d = 1 - \pi^*_u
+\end{equation}
+\begin{equation}
+	p^* = \frac{\mathbb{E}^* \big\lbrack x \big\rbrack}{R^f} = \frac{\pi^*_u \cdot x_u + \pi^*_d \cdot x_d}{R^f} \label{eq:prn}
+\end{equation}
+
+\subsubsection{Berechnung von Calls und Puts}
+\paragraph{Call (\(S_d\) wird Null)}
+\begin{equation}
+	C_t = \frac{\pi^*_u \cdot \big( S_{u,t+1} - Ausuebungspreis \big)}{R^f}
+\end{equation}
+\paragraph{Call (\(S_u\) wird Null)}
+\begin{equation}
+	P_t = \frac{\pi^*_d \cdot \big( Ausuebungspreis - S_{d,t+1} \big)}{R^f}
 \end{equation}
 
 
@@ -271,10 +397,35 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \begin{equation}
 	m_{t+1} = a + b^\prime f_{t+1} \label{eq:lfm}
 \end{equation}
+\begin{equation}
+	\beta \cdot \frac{u^\prime(c_{t+1})}{u^\prime(c_t)} \approx a + b^\prime f_{t+1} \label{eq:lff}
+\end{equation}
+
+\subsubsection{Capital Asset Pricing Modell}
+\begin{equation}
+	\mathbb{E} \big\lbrack R^i \big\rbrack = R^f + \beta_{i,R^M} \cdot \big( \mathbb{E} \big\lbrack R^M \big\rbrack - R^f \big) \label{eq:capm}
+\end{equation}
+\paragraph{Diskontfaktor}
+\begin{equation}
+	m_{t+1} = a + b \cdot R^M_{t+1}
+\end{equation}
+\paragraph{Risikoloses Instrument}
+\begin{equation}
+	1 = \mathbb{E} \big\lbrack m \cdot R^f \big\rbrack
+\end{equation}
+\paragraph{Return des Marktportfolios}
+\begin{equation}
+	1 = \mathbb{E} \big\lbrack m \cdot R^M \big\rbrack
+\end{equation}
+
+\subsubsection{Abritragepreistheorie}
+\begin{equation}
+	\mathbb{E} \big\lbrack r \big\rbrack = R^f + \beta_1 \cdot \lambda_1 \dots \beta_n \cdot \lambda_n \label{eq:apt}
+\end{equation}
 
 \subsubsection{Fama-French-Dreifaktorenmodell}
 
-\(\lambda_M\), \(\lambda_{SMB}\) und \(\lambda_{HML}\) bezeichnen individuelle Marktrisokoprämien.
+\(\lambda_M\), \(\lambda_{SMB}\) und \(\lambda_{HML}\) bezeichnen individuelle Marktrisiokoprämien.
 \begin{equation}
 	r = R^f + \beta_M \cdot \lambda_M + \beta_{SMB} \cdot \lambda_{SMB} + \beta_{HML} \cdot \lambda_{HML} \label{eq:ff}
 \end{equation}
