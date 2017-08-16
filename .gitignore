@@ -2,6 +2,7 @@
 *.log
 *.out
 *.toc
+*.dvi
 
 main.pdf
 algo2only.pdf

@@ -42,12 +42,11 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 \begin{itemize}
 	\item Zentrale Bewertungsgleichung: \(p=\mathbb{E} \big\lbrack \beta \frac{u^\prime(c_{t+1})}{u^\prime(c_t)} \cdot x_{t+1} \big\rbrack\)
 	\item \(m_{t+1} = \beta \cdot \frac{u^\prime(c_{t+1})}{u^\prime(c_t)}\) (SDF) vereinfacht die zentrale Bewertungsgleichung zu \(p=\mathbb{E} \big\lbrack m_{t+1} x_{t+1} \big\rbrack\)
-	\item SDF ist zufällig und für alle Assets und Cash Flows identisch
 \end{itemize}
 
 \subsubsection{Beispiele für Preise und Zahlungen}
 \begin{itemize}
-	\item Aktieninvestment: Preis \(p_t\) setzt sich zusammen aus Preis \(p_{t+1}\) und Dividendenzahlung \(d_{t+1}\) (siehe \ref{eq:paktie})
+	\item Aktieninvestment: Preis \(p_t\) setzt sich aus Preis \(p_{t+1}\) und Dividendenzahlung \(d_{t+1}\) zusammen (siehe \ref{eq:paktie})
 	\item Brutto-Return: Berechnung des anteiligen "`Gewinnzuwachses"' im Erfolgsfall (siehe \ref{eq:br})
 	\item Überschuss-Return: Zahlung eines Portfolios ohne Kapitaleinsatz mit \(p_t=0\) (siehe \ref{eq:uer})
 	\item Einperiodige Anleihe: Anleihepreis in \(t\), Rückzahlung \(x_{t+1}=1\) (siehe \ref{eq:an})
@@ -175,7 +174,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 		\item Veränderungen und keine Levels
 		\item Gute Datenverfügbarkeit
 	\end{itemize}
-	\item Unternehmensspezifische Charakteristika können \textit{nie} als Faktor verwendet werden, da sonst durch die Differenz von geündelten Papieren und einzelnen Papieren des Unternehmens ein Arbitrage-Gewinn möglich wäre
+	\item Unternehmensspezifische Charakteristika können \textit{nie} als Faktor verwendet werden, da sonst durch die Differenz von gebündelten Papieren und einzelnen Papieren des Unternehmens ein Arbitrage-Gewinn möglich wäre
 	\item \textbf{Grundsätzliches Vorgehen zur Berechnung der erwarteten Rendite}
 	\begin{itemize}
 		\item Berechnung der Risikoexposition mittels Zeitreihendaten
@@ -186,7 +185,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 
 \subsection{Capital Asset Pricing Modell}
 \begin{itemize}
-	\item Brühmtes, weit verbreitetes Gleichgewichtsmodell
+	\item Berühmtes, weit verbreitetes Gleichgewichtsmodell
 	\item Diskontfaktor wird an Return des Marktportfolios geknüpft (siehe)
 \end{itemize}
 
@@ -252,7 +251,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 
 \subsubsection{Korrelation}
 \begin{equation}
-	\rho_{x,y} = \frac{Cov(x,y)}{\sqrt{Var(x) \cdot Var(y)}} = \frac{\sigma_{x,y}}{\sigma_x \cdot \sigma_y}
+	\rho_{x,y} = \frac{Cov(x,y)}{\sqrt{Var(x) \cdot Var(y)}} = \frac{Cov(x,y)}{\sigma_x \cdot \sigma_y}
 \end{equation}
 
 \subsubsection{Ökonomie charakterisieren}
@@ -288,7 +287,7 @@ Zusammenfassung der Vorlesung "`Asset Pricing"' aus dem Sommersemester 2017.\foo
 	1 = \mathbb{E} \big\lbrack m \cdot R \big\rbrack \Leftrightarrow R = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{p} \label{eq:br}
 \end{equation}
 
-\subsubsection{Effektiver Zinssatz (Bruttorendite, falls das Papier auszahlt}
+\subsubsection{Effektiver Zinssatz (Bruttorendite, in Zuständen in denen das Papier auszahlt}
 \begin{equation}
 	R^{eff} = \frac{\mathbb{E} \big\lbrack x \big\rbrack}{p}
 \end{equation}
