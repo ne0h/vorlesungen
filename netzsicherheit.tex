@@ -4,11 +4,12 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \section{Einführung}
 \begin{itemize}
-	\item Smarte Welt - alles vernetzt. Vorteile beispielsweise: Bessere Integration erneuerbarer Energien, bessere Organisation des Verkehrsm "`assistiertes Leben"'
-	\item Vernetzte Daten: Sensoren übermitteln die erfassten Daten an einen zentralen Datenspeicher im Internet
+	\item Smarte Welt - alles vernetzt. Vorteile beispielsweise: Bessere Integration erneuerbarer Energien, bessere Organisation des Verkehrs \(\rightarrow\) "`assistiertes Leben"'
+	\item Vernetzte Daten: Sensoren übermitteln die erfassten Daten via Internet an einen zentralen Datenspeicher
 	\item Problem: Systeme können (beispielsweise über das Internet) angegriffen werden, Daten können von unbefugten Dritten mitgelesen werden
-	\item Alternative: Vollständig verteiltes System. Probleme: Vertrauensbasis? Kontrolle? Nachvollziehbarkeit? Zuverlässigkeit?
-	\item Alternative: Isoliertes System? Kein Zugriff von außen, daher theoretisch sicher. Praktisch existiert immer eine Verbindung nach außen, z.B. zum installieren von Updates
+	\item Alternative (I): Vollständig verteiltes System. Probleme: Vertrauensbasis? Kontrolle? Nachvollziehbarkeit? Zuverlässigkeit?
+	\item Alternative (II): Vollständig isoliertes System? Kein Zugriff von außen, daher theoretisch sicher. Praktisch existiert immer eine Verbindung nach außen, z.B. zum Installieren von Updates
+	\item Randbedinungen bei Sicherheitsbetrachtungen: Technische Möglichkeiten; Kosten; Faktor Mensch
 \end{itemize}
 
 
@@ -20,10 +21,11 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item Komponente: Bestandteil eines Systems, das eine Teilfunktion dessen realisiert und über Schnittstellen mit anderen Komponenten kommuniziert
 	\item Güter: Ressourcen die für mindestens einen Akteur einen (subjektiven) Wert besitzen
 	\item Schutzziel: Anforderungen an eine Komponente oder ein System, um Güter vor Bedrohungen zu schützen
+	\item Bedrohung: Die Möglichkeit, Schutzziele \textit{gezielt} zu beeinträchtigen. Beispielsweise Abhören/Manipulieren von Daten, Sabotage, etc.
 	\item Angreifermodell: Beschreibt die Fähigkeiten eines Angreifers, Angriffe auf ein System durchzuführen (beispielsweise Lokalität, Werkzeuge, kryptografische Fähigkeiten)
 	\item \textbf{Safety}
 	\begin{itemize}
-		\item Zustand des Geschütztsein von schützenswerten Gütern vor bestimmten Gefahren
+		\item Zustand des Geschütztsein von schützenswerten Gütern vor bestimmten Gefahren. Beispielsweise Funktions- und Betriebssicherheit zum Schutz der Umgebung und Verhinderung von Personenschäden
 		\item Ist-Funktionalität von Komponenten stimmt mit der Soll-Funktionalität überein
 	\end{itemize}
 	\item \textbf{Security}
@@ -37,12 +39,12 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsection{Schutzziele}
 \begin{itemize}
-	\item \textbf{Vertraulichkeit}
+	\item \textbf{Vertraulichkeit (Confidentiality)}
 	\begin{itemize}
 		\item Ein System bewahrt Vertraulichkeit, wenn es keine unautorisierte Informationsgewinnung ermöglicht
 		\item Bausteine: Symmetrische oder asymmetrische Verschlüsselung
 	\end{itemize}
-	\item \textbf{Integrität}
+	\item \textbf{Integrität (Integrity)}
 	\begin{itemize}
 		\item Starke Integrität: Es ist nicht möglich, Daten unautorisiert zu manipulieren
 		\item Schwache Integrität: Es ist nicht möglich, Daten unautorisiert \textit{unbemerkt} zu manipulieren. Manipulation ist in vielen Fällen nicht verhinderbar, sollte dann aber nicht unbemerkt bleiben
@@ -62,6 +64,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\begin{itemize}
 		\item Idee: Klassifikation von Angreifern nach Ressourcen/Motivation/Fähigkeiten zur Bestimmung des Sicherheitsniveaus (Gegen welche Art von Angreifer will/kann ich mich schützen?)
 		\item Dolev-Yao-Angreifer: Angreifer ist omnipräsent, kann Dateneinheiten erzeugen/versenden/modifizieren, kann allerdings nicht ver- oder entschlüsseln ohne den Schlüssel zu kennen (Angreifer einspricht "`Outsider"')
+		\item "`Insider"': Angreifer analysiert/korrumpiert Protokollabläufe
 	\end{itemize}
 	\item \textbf{Systematische Einordnung von Angriffen}
 	\begin{itemize}
@@ -78,11 +81,24 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\begin{itemize}
 		\item Symmetrische oder asymmetrische Verschlüsselung
 		\item Integritätssicherung durch kryptografische Hashfunktion oder digitale Signatur
-	\end{itemize}
-	\item \textbf{Zertifikate}
-	\begin{itemize}
-		\item Authentifizierung eines Sachverhalts, den man nicht selbst überprüfen kann durch vertrauenswürdige Dritte (CA)
-		\item Digitales Dokument, in dem eine Instanz einen bestimmten Sachverhalt mittels digitaler Signatur bestätigt
+		\begin{itemize}
+			\item Über die Nutzendaten wird ein Message Authentication Code (MAC) berechnet und an diese angehängt
+			\item Eigenschaften kryptografischer Hashfunktionen
+			\begin{itemize}
+				\item Einwegeigenschaft: Ist ist schwierig, das Urbild eines Hashes zu finden
+				\item Schwache Kollisionsresistenz: Es ist schwierig, eine Kollision zu einem gegebenen \(a\) zu finden
+				\item Starke Kollisionsresistenz: Ist ist schwierig, zwei beliebige, verschiedene Urbilder mit selbem Hash zu finden
+			\end{itemize}
+		\end{itemize}
+		\item Keyed-Hashing for Message Authentication (HMAC)
+		\begin{itemize}
+			\item Idee: Angreifer soll nach Verändern der Daten keine gültigen Hash berechnen können
+			\item Berechnung (\(opad\) und \(ipad\) sind fest definierte Konstante; Finalisierung der Merkle-Damgârd-Konstruktion wichtig, da sonst "`Verlängerung"' möglich):
+			\begin{equation}
+				HMAC_K\big(m\big) = H \Big( K \bigoplus opad~\big|~H \big( K \bigoplus ipad~|~m \big) \Big)
+			\end{equation}
+		\end{itemize}
+		\item Authenticated Encryption with Associated Data (Galois Counter Mode): Erst verschlüsseln und danach MAC berechnen, da sonst \textit{Chosen Ciphertext Attack} möglich
 	\end{itemize}
 	\item \textbf{Authentifizierung}
 	\begin{itemize}
@@ -93,6 +109,11 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 			\item Passwörter oder Passwort-Hashes: Authentifikation durch Nachweis eines Geheimnissen. Nachteile u.a.: Passwortliste notwendig (Ziel für Angreifer), Passwort muss übertragen werden (Vertraulichkeit eventuell gefährdet)m oft schlechte Wahl der Passwörter
 			\item Challenge-Response-Authentifizierung: Vergleichbare Probleme wie bei Passwörtern
 		\end{itemize}
+	\end{itemize}
+	\item \textbf{Zertifikate}
+	\begin{itemize}
+		\item Authentifizierung eines Sachverhalts, den man nicht selbst überprüfen kann durch vertrauenswürdige Dritte (CA)
+		\item Digitales Dokument, in dem eine Instanz einen bestimmten Sachverhalt mittels digitaler Signatur bestätigt
 	\end{itemize}
 \end{itemize}
 
