@@ -127,10 +127,11 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item \textbf{Statische Ansätze}
 	\begin{itemize}
 		\item Persönliche Übergabe: Sehr einfach und mit automatischer Authentifizierung, allerdings persönliches Treffen notwendig und schlechte Skalierung
-		\item Hinterlegen des Schlüsselmaterials bei einer vertrauenswürdigen Instanz
+		\item Statisch ohne persönliches Treffen: Hinterlegen des Schlüsselmaterials bei einer vertrauenswürdigen Instanz
 		\begin{itemize}
+			\item Vertrauenswürdige Verwaltung der Schlüssel; Herausgabe auf Anfrage der Kommunikationsteilnehmer
 			\item Vorteile: Einfaches Verfahren, kein persönliches Treffen notwendig, weniger Schlüssel bei den Kommunikationspartnern zu speichern
-			\item Nachteile: Sicherer Kanal erforderlich, Schlüssel nur indirekt authentifiziert, zentrale Infrastuktur notwendig (Gefahr durch Ausfälle oder Korruptions)
+			\item Nachteile: Sicherer Kanal erforderlich, Schlüssel nur indirekt authentifiziert, zentrale Infrastuktur notwendig (Gefahr durch Ausfälle oder Korruption)
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Dynamische Ansätze}
@@ -144,7 +145,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\end{itemize}
 		\item Diffie-Hellman-Verfahren
 		\begin{itemize}
-			\item Vorteile: Kein persönliches Treffen oder zentrale Infrastruktur notwendig, dynamische Aushandlung \(\rightarrow\) Perfect Forward Secrecy
+			\item Vorteile: Kein persönliches Treffen oder zentrale Infrastruktur notwendig, dynamische Aushandlung \(\rightarrow\) Perfect Forward Secrecy durch Verwendung von kurzlebigen Sitzungsschlüsseln
 			\item Nachteile: Schlüssel nicht authentifiziert, sehr rechenintensiv
 		\end{itemize}
 	\end{itemize}
@@ -154,8 +155,35 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \subsection{Diffie-Hellman}
 \begin{itemize}
 	\item Problemstellung: Wie können Schlüssel sicher über einen ungesicherten Kanal ausgetauscht werden?
-	\item Vorgehen: A und B einigen sich auf gemeinsame Zufalls(prim)zahlen und leiten daraus per Einwegfunktion individuelle Geheimnissen ab, die zur gegenseitigen Echtheitsprüfung verwendet werden. Die Sicherheit beruht auf der "`schwierigen"' Rückberechnung durch die Einwegfunktion
-	\item Vorteile: Keine Infrastruktur notwendig, geheime Zufallszahlen werden nach dem Schlüsselaustausch gelöscht \(\rightarrow\) Perfect Forward Secrecy
+	\item Vorgehen: Alice und Bob einigen sich auf eine hinreichend große, zyklische Gruppe \(\mathbb{G} = \langle g \rangle\) mit Ordnung \(p\) (eine hinreichend große Primzahl) sowie einer jeweils individuellen Zufallszahl\footnote{Grafik entnommen aus \url{https://github.com/skript-sicherheit/skript}}
+	\begin{figure}[h]
+		\begin{center}
+			\begin{tikzpicture}[x=2em, y=2em]
+				\draw (-6,0) node (Alice) {\texttt{Alice}};
+				\draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+				\draw (6,0) node (Bob) {\texttt{Bob}};
+				\draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+				
+				% Lebenslinien
+				\draw[dashed] (AliceSk) -- (-6,-3.25);
+				\draw[dashed] (BobSk) -- (6,-3.25);
+				
+				% Pfeile fuer Nachrichten
+				\textbf{\draw[->, thick] (-5.7,-1) -- (5.7,-1.5) node[sloped,above,pos=0.5] {$g^x~mod~p$};}
+				\textbf{\draw[->, thick] (5.7,-2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$g^y~mod~p$};}	
+				
+				% Beschriftung Ergebnis
+				\draw (-6, -3.75) node {$(g^y)^x~mod~p$};
+				\draw (-3, -3.75) node {$=$};
+				\draw (0, -3.75) node  {$g^{xy}~mod~p$};
+				\draw (3, -3.75) node  {$=$};
+				\draw (6, -3.75) node  {$(g^x)^y~mod~p$};
+			\end{tikzpicture}
+		\end{center}
+	\end{figure}
+	\FloatBarrier
+	\item Sicherheit des Verfahrens: Es ist schwierig, den diskreten Logarithmus in einem Primzahlkörper zu berechnen
+	\item Vorteile: Keine Infrastruktur notwendig, geheime Zufallszahlen werden nach dem Schlüsselaustausch gelöscht \(\rightarrow\) \textit{Perfect Forward Secrecy}
 	\item Nachteile: Anonymer Schlüsselaustausch \(\rightarrow\) keine Authentifizierung der Teilnehmer, MitM-Angriffe möglich, rechenintensiv (und damit anfällig für DoS-Angriffe)
 \end{itemize}
 
@@ -175,14 +203,15 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \begin{itemize}
 	\item \textbf{Perfect Forward Secrecy}
 	\begin{itemize}
-		\item Bedingung: Angreifer kann die Kommunikation auch dann nicht entschlüsseln, wenn er die komplette Kommunikation aufgezeichnet hat und das langlebige Geheimnis entwedet (Einbruch in Endsysteme)
+		\item Authentifizierung mittels langlebigen Geheimnisses, danach Kommunikation über gesicherten Kanal mit kurzlebigem Sitzungsschlüssel
+		\item Ziel: Angreifer kann die Kommunikation auch dann nicht entschlüsseln, wenn er die komplette Kommunikation aufgezeichnet hat und das langlebige Geheimnis kennt (Einbruch in Endsysteme)
 		\item Maßnahmen: Sitzungsschlüssel muss von langlebigem Geheimnis unabhängig sein, alle Sitzungsinformationen müssen nach Beendigung der Sitzung gelöscht werden, langlebiges Geheimnis muss periodisch erneuert werden
-		\item Beispiel: DH-Austausch mit Authentifizierung
+		\item Beispiel: DH-Austausch mit Authentifizierung. Zusätzlich zu den DH-Parametern werden Signaturen über die Parameter ausgetauscht
 	\end{itemize}
 	\item \textbf{Schutz der Identitäten}
 	\begin{itemize}
 		\item Problem: Passiver Angreifer kann Identitäten der Kommunikationspartner abhören
-		\item Lösung: Zunächst anonymer DH-Schlüsselaustauch, danach Übertragung der Identität
+		\item Lösung: Zunächst anonymer DH-Schlüsselaustausch, danach Übertragung der signierten DH-Parameter (setzt vorherige Kenntnis der öffentlichen Schlüssel oder Zertifikate voraus)
 	\end{itemize}
 	\item \textbf{Dynamische Wahl der Verfahren}
 	\begin{itemize}
@@ -193,8 +222,8 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item \textbf{Verhinderung von Downgrade-Angriffen\footnote{\url{http://www.golem.de/news/browser-downgrade-angriffe-auf-tls-1309-101305.html}}}
 	\begin{itemize}
 		\item Ziel des Angreifers: Durch gezielte Verbindungsstörungen dafür sorgen, dass der Client eine Verbindung mit einer älteren Protokollversion durchführt
-		\item Anfällig sind beispielsweise Browser, die ältere Protokollversionen als Fallback nutzen: Fast alle gängigen Browser - Firefox, Chrome, Safari und der Internet Explorer - führen bei Verbindungsabbrüchen ein Downgrade auf SSLv3 durch
-		Lösungsansatz: Erkennen von Manipulationsversuchen durch Integritätsschutz (beispielsweise HMAC) aller gesendeten Nachrichten
+		\item Anfällig sind beispielsweise Browser, die ältere Protokollversionen als Fallback nutzen: Fast alle gängigen Browser (Firefox, Chrome, Safari, Internet Explorer) führen bei Verbindungsabbrüchen ein Downgrade auf SSLv3 durch
+		\item Lösungsansatz: Erkennen von Manipulationsversuchen durch Integritätsschutz (beispielsweise HMAC) aller gesendeten Nachrichten \(\rightarrow\) Integritätsprüfung des gesamten Verlaufs
 	\end{itemize}
 	\item \textbf{Einschränkung von DoS-Angriffen}
 	\begin{itemize}
@@ -204,12 +233,18 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 			\item Token/Cookie: Enthält zufällige Informationen des Angefragten. Wird es zurückgesendet, ist mit oher Wahrscheinlichkeit die Absenderadresse nicht gefälscht (beispielsweise durch IP-Spoofing)
 			\item Puzzle: Stellen einer rechenintensiven Aufgabe an den Anfragenden. Keine lokale Zustandshaltung beim Angefragten
 		\end{itemize}
-		\item Anforderungen an Tokens/Cookies: Aktualität, Eindeutigkeit, Unverhersagbarkeit, einfache Erzeugung (hoher Aufwand würde DoS-Angriff begünstigen), leichte Verifikation
+		\item Konzept: Tokens/Cookies
+		\begin{itemize}
+			\item Ziel: Serverzustand per Cookie auf Client auslagern \(\rightarrow\) Server muss keinen Zustand pro Anfrage speichern
+			\item Schutz der Integrität mittels lokalem Geheimnis. Beispielsweise \(HMAC_K\) über die Zustandsdaten
+			\item Anforderungen: Aktualität, Eindeutigkeit, Unverhersagbarkeit, einfache Erzeugung (hoher Aufwand würde DoS-Angriff begünstigen), leichte Verifikation
+			\item Erweiterung: Nonce zum Schutz vor Replay-Angriffen
+		\end{itemize}
 		\item Sitzungswiederaufnahme
 		\begin{itemize}
 			\item Problem: Initialer Schlüsselaufwand häufig teuer, Verbindungsabbruch bedingt erneuten Schlüsselaustausch
 			\item Zustandsbehafteter Ansatz: Zustand nach Schlüsselaustausch wird bei einem Kommunikationspartner gespeichert und kann wiederhergestellt werden (Vgl. TLS-Session-Resumption)
-			\item Zustandslos: Zustand wird komplett in geschütztes Ticket kodiert und ausgelagert. Kann bei Wiederaufnahme der Sitzung vorgelegt werden (Vgl. Tickets bei Kerberos)
+			\item Zustandslos (für Bob): Zustand wird komplett in geschütztes Cookie kodiert und ausgelagert. Kann bei Wiederaufnahme der Sitzung vorgelegt werden (Vgl. Tickets bei Kerberos)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -217,8 +252,14 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsection{Digitale Zertifikate}
 \begin{itemize}
-	\item Sichere Zuordnung von öffentlichen Schlüsseln und Identität der Kommunikationspartner
+	\item Sichere Zuordnung von öffentlichen Schlüsseln und Identitäten der Kommunikationspartner
 	\item Lösung: Verwendung von Zertifikaten. Authentifizierung hier durch vertrauenswürdige Dritte und Bestätigung durch digitale Signatur (Vgl. Personalauswand/Reisepass)
+	\item Probleme: Anbieter erfährt wer mit wem kommuniziert; Single-Point-of-Failure; schlechte Skalierung
+	\item \textbf{Klassifizierung von Zertifikaten}
+	\begin{itemize}
+		\item ID-Zertifikat: Bindet öffentlichen Schlüssel an eindeutige Identität (Verwendung beispielsweise bei S/MIME)
+		\item Attributzertifikat: Bindet Attribute an eindeutige Identität (Verwendung beispielsweise beim elektronischen Führerschein)
+	\end{itemize}
 \end{itemize}
 
 
