@@ -449,23 +449,22 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsubsection{Password Authentication Protocol (PAP)}
 \begin{itemize}
-	\item Idee: Nutzer authentifiziert sich mittels Netzerkennung und dazugehörigem Passwort bei Ressource
+	\item Idee: Nutzer authentifiziert sich mittels (zuvor ausgehandelter) Nutzerkennung und dazugehörigem Passwort bei Ressource
 	\item Schwächen: Übertragung im Klartext (MitM- oder Replay-Angriff möglich), Client ist Initiator (DoS-Angriff möglich), Ressource hat Zugriff auf das Klartext-Kennwort
 	\item Praktikabel über zuvor aufgebauten sicheren Kanal mit authentifizierung der Ressource
 \end{itemize}
 
 \subsubsection{Challenge Handshake Authentication Protocol (CHAP)}
 \begin{itemize}
-	\item Client schickt einen gehashte Kombination aus Passwort und zuvor angefragter und erhaltener Challenge an den Server
+	\item Client schickt gehashte Kombination aus Passwort und Challenge an den Server (Challenge davor von Server erhalten)
 	\item Vorteile gegenüber PAP: Passwort wird nicht im Klartext übertragen, bei guter Challenge kein Replay-Angriff möglich, Hash-Algorithmus frei wählbar
 	\item Nachteil: Passwort weiterhin im Klartext gespeichert
-	\item Paxisbeispiel MS-CHAPv2 von Microsoft: Client schickt DES-verschlüsselte Kombination aus Challenge und gehashtem Passwort an den Server. DES allerdings gebrochen, daher MS-CHAPv2 nur noch über gesicherten Kanal verwendbar
+	\item Paxisbeispiel MS-CHAPv2 von Microsoft: Client schickt mit Passworthash DES-verschlüsselte Challenge an den Server. DES allerdings gebrochen, daher MS-CHAPv2 nur noch über gesicherten Kanal verwendbar
 \end{itemize}
 
 \subsubsection{S/Key}
 \begin{itemize}
-	\item Ziel: Verhinderung von Replay-Angriffen, Vermeidung von Passwörtern auf Ressource
-	\item Idee: Hashkette
+	\item Hashkette zur Verhinderung von Replay-Angriffen \(\rightarrow\) Vermeidung von Passwortspeicherung auf Ressourcen
 	\item \textbf{Vorbereitungen}
 	\begin{itemize}
 		\item Client generiert Einmal-Kennwörter nach dem Schema: \(S_0=H(Passwort+Seed),S_1=H(S_0),...,S_n=H(S_{n-1})\)
@@ -484,19 +483,24 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \begin{itemize}
 	\item Idee: Generisches Protokoll mit Unterstützung beliebiger Module zur Authentifizierung
 	\item \textbf{Ablauf (dynamisch anpassbar)}
-	\begin{itemize}
-		\item Ressource sendet nach client-initiierter Authentifizierungsanfrage mehrere Anfragen an den Client: Frage nach ID/Angebot von Modulen/Challenge
-		\item Client lehnt ab oder sendet die angeforderten Daten zurück
-		\item Ressource anwortet mit (Miss-)Erfolg oder stellt weitere Fragen
-	\end{itemize}
+	\begin{enumerate}
+		\item Client sendet Authentifizierungswunsch
+		\item Ressource sendet Antwort mit Liste unterstützter Verfahren
+		\item Client wählt ein Verfahren aus oder sendet Gegenvorschlag
+		\item Authentifizierung wird mit gewähltem Verfahren durchgeführt
+		\item Eventuell Wiederholung mit anderen Modulen
+	\end{enumerate}
 	\item Beispielmodule: MD5-Challenge, Generic Token Card (hardware-basiert, sonst wie CHAP), One-Time Passwort
-	\item Verpflichtende Module: Identity (ermittelt die ID des zu authentifizierdenden Clients), Notification (übertragen einer Nachricht an den CLient, welche dieser bestätigen muss), NAK (Ablehnung einer Antwort)
+	\item Verpflichtende Module: Identity (ermittelt die ID des zu authentifizierdenden Clients), Notification (übertragen einer Nachricht an den Client, welche dieser bestätigen muss), NAK (Ablehnung einer Antwort)
 	\item Viele (auch kommerzielle) Module standardisiert
 \end{itemize}
 
 
 \subsection{Authentifizierungsdienste}
-Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfachpflege von Benutzeraccounts zu vermeiden.
+\begin{itemize}
+	\item Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfachpflege von Benutzeraccounts zu vermeiden und Autorisierung und Accounting zu vereinfachen
+	\item Ressourcen leiten Anfragen an AS weiter \(\rightarrow\) weiterer Übertragungsweg, der geschützt werden muss
+\end{itemize}
 
 \subsubsection{RADIUS}
 \begin{itemize}
@@ -521,13 +525,13 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 	\end{itemize}
 	\item \textbf{Sicherheitsbetrachtungen}
 	\begin{itemize}
-		\item Schutzziele (Ressource \(\leftrightarrow\) AS): Vertraulichkeit/Integrität der Nachrichten sowie Authentizität der Kommunikationspartner
-		\item Umsetzung bei RADIUS: Gemeinsames (16 Byte langes) Geheimnis zwischen Ressource und AS
+		\item Schutzziele (Ressource \(\Leftrightarrow\) AS): Vertraulichkeit/Integrität/Authentizität der Nachrichten sowie Authentizität der Kommunikationspartner?
+		\item Umsetzung bei RADIUS: Gemeinsames (16 Byte langes) Geheimnis zwischen Ressource und AS zur Sicherstelleung von Vertraulichkeit/Integrität/Authentizität
 		\item Fazit
 		\begin{itemize}
 			\item Sicherheit steht und fällt mit dem Shared Secret. Dieses muss manuell verteilt werden und fehlt beim Roaming \(\rightarrow\) nicht alle Daten sind auf dem Kommunikationsweg geschützt
-			\item Sicherheit allgemein unzureichend, schwache Sicherung der Schutzziele sowie schwacher Schutz gegen Wiederholungsangriffe
-			\item Lösung: Verwenung von TLS (oberhalb von TCP) zur Sicherstellung der Schutzziele
+			\item Sicherheit allgemein unzureichend, schwache Sicherung der Schutzziele sowie schwacher Schutz gegen Wiederholungsangriffe (beispielsweise durch Verwendung von \texttt{MD5})
+			\item Lösung: Verwenung von TLS (oberhalb von \texttt{TCP}) statt \texttt{UDP} (keine Fragmentierung/Staukontrolle/Absicherung der Kommunikation)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -535,11 +539,11 @@ Zentraler Dienst zur Authentifizierung (AS) im Unternehmen gewünscht, um Mehrfa
 \subsubsection{Diamter}
 \begin{itemize}
 	\item Nachfolger von RADIUS, allerdings nicht vollständig abwärtskompatibel
-	\item Vorteile gegenüber RADIUS: Verlässliche Transportprotokolle (TCP oder SCTP), Fokus auf Sicherheit (Verpflichtender Einsatz von IPsec oder TLS), bessere Roaming-Unterstützung, leichte Erweiterbarkeit, Basisunterstützung für Accounting
+	\item Vorteile gegenüber RADIUS: Verlässliche Transportprotokolle (TCP oder SCTP), Fokus auf Sicherheit (verpflichtender Einsatz von IPsec oder TLS), bessere Roaming-Unterstützung, leichte Erweiterbarkeit, Basisunterstützung für Accounting
 	\item \textbf{Diameter Application}
 	\begin{itemize}
 		\item Spezifiziert Framework für Anwendungen: Dienste/Protokolle/Mobile IP/Accounting sowie Ressourcen und AS-Funktionalität
-		\item Applikationen können Diamter-Funktionalität nutzen, beispielsweise Server-/Proxykomponenten, Verbindungsaufbau, Sitzngsmanagement, Kommunikationssicherheit
+		\item Applikationen können Diamter-Funktionalität nutzen, beispielsweise Server-/Proxykomponenten, Verbindungsaufbau, Sitzungsmanagement, Kommunikationssicherheit
 	\end{itemize}
 	\item \textbf{Sicherheitsbetrachtung}
 	\begin{itemize}
