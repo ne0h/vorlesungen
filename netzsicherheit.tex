@@ -252,6 +252,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsection{Digitale Zertifikate}
 \begin{itemize}
+	\item Idee: Authentifizierung von Sachverhalte, die man nicht selbst überprüfen kann, durch vertrauenswürdige Dritte
 	\item Sichere Zuordnung von öffentlichen Schlüsseln und Identitäten der Kommunikationspartner
 	\item Lösung: Verwendung von Zertifikaten. Authentifizierung hier durch vertrauenswürdige Dritte und Bestätigung durch digitale Signatur (Vgl. Personalauswand/Reisepass)
 	\item Probleme: Anbieter erfährt wer mit wem kommuniziert; Single-Point-of-Failure; schlechte Skalierung
@@ -271,7 +272,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item Idee: Absichern von asymmetrisch verschlüsselter Kommunikation mit Hilfe von digitalen Zertifikaten. Zentrale Frage: Wer erstellt die vertrauenswürdige Instanz?
 	\item \textbf{Neue Probleme}
 	\begin{itemize}
-		\item Vertrauen in die CA, bzw. deren Integrität
+		\item Vertrauen in die CA, bzw. deren Integrität (und in die Gewissenhaftigkeit der Identitätsprüfung)
 		\item Gültigkeit der Zertifikate
 		\item Authentizität des öffentlichen Schlüssels der CA
 		\item Konflikte, wenn mehrere CAs die selbe Entität signieren
@@ -279,7 +280,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\end{itemize}
 	\item \textbf{Widerruf digitaler Zertifikate}
 	\begin{itemize}
-		\item Widerruf manchmal notwendig, beispielsweise wenn der private Schlüssel verloren oder korrumpiert worden ist
+		\item Widerruf manchmal notwendig, beispielsweise wenn der private Schlüssel verloren gegangen oder korrumpiert worden ist
 		\item CA stellt signierte \textit{Certificate Revocation List} zur Verfügung
 	\end{itemize}
 \end{itemize}
@@ -289,17 +290,17 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsubsection{Public Key Infrastructure (PKI)}
 \begin{itemize}
-	\item Zentrale Infrastructur zum Management von ID-Zertifikaten. Ermöglicht somit Authentifizierung öffentlicher Schlüssel
+	\item Zentrale Infrastructur zum Management von ID-Zertifikaten \(\rightarrow\) ermöglicht Authentifizierung öffentlicher Schlüssel
 	\item \textbf{Anforderungen}
 	\begin{itemize}
 		\item Vertrauenswürdigkeit
-		\item Sicherheit interner Abläufe und der Signaturschlüssel der CA
+		\item Sicherheit interner Abläufe (Dokumentation soll Vertrauenswürdigkeit erhöhen) und der Signaturschlüssel der CA
 		\item Effiziens, Skalierbarkeit, Komfort für den Benutzer
 	\end{itemize}
 	\item \textbf{Elemente}
 	\begin{itemize}
 		\item Benutzer: Person oder Serverinstanz
-		\item Registration Authority (RA): Implementiert die administrativen Aspekte der PKI, Schnittstelle zwischen Benutzer und CA
+		\item Registration Authority (RA): Implementiert die administrativen Aspekte der PKI, Schnittstelle zwischen Benutzer und CA. I.d.R. offline
 		\item Certification Authority (CA): Führt die Zertifizierungen durch und ist für den Schutz der eigenen privaten Schlüssel zuständig
 		\item Verzeichnisdienst (Directory): Verwaltet die Zertifikate (beispielsweise LDAP) und publiziert die Widerrufslisten
 	\end{itemize}
@@ -307,10 +308,10 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsubsection{Privilege Management Infrastructure (PMI)}
 \begin{itemize}
+	\item Access Control List (ACL): Definiert, wer auf eine Ressource zugreifen kann
 	\item \textbf{Methoden zur Autorisierung}
 	\begin{itemize}
-		\item Access Control List (ACL): Definiert, wer auf eine Ressource zugreifen kann
-		\item Discretionary Access Control: Individuelle, feingranulare pro Benutzer
+		\item Discretionary Access Control: Individuelle, feingranulare Rechtevergabe pro Benutzer
 		\item Mandantory Access Control: Benutzer werden klassifiziert und bekommen klassenbezogene Zugriffsrechte
 		\item (Hierachical) Role-based Access Control: Benutzer werden Rollen zugewiesen, die über entsprechende Rollen verfügen. Ggf. vererbt
 		\item Attributzertifikat: Attestieren Identitäten ein bestimmtes Privileg (als Attribut implementiert). Zeitlich beschränkt und kann per CRL zurückgerufen werden
@@ -329,7 +330,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item Vertrauen: Normal im Alltagsleben, subjektiv, unscharf, gerichten, kontextgebunden, risikoabhängig, etc.
 	\item \textbf{Vertrauensmodell (Trust Model)}
 	\begin{itemize}
-		\item Beschreibt, welchen Zertifikaten ein Benutzer trauen kann, wie Vertrauen hergestellt wird und dieses Verhalten eingeschränkt/kontrolliert werden kann
+		\item Beschreibt, welchen Zertifikaten ein Benutzer trauen kann;, wie Vertrauen hergestellt wird und wie dieses Verhalten eingeschränkt/kontrolliert werden kann
 		\item Vertrauensanker (Trust Anchor): Ausgangspunkt einer Zertifizierungskette (beispielsweise eine Root CA)
 		\item Modelle
 		\begin{itemize}
@@ -348,7 +349,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\end{itemize}
 		\item Transitivität von Vertrauen
 		\begin{itemize}
-			\item Transitives Vertrauen für komplexere Vertrauensmodelle notwendig
+			\item Notwendig für komplexere Vertrauensmodelle
 			\item Mathematische Definition: Wenn \(A\) Vertrauen in \(B\) (und dessen Zertifizierungen) hat und \(B\) Vertrauen in \(C\) (und dessen Zertifizierungen), so kann \(A\) auch Vertrauen in \(C\) (und dessen Zertifizierungen) haben
 			\item Anstatt einem einzigen Zertifikat zu vertrauen werden jetzt Zertifikatsketten zwischen Vertrauensanker und Endpunkt aufgebaut und jede Stufe separat validiert
 		\end{itemize}
@@ -382,8 +383,9 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \subsubsection{X.509}
 \begin{itemize}
 	\item Bekannster und verbreitetster Standard für Zertifikate
-	\item Erweiterungsmöglichkeit duch optionale Parameter
+	\item Erweiterungsmöglichkeit duch optionale Parameter; auch als Attributzertifikat verwendbar
 	\item Aktive Nutzung: SSL/TLS, S/MIME, IPsec, etc.
+	\item Hierarchisches Namensschema: \textit{Distinguished Name} setzt sich aus mehreren Attributen zusammen (beispielsweise Land, Bundestaat, Stadt, etc.)
 	\item \textbf{Aufbau}
 	\begin{itemize}
 		\item Subject: Besitzer des Zertifikats
@@ -394,12 +396,18 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item \textbf{Wichtige Erweiterungen}
 	\begin{itemize}
 		\item Verwendung mehrerer Schlüssel: Mehrere Erweiterungsmöglichkeiten zur Verwendung weiterer Schlüssel
-		\item Alternativnamen für Subjekte: X.500-Namen wenig verbreitet. So können auch beispielsweise IP-Adressen, E-Mail-Adressen, Domains, etc. verwendet werden
+		\item Alternativnamen für Subjekte: X.500-Namen wenig verbreitet, daher Verwendung von \textit{Subject-Issuer Alternative Names}. So können auch beispielsweise IP-Adressen, E-Mail-Adressen, Domains, etc. verwendet werden
+	\end{itemize}
+	\item \textbf{Extended Validation}
+	\begin{itemize}
+		\item Ziel: Höheres Maß an Vertrauen durch erweiterte Überprüfung
+		\item Richtlinien mit technischen/organisatorischen Anforderungen
+		\item Zertifikate enthalten \textit{certificatePolicies}-Erweiterungen (\texttt{OID} der Policy für EV-Zertifikate sowie URL zum \textit{Certification Practice Statement})
 	\end{itemize}
 	\item \textbf{PKI-Unfälle}
 	\begin{itemize}
 		\item Immer wieder Einbrüche bei bekannten PKI-Betreibern
-		\item Microsoft Windows prüft nicht, ob eigene Zertifikate zurückgezogen worden sind \(\rightarrow\) schwächstes Glied in der Kette bestimmt die Gesamtsicherheit
+		\item Microsoft Windows kann einige eigene Zertifikate nicht auf Widerruf prüfen (CRL nicht implementiert) \(\rightarrow\) schwächstes Glied in der Kette bestimmt die Gesamtsicherheit
 	\end{itemize}
 \end{itemize}
 
@@ -407,13 +415,12 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \begin{itemize}
 	\item \textbf{Online Certificate Status protocol (OCSP)}
 	\begin{itemize}
-		\item Erster Ansatz zur Onlineprüfung von Zertifikaten auf Widerruf
-		\item Einfaches Frage-Antwort-Schema
-		\item Erweiterung im Zertifikat zur Spezifizierung von Respondern und das zu verwendende Protokoll (beispielsweise LDAP/HTTP). Responder wird ebenfalls signiert
+		\item Erster Ansatz zur Onlineprüfung von Zertifikaten auf Widerruf mittels einfachem Frage-Antwort-Schema
+		\item Erweiterung im Zertifikat zur Spezifizierung von Respondern und des zu verwendenden Protokolls (beispielsweise LDAP/HTTP). Responder wird ebenfalls signiert
 		\item Einschränkungen
 		\begin{itemize}
 			\item Antwortet nur in Bezug auf Widerruf. Keine Prüfung von Verwendungszweck oder zeitliche Gültigkeit
-			\item Schlechte Skalierung beim Responder
+			\item Schlechte Skalierung beim Responder, da Antwort immer signiert wird (Vgl.: Bei CRLs muss nur einmal signiert werden, bei OCSP bei jeder Anfrage)
 			\item Verringert Clientaufwand zur Zertifikatsprüfung kaum
 			\item Angreifer kann OSCP-Anfrage eventuell blockieren
 		\end{itemize}
