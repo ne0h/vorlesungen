@@ -516,7 +516,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item \textbf{Authentifizierung mit EAP}
 	\begin{itemize}
 		\item Problemstellung: Ressource authentifiziert Client meist über EAP (beispielsweise PPP, PPPoE, 802.1X). Dazu müssen allerdings Daten aufwendig zwischen EAP-Paketen und RADIUS-Attributen kopiert/umgesetzt werden
-		\item Idee/Lösungsansatz: Verwenden von RADIUS-Attribut "`EAP-Mesage"' zur Übersetzungsvermeidung in einzelne RADIUS-Attribute
+		\item Idee/Lösungsansatz: Verwenden von RADIUS-Attribut "`EAP-Message"' zur Übersetzungsvermeidung in einzelne RADIUS-Attribute
 	\end{itemize}
 	\item \textbf{Roaming}
 	\begin{itemize}
@@ -556,31 +556,75 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 
 \section{Kerberos}
+
+\subsection{Überblick}
 \begin{itemize}
 	\item Verteilter Authentifizierungsdienst für Benutzer und Server in (un-)geschützten Netzwerken
-	\item SingleSignOn innerhalb der Domäne
+	\item SingleSignOn innerhalb der Domäne (Benutzer muss sich nur einmal anmelden)
 	\item \textbf{Komponenten}
 	\begin{itemize}
-		\item \textit{Authentication Server} (AS) zur Authentifizierung der Benutzer sowie zur Ausstellung von Authentifizierungstokens (\textit{Ticket-Granting-Ticket}: TGT)
-		\item \textit{Ticket Granting Server} (TGS): Ressourcen-Zugangs-Server zur Autorisierung des Ressourcen-Zugriffs mit gültigem TGT. Ausstellung von Zugangsberechtigungen (\textit{Tickets})
+		\item \textit{Key Distribution Center (KDC)}
+		\begin{itemize}
+			\item Trennung von Authentifizierung und Ressourcenzugang (Autorisierung)
+			\item Nachteile: Muss vertraut werden; Single-Point-of-Failure
+			\item Bestandteile
+			\begin{itemize}
+				\item Authentication Server (AS) zur Authentifizierung der Benutzer sowie zur Ausstellung von Authentifizierungstokens (\textit{Ticket-Granting-Ticket}: TGT)
+				\item Ticket Granting Server (TGS): Ressourcen-Zugangs-Server zur Autorisierung des Ressourcen-Zugriffs mit gültigem TGT. Ausstellung von Zugangsberechtigungen (\textit{Tickets})
+			\end{itemize}
+		\end{itemize}
 		\item Benutzerdaten zur Speicherung der \textit{Master-Secrets} aller Benutzer und Ressourcen
-		\item AS und TGS bilden \textit{Kerberos Distribution Center} (KDC)
 	\end{itemize}
-	\item \textbf{Ablauf einer Anmeldung}
+	\item \textbf{Ablauf einer Anmeldung (Überblick)}
 	\begin{enumerate}
-		\item Anmeldung beim AS: Client erhält TGT
+		\item Anmeldung beim AS: Client erhält TGT von AS
 		\item Ressourcenanforderung: Autorisierung durch TGT. Client erhält Ticket für die entsprechende Ressource
-		\item Kommunikation mit der Ressource. Zugriffskontrolle erfolgt durch die Ressource
+		\item Kommunikation mit der Ressource, nicht mehr Teil von Kerberos. Zugriffskontrolle erfolgt durch die Ressource
 	\end{enumerate}
+	\item \textbf{Grundprinzip Kerberos-Authentifizierung: Verwendete Schlüssel}
+	\begin{itemize}
+		\item Schlüsselüberblick
+		\begin{description}
+			\item[Master-Secret des Client (\(k_{Alice}\)):] Alice und dem KDC bekannt, wird KDC-seitig aus Anmeldepasswort abgeleitet (\(SHA1(password_{Alice})\))
+			\item[Master-Secret des KDC (\(k_{KDC}\)):] Nur dem KDC bekannt
+			\item[Sitzungsschlüssel (\(k_S\)):] Sitzungsschlüssel. Vom KDC pro Sitzung zufällig gewählt und per TGT verteilt
+		\end{description}
+		\item Aussteller (AS oder TGS) erzeugt Sitzungsschlüssel \(k_S\), den Nutzer und Prüfer (TGS oder Ressource) erhalten. Ebenfalls Bestandteil des Tickets (mit \(k_{KDC}\) verschlüsselt)
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Schritt für Schritt}
+\begin{itemize}
+	\item Anmeldung an der Workstation: Anmeldung per Benutzername und Passwort. Aus dem Passwort wird das Benutzer-Secret abgeleitet (\(SHA_1(Password_{Alice}) = secret_{Alice}\))
 	\item \textbf{Anmeldung am Netz}
 	\begin{itemize}
-		\item Übertragen des Benutzernames im Klartext zum KDC (Angreifer kann Identität des Benutzers abhören). Nonce zum Schutz vor Replay-Attacken (\texttt{AS\_REQ})
-		\item Antwort vom Server (\texttt{AS\_REP}) mit dem Master-Secret des Benutzers verschlüsselt (verschiedene Verfahren wie beispielsweise AES unterstützt)
+		\item KDC authentifiziert Benutzer anhand Benutzername (im Klartext übertragen) und Benutzer-Secret (Angreifer kann Identität des Benutzers abhören)
+		\item Antwort vom Server (\texttt{AS\_REP}) enthält TGT (mit \(k_{KDC}\) verschlüsselt) und Sitzungsdaten für den Benutzer (\(mit k_{Alice}\) verschlüsselt)
+		\item Schutz des langlebigen Geheimnisses durch Sitzungsschlüssel; Nonce in \(k_{Alice}\) zum Schutz vor Replay-Attacken
 	\end{itemize}
+	\item \textbf{Ressourcenanforderung}
+	\begin{itemize}
+		\item TGS für die Ausgabe von Ressourcen-Tickets verantwortlich
+		\item Zugangskontrolle durch jede Ressource (Erweiterung: Zugriffsbeschränkung durch KDC)
+		\item \texttt{TGS\_REQ} enthält TGT, Ressourcenname, Authenticator (verschlüsselt mit \(k_s\))
+		\item \texttt{TGS\_REP} enthält Sitzungsschlüssel mit der Ressource (\(k_{AR}\), mit \(k_s\) verschlüsselt) sowie Ticket für den Ressourcenzugriff (mit Ressourcenschlüssel \(k_R\) verschlüsselt)
+		\item Vorteil für TGT: Muss keinen Zustand halten
+	\end{itemize}
+	\item \textbf{Kommunikation mit der Ressource}
+	\begin{itemize}
+		\item Application Request (\texttt{APP\_REQ}) enthält Ticket und Azthenticator
+		\item Danach ungeschützter Austausch von Anwendungsdaten
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Angriffe, Entwurfsentscheidungen, etc.}
+\begin{itemize}
 	\item \textbf{Offline-Password-Guessing-Angriff}
 	\begin{itemize}
 		\item Ziel: Erlangen des Benutzerpassworts
-		\item Vorgehen: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP}, anschließend Wörtbuchangriff zur Ermittlung des Passworts
+		\item Vorgehen: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP} mit anschließendem Wörtbuchangriff zur Ermittlung des Passworts
 		\item Bei (veraltetem) Kerberos v4: Aktiver Angriff durch Generierung von \texttt{AS\_REQ}-Anfragen für beliebige Nutzer
 		\item Optionaler Schutz in Kerberos v5 integriert: Zusätzlich aktueller Zeitstempel mit Master-Key des Client verschlüsselt in \texttt{AS\_REQ} enthalten. Brute-Force-Angriffe weiterhin möglich
 	\end{itemize}
