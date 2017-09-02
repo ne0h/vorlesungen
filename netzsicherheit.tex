@@ -621,48 +621,120 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsection{Angriffe, Entwurfsentscheidungen, etc.}
 \begin{itemize}
-	\item \textbf{Offline-Password-Guessing-Angriff}
+	\item \textbf{Password-Guessing-Angriffe}
 	\begin{itemize}
-		\item Ziel: Erlangen des Benutzerpassworts
-		\item Vorgehen: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP} mit anschließendem Wörtbuchangriff zur Ermittlung des Passworts
-		\item Bei (veraltetem) Kerberos v4: Aktiver Angriff durch Generierung von \texttt{AS\_REQ}-Anfragen für beliebige Nutzer
-		\item Optionaler Schutz in Kerberos v5 integriert: Zusätzlich aktueller Zeitstempel mit Master-Key des Client verschlüsselt in \texttt{AS\_REQ} enthalten. Brute-Force-Angriffe weiterhin möglich
+		\item Offline-Password-Guessing-Angriff: Abhören von \texttt{AS\_REQ} und \texttt{AS\_REP} mit anschließendem Wörtbuchangriff zur Ermittlung des Passworts (Benutzername im Klartext übertragen)
+		\item Aktive Password-Guessing-Angriffe
+		\begin{itemize}
+			\item Idee: Generierung gefälschter \texttt{AS\_REQ} für beliebige Nutzer
+			\item Preauthentication Data (optional in Kerberos v5)
+			\begin{itemize}
+				\item Aktueller Zeitstempel wird mit \(k_{Alice}\) verschlüsselt zusätzlich übertragen \(\rightarrow\) Server antwortet nur bei korrekt entschlüsselbarem Zeitstempel
+				\item Offline-Password-Guessing allerdings weiterhin möglich
+				\item Brute-Force-Angriff (Passwort raten und damit Preauthentication-Data verschlüsselen) ebenfalls weiterhin möglich, dauert allerdings lange und wird am KDC protokolliert
+			\end{itemize}
+		\end{itemize}
 	\end{itemize}
-	\item Optional Netzwerkadressen der Clients in jedem Ticket: Keine Weitergabe von Tickets \(\rightarrow\) schützt vor Ticketdiebstahl. IP-Spoofing allerdings unkompliziert möglich, funktioniert nicht bei NAT
+	\item \textbf{Authenticator}
+	\begin{itemize}
+		\item Ziel: Verhinderung von Replay-Angriffen durch einmalig einsetzbares Token
+		\item Name und Zeitstempel werden mit Sitzungsschlüssel verschlüsselt; Token nur innerhalb Zeitfenster gültig
+		\item Bedingung: Synchronisation der Systemuhren
+	\end{itemize}
+	\item \textbf{Netzwerkadressen der Clients in jedem Ticket}
+	\begin{itemize}
+		\item Keine Weitergabe von Tickets \(\rightarrow\) schützt vor Ticketdiebstahl
+		\item Probleme: IP-Spoofing allerdings unkompliziert möglich; funktioniert nicht bei NAT
+	\end{itemize}
+	\item \textbf{Entwurfsentscheidungen}
+	\begin{itemize}
+		\item Trennung von Authentifizierung und Autorisierung
+		\begin{itemize}
+			\item Zweiteilung: Beantragen von TGTs beim AS, beantragen von Ressourcen-Tickets beim TGS
+			\item Vorteil: Master-Secret des Clients wird nur einmal benötigt; MAstersecret und Passwort des Clients müssen im PC gespeichert werden; Nutzer muss Passwort nur einmal eingeben
+		\end{itemize}
+		\item Keine Zustandshaltung beim KDC: Vermeidet Überlastung \(\rightarrow\) gute Skalierung sowie Schutz für DoS-Angriffen
+		\item Keine asymmetrische Kryptografie: Zum Entwurfszeitpunkt (1993) zu wenig Rechenleistung verfügbar
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Spezielle Eigenschaften}
+\begin{itemize}
+	\item \textbf{Passwort-Änderung}
+	\begin{itemize}
+		\item Problem (I): Ausgestellte Tickets sind  mit Mastersecret des Clients verschlüsselt \(\rightarrow\) Passwortänderung führt zu neuem Mastersecret des Clients
+		\item Lösung (I): Versionierung der Schlüssel, jedes Ticket enthält Schlüsselversion
+		\item Problem (II): Replizierung des KDC \(\rightarrow\) Login mit neuem Schlüssel eventuell noch nicht möglich (s.u.)
+	\end{itemize}
+	\item \textbf{Rechteübertragung}
+	\begin{itemize}
+		\item Kerberos v5 erlaubt das Übertragen von Tickets
+		\item Anforderungen: Zeitliche Beschränkung; Beschränkung der übertragenen Rechte; wer darf darüber entscheiden?
+		\item Nachteile: Mehr KDC-Anfragen; komplizierte Zugriffsbeschränkungsregeln in KDC und Anwendungen
+		\item Übertragene Tickets
+		\begin{itemize}
+			\item Forwardable TGT: Übertragenes TGT
+			\item Proxy Ticket: Übertragenes Ticket für genau eine Ressource
+			\item Signalisierung durch Flag; Sitzungsschlüssel wird mit dem Ticket übergeben
+			\item Einschränkung auf IP-Adresse(n) möglich (spoofbar)
+		\end{itemize}
+		\item Einschränkbar durch Sicherheitsrichtlinien des KDC oder individuell durch Ressourcen
+		\item \textbf{Lebenszeit von Tickets}
+		\begin{itemize}
+			\item Feste und begrenzte Lebenzeit in Kerberos v4
+			\item Langlebige Tickets generell gefährlich, da Widerrufen schwierig
+			\item Neue Ticketarten in Kerberos v5
+			\begin{description}
+				\item[Erneuerbare Tickets:] Langfristig gültige Tickets
+				\item[Zukünftige Tickets:] Gültigkeitsbeginn in der Zukunft
+			\end{description}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Kerberos in großen Netzen}
+Welche Probleme können in großen Netzen auftreten?
+\begin{itemize}
 	\item \textbf{Schlüssel-Server für große Netze}
 	\begin{itemize}
 		\item Einzelner KDC ist Single-Point-of-Failure \(\rightarrow\) Replizieren des Schlüssel-Servers
-		\item Gliederung des Netzwerk in Domänen (Realms). Einzelner KDC kennt nicht mehr alle Master-Secrets
+		\item Sicherheitproblem: KDC kennt alle Mastersecrets
 		\item Replizierte Schlüssel-Server
 		\begin{itemize}
-			\item Eine Master-Copy der Benutzerdatenbank mit mehreren Read-only-Slave-KDCs. Alle Änderungen nur auf der Master-Copy
-			\item Auch bei Ausfall des Master-KDC ist die Nutzung des Netzes weiterhin möglich, lediglich Änderungen fallen aus
-			\item Periodisches Abfragen der Slaves (oder per Kommando). Updates verschlüsselt und mit MAC versehen
-			\item Passwortänderung problematisch
-			\begin{itemize}
-				\item Passwort muss jederzeit änderbar sein
-				\item Problem (I): Bereits ausgestellte Tickets sind mit dem alten Passwort verschlüsselt
-				\item Lösung (I): Speicherung mehrerer Schlüsselversionen sowie Ergänzen der Tickets um die Version
-				\item Problem (II): Replizieren des KDCs. Bei periodischem Verteilen eventuell noch das alte Kennwort auf dem Slave \(rightarrow\) altes Passwort weiterhin gültig \(\rightarrow\) Verwirrung des Benutzers
-			\end{itemize}
-		\end{itemize}
-		\item Rechteübertragung % TODO!
-		\begin{itemize}
-			\item Erst ab Kerberos v5 möglich
+			\item Eine Master-Copy und mehrere read-only-Slaves der Benutzerdatenbank; alle KDCs benutzen das selbe Mastersecret
+			\item Alle Änderungen auf der Master-Copy, Slaves werden periodisch (oder explizit) synchronisiert. Updates werden mit KDC-Secret verschlüsselt sowie gehasht
+			\item Bei Masterausfall ist das Netz weiterhin nutzbar, allerdings sind keine KDC-Updates möglich
 		\end{itemize}
 		\item Domänen (Realms)
 		\begin{itemize}
-			\item Administrative Aufteilung pro Realm: Eigene Benutzerdatenbank, Replizierung, KDCs einer Domäne beisitzen das selbe KDC-Master-Secret
-			\item Inter-Domänen-Authentifizierung zur Nutzung von Ressourcen einer anderen Domäne. Autorisierung durch den KDC der anderen Domäne. KDC kann hierzu als Client eines anderen KDC registriert sein
-			\item Mehrstufige Domänen durch Verkettung von Inter-Domänen-Tickets möglich. KDC registriert sich hierzu als Client bei KDC der Vaterdomäne
+			\item Eigene Benutzerdatenbank pro Domäne; Replizierung möglich (KDCs nutzen dann das selbe Mastersecret)
+			\item Interdomänenauthentifizierung
+			\begin{itemize}
+				\item Ressourcenzugriff auf Ressource einer anderen Domäne: Autorisierung durch KDC der anderen Domänen
+				\item KDC der anderen Domäne wird dabei wie eine Ressource behandelt:
+				\begin{enumerate}
+					\item Alice beantragt zunächst Ressourcen-Ticket bei Heim-KDC für entfernteten KDC
+					\item Alice beantragt Ressourcen-Ticket für entfernte Ressource bei entferntem KDC
+				\end{enumerate}
+			\end{itemize}
+		\end{itemize}
+		\item Mehrstufige Domänen
+		\begin{itemize}
+			\item Verkettung von Inter-Domänen-Tickets möglich (neu in Kerberos v5)
+			\item Umgang über Sicherheitsrichtlinien in den Anwendungen geregelt
+			\item Hierarchische Domänen: KDC registriert sich als Client bei KDC der Vaterdomäne (Anhlehnung an \texttt{X.500}-Namen)
 		\end{itemize}
 	\end{itemize}
-	\item \textbf{Zusammenfassung}
-	\begin{itemize}
-		\item SSO-Netzwerk; Tickets mit Cookie-Prinzip; Übertragung von Rechten möglich; KDC als Single-Point-of-Failure (Replizierung, Mehrstufigkeit)
-		\item Vorteile: Nur ein Passwort; sichere, netzwerkweite Authentifizierung; basiert fast ausschließlich auf symmetrische Verfahren
-		\item Nachteile: Kompromittierung des Master-Secrets des KDC legt alle Master-Secrets der Clients offen; alle Ressourcen müssen angepasst sein ("`kerberized"'); enge Synchronisation der Systemuhren notwendig
-	\end{itemize}
+\end{itemize}
+
+
+\subsection{Zusammenfassung}
+\begin{itemize}
+	\item SSO-Netzwerk; Tickets mit Cookie-Prinzip; Übertragung von Rechten möglich; KDC als Single-Point-of-Failure (Replizierung, Mehrstufigkeit)
+	\item Vorteile: Nur ein Passwort; sichere, netzwerkweite Authentifizierung; basiert fast ausschließlich auf symmetrische Verfahren
+	\item Nachteile: Kompromittierung des Master-Secrets des KDC legt alle Master-Secrets der Clients offen; alle Ressourcen müssen angepasst sein ("`kerberized"'); enge Synchronisation der Systemuhren notwendig
 \end{itemize}
 
 
