@@ -1043,18 +1043,18 @@ Welche Probleme können in großen Netzen auftreten?
 
 
 
-\section{TLS}
+\section{Transport Layer Security Protocol (TLS)}
 
 \subsection{Einführung}
 \begin{itemize}
 	\item \textbf{Motivation}
 	\begin{itemize}
-		\item Die standardmäßig im Internet eingesetzten Protokolle (TCP und UDP) beinhalten keine Maßnahmen zur Unterstützung von Sicherheit \(\rightarrow\) keine gewährleistung der Schutzziele
+		\item Die standardmäßig im Internet eingesetzten Protokolle (TCP und UDP) beinhalten keine Maßnahmen zur Unterstützung von Sicherheit \(\rightarrow\) keine Gewährleistung der Schutzziele
 	\end{itemize}
 	\item \textbf{Überblick}
 	\begin{itemize}
 		\item Ziel: Vertrauliche und integere Kommunikation zwischen Anwendungen mit Authentifikation der Kommunikationspartnern
-		\item Einordnung im Protokollstapel: TLS zwischen TCP und Anwendungsschicht (beispielsweise FTP, SMTP, HTTP)
+		\item Einordnung im Protokollstapel: TLS zwischen \texttt{TCP} und Anwendungsschicht (beispielsweise \texttt{FTP}, \texttt{SMTP}, \texttt{HTTP})
 		\item Im Vergleich zu IPsec nicht so flexibel einsetzbar, da auf höherer Schicht
 	\end{itemize}
 	\item \textbf{Grundlegender Aufbau}
@@ -1068,41 +1068,93 @@ Welche Probleme können in großen Netzen auftreten?
 
 
 \subsection{Architektur}
-\begin{itemize}
-	\item \textbf{TLS Handshake Protocol}
+\begin{description}
+	\item[TLS Handshake Protocol]\hfill
 	\begin{itemize}
-		\item Beinhaltet Aushandlung der verwendeten kryptografischen Algorithmen zur Verschlüsselung/Integritätssicherung sowie Authentifizierung der Kommunikationspartnern und Aushandlung des Schlüsselmaterials
+		\item Verantwortlich für: Aushandlung Verschlüsselung/Integritätssicherung; Authentifizierung der KommunikationspartnerM Aushandlung Schlüsselmaterial
+		\item Beispiel einer TLS-Cipher-Suite: \texttt{TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA}
 		\item Vereinfachter Ablauf im Überblick: Client will mit TLS gesicherte Daten versenden. TLS-Verbindung wird dabei neu aufgebaut
 		\begin{enumerate}
 			\item Auswahl der kryptografischen Verfahren (Client \(\rightarrow\) Server)
 			\item Schlüsselaustausch und Authentifizierung (Server \(\rightarrow\) Client \(\rightarrow\) Server). Daraufhin Erzeugung des Schlüsselmaterials (beide Seiten separat)
 			\item Abschluss in Überprüfung mittels MAC (Client \(\rightarrow\) Server \(\rightarrow\) Client)
 		\end{enumerate}
-		\item Sitzungswiederherstellung zur Vermeidung von rechenintensiver Schlüsselaushandlung. Wiederverwendung der gleichen Sitzungs-ID und Überspringen der restlichen Aushandlung
-		\item Neuaushandlung des Schlüsselmaterials (TLS-Rekeying): Kann jederzeit durch Client oder Server initiitiert werden. Die Aushandlung erfolgt unter Schutz der bestehenden Verbindung
-		\item TSL-Alert Protokoll zur Behandlung von Fehlerzuständen: Fatale Fehler (führen zu sofortigem Verbindungsabbruch) oder Heinweise. Beispielsweise zertifikatsfehler oder Fehler beim Datenempfang
-		\item Expliziter Verbindungsabbau notwendig, anonsten \textit{Truncation Agriff} möglich (Angreifer schleust unverschlsseltes TCP-FIN-Paket ein, wodurch ein Auslogversuch des Clients nei beim Server ankommt). Lösung: Beide Kommunikationspartner müssen ein CloseNotify verschicken
+		\item Angriffe
+		\begin{itemize}
+			\item Downgrad-Attack: Aufbau von Verbindungen mit starken \texttt{TLS}-Version per \texttt{RST}-Flag probieren zu verhindern \(\rightarrow\) Client versucht Verbindung mit schwächerer Verschlüsselung aufzubauen. Lösung: Verbindungen mit schwachen Versionen Verbieten
+			\item Cipher-Attack: "`Knacken"' schwacher Kryptomechanismen (RC4, RSA512, etc.). Lösung: Verbindungen mit schwachen Versionen
+			\item Logjam (Angriff auf DH-Schlüsselaustausch)
+			\begin{itemize}
+				\item Problem: Viele Webserver verwenden selbe Primzahl für DH
+				\item Vorgehen: Vorberechnung aller 512-Bit Primzahlen (dauert ca. 1-2 Wochen); danach Downgrad-Angriff auf 512-Bit-DH und brechen der Verbindung
+				\item Gegenmaßnahmen: Verwendung individueller Patameter sowie hinreichend lange Schlüssel
+			\end{itemize}
+		\end{itemize}
+		\item TLS Sitzungswiederaufnahme
+		\begin{itemize}
+			\item Vermeidung der rechenintensiver Schlüsselaushandlung. Wiederverwendung der gleichen Sitzungs-ID und Überspringen der restlichen Aushandlung
+			\item Neuaushandlung des Schlüsselmaterials (TLS-Rekeying): Kann jederzeit durch Client oder Server initiitiert werden. Die Aushandlung erfolgt unter Schutz der bestehenden Verbindung
+			\item Protocol Attack auf \texttt{SSL 3.0}
+			\begin{itemize}
+				\item Erst TLS-Verbindung zwischen Client und Server aufbauen lassen; dann Renegotiation mit MitM veranlassen
+				\item Gegenmaßnahmen: Renegotiation deaktivieren; \texttt{Hello}-Message Inhalte der letzten \texttt{Finish}-Message hinzufügen
+			\end{itemize}
+		\end{itemize}
+		\item Expliziter Verbindungsabbau notwendig, anonsten \textit{Truncation Angriff} möglich (Angreifer schleust unverschlsseltes TCP-FIN-Paket ein, wodurch ein Auslogversuch des Clients beim Server ankommt). Lösung: Beide Kommunikationspartner müssen ein CloseNotify verschicken
+		\item TSL-Alert Protokoll zur Behandlung von Fehlerzuständen: Fatale Fehler (beispielsweise Zertifikatsfehler, führen zu sofortigem Verbindungsabbruch) oder Hinweise (beispielsweise Fehler beim Datenempfang)
 	\end{itemize}
-	\item \textbf{TLS Record Protocol}
+	\item[TLS Record Protocol]\hfill
 	\begin{itemize}
+		\item Ziel: Sicherung von Vertraulichkeit (symmetrische Kryptografie) und Integrität (\texttt{(H)MAC})
 		\item Aufgaben: Verwaltung der Sitzung, Fragmentierung (und optional Komprimierung) der Anwendungsdaten sowie kryptografische Verarbeitung der zu übertragenden Anwendungsdaten
-		\item Eine Sitzung speichert Zustandsinformationen und kann mehrere Verbindungen zusammenfassen. Beispielsweise wenn zustandsloses HTTP mit mehreren TCP-Verbindungen auf eine Webseite zugreift (effizientere Verwaltung als bei Einzelverbindungen)
-		\item Sitzungszustand identifiziert durch Identifikator, Zertifikat, Komprimierungsverfahren (Default: Null), CipherSpec, MasterSecret (zwischen Client und Server berechnetes Schlüsselmaterial)
-		\item Verbindungszustand charakterisiert durch Zufallszahlen, Schlüssel jeweils zur MAC-Berechnung und Verschlüsselung, Initialisierungsvektor sowie Sequenznummer
-		\item Ablauf als Sender: Erhalten von Daten beliebiger Länge von der Anwendung; Fragmentieren und ggf. Komprimieren der Daten; Integritätssicherung mittels MAC; Verschlüsselung; Übergabe an Transportschicht
-		\item Ablauf als Empfänger: Erhalten der Datenpakete aus Transportschicht; Entschlüsseln und Verifizieren des MAC; ggf. Dekomprimieren; Defragmentieren und Übergabe an die Anwendung
-		\item Integritätssicherung mittels MAC. Eingabewerte: Client-/Serverschlüssel, Sequenznummer, Fragmentierte und komprimierte Dateneinheit mit entsprechenden Headern
+		\item Nutzbar für Protokolle der höheren Schichten (\textit{Handshake Protocol}, \textit{ChangeCipherSpecProtocol}, etc.). Schlüsselmeterial muss durch anderes Protokoll ausgehandelt werden (\textit{Handshake Protocol})
+		\item Eine Sitzung speichert Zustandsinformationen und kann mehrere Verbindungen zusammenfassen. Beispielsweise wenn zustandsloses HTTP mit mehreren TCP-Verbindungen auf eine Webseite zugreift (effizientere Verwaltung als bei Einzelverbindungen) \(\rightarrow\) Aufgabe des \textit{Record Layers}
+		\item Sitzungszustand identifiziert durch Identifikator, Zertifikat, Komprimierungsverfahren (Default: \texttt{NULL}), CipherSpec, MasterSecret (zwischen Client und Server berechnetes Schlüsselmaterial)
+		\item Verbindungszustand charakterisiert durch Zufallszahlen (Client- und Server-), Schlüssel jeweils zur MAC-Berechnung und Verschlüsselung, Initialisierungsvektor sowie Sequenznummer
+		\item Ablauf zur Datenübertragung
+		\begin{itemize}
+			\item Ablauf als Sender: Erhalten von Daten beliebiger Länge von der Anwendung; Fragmentieren und ggf. Komprimieren der Daten; Integritätssicherung mittels MAC; Verschlüsselung; Übergabe an Transportschicht
+			\item Ablauf als Empfänger: Erhalten der Datenpakete aus Transportschicht; Entschlüsseln und Verifizieren des MAC; ggf. Dekomprimieren; Defragmentieren und Übergabe an die Anwendung
+		\end{itemize}
+		\item Fragmentierung
+		\begin{itemize}
+			\item \textit{Record Layer} erhält von Anwendung Datenblöcke beliebiger Länger
+			\item Aufteilung in \texttt{TLS}-Fragmente von maximal \(2^{14}\) Byte; optional können kleinere Blöcke zusammengefasst werden
+			\item Erschweren von Verkehrsanalysen: Versenden von \texttt{TLS}-Fragmenten der Länge \(0\) Byte
+		\end{itemize}
+		\item Kombimierung (optional)
+		\begin{itemize}
+			\item Verringert Kommunikationsaufwand sowie Redundanz der Daten
+			\item Verschiedene Angriffe möglich
+			\item Gegenmaßnahmen: Cross-site Request Forgery (CSRF) Protection; verbieten von Kombrimierung
+		\end{itemize}
+		\item Integritätssicherung mittels (H)MAC. Eingabewerte: Client-/Serverschlüssel, Sequenznummer, Fragmentierte und komprimierte Dateneinheit mit entsprechenden Headern
+		\item Berechnung des Schlüsselmaterials
+		\begin{itemize}
+			\item Ablauf
+			\begin{enumerate}
+				\item Erzeugen des \textit{Premaster Secret} aus Handshake
+				\item Erzeugen des \textit{Master Secret} innerhalb des \textit{Record Protocol}:\newline\(MasterSecret = PRF\big(PreMasterSecret,"master secret", ClientHello.rand~|~MasterHello.rand\big)\)
+			\end{enumerate}
+			\item Warum nicht direkt \textit{Premaster Secret} verwenden?
+			\begin{itemize}
+				\item \textit{Master Secret} muss ausreichene Länge haben
+				\item Client Zufallszahl eventuell nicht sicher
+				\item Schutz gegen Replay-Angriff: Angreifer könnte verschlüsseltes \textit{Premaster Secret} ohne Zufallszahlen wieder einspielen
+				\item Verschiedene Angriffe bekannt. Lösung: Authentifizierte Verschlüsselung
+			\end{itemize}
+		\end{itemize}
 	\end{itemize}
-\end{itemize}
+\end{description}
 
 
 \subsection{Bewertung}
 \begin{itemize}
 	\item \textbf{Wie sicher ist TLS}
 	\begin{itemize}
-		\item Historisch bedingt existieren verschiedene Versionen. Neuere sind i.A. sicherer (Angriffe in existierenden versionen haben u.a. erst zu neueren Vesionen geführt)
+		\item Historisch bedingt existieren verschiedene Versionen. Neuere sind i.A. sicherer (Angriffe auf existierenden Versionen haben u.a. erst zu neueren Vesionen geführt)
 		\item Es existieren über 100 unterschiedliche Ciphersuites, die teilweise unsicher geworden sind. Problematisch sind dabei Standartkonfigurationen in Browsern oder Servern
-		\item Es existieren verschiedene Angriffe (entstanden beispielsweise durch Tippfehler/Programmierfehler an kritischen stellen, siehe Heartbleed). Lösung üblicherweise: Verwenden von neueren TLS-/SSL-Versionen und serverseitiges Verbieten von veralteten
+		\item Es existieren verschiedene Angriffe (entstanden beispielsweise durch Tippfehler/Programmierfehler an kritischen stellen, siehe Heartbleed). Lösung üblicherweise: Verwenden von neueren TLS-/SSL-Versionen sowie serverseitiges Verbieten von veralteten
 	\end{itemize}
 	\item \textbf{IPsec vs. TLS}
 	\begin{itemize}
@@ -1112,9 +1164,9 @@ Welche Probleme können in großen Netzen auftreten?
 \end{itemize}
 
 
-\subsection{TLS im Internet der Dinge: DTLS}
+\subsection{TLS im Internet der Dinge}
 \begin{itemize}
-	\item TLS zur Anwendung oberhalb eines zuverlässigen Transportprotokolls (beispielsweise TCP) entworfen. Anwendungen verwenden allerdings vermehrt UDP (beispielsweise VoIP)
+	\item TLS zur Anwendung oberhalb eines zuverlässigen Transportprotokolls (beispielsweise TCP) entworfen. Anwendungen verwenden allerdings vermehrt UDP (beispielsweise \texttt{VoIP} oder \texttt{CoAP})
 	\item Zuverlässigkeit muss während des Handshakes garantiert sein, da Paketverluste zu einem neuen Handshake führen. Darüber hinaus ist sie für den Integritätsschutz mittels Sequenznummern notwendig
 	\item \textbf{Datagram Transport Layer Security (DTLS)}
 	\begin{itemize}
