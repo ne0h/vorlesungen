@@ -899,13 +899,13 @@ Welche Probleme können in großen Netzen auftreten?
 \begin{itemize}
 	\item \textbf{Motivation}
 	\begin{itemize}
-		\item Internet-Protocol (IP) bietet einen nur unzuverlässigen Ende-zu-Ende Dienst
+		\item Internet-Protocol (IP) bietet einen nur unzuverlässigen Ende-zu-Ende Dienst (best-Effort)
 		\item Mögliche Angriffe: Eavesdropping, IP-Spoofing, MitM-Angriffe, Replay-Angriffe \(\rightarrow\) Schutzziele nicht gewährleistet
 	\end{itemize}
 	\item \textbf{Überblick}
 	\begin{itemize}
 		\item Ziel: Umsetzung von Schutzzielen für den Verkehr auf Schicht 3, unabhängig vom Transportprotokoll
-		\item Nutzung durch alle oberhalb von IP angesiedelten Protokolle sowie IP selbst
+		\item Vrteile: Sicherheit unabhängig von Anwendungen; transparent; individuell konfigurierbar
 	\end{itemize}
 	\item \textbf{Einsatzszenario}
 	\begin{itemize}
@@ -914,7 +914,7 @@ Welche Probleme können in großen Netzen auftreten?
 	\item \textbf{Grundlegender Aufbau}
 	\begin{itemize}
 		\item Wesentliche Komponenten: Schlüsselaustausch (Internet Key Exchange - IKE) und Protokolle zur sicheren Kommunikation (Authentication Header - AH oder Encapsulating Security Payload - ESP)
-		\item Entwurfsentscheidung: Entkopplung von Schlüsselaustausch und Sicherung
+		\item Entwurfsentscheidung: Entkopplung von Schlüsselaustausch (Kontrollebene) und Sicherung (Datenebene)
 	\end{itemize}
 \end{itemize}
 
@@ -923,15 +923,15 @@ Welche Probleme können in großen Netzen auftreten?
 \begin{itemize}
 	\item \textbf{Sicherheitsassoziation}
 	\begin{itemize}
-		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strom gestellt werden
-		\item Security-Association (SA): Unidirektionale Verbindung zwischen zwei IP-Instanzen. Generell zwischen allen Verbindungen möglich
+		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strom gestellt werden. Kommunikationspartner definieren \textit{Security Policy}, die für alle Pakete angewandt wird
+		\item Security-Association (SA): Unidirektionale Verbindung zwischen zwei IP-Instanzen. Generell zwischen allen Verbindungen möglich. \textbf{Lokal} eindeutig durch \textit{Security Parameter Index} (SPI) identifizierbar
 	\end{itemize}
 	\item \textbf{SAD und SPD}
-	\begin{itemize}
-		\item Security Associaten Database (SAD): Hält Parameter aktiver gesicherter IP-Datenströme
-		\item Security Policy Database (SPD): Enthält Richtlinien nach denen der Verkehr zu schützen ist. Zu sendende Dateneinheiten werden gemäß SPD auf SA abgebildet. Besteht aus einer Tabelle, die beschreibt, wie die einzelnen Verbindungen (Adressen, Ports, Protokoll) zu sichern sind. Dies kann auch bedeuten, dass manche Verbindugen gar nicht gesichert werden. Wird zu einer Verbindung keine Einstellung gefunden, so wird diese verworfen
-	\end{itemize}
-	\item Bearbeiten von Dateneinheiten
+	\begin{description}
+		\item[Security Association Database (SAD):] Hält Parameter aktiver, gesicherter IP-Datenströme (\textit{Security Parameter Index, Sequenznummer, Fenster gegen Replay-Angriffe, Lebenszeit der SA etc.})
+		\item[Security Policy Database (SPD):] Enthält Richtlinien nach denen der Verkehr zu schützen ist. Zu sendende Dateneinheiten werden gemäß SPD auf SA abgebildet. Besteht aus einer Tabelle, die beschreibt, wie die einzelnen Verbindungen (Adressen, Ports, Protokoll) zu sichern sind. Dies kann auch bedeuten, dass manche Verbindugen gar nicht gesichert werden (\texttt{BYPASS}). Wird zu einer Verbindung keine Einstellung gefunden, so wird diese verworfen
+	\end{description}
+	\item \textbf{Bearbeiten von Dateneinheiten}
 	\begin{itemize}
 		\item Bearbeiten zu sendender IP-Dateneinheiten
 		\begin{itemize}
@@ -944,8 +944,8 @@ Welche Probleme können in großen Netzen auftreten?
 		\begin{itemize}
 			\item Gegeben: Empfangene Dateneinheit
 			\item Zunächst Bestimmung des Types
-			\item Typ IP: Suche in der SPD. Falls \texttt{Bypass} Weitergabe an höhere Schicht, ansonsten Verwerfen der Dateneinheit
-			\item Typ IPsec: Suche in der SAD. Falls enthalten AH- oder ESP-Verarbeitung, ansonsten Verwerfen der Dateneinheit. Danach Weitergabe an höhere Schicht
+			\item Typ IP: Suche in der SPD. Falls \texttt{BYPASS}, Weitergabe an höhere Schicht, ansonsten Verwerfen der Dateneinheit
+			\item Typ IPsec: Suche in der SAD. Falls enthalten, AH- oder ESP-Verarbeitung, ansonsten Verwerfen der Dateneinheit. Danach Weitergabe an höhere Schicht
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -953,18 +953,21 @@ Welche Probleme können in großen Netzen auftreten?
 
 \subsection{Architektur}
 \begin{itemize}
+	\item \textbf{Endpunkttypen}
+	\begin{description}
+		\item[Kommunikationsendpunkt:]Endpunkte ausgetauschter Punkte
+		\item[Kryptografische Endpunkt:] Endpunkte der Sicherheitsprotokolle
+	\end{description}
 	\item \textbf{Übertragungsmodi}
 	\begin{itemize}
-		\item Generell Unterscheidung in Kommunikationsendpunkte und kryptografische Endpunkte
-		\item Transport-Modus: Einsatz zwischen Kommunikationsendpunkten, schützt die Nutzdaten. Zusätzlicher IPsec-Kopf im Paket enthalten
-		\item Tunnel-Modus: Einsatz zwischen beliebigen Systemen, oft ist ein Endpunkt kein Kkommunikationsendpunkt. IP-in-IP-Kapselung, schützt die gesamte IP-Dateneinheit, Router auf dem Weg haben keinen Zugriff auf Orginal-IP-Kopf
+		\item[Transport-Modus:] Einsatz zwischen Kommunikationsendpunkten, schützt die Nutzdaten. Zusätzlicher IPsec-Kopf im Paket enthalten
+		\item[Tunnel-Modus:] Einsatz zwischen beliebigen Systemen, oft ist ein Endpunkt kein Kkommunikationsendpunkt. IP-in-IP-Kapselung, schützt die gesamte IP-Dateneinheit, Router auf dem Weg haben keinen Zugriff auf Orginal-IP-Kopf
 	\end{itemize}
 	\item \textbf{Schutz vor Replay-Attacken}
 	\begin{itemize}
 		\item Erster Ansatz: Verwenden von eindeutigen, monoton wachsenden Sequenznummern
 		\item Besser: Verwenden eines Sliding Window mit fester Fenstergröße \(W\). Pakete werden nur dann akzeptiert, wenn die neue Sequenznummer innerhalb des Fensters liegt oder größer ist als die höchste, bisher empfangene und noch nicht verwendet worden ist. Liegt die Sequenznummer außerhalb des Fensters, so wird dieses verschoben. Anonsten wird das Paket verworfen
-		\item Bisherige 32-Bit-Sequenznummer (reicht für etwa 4 Milliarden Dateneinheiten) für schnelle Netze zu wenig (bei ca. 1 Millionen Dateneinheiten pro Sekunde Überlauf nach ca 1,12 Stunden)
-		\item Extendes Sequenz Number (ESN) mit 64 Bit: Zum Erhalten der Abwärtskompatibilität werden nur die unteren 32 Bit übertragen, die oberen 32 Bit lediglich in der SA 
+		\item Bisherige 32-Bit-Sequenznummer (reicht für etwa 4 Milliarden Dateneinheiten) für schnelle Netze zu wenig (bei ca. 1 Millionen Dateneinheiten pro Sekunde: Überlauf nach etwa 1,12 Stunden) \(\rightarrow\) \textit{Extended Sequence Number} (ESN) mit 64 Bit: Zum Erhalten der Abwärtskompatibilität werden nur die unteren 32 Bit übertragen, die oberen 32 Bit lediglich in der SA 
 	\end{itemize}
 	\item \textbf{Schutz vor Verkehrsanalyse}
 	\begin{itemize}
@@ -978,39 +981,45 @@ Welche Probleme können in großen Netzen auftreten?
 \begin{itemize}
 	\item \textbf{AH-Protokoll}
 	\begin{itemize}
-		\item Bietet Integrität, Authentizität, Zgnagskontrolle, Schutz gegen Replay-Angriffen
+		\item Bietet Integrität, Authentizität, Zugangskontrolle, Schutz gegen Replay-Angriffe
 		\item Zentrales Ziel: Abwehr von Address-Spoofing-Angriffen durch HMACs
-		\item Berechnung von MAC
+		\item Berechnung des MAC: \texttt{HMAC} über:
 		\begin{itemize}
-			\item Unveränderliche Felder des vorangegangenen IP-Kopf
-			\item Der aktuelle IP-Kopf
+			\item Unveränderliche Felder des vorangegangenen IP-Kopf (veränderliche werden auf Null gesetzt)
+			\item \texttt{AH}-Kopf
 			\item Die Nutzdaten
 			\item Die oberen 32 Bits der erweiterten Sequenznummer
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{ESP-Protokoll}
 	\begin{itemize}
-		\item Bietet Integrität, Authentizität, Zgnagskontrolle, Schutz gegen Replay-Angriffen sowie Vertraulichkeit und Schutz vor Verkehrsanalysen
+		\item Bietet Integrität, Authentizität, Zugangskontrolle, Schutz gegen Replay-Angriffe sowie Vertraulichkeit und Schutz vor Verkehrsanalysen
 		\item Umsetzung der Schutzziele abhängig von den ausgewählten Optionen bei Etablierung der SA sowie Lokation der Implementierung (beispielsweise in Endsystem oder Gateway)
-		\item Verwendung von authentifizierter Verschlüsselung: MACs und entsprechende symmetrische Chiffren wie 3DES-CBC oder AES-128-CBC. Voraussetzung ist ein gemeinsamer, geheimer Schlüssel
-		\item Transportmodus: Dateneinheit der höheren Schicht sowie ESP-Anhang werden verschlüsselt, Authentifizierungsdaten werden ggf. drangehängt (falls ausgewählt). Stellt Vertraulichkeit der übergeordneten Protokolle sicher, verhindert allerdings keine Verkehrsanalyse. DIe Felder im IP-Kopf werden nicht authentifiziert (im Unterschied zu AH)
-		\item Transportmodus: Dateneinheit wird verschlüsselt, ESP-Kopf wird der Dateneinheit vorangestellt sowie ggf. Authentifizierungsdaten angehängt (falls ausgewählt). Schützt Netzwerk vor externen Netzen druch Verschlüsselung zwischen externem Endsystem und Sicherheitsgateway. Keine Verkehrsanalyse möglich
-	\end{itemize}
-	\item \textbf{Kombinationen von SAs}
-	\begin{itemize}
-		\item Entwurfsentscheidung: In welcher Reihenfolge MAC und Verschlüsselung anwenden?
+		\item Kryptografische Bausteine: MACs sowie symmetrische Chiffren (beispielsweise 
+		3DES-CBC oder AES-128-CBC). Voraussetzung ist ein gemeinsamer, geheimer Schlüssel
+		\item Erst verschlüsseln oder Authentifizieren?
 		\begin{itemize}
-			\item Erst verschlüsseln, dann authentifizieren: Nur authentifizierte Dateneinheiten werden entschlüsselt \(\rightarrow\) DoS-Angriffe eingeschränkt. Nach aktuellem Stand der Forschung in der Theorie besser
-			\item Erst authentifizieren, dann verschlüsseln: Teure Entschlüsselung immer erforderlich, dafür MAC nicht direkt angreifbar. Horton-Prinzip: "`You should authenticate what you mean, not what you say"'
-			\item Kombinationen aus beidem
+			\item Encrypt-then-MAC (EtM): Schränkt DoS-Angriffe ein (Authentizität kann vor Entschlüsselung geprüft werden); Authentifizierungsdaten allerdings unverschlüsselt \(\rightarrow\) Keyed Authentication Algorithm notwendig; in der Theorie besser
+			\item Mac-than-Encrypt (MtE): MAC nicht angreifbar; "`You should authenticate what you men, not what you say"\footnote{Horton-Prinzip}
 		\end{itemize}
-		\item SA Bundle: Sequenz von SAs zur Bereitstellung der ausgewählten Schutzziele. Mögliche Kombinationen:
-		\begin{enumerate}
-			\item Sicherheit zwischen Endsystemen: AH oder ESP jeweils im Transport-Modus oder ESP in AH, auch jeweils im Transportmodus. Alle drei Möglichkeiten innerhalb eines AH- oder ESP-Tunnel. Voraussetzung ist, dass beide Endsysteme über einen gemeinsamen Schlüssel verfügen
-			\item Sicherheit zwischen Gateways: AH, ESP oder ESP mit AH
-			\item Erweiterung von (2) um Ende-zu-Ende Sicherheit: Varianten aus Kombinationen 1 und 2 anwendbar
-			\item Unterstützung von externen Endsystemen: Bietet Ende-zu-Ende Sicherheit beim Zugang über Firewall der Organisation. Wie in Kombination 1 ein oder zwei SAs anwendbar
-		\end{enumerate}
+		\item Transportmodus: Dateneinheit der höheren Schicht sowie ESP-Anhang werden verschlüsselt, Authentifizierungsdaten werden ggf. drangehängt (falls ausgewählt). Stellt Vertraulichkeit der übergeordneten Protokolle sicher, verhindert allerdings keine Verkehrsanalyse. Die Felder im IP-Kopf werden nicht authentifiziert (im Unterschied zu AH, da Router darauf zugreifen)
+		\item Tunnelmodus: Dateneinheit wird inklusive orginal IP-Kopf verschlüsselt, ESP-Kopf wird der Dateneinheit vorangestellt sowie ggf. Authentifizierungsdaten angehängt (falls ausgewählt). Schützt Netzwerk vor externen Netzen durch Verschlüsselung zwischen externem Endsystem und Sicherheitsgateway. Verkehrsanalyse wird eingeschränkt
+	\end{itemize}
+	\item \textbf{Probleme \& Angriffe}
+	\begin{itemize}
+		\item Detailsprobleme
+		\begin{itemize}
+			\item NAT: \texttt{AH} authentifiziert IP-Kopf \(\rightarrow\) Änderungen machen Pakete ungültig \(\rightarrow\) IPsec muss Änderungen vorher in Authentifizierungsdaten einberechnen
+			\item Firewalls filtern meist Portnummer-basiert. Bei \texttt{ESP} ist die Portnummer jedoch verschlüsselt
+			\item Konfigurationsfehler in SDP. Beispielsweise Spoofing und Manipulation von Daten bei Verwendung von \texttt{ESP} ohne Authentifizierungsanteil möglich
+			\item IPsec-Header vergrößern Paket
+		\end{itemize}
+		\item Cut-and-Paste-Angriff
+		\begin{itemize}
+			\item Wird IPSec eingesetzt um ein VPN einzurichten, ohne den AH-Header zu verwenden, so kann der Netzverkehr aufgezeichnet werden und an eine dritte Person (Insider) innerhalb des vertrauenswürdigen Standortes gesendet werden. Diese dritte Person kann somit diese Nachrichten in Klartext empfangen, da die Nachricht vorher durch den IPSec-Proxy entschlüsselt wurde\footnote{\url{http://www.nm.ifi.lmu.de/pub/Fopras/fack00/HTML-Version/node56.html}}
+			\item Lösung: \texttt{ESP} mit Authemtifikation kombinieren
+		\end{itemize}
+		\item Session-Hijacking: Hijacking von Sessions via Cut-and-Paste-Angriff
 	\end{itemize}
 \end{itemize}
 
@@ -1026,7 +1035,9 @@ Welche Probleme können in großen Netzen auftreten?
 	\begin{itemize}
 		\item Ziel: Sichere Aushandlung von IPsec-Parametern
 		\item Aufbau eines gesicherten Kanals (IKE-SA): Definition von Formaten der Dateneinheiten, gegenseitige Authentifizierung sowie DH-Austausch zum Erzeugen eines gemeinsamen Geheimnisses
-		\item Aushandlung des IPsec-Schlüsselmaterials pro SA: Wahl der zu verwendenden Verfahren sowie Generierung der Schlüssel
+		\item Aushandlung des IPsec-Schlüsselmaterials pro SA: Wahl der zu verwendenden Verfahren sowie Generierung der Schlüssel. Anschließend Eintrag in SAD
+		\item NAT-Traversal: IKEv2 transportiert mittels Notify-Payload den Hash der Adressen (SPI, IP, Port) \(\rightarrow\) Gegenseite kann NATs erkennen
+		\item Sitzungswiederaufnahme nach Verbindungsabbruch: Tickets zur Zustandsspeicherung
 	\end{itemize}
 \end{itemize}
 
