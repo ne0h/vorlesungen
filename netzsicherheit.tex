@@ -1306,11 +1306,17 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 \subsection{Einführung}
 \begin{itemize}
 	\item Motivation: Schutz des Persönlichkeitsrechts bei der Verarbeitung personenbezogender Daten ("`Recht auf informationelle Selbstbestimmung"')
-	\item Säulen zum Schutz der Privatsphäre: Regulierung durch Gesetze, Selbstregulierung, Selbstschutz
-	\item Schutzziele: Unverkettbarkeit (personenbezogene Daten aus verschiedenen Kontexten können nicht in Verbindung gebracht werden), Transparenz, Intervenierbarkeit
+	\item Generelle Frage: Welche Daten sind schützenswert? Auch Metadaten!
+	\item Säulen zum Schutz der Privatsphäre: Regulierung durch Gesetze, Selbstregulierung (TÜV, Trusted Shop, etc.), Selbstschutz durch PETs (s.u.)
+	\item Schutzziele im Kontext Privatsphäre: Unverkettbarkeit (personenbezogene Daten aus verschiedenen Kontexten können nicht in Verbindung gebracht werden), Transparenz, Intervenierbarkeit
+	\item \textbf{Definitionen}\footnote{Nach BDSG}
+	\begin{description}
+		\item[Anonymität:] Verändern personenbezogener Daten derart, dass sie nur mit unverhältnismäßig großem Aufwand zugeordnet werden können
+		\item[Pseudonymität:] Ersetzen von Identifikationsmerkmalen, um Bestimmung Betroffener wesentlich zu erschwerden
+	\end{description}
 	\item \textbf{Privacy Enhancing Technologies (PET)}
 	\begin{itemize}
-		\item Grundprinzip: Datensparsamkeit
+		\item Technologien zur Datenminimierung
 		\item Schutz der Identität eines Benutzers, Schutz der Herkunft von Daten, Schutz personenbezogener Daten
 	\end{itemize}
 \end{itemize}
@@ -1330,24 +1336,14 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 		\item Beispiel Tor: Wahl zufälliger Route über drei Knoten. Verschlüsselte Verbindungen zwischen den Knoten mit regelmäßiger Neuwahl der Route
 	\end{itemize}
 	\item Crowds: Menge von Benutzern, die entweder Anfragen verschlüsselt an andere Benutzer weiterleiten oder unverschlüsselt ans Ziel schicken. Senderanonymität, allerdings können Anfragen mitgelesen werden sowie lange Wartezeiten und DDoS-anfällig
-	\item P2P-Filesharingnetz Freenet: Anfragen über mehrere Knoten zur Gewährleistung von Sender-/Empfängeranonymität, allerdings Verkehrsanalysen möglich und Unverkettbarkeit nicht immer garantiert
+	\item P2P-Filesharingnetz Freenet: Anfragen über mehrere Knoten zur Gewährleistung von Sender-/Empfängeranonymität (selber Rückweg) \(\rightarrow\) Knoten kennen nur ihre direkten Nachbarn, allerdings Verkehrsanalysen möglich und Unverkettbarkeit nicht immer garantiert
 	\item Off-the-Record Messaging: Datenformat zum Verschlüsseln und Signieren mittels OpenPGP zur Gewährleistung von Sicherheit und Datenschutz beim Instant Messaging (funktioniert nicht mit mehreren Geräten des selben Benutzers). Auch bei Kompromittierung des Hosts soll Abstreitbarkeit erhalten bleiben
 	\item Web-Privacy: Tracking Cookies, Browser-Fingerprinting, DNS-Tracking
 \end{enumerate}
 
-
-\subsection{Aktuelle Forschungsarbeiten am Institut}
+\subsubsection{Aktuelle Forschungsarbeiten am Institut}
 \begin{itemize}
-	\item Motivation: "`Kann ich auf Dienstanbieter und Server (wie Google oder Facebook) verzichten?"'
-	\item Ansatz: Direkte Kommunikation zwischen Nutzergeräten durch Etablierung eines dezentralen Overly-Netzes. Dadurch Schutz der persönlichen Daten. Muss allerdings hinsichtlich Ressourcennutzung effizient und skalierbar sein
-	\item Anwendungsszenarien: Soziale Netzwerke, Smart Traffic, Smart Grid
-	\item Anwendungsszenario soziales Netzwerk: Austausch von Daten zwischen Nutzern mit Vertrauensverhältnis. Kein Datenabfluss an Dritte \(\rightarrow\) SociaPath
-	\item \textbf{SociaPath: Selbversorgender Datentransfer}
-	\begin{itemize}
-		\item Idee: Selbstversorgendes Overlay-Netz nur zwischen Geräte von Nutzern mit Vertrauensverhältnis (Datensparksamkeit, Datenlokalität)
-		\item Publish-/Subscribe-Dienst: Kontext der Veröffentlichunf eines Datenobjekts durch \textit{Thema} gebildet
-		\item Herausforderungen: Koordination ohne hochverfügbare Server; heterogene Ressourcen der Nutzergeräte; Inkinsistenzen durch Netzpartitionierung möglich; hohe Dynamik sowie geringe Anzahl an eigenen GEräten (genügend Verfügbarkeit erzielbar?)
-		\item Behandlung von Inkonsistenzen: \texttt{STATE}-Nachricht um Konsistenzen widerherzustellen. Empfänger prüft, ob zusätzliche Objekte vorhanden sind und schickt \texttt{NOTIFY}-Nachricht
-	\end{itemize}
-	\item Weitere Forschungsarbeit zum Thema Privatsphäre im modernen Straßenverkehr (Smart Traffic), zukünftigen Stromnetz (Smart Grid), Haushalt (Smart Home)
+	\item Privatsphäre im modernen Straßenverkehr (Smart Traffic)
+	\item Privatsphere im zukünftigen Stromnetz (Smart Grid)
+	\item Privatsphere im Haushalt (Smart Home)
 \end{itemize}
