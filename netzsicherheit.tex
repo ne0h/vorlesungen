@@ -1177,56 +1177,87 @@ Welche Probleme können in großen Netzen auftreten?
 
 
 
-\section{Internetdienste}
+\section{Infrastrukturdienste}
+Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worden.
 
-\subsection{Border Gateway Protocol (BGP)}
+\subsection{Interdomain-Routing: BGPsec}
 \begin{itemize}
 	\item Aufteilung des Internet in Autonome Systeme (AS). IANA (Internet Assigned Numbers Authority) delegiert die Zuteilung an \(Reginal Internet Registries\) (RIRs), beispielsweise RIPE NCC für Europa, den Nahen Osten und Zentralasien
 	\item RIRs sind verantwortlich für die Zuteilung von global eindeutigen IP-Adressbereichen (Präfixe) sowie das Routing innerhalb des Autonomen Systems und zu anderen Autonomen Systemen
-	\item \textbf{Exterior Gateway Protocol} (EGP)
+	\item \textbf{Bestandteile}
+	\begin{description}
+		\item[Interior Gateway Protocol:] Routing \textit{innerhalb} automomer Systeme
+		\item[Exterior Gateway Protocol:] Routing \textit{zwischen} autonomen Systemen
+	\end{description}
+	\item \textbf{Border Gateway Protocol (BGP)}
 	\begin{itemize}
-		\item Meisteingesetztes Protokoll zum Routing zwischen verschiedenen AS. Etablierung einer BGP-Session über TCP zum regelmäßigen Austausch von Routinginformationen
-		\item UPDATE-Nachrichten zum Mitteilen wie Präfixe erreichbar sind. Dient der Verhinderung von Schleifen und zur Bewertung einer Route (enthält Liste von AS)
+		\item Einzig eingesetzt \textit{Exterior Gateway Protocol} (EGP)
+		\item Austausch von Routinginformationen (Präfixe mit AS-Pfaden, \texttt{UPDATE}-Nachrichten) über \texttt{TCP}
 		\item Angriffsziele
 		\begin{itemize}
-			\item Unautorisierte Bekanntgabe von Präfixen: Abhören/Manipulieren von Datenverkehr oder DoS-Angriff
-			\item Fälschen von AS-Path-Angaben: Künstliches Verbessern/Verschlechtern von Routen sowie DoS-Angriffe
-			\item Eindringen in BGP-/TCP-Session: Manipulation der Routen sowie DoS-Angriffe
+			\item MitM-Hijacking: Unautorisierte Bekanntgabe von Präfixen zum Abhören/Manipulieren/Unterdrucken von Datenverkehr
+			\begin{itemize}
+				\item Bisher keine Möglichkeit, die Rechtmäßigkeit von bekanntgegeben Routen zu prüfen \(\rightarrow\) Angriff trivial durch Bekanntgabe der Präfixe des Opfers
+				\item Angreifer leitet Verkehr zu seinem "`Opfer"' über sich um
+				\item Problem: Schwer zu erkennen
+				\item Gegenmaßnahme: Globale Überwachung der eigenen Präfixe; filtern der eingehenden Routen anderer ASe (aufwendige, manuelle Konfiguration). Solange nicht alle ASe die Routen ihrer Kunden filtern besteht das Problem weiter
+			\end{itemize}
+			\item Fälschen von AS-Pfad-Angaben zum Verbesseren/Verschlechtern von Routen
+			\item Angriffe auf BGP-Sessions
+			\item DoS-Angriffe
 		\end{itemize}
-		\item Beispiele
-		\begin{itemize}
-			\item Youttube-Ausfall 2008: Landesweite Youtube-Sperre in Pakistan durch entsprechende Manipulation der Route zu Youtube, um dieses landesweit zu sperren
-			\item MitM-Hijacking: Angreifer leitet Verkehr des Opfers über sich um
-		\end{itemize}
-		\item Mögliche Lösung für die Sicherheitsprobleme: Aufbau von krytografischen Vertrauensketten für Routinginformationen
+		\item Schutzziele
+		\begin{description}
+			\item[Kontrollebene:] AS-Autorisierung für Bekanntgabe eines Präfixes; Authentizität von Routinginformationen
+			\item[Transportebene:] Vertraulichkeit und Integrität (beispielsweise durch IPsec)
+		\end{description}
 	\end{itemize}
-	\item \textbf{Mechanismen zum Schutz für BGP}
+	\item Umsetzung von Schutzmaßnahmen in der Praxis sehr aufwendig
+	\item \textbf{BGBsec}
 	\begin{itemize}
-		\item Probleme bei der Entwicklung sicherer Routing-Protokolle: Umsetzung in der Praxis schwierig; Abwärtskompatibilität nicht immer gegeben; hohe zusätzliche Last auf den Routern
-		\item Beispiel BGPSec: Einführung einer \textit{Resource Public Key Infrastructure} (RPKI) mit Zertifikaten zur Authentifizierung sowie digitale Signaturen von Routing-Objekten. Dadurch zusätzliches BGP-Attribut zum Transport von Signaturen
+		\item Ressource Public Key Infrastructure (RPKI)
+		\begin{itemize}
+			\item \textbf{Autorisierung} von Routinginformationen durch Digitale Signaturen der Routing-Objekte \(\rightarrow\) GBP-Attribut zum Transport von Signaturen
+			\item Hierarchischer Aufbau von CAs/Vertrauen
+			\item Zugangskontrolle für Schreibzugriffe (unautorisiertes Löschen, etc.)
+			\item Signiertes Objekt enthält u.a. ASN, Gültigkeitszeitraum, Trust Anchor sowie Präfixe
+			\item Integritätsschutz der Pfadinformationen entlang des gesamten Wegs notwendig
+		\end{itemize}
 	\end{itemize}
-	\item Zusammenfassung: Internetprotokolle sind auf Vertrauensbasis entwickelt. Dabei ist die Annahme getroffen worden, dass Angreifer keinen Zugang zum Netz haben. Da Angriffe auf BGP gravierende Folgen haben können ist es notwendig, sichere Routing-Protokolle zu entwickeln
 \end{itemize}
 
 
-\subsection{DNS}
+\subsection{Namensdienste}
+
+\subsubsection{Domain Name System (DNS)}
 \begin{itemize}
-	\item Verwendung von Namensserver zum Abfragen von Namen statt IP-Adressen, die zur Adressierung von Rechnern genutzt werden können
+	\item Verwendung von Namensserver zum Abfragen von Namen statt IP-Adressen, die zur Adressierung von Rechnern genutzt werden
 	\item Typen von \textit{Resource Records} (RR): \textit{A-Record} zur Abbildung auf IP-Adressen, \textit{MX} für E-Mail-Server, \textit{CNAME} zur Abbildung von Namen auf Namen, \textit{NS} für Nameserver, etc.
 	\item Hierarchische Aufteilung in Zonen
-	\item Angriffsziele: Unautorisierte Bekanntgabe von Records, Manipulation des Caches, Eindringen in den UDP-Datenverkehr
+	\item Angriffsziele: Unautorisierte Bekanntgabe von Records, Manipulation des lokalen Caches (Cache Poisoning: Bei rekursiven Anfragen ungefragt gefälschte Einträge mitsenden), Eindringen in den UDP-Datenverkehr
+	\item \textbf{Schutzziele}
+	\begin{description}
+		\item[Kontrollebene:] Authentizität der RRs; welcher Nameserver ist berechtigt?
+		\item[Übertragungsweg:] Vertraulichkeit und Integrität
+	\end{description}
 	\item Schutz gegen Angriffe: Aufbau von kryptografisch sicheren Vertrauensketten zur Authentifizierung von Nameservern und Records
 	\item \textbf{Domain Name System Security Extensions (DNSSEC)}
 	\begin{itemize}
-		\item Verwendung von TLS zum Abfragen von DNS-Servern sowie zusätzliche DNS-Records für öffentliche Schlüssel und Signaturen
+		\item Verwendung von TLS zum Abfragen von DNS-Servern sowie zusätzliche DNS-Records für öffentliche Schlüssel und Signaturen \(\rightarrow\) Client kann Inhalte der DNS-Antwort selbst lokal überprüfen
 		\item Schützt allerdings gegen MitM-Angreifer oder Angriffe auf das Routing
 	\end{itemize}
-	\item \textit{DNS-based Authentication of Named Entities} (DANE): Bietet Überprüfbarkeit ob ein Server tatsächlich zur Domain gehört. Dazu werden Serverzertifikate per DNSSEC in Zonen hinterlegt
-	\item Zusammenfassung: Auch DNS ist auf Vertrauensbasis entwickelt worden, daher dringend sichere DNS-Protokolle notwendig
+	\item Probleme: \texttt{DNSSEC} garantiert nicht, dass Server authentisch sind (beispielsweise kann Provider Anfragen umleiten oder fahrlässige CAs vergeben gültige Zertifikate für Angreifer)
+\end{itemize}
+
+\subsubsection{DNS-based Authentication of Named Entities (DANE)}
+\begin{itemize}
+	\item Probleme mit \texttt{TLS}-Zertifikaten: Zuständigkeit innerhalb CAs; unpassende Zertifikattypen; selbstsignierte Zertifikate haben keinen gültigen Vertrauensanker
+	\item Fingerprint von Serverzertifikaten wird zusätzlich in \texttt{DNSSEC}-Record abgelegt \(\rightarrow\) Client kann per \texttt{DNSSEC} überprüfen, ob das hinterlegte mit dem erhaltenen Zertifikat übereinstimmt \(\rightarrow\) zusätzliche Hürde für Angreifer
 \end{itemize}
 
 
-\subsection{DDoS}
+
+\section{DDoS}
 \begin{itemize}
 	\item Angriff auf die Verfügbarkeit eines Dienstes. Anzahl aus Ausmaße steigen in den letzten Jahren deutlich
 	\item \textbf{Arten von Angriffen}
