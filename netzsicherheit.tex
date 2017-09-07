@@ -904,7 +904,7 @@ Welche Probleme können in großen Netzen auftreten?
 	\item \textbf{Überblick}
 	\begin{itemize}
 		\item Ziel: Umsetzung von Schutzzielen für den Verkehr auf Schicht 3, unabhängig vom Transportprotokoll
-		\item Vrteile: Sicherheit unabhängig von Anwendungen; transparent; individuell konfigurierbar
+		\item Vorteile: Sicherheit unabhängig von Anwendungen; transparent; individuell konfigurierbar
 	\end{itemize}
 	\item \textbf{Einsatzszenario}
 	\begin{itemize}
@@ -922,7 +922,7 @@ Welche Probleme können in großen Netzen auftreten?
 \begin{itemize}
 	\item \textbf{Sicherheitsassoziation}
 	\begin{itemize}
-		\item Flexibilität: Teilnehmer können entscheiden welche Sicherheitsanforderungen an einen IP-Strom gestellt werden. Kommunikationspartner definieren \textit{Security Policy}, die für alle Pakete angewandt wird
+		\item Flexibilität: Teilnehmer können entscheiden, welche Sicherheitsanforderungen an einen IP-Strom gestellt werden. Kommunikationspartner definieren \textit{Security Policy}, die für alle Pakete angewandt wird
 		\item Security-Association (SA): Unidirektionale Verbindung zwischen zwei IP-Instanzen. Generell zwischen allen Verbindungen möglich. \textbf{Lokal} eindeutig durch \textit{Security Parameter Index} (SPI) identifizierbar
 	\end{itemize}
 	\item \textbf{SAD und SPD}
@@ -958,10 +958,10 @@ Welche Probleme können in großen Netzen auftreten?
 		\item[Kryptografische Endpunkt:] Endpunkte der Sicherheitsprotokolle
 	\end{description}
 	\item \textbf{Übertragungsmodi}
-	\begin{itemize}
+	\begin{description}
 		\item[Transport-Modus:] Einsatz zwischen Kommunikationsendpunkten, schützt die Nutzdaten. Zusätzlicher IPsec-Kopf im Paket enthalten
-		\item[Tunnel-Modus:] Einsatz zwischen beliebigen Systemen, oft ist ein Endpunkt kein Kkommunikationsendpunkt. IP-in-IP-Kapselung, schützt die gesamte IP-Dateneinheit, Router auf dem Weg haben keinen Zugriff auf Orginal-IP-Kopf
-	\end{itemize}
+		\item[Tunnel-Modus:] Einsatz zwischen beliebigen Systemen, oft ist ein Endpunkt kein Kommunikationsendpunkt. IP-in-IP-Kapselung, schützt die gesamte IP-Dateneinheit, Router auf dem Weg haben keinen Zugriff auf Orginal-IP-Kopf
+	\end{description}
 	\item \textbf{Schutz vor Replay-Attacken}
 	\begin{itemize}
 		\item Erster Ansatz: Verwenden von eindeutigen, monoton wachsenden Sequenznummern
@@ -999,7 +999,7 @@ Welche Probleme können in großen Netzen auftreten?
 		\item Erst verschlüsseln oder Authentifizieren?
 		\begin{itemize}
 			\item Encrypt-then-MAC (EtM): Schränkt DoS-Angriffe ein (Authentizität kann vor Entschlüsselung geprüft werden); Authentifizierungsdaten allerdings unverschlüsselt \(\rightarrow\) Keyed Authentication Algorithm notwendig; in der Theorie besser
-			\item Mac-than-Encrypt (MtE): MAC nicht angreifbar; "`You should authenticate what you men, not what you say"\footnote{Horton-Prinzip}
+			\item Mac-than-Encrypt (MtE): MAC nicht angreifbar; "`You should authenticate what you mean, not what you say"\footnote{Horton-Prinzip}
 		\end{itemize}
 		\item Transportmodus: Dateneinheit der höheren Schicht sowie ESP-Anhang werden verschlüsselt, Authentifizierungsdaten werden ggf. drangehängt (falls ausgewählt). Stellt Vertraulichkeit der übergeordneten Protokolle sicher, verhindert allerdings keine Verkehrsanalyse. Die Felder im IP-Kopf werden nicht authentifiziert (im Unterschied zu AH, da Router darauf zugreifen)
 		\item Tunnelmodus: Dateneinheit wird inklusive orginal IP-Kopf verschlüsselt, ESP-Kopf wird der Dateneinheit vorangestellt sowie ggf. Authentifizierungsdaten angehängt (falls ausgewählt). Schützt Netzwerk vor externen Netzen durch Verschlüsselung zwischen externem Endsystem und Sicherheitsgateway. Verkehrsanalyse wird eingeschränkt
@@ -1071,7 +1071,7 @@ Welche Probleme können in großen Netzen auftreten?
 	\item[TLS Handshake Protocol]\hfill
 	\begin{itemize}
 		\item Verantwortlich für: Aushandlung Verschlüsselung/Integritätssicherung; Authentifizierung der KommunikationspartnerM Aushandlung Schlüsselmaterial
-		\item Beispiel einer TLS-Cipher-Suite: \texttt{TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA}
+		\item Beispiel eines Elements einer TLS-Cipher-Suite: \texttt{TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA}
 		\item Vereinfachter Ablauf im Überblick: Client will mit TLS gesicherte Daten versenden. TLS-Verbindung wird dabei neu aufgebaut
 		\begin{enumerate}
 			\item Auswahl der kryptografischen Verfahren (Client \(\rightarrow\) Server)
@@ -1081,11 +1081,11 @@ Welche Probleme können in großen Netzen auftreten?
 		\item Angriffe
 		\begin{itemize}
 			\item Downgrad-Attack: Aufbau von Verbindungen mit starken \texttt{TLS}-Version per \texttt{RST}-Flag probieren zu verhindern \(\rightarrow\) Client versucht Verbindung mit schwächerer Verschlüsselung aufzubauen. Lösung: Verbindungen mit schwachen Versionen Verbieten
-			\item Cipher-Attack: "`Knacken"' schwacher Kryptomechanismen (RC4, RSA512, etc.). Lösung: Verbindungen mit schwachen Versionen
+			\item Cipher-Attack: "`Knacken"' schwacher Kryptomechanismen (RC4, RSA512, etc.). Lösung: Verbindungen mit schwachen Versionen verbieten
 			\item Logjam (Angriff auf DH-Schlüsselaustausch)
 			\begin{itemize}
 				\item Problem: Viele Webserver verwenden selbe Primzahl für DH
-				\item Vorgehen: Vorberechnung aller 512-Bit Primzahlen (dauert ca. 1-2 Wochen); danach Downgrad-Angriff auf 512-Bit-DH und brechen der Verbindung
+				\item Vorgehen: Vorberechnung pro 512-Bit Primzahl und Generator (dauert ca. 1-2 Wochen); danach Downgrad-Angriff auf 512-Bit-DH und brechen der Verbindung
 				\item Gegenmaßnahmen: Verwendung individueller Patameter sowie hinreichend lange Schlüssel
 			\end{itemize}
 		\end{itemize}
@@ -1099,7 +1099,7 @@ Welche Probleme können in großen Netzen auftreten?
 				\item Gegenmaßnahmen: Renegotiation deaktivieren; \texttt{Hello}-Message Inhalte der letzten \texttt{Finish}-Message hinzufügen
 			\end{itemize}
 		\end{itemize}
-		\item Expliziter Verbindungsabbau notwendig, anonsten \textit{Truncation Angriff} möglich (Angreifer schleust unverschlsseltes TCP-FIN-Paket ein, wodurch ein Auslogversuch des Clients beim Server ankommt). Lösung: Beide Kommunikationspartner müssen ein CloseNotify verschicken
+		\item Expliziter Verbindungsabbau notwendig, anonsten \textit{Truncation Angriff} möglich (Angreifer schleust unverschlüsseltes TCP-FIN-Paket ein, wodurch ein Auslogversuch des Clients beim Server ankommt). Lösung: Beide Kommunikationspartner müssen ein CloseNotify verschicken
 		\item TSL-Alert Protokoll zur Behandlung von Fehlerzuständen: Fatale Fehler (beispielsweise Zertifikatsfehler, führen zu sofortigem Verbindungsabbruch) oder Hinweise (beispielsweise Fehler beim Datenempfang)
 	\end{itemize}
 	\item[TLS Record Protocol]\hfill
@@ -1121,11 +1121,11 @@ Welche Probleme können in großen Netzen auftreten?
 			\item Aufteilung in \texttt{TLS}-Fragmente von maximal \(2^{14}\) Byte; optional können kleinere Blöcke zusammengefasst werden
 			\item Erschweren von Verkehrsanalysen: Versenden von \texttt{TLS}-Fragmenten der Länge \(0\) Byte
 		\end{itemize}
-		\item Kombimierung (optional)
+		\item Komprimierung (optional)
 		\begin{itemize}
 			\item Verringert Kommunikationsaufwand sowie Redundanz der Daten
 			\item Verschiedene Angriffe möglich
-			\item Gegenmaßnahmen: Cross-site Request Forgery (CSRF) Protection; verbieten von Kombrimierung
+			\item Gegenmaßnahmen: Cross-site Request Forgery (CSRF) Protection; Komprimierung verbieten
 		\end{itemize}
 		\item Integritätssicherung mittels (H)MAC. Eingabewerte: Client-/Serverschlüssel, Sequenznummer, Fragmentierte und komprimierte Dateneinheit mit entsprechenden Headern
 		\item Berechnung des Schlüsselmaterials
@@ -1181,7 +1181,7 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 
 \subsection{Interdomain-Routing: BGPsec}
 \begin{itemize}
-	\item Aufteilung des Internet in Autonome Systeme (AS). IANA (Internet Assigned Numbers Authority) delegiert die Zuteilung an \(Reginal Internet Registries\) (RIRs), beispielsweise RIPE NCC für Europa, den Nahen Osten und Zentralasien
+	\item Aufteilung des Internet in Autonome Systeme (AS). IANA (Internet Assigned Numbers Authority) delegiert die Zuteilung an \textit{Reginal Internet Registries} (RIRs), beispielsweise RIPE NCC für Europa, den Nahen Osten und Zentralasien
 	\item RIRs sind verantwortlich für die Zuteilung von global eindeutigen IP-Adressbereichen (Präfixe) sowie das Routing innerhalb des Autonomen Systems und zu anderen Autonomen Systemen
 	\item \textbf{Bestandteile}
 	\begin{description}
@@ -1196,7 +1196,7 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 		\begin{itemize}
 			\item MitM-Hijacking: Unautorisierte Bekanntgabe von Präfixen zum Abhören/Manipulieren/Unterdrucken von Datenverkehr
 			\begin{itemize}
-				\item Bisher keine Möglichkeit, die Rechtmäßigkeit von bekanntgegeben Routen zu prüfen \(\rightarrow\) Angriff trivial durch Bekanntgabe der Präfixe des Opfers
+				\item Bisher keine Möglichkeit, die Rechtmäßigkeit von bekanntgegeben Routen zu prüfen \(\rightarrow\) Angriff trivial durch Bekanntgabe der Präfixe des Opfers mittels \textit{Longest Prefix Matching}
 				\item Angreifer leitet Verkehr zu seinem "`Opfer"' über sich um
 				\item Problem: Schwer zu erkennen
 				\item Gegenmaßnahme: Globale Überwachung der eigenen Präfixe; filtern der eingehenden Routen anderer ASe (aufwendige, manuelle Konfiguration). Solange nicht alle ASe die Routen ihrer Kunden filtern besteht das Problem weiter
@@ -1216,7 +1216,7 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 	\begin{itemize}
 		\item Ressource Public Key Infrastructure (RPKI)
 		\begin{itemize}
-			\item \textbf{Autorisierung} von Routinginformationen durch Digitale Signaturen der Routing-Objekte \(\rightarrow\) GBP-Attribut zum Transport von Signaturen
+			\item \textbf{Autorisierung} von Routinginformationen durch Digitale Signaturen der Routing-Objekte \(\rightarrow\) BGP-Attribut zum Transport von Signaturen
 			\item Hierarchischer Aufbau von CAs/Vertrauen
 			\item Zugangskontrolle für Schreibzugriffe (unautorisiertes Löschen, etc.)
 			\item Signiertes Objekt enthält u.a. ASN, Gültigkeitszeitraum, Trust Anchor sowie Präfixe
