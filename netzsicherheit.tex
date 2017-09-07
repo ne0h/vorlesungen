@@ -1,6 +1,6 @@
 \chapter{Netzsicherheit: Architekturen und Protokolle}
 
-Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' aus dem Sommersemester 2016.\footnote{\url{https://telematics.tm.kit.edu/ss2016_2928.php}}
+Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' aus dem Sommersemester 2017.\footnote{\url{https://telematics.tm.kit.edu/ss2017_3540.php}}
 
 \section{Einführung}
 \begin{itemize}
@@ -106,13 +106,13 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Möglichkeiten: (Kombination aus) Besitz/Wissen/Biometrisches Merkmal
 		\item Mechanismen und Bausteine
 		\begin{itemize}
-			\item Passwörter oder Passwort-Hashes: Authentifikation durch Nachweis eines Geheimnissen. Nachteile u.a.: Passwortliste notwendig (Ziel für Angreifer), Passwort muss übertragen werden (Vertraulichkeit eventuell gefährdet)m oft schlechte Wahl der Passwörter
+			\item Passwörter oder Passwort-Hashes: Authentifikation durch Nachweis eines Geheimnissen. Nachteile u.a.: Passwortliste notwendig (Ziel für Angreifer), Passwort muss übertragen werden (Vertraulichkeit eventuell gefährdet); oft schlechte Wahl der Passwörter
 			\item Challenge-Response-Authentifizierung: Vergleichbare Probleme wie bei Passwörtern
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Zertifikate}
 	\begin{itemize}
-		\item Authentifizierung eines Sachverhalts, den man nicht selbst überprüfen kann durch vertrauenswürdige Dritte (CA)
+		\item Authentifizierung eines Sachverhalts, den man nicht selbst überprüfen, kann durch vertrauenswürdige Dritte (CA)
 		\item Digitales Dokument, in dem eine Instanz einen bestimmten Sachverhalt mittels digitaler Signatur bestätigt
 	\end{itemize}
 \end{itemize}
@@ -203,7 +203,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 \begin{itemize}
 	\item \textbf{Perfect Forward Secrecy}
 	\begin{itemize}
-		\item Authentifizierung mittels langlebigen Geheimnisses, danach Kommunikation über gesicherten Kanal mit kurzlebigem Sitzungsschlüssel
+		\item Authentifizierung mittels langlebigen Geheimnisses, danach Kommunikation über gesicherten Kanal mittels kurzlebigem Sitzungsschlüssel
 		\item Ziel: Angreifer kann die Kommunikation auch dann nicht entschlüsseln, wenn er die komplette Kommunikation aufgezeichnet hat und das langlebige Geheimnis kennt (Einbruch in Endsysteme)
 		\item Maßnahmen: Sitzungsschlüssel muss von langlebigem Geheimnis unabhängig sein, alle Sitzungsinformationen müssen nach Beendigung der Sitzung gelöscht werden, langlebiges Geheimnis muss periodisch erneuert werden
 		\item Beispiel: DH-Austausch mit Authentifizierung. Zusätzlich zu den DH-Parametern werden Signaturen über die Parameter ausgetauscht
@@ -215,7 +215,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\end{itemize}
 	\item \textbf{Dynamische Wahl der Verfahren}
 	\begin{itemize}
-		\item Dynamische Wahl der genutzten Sicherheitsmechanismn zur Verbesserung der Interoperabilität
+		\item Dynamische Wahl der genutzten Sicherheitsmechanismen zur Verbesserung der Interoperabilität
 		\item Vorteile: Einfache Migration zu kryptographisch stärkeren Verfahren sowie Ausschluss gebrochener Verfahren
 		\item Probleme: Komplexität des Protokolls (Wie werden Sicherheitsmechanismen beschrieben und welche Kombinationen sind zulässig?), Downgrade-Angriff
 	\end{itemize}
@@ -230,7 +230,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Ziel: Keine Durchführung von rechenintensiven Operationen, solange nicht klar ist, dass die Absenderadresse nicht gefälscht ist
 		\item Möglichkeiten zur Echtheitsprüfung des Anfragenden
 		\begin{itemize}
-			\item Token/Cookie: Enthält zufällige Informationen des Angefragten. Wird es zurückgesendet, ist mit oher Wahrscheinlichkeit die Absenderadresse nicht gefälscht (beispielsweise durch IP-Spoofing)
+			\item Token/Cookie: Enthält zufällige Informationen des Angefragten. Wird es zurückgesendet, ist mit hoher Wahrscheinlichkeit die Absenderadresse nicht gefälscht (beispielsweise durch IP-Spoofing)
 			\item Puzzle: Stellen einer rechenintensiven Aufgabe an den Anfragenden. Keine lokale Zustandshaltung beim Angefragten
 		\end{itemize}
 		\item Konzept: Tokens/Cookies
@@ -290,12 +290,12 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsubsection{Public Key Infrastructure (PKI)}
 \begin{itemize}
-	\item Zentrale Infrastructur zum Management von ID-Zertifikaten \(\rightarrow\) ermöglicht Authentifizierung öffentlicher Schlüssel
+	\item Zentrale Infrastruktur zum Management von ID-Zertifikaten \(\rightarrow\) ermöglicht Authentifizierung öffentlicher Schlüssel
 	\item \textbf{Anforderungen}
 	\begin{itemize}
 		\item Vertrauenswürdigkeit
 		\item Sicherheit interner Abläufe (Dokumentation soll Vertrauenswürdigkeit erhöhen) und der Signaturschlüssel der CA
-		\item Effiziens, Skalierbarkeit, Komfort für den Benutzer
+		\item Effizienz, Skalierbarkeit, Komfort für den Benutzer
 	\end{itemize}
 	\item \textbf{Elemente}
 	\begin{itemize}
@@ -327,7 +327,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsection{Vertrauen/Vertrauensmodelle}
 \begin{itemize}
-	\item Vertrauen: Normal im Alltagsleben, subjektiv, unscharf, gerichten, kontextgebunden, risikoabhängig, etc.
+	\item Vertrauen: Normal im Alltagsleben, subjektiv, unscharf, gerichtet, kontextgebunden, risikoabhängig, etc.
 	\item \textbf{Vertrauensmodell (Trust Model)}
 	\begin{itemize}
 		\item Beschreibt, welchen Zertifikaten ein Benutzer trauen kann;, wie Vertrauen hergestellt wird und wie dieses Verhalten eingeschränkt/kontrolliert werden kann
@@ -337,7 +337,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 			\item Single-CA
 			\begin{itemize}
 				\item Eine CA erstellt alle Zertifikate
-				\item Vorteil: Nur ein Vertrauensanker erleicht die Validierung
+				\item Vorteil: Einzelner Vertrauensanker erleicht die Validierung
 				\item Nachteile: Globales Vertrauen notwendig, Monopolstellung, Kompromittierung des CA-Schlüssels hat globale Konsquenzen, Skalierung, Single-Point-of-Failure
 			\end{itemize}
 			\item Oligarchie von CAs
@@ -382,7 +382,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 
 \subsubsection{X.509}
 \begin{itemize}
-	\item Bekannster und verbreitetster Standard für Zertifikate
+	\item Bekanntester und verbreitetster Standard für Zertifikate
 	\item Erweiterungsmöglichkeit duch optionale Parameter; auch als Attributzertifikat verwendbar
 	\item Aktive Nutzung: SSL/TLS, S/MIME, IPsec, etc.
 	\item Hierarchisches Namensschema: \textit{Distinguished Name} setzt sich aus mehreren Attributen zusammen (beispielsweise Land, Bundestaat, Stadt, etc.)
@@ -491,7 +491,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Eventuell Wiederholung mit anderen Modulen
 	\end{enumerate}
 	\item Beispielmodule: MD5-Challenge, Generic Token Card (hardware-basiert, sonst wie CHAP), One-Time Passwort
-	\item Verpflichtende Module: Identity (ermittelt die ID des zu authentifizierdenden Clients), Notification (übertragen einer Nachricht an den Client, welche dieser bestätigen muss), NAK (Ablehnung einer Antwort)
+	\item Verpflichtende Module: Identity (ermittelt die ID des zu authentifizierdenden Clients), Notification (Übertragen einer Nachricht an den Client, welche dieser bestätigen muss), NAK (Ablehnung einer Antwort)
 	\item Viele (auch kommerzielle) Module standardisiert
 \end{itemize}
 
@@ -526,28 +526,28 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item \textbf{Sicherheitsbetrachtungen}
 	\begin{itemize}
 		\item Schutzziele (Ressource \(\Leftrightarrow\) AS): Vertraulichkeit/Integrität/Authentizität der Nachrichten sowie Authentizität der Kommunikationspartner?
-		\item Umsetzung bei RADIUS: Gemeinsames (16 Byte langes) Geheimnis zwischen Ressource und AS zur Sicherstelleung von Vertraulichkeit/Integrität/Authentizität
+		\item Umsetzung bei RADIUS: Gemeinsames (16 Byte langes) Geheimnis zwischen Ressource und AS zur Sicherstellung von Vertraulichkeit/Integrität/Authentizität
 		\item Fazit
 		\begin{itemize}
 			\item Sicherheit steht und fällt mit dem Shared Secret. Dieses muss manuell verteilt werden und fehlt beim Roaming \(\rightarrow\) nicht alle Daten sind auf dem Kommunikationsweg geschützt
 			\item Sicherheit allgemein unzureichend, schwache Sicherung der Schutzziele sowie schwacher Schutz gegen Wiederholungsangriffe (beispielsweise durch Verwendung von \texttt{MD5})
-			\item Lösung: Verwenung von TLS (oberhalb von \texttt{TCP}) statt \texttt{UDP} (keine Fragmentierung/Staukontrolle/Absicherung der Kommunikation)
+			\item Lösung: Verwendung von TLS (oberhalb von \texttt{TCP}) statt \texttt{UDP} (keine Fragmentierung/Staukontrolle/Absicherung der Kommunikation)
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
-\subsubsection{Diamter}
+\subsubsection{Diameter}
 \begin{itemize}
 	\item Nachfolger von RADIUS, allerdings nicht vollständig abwärtskompatibel
 	\item Vorteile gegenüber RADIUS: Verlässliche Transportprotokolle (TCP oder SCTP), Fokus auf Sicherheit (verpflichtender Einsatz von IPsec oder TLS), bessere Roaming-Unterstützung, leichte Erweiterbarkeit, Basisunterstützung für Accounting
 	\item \textbf{Diameter Application}
 	\begin{itemize}
 		\item Spezifiziert Framework für Anwendungen: Dienste/Protokolle/Mobile IP/Accounting sowie Ressourcen und AS-Funktionalität
-		\item Applikationen können Diamter-Funktionalität nutzen, beispielsweise Server-/Proxykomponenten, Verbindungsaufbau, Sitzungsmanagement, Kommunikationssicherheit
+		\item Applikationen können Diameter-Funktionalität nutzen, beispielsweise Server-/Proxykomponenten, Verbindungsaufbau, Sitzungsmanagement, Kommunikationssicherheit
 	\end{itemize}
 	\item \textbf{Sicherheitsbetrachtung}
 	\begin{itemize}
-		\item Sicherheit von Anfang an im Fokus: verwendung von IPsec vorgschrieben, Server muss zusätzlich TLS unterstützen
+		\item Sicherheit von Anfang an im Fokus: Verwendung von IPsec vorgeschrieben, Server muss zusätzlich TLS unterstützen
 		\item Hoher Schutz der Kommunikation zwischen Ressource und AS
 		\item Kommunikation zwischen Client und Ressource muss weiterhin zusätzlich gesichert werden
 	\end{itemize}
@@ -585,7 +585,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\begin{itemize}
 		\item Schlüsselüberblick
 		\begin{description}
-			\item[Master-Secret des Client (\(k_{Alice}\)):] Alice und dem KDC bekannt, wird KDC-seitig aus Anmeldepasswort abgeleitet (\(SHA1(password_{Alice})\))
+			\item[Master-Secret des Client (\(k_{Alice}\)):] Alice und dem KDC bekannt, wird aus Anmeldepasswort abgeleitet (\(SHA1(password_{Alice})\))
 			\item[Master-Secret des KDC (\(k_{KDC}\)):] Nur dem KDC bekannt
 			\item[Sitzungsschlüssel (\(k_S\)):] Sitzungsschlüssel. Vom KDC pro Sitzung zufällig gewählt und per TGT verteilt
 		\end{description}
@@ -599,21 +599,21 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 	\item Anmeldung an der Workstation: Anmeldung per Benutzername und Passwort. Aus dem Passwort wird das Benutzer-Secret abgeleitet (\(SHA_1(Password_{Alice}) = secret_{Alice}\))
 	\item \textbf{Anmeldung am Netz}
 	\begin{itemize}
-		\item KDC authentifiziert Benutzer anhand Benutzername (im Klartext übertragen) und Benutzer-Secret (Angreifer kann Identität des Benutzers abhören)
-		\item Antwort vom Server (\texttt{AS\_REP}) enthält TGT (mit \(k_{KDC}\) verschlüsselt) und Sitzungsdaten für den Benutzer (\(mit k_{Alice}\) verschlüsselt)
+		\item KDC authentifiziert Benutzer anhand Benutzername (im Klartext übertragen) und Benutzer-Secret \(rightarrow\) Angreifer kann Identität des Benutzers abhören
+		\item Antwort vom Server (\texttt{AS\_REP}) enthält TGT (mit \(k_{KDC}\) verschlüsselt) und Sitzungsdaten für den Benutzer (mit \(k_{Alice}\) verschlüsselt)
 		\item Schutz des langlebigen Geheimnisses durch Sitzungsschlüssel; Nonce in \(k_{Alice}\) zum Schutz vor Replay-Attacken
 	\end{itemize}
 	\item \textbf{Ressourcenanforderung}
 	\begin{itemize}
 		\item TGS für die Ausgabe von Ressourcen-Tickets verantwortlich
 		\item Zugangskontrolle durch jede Ressource (Erweiterung: Zugriffsbeschränkung durch KDC)
-		\item \texttt{TGS\_REQ} enthält TGT, Ressourcenname, Authenticator (verschlüsselt mit \(k_s\))
-		\item \texttt{TGS\_REP} enthält Sitzungsschlüssel mit der Ressource (\(k_{AR}\), mit \(k_s\) verschlüsselt) sowie Ticket für den Ressourcenzugriff (mit Ressourcenschlüssel \(k_R\) verschlüsselt)
+		\item \texttt{TGS\_REQ} enthält TGT, Ressourcenname, Authenticator (verschlüsselt mit \(k_S\))
+		\item \texttt{TGS\_REP} enthält Sitzungsschlüssel mit der Ressource (\(k_{AR}\), mit \(k_S\) verschlüsselt) sowie Ticket für den Ressourcenzugriff (mit Ressourcenschlüssel \(k_R\) verschlüsselt)
 		\item Vorteil für TGT: Muss keinen Zustand halten
 	\end{itemize}
 	\item \textbf{Kommunikation mit der Ressource}
 	\begin{itemize}
-		\item Application Request (\texttt{APP\_REQ}) enthält Ticket und Azthenticator
+		\item Application Request (\texttt{APP\_REQ}) enthält Ticket und Authenticator
 		\item Danach ungeschützter Austausch von Anwendungsdaten
 	\end{itemize}
 \end{itemize}
@@ -631,7 +631,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 			\begin{itemize}
 				\item Aktueller Zeitstempel wird mit \(k_{Alice}\) verschlüsselt zusätzlich übertragen \(\rightarrow\) Server antwortet nur bei korrekt entschlüsselbarem Zeitstempel
 				\item Offline-Password-Guessing allerdings weiterhin möglich
-				\item Brute-Force-Angriff (Passwort raten und damit Preauthentication-Data verschlüsselen) ebenfalls weiterhin möglich, dauert allerdings lange und wird am KDC protokolliert
+				\item Brute-Force-Angriff (Passwort raten und damit Preauthentication-Data verschlüsseln) ebenfalls weiterhin möglich, dauert allerdings lange und wird am KDC protokolliert
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
@@ -651,7 +651,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Trennung von Authentifizierung und Autorisierung
 		\begin{itemize}
 			\item Zweiteilung: Beantragen von TGTs beim AS, beantragen von Ressourcen-Tickets beim TGS
-			\item Vorteil: Master-Secret des Clients wird nur einmal benötigt; MAstersecret und Passwort des Clients müssen im PC gespeichert werden; Nutzer muss Passwort nur einmal eingeben
+			\item Vorteil: Master-Secret des Clients wird nur einmal benötigt; Mastersecret und Passwort des Clients müssen im PC gespeichert werden; Nutzer muss Passwort nur einmal eingeben
 		\end{itemize}
 		\item Keine Zustandshaltung beim KDC: Vermeidet Überlastung \(\rightarrow\) gute Skalierung sowie Schutz für DoS-Angriffen
 		\item Keine asymmetrische Kryptografie: Zum Entwurfszeitpunkt (1993) zu wenig Rechenleistung verfügbar
@@ -715,7 +715,7 @@ Welche Probleme können in großen Netzen auftreten?
 				\item Ressourcenzugriff auf Ressource einer anderen Domäne: Autorisierung durch KDC der anderen Domänen
 				\item KDC der anderen Domäne wird dabei wie eine Ressource behandelt:
 				\begin{enumerate}
-					\item Alice beantragt zunächst Ressourcen-Ticket bei Heim-KDC für entfernteten KDC
+					\item Alice beantragt zunächst Ressourcen-Ticket bei Heim-KDC für entfernte Domäne
 					\item Alice beantragt Ressourcen-Ticket für entfernte Ressource bei entferntem KDC
 				\end{enumerate}
 			\end{itemize}
@@ -843,7 +843,7 @@ Welche Probleme können in großen Netzen auftreten?
 		\end{itemize}
 		\item Personal Mode
 		\begin{itemize}
-			\item Berechnung des \textit{Pairwise Master Key} aus \texttt{PSK} und \texttt{SSID} (\(PKM = \big(H(PSK+SSID)\big)^(4096)\))
+			\item Berechnung des \textit{Pairwise Master Key} aus \texttt{PSK} und \texttt{SSID} (\(PKM = \big(H(PSK+SSID)\big)^{4096}\))
 			\item 4-Wege-Handshake zum Authentifizieren und Aushandeln von Sitzungsschlüsseln
 			\item Verschlüsselung und Integritätsschutz bei Unicast-Kommunikation: Abgeleitet aus PMK
 			\item Verschlüsselung und Integritätsschutz bei Mulicast-Kommunikation
@@ -869,9 +869,8 @@ Welche Probleme können in großen Netzen auftreten?
 	\item \textbf{Aufbau}
 	\begin{itemize}
 		\item Eindeutige, globale Identifikation der Benutzer (beispielsweise \texttt{benutzer@student.kit.edu})
-		\item Aufteilung in Authentifizierungsdomänen (Realms): Jede teilnehmende Universität stellt eigenen AS (Identitätsprovider, RADIUS-Server)
+		\item Aufteilung in Authentifizierungsdomänen (Realms): Jede teilnehmende Universität stellt eigenen AS (Identitätsprovider, RADIUS-Server) \(\rightarrow\) Roaming über hierarchisches RADIUS-Netzwerk
 		\item Hierarchischer Zusammenschluss je Land zu einer Föderation sowie Zusammenschloss der Föderationen zu entsprechenden Konföderationen (Europa, Asien-Pazifik, USA, Kanada, etc.)
-		\item Roaming über hierarchisches RADIUS-Netzwerk
 		\item Probleme bisher:
 		\begin{itemize}
 			\item Schutz nur jeweils zwischen Supplicant/NAS, NAS/AS, AS/AS. Zwischensysteme können Daten abhören/manipulieren \(\rightarrow\) kein Schutz auf dem kompletten Kommunikationsweg zwischen Supplicant und Heimat-AS
@@ -1332,7 +1331,7 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 	\begin{itemize}
 		\item Weiterleitung durch zufällig gewählte Reihe von Onion Routern mit scheitweiser Verschlüsselung. Im Unterschied zu Mixes erfolgt keine Speicherung der Nachrichten sowie neue Pfadwahl für jede Verbindung
 		\item Vorteile: Unverkettbarkeit, keine Speicherung der Nachrichten notwendig, für viele Anwendungsprotokolle geeignet
-		\item Nachteile: Viele Public-Key-nachrichten notwendig; Unverkettbarkeit wird nur bei hinreichend viel Verkehr pro Router erreicht (sonst beobachtbar); Angriffe durch Beobachten von Paketgröße oder Paketreihenfolge möglich
+		\item Nachteile: Viele Public-Key-Nachrichten notwendig; Unverkettbarkeit wird nur bei hinreichend viel Verkehr pro Router erreicht (sonst beobachtbar); Angriffe durch Beobachten von Paketgröße oder Paketreihenfolge möglich
 		\item Beispiel Tor: Wahl zufälliger Route über drei Knoten. Verschlüsselte Verbindungen zwischen den Knoten mit regelmäßiger Neuwahl der Route
 	\end{itemize}
 	\item Crowds: Menge von Benutzern, die entweder Anfragen verschlüsselt an andere Benutzer weiterleiten oder unverschlüsselt ans Ziel schicken. Senderanonymität, allerdings können Anfragen mitgelesen werden sowie lange Wartezeiten und DDoS-anfällig
