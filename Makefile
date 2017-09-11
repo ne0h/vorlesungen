@@ -49,6 +49,10 @@ pmonly:
 	pdflatex pmonly.tex
 	pdflatex pmonly.tex
 
+pponly:
+	pdflatex parallelrechnerparallelprogrammierungonly.tex
+	pdflatex parallelrechnerparallelprogrammierungonly.tex
+
 propaonly:
 	pdflatex propaonly.tex
 	pdflatex propaonly.tex

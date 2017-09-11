@@ -34,6 +34,7 @@ Aktuell enthalten
 * Netzsicherheit
 * Netzsicherheit - Fragenkatalog
 * Rechnerstrukturen
+* Parallelrechner und Parallelprogrammierung
 * Powermanagement
 * Sicherheit - Verfahren und Formelsammlung
 * Softwaretechnik 2
