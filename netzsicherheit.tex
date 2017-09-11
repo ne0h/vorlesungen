@@ -93,10 +93,7 @@ Zusammenfassung der Vorlesung "`Netzsicherheit: Architekturen und Protokolle"' a
 		\item Keyed-Hashing for Message Authentication (HMAC)
 		\begin{itemize}
 			\item Idee: Angreifer soll nach Verändern der Daten keine gültigen Hash berechnen können
-			\item Berechnung (\(opad\) und \(ipad\) sind fest definierte Konstante; Finalisierung der Merkle-Damgârd-Konstruktion wichtig, da sonst "`Verlängerung"' möglich):
-			\begin{equation}
-				HMAC_K\big(m\big) = H \Big( K \bigoplus opad~\big|~H \big( K \bigoplus ipad~|~m \big) \Big)
-			\end{equation}
+			\item Berechnung (\(opad\) und \(ipad\) sind fest definierte Konstante; Finalisierung der Merkle-Damgârd-Konstruktion wichtig, da sonst "`Verlängerung"' möglich)
 		\end{itemize}
 		\item Authenticated Encryption with Associated Data (Galois Counter Mode): Erst verschlüsseln und danach MAC berechnen, da sonst \textit{Chosen Ciphertext Attack} möglich
 	\end{itemize}
@@ -843,10 +840,10 @@ Welche Probleme können in großen Netzen auftreten?
 		\end{itemize}
 		\item Personal Mode
 		\begin{itemize}
-			\item Berechnung des \textit{Pairwise Master Key} aus \texttt{PSK} und \texttt{SSID} (\(PKM = \big(H(PSK+SSID)\big)^{4096}\))
+			\item Berechnung des \textit{Pairwise Master Key} aus \texttt{PSK} und \texttt{SSID} (\(PMK = \big(H(PSK+SSID)\big)^{4096}\))
 			\item 4-Wege-Handshake zum Authentifizieren und Aushandeln von Sitzungsschlüsseln
 			\item Verschlüsselung und Integritätsschutz bei Unicast-Kommunikation: Abgeleitet aus PMK
-			\item Verschlüsselung und Integritätsschutz bei Mulicast-Kommunikation
+			\item Verschlüsselung und Integritätsschutz bei Multicast-Kommunikation
 			\begin{itemize}
 				\item AP wählt zufälligen \textit{Group Master Key} und leitet darauß \textit{Group Transient Key} (GTK) ab, der an alle Gruppenmitglieder verteilt wird
 				\item Schlüssel müssen erneuert werden, wenn ein Mitglied die Gruppe verlässt
@@ -1010,7 +1007,7 @@ Welche Probleme können in großen Netzen auftreten?
 		\begin{itemize}
 			\item NAT: \texttt{AH} authentifiziert IP-Kopf \(\rightarrow\) Änderungen machen Pakete ungültig \(\rightarrow\) IPsec muss Änderungen vorher in Authentifizierungsdaten einberechnen
 			\item Firewalls filtern meist Portnummer-basiert. Bei \texttt{ESP} ist die Portnummer jedoch verschlüsselt
-			\item Konfigurationsfehler in SDP. Beispielsweise Spoofing und Manipulation von Daten bei Verwendung von \texttt{ESP} ohne Authentifizierungsanteil möglich
+			\item Konfigurationsfehler in SPD. Beispielsweise Spoofing und Manipulation von Daten bei Verwendung von \texttt{ESP} ohne Authentifizierungsanteil möglich
 			\item IPsec-Header vergrößern Paket
 		\end{itemize}
 		\item Cut-and-Paste-Angriff
@@ -1346,3 +1343,78 @@ Generelles Problem: Internetprotokolle sind auf Vertrauensbasis entwickelt worde
 	\item Privatsphere im zukünftigen Stromnetz (Smart Grid)
 	\item Privatsphere im Haushalt (Smart Home)
 \end{itemize}
+\newpage
+
+
+
+\section{Appendix A: Formeln und Glossar}
+
+\subsection{Schutzmechanismen und Bausteine}
+\begin{equation}
+	HMAC_K\big(m\big) = H \Big( K \oplus opad~\big|~H \big( K \oplus ipad~|~m \big) \Big)
+\end{equation}
+
+
+\subsection{Schlüsselaustausch}
+\begin{equation}
+	\mathbb{G} = \langle g \rangle~mit~Ordnung~p
+\end{equation}
+
+
+\subsection{Vertrauensmodelle}
+\begin{description}
+	\item[Online Certificate Status Protocol (OCSP):] Prüft Zertifikat auf Widerruf
+	\item[Server-based Certificate Validation Protocol (SCVP):] Konstruktion (und Validierung) einer Zertifikatskette
+\end{description}
+
+
+\subsection{Authentifizierung}
+\begin{description}
+	\item[RADIUS:] Remote Authentication Dial In User Service
+\end{description}
+
+
+\subsection{Kerberos}
+\begin{equation}
+	secret_{Alice} = SHA1\big(password_{Alice}\big)
+\end{equation}
+
+\subsection{Zugangsschutz}
+\begin{description}
+	\item[Layer 2 Tunneling Protocol (L2TP):] Stellt einer Layer 2 Verbindung oberhalb von \texttt{UDP} her (via \texttt{PPPoI})
+\end{description}
+
+\subsubsection{WPA2}
+\begin{equation}
+	PMK = \Big(H\big(PSK+SSID\big)\Big)^{4096}
+\end{equation}
+\begin{equation}
+	PTK = PMK + N_{AP} + N_{S} + MacAddress_{Supplicant} + MacAddress_{AP}
+\end{equation}
+
+
+\subsection{IPsec}
+
+\subsubsection{Glossar}
+\begin{description}
+	\item[Security Association (SA):] Unidirektionale Verbindung zwischen zwei Instanzen
+	\item[Security Policy Index (SPI):] Identifiziert lokal eine \texttt{SA}. Wird im Header von \texttt{AH} und \texttt{ESP} übertragen
+	\item[Security Association Database (SAD):] Hält Parameter aktiver Verbindungen (\texttt{SPI}, Sequenznummer, Modus, etc.)
+	\item[Security Policy Database (SPD):] Tabelle, die beschreibt, wie Verbindungen abzusichern sind. Pakete ohne Eintrag werden verworfen
+	\item[Authentication Header (AH):] Hauptsächlich zur Abwehr von Address-Spoofing. Itegritätsschutz mittels HMAC, allerdings unverschlüsselt
+\end{description}
+
+
+\subsection{TLS}
+
+\subsubsection{PreMaster Secret}
+Wird während Schlüsselaustausch generiert.
+
+\subsubsection{Master Secret}
+\begin{equation}
+	secret = PRF\big(PreMasterSecret,"master~secret", ClientHello.rand~|~MasterHello.rand\big)
+\end{equation}
+
+
+\subsection{Transport Layer Security Protocol (TLS)}
+Beispiel eines Elements einer TLS-Cipher-Suite: \texttt{TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA}
