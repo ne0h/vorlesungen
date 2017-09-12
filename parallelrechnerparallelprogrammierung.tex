@@ -1,3 +1,28 @@
 \chapter{Parallelrechner und Parallelprogrammierung}
 
 Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus dem Sommersemester 2017.\footnote{\url{https://www.scc.kit.edu/personen/11185.php}}
+
+\section{Einführung}
+
+\begin{itemize}
+	\item \textbf{Klassifikation nach Flynn}
+	\begin{description}
+		\item[Single Instruction Single Data (SISD):] von-Neumann-Architektur (Einprozessorrechner)
+		\item[Single Instruction Multiple Data (SIMD):] Vektorrechner
+		\item[Multiple Instruction Single Data (MISD):] In der Praxis irrelevant. Ausnahme: Mehrere Geräte, die zur Berechnungsverifikation das selbe Datum mehrfach parallel berechnen
+		\item[Multiple Instruction Multiple Data (MIMD):] Multiprozessorsystem
+	\end{description}
+	\item \textbf{Multiprozessorsysteme}
+	\begin{description}
+		\item[Speichergekoppelter:] Gemeinsamer Adresseraum; Kommunikation über gemeinsame Variablen; skalieren mit \(>1000\) Prozessoren
+		\begin{description}
+			\item[Uniform Memory Access Model (UMA):] Alle Prozessoren greifen gleichermaßen mit gleicher Zugriffszeit auf einen gemeinsamen Speicher zu (symmetrische Multiprozessoren)
+			\item[Non-uniform Memory Access Modell (NUMA):] Speicherzugriffszeiten variieren, da Speicher physikalisch auf verschiedene Prozessoren verteilt ist (Distributed Shared Memory System (DSM))
+		\end{description}
+		\item[Nachrichtengekoppelt:] Lokale Adresseräume; Kommunikation über Nachrichten (No-remote Memory Access Model); theoretisch unbegrenzte Skalierung
+		\begin{description}
+			\item[Uniform Communication Architecture Model (UCA):] Einheitliche Nachrichtenübertragungszeit
+			\item[Nin-uniform Communication Architecture Model (NUCA):] Unterschiedliche Nachrichtenübertragungszeiten in Abhängigkeit der beteiligten Prozessoren
+		\end{description}
+	\end{description}
+\end{itemize}
