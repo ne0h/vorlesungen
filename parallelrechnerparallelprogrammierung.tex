@@ -2,6 +2,8 @@
 
 Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus dem Sommersemester 2017.\footnote{\url{https://www.scc.kit.edu/personen/11185.php}}
 
+
+
 \section{Einführung}
 
 \begin{itemize}
@@ -26,3 +28,336 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\end{description}
 	\end{description}
 \end{itemize}
+
+
+
+\section{Parallelrechner}
+\begin{itemize}
+	\item \textbf{Leistungsfähigkeit}
+	\begin{itemize}
+		\item Maßzahl: Floating Point Operations per Second (FLOPS)
+		\item Nicht notwendigerweise protportional zur Taktgeschwindkeit: Eventuell mehrere Zyklen zur Berechnung notwendig; Vektorprozessoren verarbeiten viele Floating Point Operations gleichzeitig (Grafikkarten)
+		\item Messstandard: \texttt{LINPACK}-Benchmark
+	\end{itemize}
+\end{itemize}
+
+\subsection{Shared Memory Multiprozessoren}
+\begin{itemize}
+	\item Programmierung durch effiziente automatische Parallelisierungswerkzeuge einfach und attraktiv
+	\item \textbf{Cache-Kohärenz}
+	\begin{itemize}
+		\item Problem: Replikate in Caches verschiedener Prozessoren müssen kohärent gehalten werden (Lesezugriffe müssen immer den Wert des zeitlich letzten Schreibzugriffs liefern)
+		\item Lösung: Verzicht auf strikte Konsistenz. Replikate müssen nicht zu jedem Zeitpunkt identisch sein
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Distributed Memory Multiprozessoren}
+\begin{itemize}
+	\item Aufbau: Rechenknoten mit (mehreren) CPU(s), lokalem Speicher und ggf. lokaler Festplatte. Kopplung über Verbindungsnetzwerk
+	\item Kriterien: Geschwindkeit, Parallelitätsgrad, Kosten, Latenz
+\end{itemize}
+
+\subsubsection{IBM RS/6000 SP (1990-2000)}
+\begin{itemize}
+	\item Nachrichtengekoppelter Multiprozessor mit \(2-512\) superskalaren, \(64\)-bit \texttt{POWER}-Knoten (\texttt{POWER3-II} weist \(1,5 GFLOPS\) Spitzenleistung auf)
+	\item Verbindungsstruktur: High-Performance-Omega-Netzwerk (\(4 \times 4\)) bidirektionale Kreuzschinen
+	\item Skalierbares IO-System über FileServer-Knoten
+	\item Betriebssystem: \texttt{IBM AIX}
+	\item \textbf{Aufbau}
+	\begin{itemize}
+		\item Frames: Jeweils \(16\) Knoten mit reduntanter Stromversorgung/Steuerungslogik sowie Hochleistungsnetzwerk
+		\item High-Performance Switch
+		\begin{itemize}
+			\item Pro Frame ein \(16 \times 16\) Schaltnetzwerk, besteht aus \(4 \times 4\) Kreuzschinenschalter, zur Kommunikation mit anderen Frames
+			\item \textit{Buffered Wormhole Routing}: Bei Kollisionen in den Verbindungselementen bleiben Nachrichten stehen und blockieren nachfolgende Datenpakete)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{IBM Power 4 in der IBM p690 eSeries 1600 Cluster}
+\begin{itemize}
+	\item \textbf{\texttt{POWER4}-Prozessor}
+	\begin{itemize}
+		\item Erster Dual-Core Prozessor mit gemeinsamen \texttt{L2}-Cache und \(10,4\) GFLOPS
+		\item \textit{Fabric Controller} zum Zusammenschalten von mehreren Chips \(\rightarrow\) \textit{Multi-Chip-Module} (MCM)
+		\begin{itemize}
+			\item interne Kommunikation über unidirektionalen Ring mit \(40\) GBit/s
+			\item Gemeinsames Memory-Subsystem für \(8-32\) GB
+		\end{itemize}
+		\item \textit{Central Electronics Complex} (CEC) zum Zusammenschalten von bis zu \(4\) MCMs und bis zu \(8\) Speicherkarten
+	\end{itemize}
+	\item \textbf{Logical Partitions (LPARs)}
+	\begin{itemize}
+		\item Partitionierung von Ressourcen in physikalische Maschinen
+		\item Volle Flexibilität bei voller Isolation; jede Kopie führt \texttt{AIX/Linux} aus
+	\end{itemize}
+	\item Speicherkonfiguration pro Rack: Bis zu \(8\) Speicherslots
+	\item Beispiel: Juelich-Multi-Processor (JUMP) mit \(41\) \texttt{p690+} Schränken
+\end{itemize}
+
+
+\subsection{Distributed Shared Memory Multiprozessoren}
+\begin{itemize}
+	\item \textbf{Überblick}
+	\begin{itemize}
+		\item Gemeinsamer Adressraum, einzelne Speichermodule sind auf die einzelnen Prozessoren verteilt
+		\item Oft Cache-Kohärenz bei (lokalem) Speicherzugriffen
+	\end{itemize}
+	\item \textbf{Zugriff}
+	\begin{itemize}
+		\item Mikrobefehlsebene
+		\begin{itemize}
+			\item Transparent für das Maschinenprogramm
+			\item Explizite Befehle für entfernten Speicherzugriff
+		\end{itemize}
+		\item Software DSM
+		\begin{itemize}
+			\item Jeder Prozessor kann immer auf gemeinsame Daten zugreifen. Synchronisation mittels Schloss,- Semaphor- oder Bedigungsvariablen
+			\item DSM-System regelt Kommunikation selbständig über (zumeist) Message-Passing
+			\item Vorteile: Entlastung des Programmierers; leichte Partierbarkeit von/zu eng gekoppelten Multiprozessoren
+			\item Datenverwaltung
+			\begin{description}
+				\item[Seitenbasiert:] Nutzung der virtuellen Speicherverwaltung des Betriebssystems zur expliziten Platzierung der Daten (unterschiedliche Granularität der Seiten: \(16\) Byte bis \(8\) kByte)
+				\item[Objektbasiert:] % TODO
+			\end{description}
+			\item Probleme bei seitenbasierter Datenverwaltung
+			\begin{itemize}
+				\item Geringe Effizienz beim Nachladen über das Verbindungsnetz
+				\item Lineares, strukturloses Feld von Speicherwort
+				\item False Sharing und Flattern (Trashing)
+				\begin{itemize}
+					\item False Sharing: Eine Speicherseite beinhaltet mehrere Datenwörter, die von verschiedenen Prozessoren benötigt werden (Kohärenz auf Seitenebene) \(\rightarrow\) nach jedem Schreizugriff eines Datenwortes muss die komplette Seite neu zu den anderen Prozessoren übertragen werden
+					\item Flattern (Trashing): Bei mehrfachen Schreibzugriffen wird die Seite immer wieder übertragen
+					\item Gegenmaßnahmen
+					\begin{itemize}
+						\item Verkleinerung der Seitengröße. Allerdings steigt damit der Seitenverwaltungsaufwand
+						\item Objektbasiertes Software SDM-System: Gemeinsame Variablenzugriffe werden vom Precompiler erkannt und durch Bibliotheksfunktionen für entfernte Zugriffe ersetzt \(\rightarrow\) es werden nur Datenobjekte verschoeben, die benötigt werden \(\rightarrow\) \textit{False Sharing} wird ausgeschlossen
+					\end{itemize}
+				\end{itemize}
+			\end{itemize}
+			\item Datenlokation und Datenzugriff
+			\begin{itemize}
+				\item Jeder Knoten muss Daten finden können (Datenlokation) und darauf zugreifen (Datenzugriff)
+				\item Statische Verwaltung der Daten
+				\begin{itemize}
+					\item Daten werden zentral auf einem oder mehreren Servern verwaltet (Verteilung wird nicht verändert)
+					\item Datenlokalisierung funktionsbasiert
+					\item Konsistenz durch Sequentialisierung auf dem zuständigen Server
+				\end{itemize}
+				\item Dynamische Verwaltung der Daten
+				\begin{itemize}
+					\item Datum wird vor Zugriff auf zugreifenden Knoten verschoben \(\rightarrow\) alle Zugriffe sind lokal (single-reader-single-writer-Konzept)
+					\item \textit{False Sharing} bei seitenbasiertem System
+					\item Konsistenz durch Verschieben der Seiten
+				\end{itemize}
+			\end{itemize}
+			\item Replizierte Daten
+			\begin{itemize}
+				\item Bisher: Knoten können nur sequentiell auf Daten zugreifen
+				\item Replikation ähnelt Caching
+				\begin{description}
+					\item[Lesereplikation:] Reine Lesekopie, kann nicht geändert und zurückgeschrieben werden
+					\item[Leseanfrage:] Falls vorhanden, Verwerfen einer Schreibkopie; danach Anfordern einer neuen Lesekopie
+					\item[Schreibanfrage:] Verwerfen aller Kopien; danach Anlegen der Schreibkopie so wie zurückschreiben
+				\end{description}
+				\item Volle Replikation: multiple readers/multiple writers
+				\begin{itemize}
+					\item Jeder Knoten kann lokal Änderungen vornehmen \(\rightarrow\) Konsistenz schwierig
+					\item Ansatz potentiell am effizientesten, da alle Zugriffe lokal sind
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Beispielsystem: Cray T3E}
+\begin{itemize}
+	\item NCC-NUMA-Konzept: Puffern von Cache-Blöcken nur bei prozessorlokalen Speicherzugriffen (keine Kohärenz über alle Cache-Speicher)
+	\item Erster Supercomputer, der \(>1\) TFLOPS bei einer wissenschaftlichen Anwendung erzielte (1998)
+	\item Verwendung von \(8-2176\) Alpha-Mikroprozessoren mit 3D-Torus-Nutzwerk
+	\item \textbf{Adressierung}
+	\begin{itemize}
+		\item Aufbau einer globalen Adresse: Verarbeitungselementnummer (PE-Nummer) und lokaler Offset
+		\item Adressumsetzung in Hardware (virtuelle \(\rightarrow\) logische \(\rightarrow\) physische Adresse)
+	\end{itemize}
+	\item \textbf{Verbindugnsnetzwerk}
+	\begin{itemize}
+		\item Dreidimensionaler Torus (dreidimensionales, ringförmig geschlossenes Gitter)\footnote{\url{https://en.wikipedia.org/wiki/Torus_interconnect}}
+		\item Daten können gleichzeitig über separate Kommunikationspfade ohne Beteiligung der Verarbeitungselemente (unabhängige Hardware-Unterstützung für den Nachrichtenaustausch) in alle drei Richtungen transportiert werden \(\rightarrow\) kurze Verbindungswege, schnelle Übertragung
+	\end{itemize}
+	\item \textbf{Mechanismen zur Synchronisation}
+	\begin{description}
+		\item[Barrier-Synchronisation:] Barrier-Modus (\texttt{UND}-Verknüpfung) und Eureka-Modus (\texttt{ODER}-Verknüpfung)
+		\item[Fetch-and-Increment:] Atomares Lesen eines Werts und Inkrementieren eines speziellen lokalen Registers
+		\item[Atomic-Swap:] Atomares Tauschen von lokalem Registerinhalt mit dem Inhalt einer (entfernten) Speicherzelle
+	\end{description}
+	\item Betriebssystem: Microkernel pro Verarbeitungselement
+\end{itemize}
+
+\subsubsection{Beispielsystem: SGI Altix (LRZ)}
+\begin{itemize}
+	\item CC-NUMA auf Basis von Intel Itanium Dual-Cores mit insgesamt \(9728\) cores (Platz 10, 06/2007)
+	\item Leistung: \(56,5\) TFLOS (Linpack) bei ca. \(1\) MW Energiebedarf
+	\item Nachfolgesystem \texttt{SuperMUC}: \(3,2\) PFLOPS bei \(2\) MW Energiebedarf
+\end{itemize}
+
+
+\subsection{Cluster Systeme}
+\begin{itemize}
+	\item Hintergrund:Zu Beginn häufig Spezialprozessoren in Supercomputern (Consumermarktentwicklung noch zu langsam). Später vermehrt Nutzung von \texttt{x86}-Standardprozessoren
+	\item \textbf{Charakterisierung}
+	\begin{itemize}
+		\item Jeder Knoten als eigenes System mit eigenem OS
+		\item Nachrichtenaustausch früher: Interprozesskommunikation über Netzwerk
+		\item Nachrichtenaustausch heute: Cluster sind durch Multicore Prozessoren hybride Systeme
+		\begin{itemize}
+			\item Gemeinsamer Speicher in einem Knoten (OpenMP)
+			\item Verteilter Speicher zwischen den Knoten (MPI)
+			\item Somit zwei Parallelitätsebenen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{HPC Cluster am KIT}
+\begin{itemize}
+	\item \textbf{HC3: HP XC3000 (seit Februar 2010)}
+	\begin{itemize}
+		\item \(356\) Rechenknoten mit jeweils zwei \texttt{Intel Xeon E5540} Quad Core (\(27,04\) TFLOPS Spitzenleistung) und insgesamt \(\approx 10\) TB Hauptspeicher
+		\item OS: \texttt{HP XC Linux}
+		\item Infiniband Netzwerk
+		\item Nutzung durch KIT Institute
+	\end{itemize}
+	\item \textbf{InstitutsCluster 2 (IC2)}
+	\begin{itemize}
+		\item \(6560\) Xeon-Cores mit \(135,7\) TFLOPS Spitzenleistung und \(\approx 28\) TB Hauptspeicher
+		\item OS: \texttt{SLES 11} mit \texttt{KITE} Managementsoftware
+		\item Infiniband Netzwerk
+		\item Nutzung durch KIT Institute
+	\end{itemize}
+	\item \textbf{bwUniCluster}
+	\begin{itemize}
+		\item Gemeinsames System aller Lindesuniversitäten Baden Württembergs
+		\item Systemarchitektur: \texttt{64bit x86} MultiCore-Prozessoren (sandy bridge); Infiniband FDR (\(56\) GBit/s)
+		\item Kennzahlen Cluster: \(8448\) Cores mit \(175\) TFLOPS Spitzenleistung bei \(\approx 200\) KW Energieverbrauch
+		\item Kennzahlen Speichersystem: \(900\) TB Speicher bei \(\approx 20\) KW Energieverbauch
+	\end{itemize}
+	\item \textbf{ForHLR Stufe 1}
+	\begin{itemize}
+		\item Landeshöchstleistungsrechner: System der Ebene Tier-2; Rechenzeitvergabe nach wissenschaftlichem Begutachtungsprozess
+		\item \(528\) Xeon Prozessoren mit insgesamt \(10752\) Cores, \(\approx 41\) TB Hauptspeicher und \(232\) TFLOPS Spitzenleistung bei einem Energieverbauch von \(226\) KW
+		\item Infiniband 4X FDR
+		\item Benchmarks
+		\begin{description}
+			\item[Top500:] 243 (06/2014)
+			\item[Green500:] 69 (06/2014)
+		\end{description}
+	\end{itemize}
+	\item \textbf{ForHLR Stufe 2}
+	\begin{itemize}
+		\item \(1152\) HPC-Knoten mit jeweils zwei DecaCore \texttt{Intel Xeon E5-2660v3}, \(64\) GB Hauptspeicher und \(480\) GB SSD
+		\item Spitzenleistung: \(24.048\) Cores mit \(95\) TB Hauptspeicher und \(1,1\) PFLOPS Spitzenleistung
+		\item OS: \texttt{RHEL 7.x} mit \texttt{KITE} Managementsoftware
+		\item Heißwasserkühlung mit \(\approx 40^\circ\) Grad Vorlauftemperatur und \(> 45^\circ\) Grad Rücklauftemperatur \(\rightarrow\) freie Kühlung selbst bei tropischen Temperaturen
+		\item Visualisierungskomponenten
+		\begin{itemize}
+			\item \(21\) Visualisierungsknoten mit jeweils \(4\) Dodeka-Core \texttt{Intel Xeon E7-4830v3}, \(1\) TB Hauptspeicher, \(4\) \(960\) GB SSDs und \(4\) \texttt{NVIDIA GeForce GTX980 Ti}
+			\item Neues Visualisierungslabor mit zwei \texttt{4K} Projektoren
+		\end{itemize}
+		\item Dateisystem und Integration
+		\begin{itemize}
+			\item \(4,8\) PB bei \(80\) GB/s Durchsatz
+			\item Kopplung der Dateisysteme von \texttt{ForHLR I} (Campus Süd) und \texttt{ForHLR II} (Campus Nord) über redundante \(320\) GBit/s Infiniband-Leitung (\(35\) km Laufstrecke)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Jülich Reasearch on Petaflop Architectures (JUROPA)}
+\begin{itemize}
+	\item \textbf{Aufbau}
+	\begin{itemize}
+		\item \texttt{Sun Blade 6048 System} mit \(2208\) Rechenknoten, \(17664\) Cores und \(\approx 52\) TB Hauptspeicher
+		\item Pro Rechenknoten: Zwei \texttt{Intel Xeon X5570} QuadCore mit \(24\) GB Hauptspeicher
+		\item Gesamtleistung: \(207\) TFLOPS Spitzenleistung
+		\item Netzwerk: Infiniband QDR (non-blocking Fat Tree)
+	\end{itemize}
+	\item \textbf{Schwestersystem}
+	\begin{itemize}
+		\item \(8640\) Cores mit \(101\) FTLOPS Spitzenleistung
+		\item Exklusiv für europäische Fusions-Wissenschaften
+	\end{itemize}
+	\item Besonderheiten der Systeme: Unterschiedliche Hersteller aber mit gleicher/kompatibler Hardware. Werden gemeinsam Entwickelt und können als ein Gesamtsystem betrieben werden
+\end{itemize}
+
+
+\subsection{Vektorrechner}
+\begin{itemize}
+	\item Rechner mit pipelineartig aufgebautem Rechenwerk zur Verarbeitung von Vektoren von Gleitkommazahlen
+	\item Skalarverarbeitung: Verknüpfung von Vektoren mit einzelnen Operanden
+	\item \textbf{Beispiel: Vektor-Addition in vierstufiger Pipeline}
+	\begin{description}
+		\item[Stufe 1:] Laden von Gleitkommazahlen aus dem Vektorregister
+		\item[Stufe 2:] Exponenten vergleichen und Mantisse verschieben
+		\item[Stufe 3:] Verschieben der ausgerichteten Mantisse
+		\item[Stufe 4:] Ergebnis normalisieren und zurückschreiben
+	\end{description}
+	\item \textit{Chaining}: Verketten von (spezialisierten) Pipelines. Ergebnisse der vorderen Pipeline werden direkt der nächsten Pipeline zur Verfügung gestellt
+	\item \textbf{Möglichkeiten zur Parallelisierung}
+	\begin{description}
+		\item[Vektor-Pipeline-Parallelität:] Durch die Pipeline selbst gegeben
+		\item[Mehrere Pipelines pro Vektoreinheit:] Parallelität durch \textit{Chaining} von Pipelines
+		\item[Vervielfachen der Pipelines:] Verwendung mehrerer parallel arbeitender, gleichartiger Pipelines
+		\item[Mehrere Vektoreinheiten:] Mehrere unabhängige Vektoreinheiten
+	\end{description}
+	\item Vektorrechner heutzutage: Keine Relevanz mehr, da Standardprozessoren \texttt{SIMD}-Operationen effizient ausführen können
+\end{itemize}
+
+\subsubsection{NEC SX Serie}
+\begin{itemize}
+	\item \textbf{Beispielsystem am SCC (NEC SX-9)}
+	\begin{itemize}
+		\item Ein \texttt{SX-9} Knoten enthält \(16\) Vektorprozessoren (mit jeweils \(8\) Vektorpipelines) mit \(1\) TB Hauptspeicher und \(1,6\) TFLOPS Spitzenleistung
+		\item Sehr gut geeignet für Strömungsberechnungen
+		\item Größtmögliches System: \(512\) Knoten mit \(970\) TFLOPS Spitzenleistung
+	\end{itemize}
+	\item \textbf{Weitere \texttt{SX-9} Systeme}
+	\begin{itemize}
+		\item HLRS Stuttgart: \(12\) Knoten mit \(19,2\) TFLOPS Spitzenleistung
+		\item Der Deutsche Wetterdienst besitze zwei unabhängige Systeme mit jeweils \(14\) Knoten und \(23\) TFLOPS Spitzenleistung
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Ressourcenmanagement}
+\begin{itemize}
+	\item Typischerweise Knappheit von Parallelrechnerressourcen \(\rightarrow\) Ressourcenmanagement/Job Scheduling notwendig
+	\item \textbf{Job Scheduling}
+	\begin{enumerate}
+		\item[Time-Sharing:] Simultane Ausführung mehrerer Jobs auf der gleichen Ressource nach einem \textit{Round-Robin}-Verfahren. Anwendung bei PCs
+		\item[Space-Sharing:] Jobs bekommen exklusiv Ressourcen zur Ausführung zugewiesen, müssen allerdings ggf. warten bis genügend Ressourcen frei sind (Batch-System). Laufzeiten müssen abgeschätzt werden, meist gibt es Obergrenzen. Anwendung bei Clustern/Supercomputern
+	\end{enumerate}
+	\item \textbf{Beispiel: LoadLeveler}
+	\begin{itemize}
+		\item Job Scheduler von \texttt{IBM} zum Ausführen von Batch-Jobs
+		\item Grundlegende Befehle zum Hinzufügen/Anzeigen/Abbrechen/Status anzeigen von Jobs
+		\item Hinzufügen von Jobs per Job-Kommando-Datei (\textit{cmdfile})
+	\end{itemize}
+	\item \textbf{Beispiel: Torque (Resource Manager) + Maui (Cluster Scheduler)}
+	\begin{itemize}
+		\item Grundlegende Befehle zum Hinzufügen/Anzeigen/Abbrechen/Status anzeigen von Jobs
+		\item Hinzufügen neuer Jobs per Kommandozeile
+		\item Beispiel: \texttt{msub -l nodes=32:ppn=2,pmem=1800mb,walltime=3600 myscript}
+	\end{itemize}
+\end{itemize}
+
+
+
+\section{Appendix A: Formelsammung}
+
+\subsection{Parallelrechner}
+
+\subsubsection{Ende-zu-Ende Übertragungszeit}
+Overhead: Zeit, um Nachrichten in/aus dem Netzwerk zu bekommen
+\begin{equation}
+	latency = t_{overhead} + t_{routing} + t_{transmission} + t_{contention}
+\end{equation}
