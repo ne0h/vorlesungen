@@ -352,6 +352,254 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 
 
+\section{Programmiermodelle und Grundlagen}
+
+\subsection{Parallelitätsebenen/Parallelitätstechniken}
+\begin{itemize}
+	\item \textbf{Ebenen der Parallelität}
+	\begin{enumerate}
+		\item Programmebene (Jobebene): Beispielsweise gleichzeitig, von einander unabhängige Programme auf einem Betriebssystem
+		\item Prozessebene (Taskebene): Beispielsweise Linux-Prozesse eines Programms, die auf gemeinsamen Daten arbeiten
+		\item Blockebene (Threadebene): Beispielsweise parallel ausgeführte Schleifeniteration
+		\item Anweisungsebene: Beispielsweise einzelne Maschinenbefehle, die parallel ausgeführt werden (beispielsweise bei superskalaren Prozessoren oder VLIW) 
+		\item Suboperationsebene: Beispielsweise Vektorbefehle in einer Vektropipeline; setzt vektorisierende Compiler und komplexe Datenstrukturen voraus
+	\end{enumerate}
+	\item \textbf{Körnigkeit/Granularität}
+	\begin{itemize}
+		\item Verhältnis von Rechenaufwand zu Kommunikations-/Synchronisationsaufwand
+		\item Klassifizierung
+		\begin{description}
+			\item[Grobkörnig:] Programm-, Prozess- und Blockebene
+			\item[Mittelkörnig:] Blockebene, jedoch selten verwendet
+			\item[Feinkörnig:] Anweisungsebene
+			\item[Noch feinkörniger:] Supoperationsebene
+		\end{description}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Maschinenmodelle}
+\begin{itemize}
+	\item \textbf{Random-Access Machine (RAM)}
+	\begin{itemize}
+		\item Einprozessorrechner mit jeweils einmal: Recheneinheit, Programm, RW-Speicher, Eingabeband, Ausgabeband
+		\item Befehle mit Zielregister und zwei Operandenregistern
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Parallel Random-Access Machine (PRAM)}
+\begin{itemize}
+	\item Modell eines idealen speichergekoppelten Parallelrechners. Keine Beachtung von Synchronisations-/Zugriffskosten
+	\item \texttt{n}-Prozessor-PRAMs bestehen aus \texttt{n} identischen Prozessoren, mit gemeinsamen Speicher/Takt
+	\item Praktische Bedeutung: PRAMs idealisieren Parallelrechner (s.o.) ohne Beachtung der Lokalität des global adressierbaren Speichers (Zugriff aller Prozessoren auf jede Speicherzelle immer in Einheitszeit)
+	\item \textbf{Zugriffskonflikte}
+	\begin{itemize}
+		\item Typen von Zugriffskonflikten
+		\begin{description}
+			\item[Exclusive Read (ER):] Pro Zyklus kann höchstens ein Prozessor die selbe Speicherzelle lesen
+			\item[Exclusive Write (EW):] Pro Zyklus kann höchstens ein Prozessor die selbe Speicherzelle beschreiben
+			\item[Concurrent Read (CR):] Pro Zyklus können mehrere Prozessoren die selbe Speicherzelle lesen
+			\item[Concurrent Write (CW):] Pro Zyklus können mehrere Prozessoren die selbe Speicherzelle beschreiben \(\rightarrow\) Schreibkonflikte müssen gelöst werden
+		\end{description}
+		\item Kombinationen von Zugriffskonflikten
+		\begin{description}
+			\item[EREW-PRAM:] Keine gemeinsamen Zugriffe
+			\item[CWER-PRAM:] Gemeinsames Lesen erlaubt, gemeinsames Schreiben verboten
+			\item[ERCW-PRAM:] Exklusiver Lesezugriff, gemeinsamer Schreibzugriff
+			\item[CRCW-PRAM:] Gemeinsame Lese-/Schreibzugriffe erlaubt
+		\end{description}
+		\item Lösen von Schreibkonflikten
+		\begin{description}
+			\item[Common (C-CRCW):] Gemeinsamer Schreibzugriff nur erlaubt, wenn alle Prozessoren den selben Wert schreiben wollen
+			\item[Arbitrary (A-CRCW):] Ein Prozessor gewinnt, alle anderen werden ignoriert
+			\item[Priority (P-CRCW):] Der Prozessor mit dem kleinsten Index gewinnt
+		\end{description}
+	\end{itemize}
+	\item Zusammenfassung: Speichergekoppelt; taktsynchron; gut zu programmieren
+\end{itemize}
+
+\subsubsection{Bulk Synchronous Parallel (BSP)}
+\begin{itemize}
+	\item Nachrichtengekoppeltes Maschinenmodell
+	\item Aufbau: Prozessoren (mit oder ohne lokalem Speicher); Kommunikationsnetz; Barrierensynchronisation
+	\item Definiert über Anzahl der Prozessoren \(p\), Kommunikationskostenfaktor \(g\) und die minimale Zeit für die Ausführung eines Superschrittes \(L\)
+	\item \textit{Super-Step} Betrieb
+	\begin{itemize}
+		\item Sequentielle Ausführung von Superschritten. Pro Superschritt arbeiten die Prozessoren unabhängig von einander
+		\item Bestandteile pro Superstep
+		\begin{itemize}
+			\item Berechnungsschritte auf lokalen Variablen, die zu Beginn des Superschritts zur Verfügung stehen
+			\item Senden/Empfangen von Nachrichten
+			\item Am Ende: Barrierensynchronisation aller Prozessoren vor dem nächsten Superschritt
+		\end{itemize}
+	\end{itemize}
+	\item Zusammenfassung: Nahrichtengekoppelt, Superschritt-Synchronisation
+\end{itemize}
+
+\subsubsection{LogP-Modell}
+\begin{itemize}
+	\item Prozessoren arbeiten unabhängig und tauschen Nachrichten aus
+	\item \textbf{Definition einer Maschine}
+	\begin{description}
+		\item[L:] Maximale Latenz einer Übertragung einer kurzen Nachricht (weniger Wörter umfassend)
+		\item[o:] Zeitbedarf zum Übertragen der Nachricht. Keine weitere Befehlsausführung während Senden oder Empfangen
+		\item[g:] Untere Zeitschranke, die pro Prozessor zwischen zwei Übertragungen eingehalten werden muss
+		\item[P:] Anzahl Prozessoren mit optionalem lokalen Speicher
+	\end{description}
+	\item Endliche Netzwerkbandbreite: Es können immer nur \(\frac{L}{g}\) Nachricht zeitgleich ausgetauscht werden
+	\item \(L\) ist obere Schranke pro Nachrichtenübertragung aufzufassen
+	\item Zusammenfassung: Nachrichtengekoppelt; explizite Kommunikation; geeignet für Laufzeitabschätzungen
+\end{itemize}
+
+
+\subsection{Quantitative Maßzahlen für Parallelrechner}
+\begin{itemize}
+	\item Prozessorzustände während Programmausführung: \textit{rechnend}, \textit{kommunizierend}, \textit{wartend} (auf Kommunikation)
+	\item \textbf{Laufzeitmessung von \(T(1)\)}
+	\begin{description}
+		\item[Relative Beschleunigung (Algorithmenabhängig):] Paralleler Algorithmus wird auf Multiprozessorsystem so ausgeführt, als sei er sequentiell
+		\item[Absolute Beschleunigung (Algorithmenunabhängig):] Verwenden des besten bekannten sequentiellen Algorithmus
+	\end{description}
+	\item \textbf{Skalierbarkeit}
+	\begin{itemize}
+		\item Definition: Das Hinzufügen von Verarbeitungselementen führt zur Verkürzung der Ausführungszeit, ohne dass das Programm geändert wird
+		\item Annahme: Konstante Problemgröße
+		\item Skalierung ist immer beschränkt: Sättigung ab einer bestimmten Prozessorzahl
+		\item Skaliert ein System, so tritt das Problem bei einer wachsenden Problemgröße nicht auf
+	\end{itemize}
+	\item \textbf{Amdahls Gesetz}
+	\begin{itemize}
+		\item Aufteilung eines Programms in einen parallelen und einen sequentiellen Anteil. Speedup-Berechnung unter der Annahme, das kein Programm komplett parallelisiert werden kann
+		\item Es gilt: \(1 \le S(p) \le p\)
+		\item Superlinearer Speedup: \(S(p) > p\)
+		\begin{itemize}
+			\item Tritt nur selten auf, sorgt für Konfusion
+			\item Gründe: Cache-Effekte durch die Speicherhierarchie; mit steigender Prozessorzahl steigt wächst die Cache-Hierarchie \(\rightarrow\) Reduzierung der Hauptspeicherzugriffe \(\rightarrow\) kürzere Laufzeit bei paralleler Ausführung
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Prozesse und Threads}
+\begin{itemize}
+	\item Parallelität ist eine spezielle Form von Nebenläufigkeit. Nebenläufige Anweisungen sind nur dann parallel, wenn zur Ausführung mehrere Prozessoren zur Verfügung stehen
+	\item \textbf{Definitionen}
+	\begin{description}
+		\item[Prozessumgebung:] Geschützter Adressbereich eines Prozesses mit individuellem Code-/Datenbereich im Speicher \(\rightarrow\) Prozesswechsel bedingt somit (i.d.R.) einen Umgebungswechsel
+		\item[Prozesskontext:] Registerwerte des Prozessors während der Prozessausführung. Beeinhaltet u.a. Befehlszähler, Stackpointer, etc. \(\rightarrow\) Prozesswechsel bedingt immer auch einen Kontextwechsel
+	\end{description}
+	\item Laufzeitbetrachtung: Erheblicher Aufwand durch Prozesserzeugung; Zugriffsschutzmechanismen (wenn Prozesse mehrerer Benutzer ausgeführt werden); Prozesswechsel; Kommunikations-/Synchronisationsoperationen
+	\item \textbf{Prozesstypen}
+	\begin{description}
+		\item[Schwergewichtige Prozesse (Prozesse):] Klassische Prozesse
+		\item[Leichtgewichtige Prozesse (Threads):] Mehrere \textit{Threads} teilen sich eine gemeinsame Prozessumgebung (Adressraum, Filepointer, geschützten Speicherbereich, etc.). Threadwechsel erzeugen keinen Umgebungswechsel, lediglich einen Kontextwechsel
+	\end{description}
+\end{itemize}
+
+
+\subsection{Synchronisation und Kommunikation über gemeinsame Variablen}
+\begin{itemize}
+	\item \textbf{Synchronisation}
+	\begin{itemize}
+		\item Koordination zwischen Prozessen/Threads
+		\item Einseitige Synchronisation: Abhängige Aktivitäten müssen in der richtigen Reichenfolge ausgeführt werden
+		\item Mehrseitige Synchronisation: Zeitliche Reihenfolge der Ausführung unerheblich, Ausführung darf allerdings nicht parallel erfolgen (gemeinsamer Ressourcenzugriff) \(\rightarrow\) \textit{Mutual Exclusion} (gegenseitiger Ausschluss)
+		\item \textit{Critical Section}: Anweisungen, deren Ausführung einen gegenseitigen Ausschluss erfordern
+	\end{itemize}
+	\item \textbf{Deadlocks (Verklemmungen)}
+	\begin{itemize}
+		\item Deadlock: Prozesse warten auf Ereignisse, die nicht mehr eintreten können \(\rightarrow\) Prozess wird undefinierbar verzögert (Aussperrung)
+		\item Voraussetzungen für Deadlocks
+		\begin{enumerate}
+			\item Mutual Excklusion: Betriebsmittel sind nur exklusiv nutzbar
+			\item No Preemption: Betriebsmittel können nicht entzogen werden
+			\item Hold and Wait: Es werden Betriebsmittel gehalten während auf andere Betriebsmittel gewartet wird
+			\item Circular Wait: Zirkuläre Abhängigkeit von Betriebsmittel von mindestens zwei Prozessen
+		\end{enumerate}
+		\item Vermeidung von Deadlocks
+		\begin{itemize}
+			\item Schlossvariable
+			\begin{itemize}
+				\item Abstrakte Datenstruktur, auf die alle Prozesse zugreifen müssen, die einen kritischen Abschnitt betreten wollen
+				\item Operationen
+				\begin{description}
+					\item[lock:] Verschließt den kritischen Abschnitt von innen. Prozesse warten bis der kritische Abschnitt frei ist. Ist selbst ein kritischer Abschnitt \(\rightarrow\) Implementierung über atomare Befehle (\texttt{TEST\_AND\_SET}, \texttt{RESET}) oder der spezielle Maschineninstruktion \texttt{swap} (tauscht den Inhalt eines Registers und eines Speicherplatzes ohne untebrochen werden zu können). \textit{Spinlock} zum zyklischen Prüfen, ob ein Bereich wieder frei ist (ebenfalls per \texttt{swap})
+					\item[unlock:] Gibt den Bereich wieder frei
+				\end{description}
+			\end{itemize}
+			\item Semaphor
+			\begin{itemize}
+				\item Aufbau: Nicht-negative Integer-Variable; atomare Operationen "`passieren"' und "`verlassen"'
+				\item Initialisierung über maximale Anzahl Prozesse, die eine Ressource zeitgleich nutzen dürfen. Bei Betreten wird der interne Zähler dekrementiert, beim Verlassen inkrementiert. Ist der Zähler Null, so muss auf Freigabe durch einen anderen Prozess gewartet werden
+				\item Spezialfall: \texttt{new Semaphore(1)} wird als binäre Semaphore/Mutex Lock bezeichnet
+				\item Nachteil: Kann bei fehlerhafter Implementierung (Vergessen von \textit{Verlassen}) das ganze System lahmlegen
+				\item Unterschied zu \textit{Schlossvariable}: \textit{Verlassen} kann von allen Prozessen/Threads aufgerufen werden
+			\end{itemize}
+			\item Kritischer Abschnitt
+			\begin{itemize}
+				\item Zu jedem Zeitpunkt darf sich höchstens ein Prozess/Thread im kritischen Abschnitt befinden
+				\item Bedingter kritischer Abschnitt: Kritischer Abschnitt kann nur betreten werden, wenn die Bedingung wahr ist (Implementierung von Fairness/Prioritäten/etc.)
+				\item Wird der kritische Bereich freigegeben, bewerben sich alle wartenden Prozesse (bei denen die Bedingung wahr ist) um den kritischen Bereich
+			\end{itemize}
+			\item Monitor
+			\begin{itemize}
+				\item Zugriff exklsuiv einem Prozess vorbehalten. Abstrahiert die Zugriffsfunktionen/Realisierung des gegenseitigen Ausschlusses
+				\item Im Monitor vereinbarte Variablen sind exklusiv und können nie gleichzeitig benutzt werden
+				\item Innerhalb des Monitors haben Funktionen ledigleich Zugriff auf Monitorvariablen
+				\item Auf monitorgebundene Variablen kann von außen nicht zugegriffen werden
+				\item \textit{Verlassen} kann nur innerhalb des Monitors aufgerufen werden
+				\item Vorteil gegenüber Semaphor: Kann nicht durch weitere hinzugekommene Anwenderprozesse gestört werden, wenn einmal korrekt programmiert
+				\item Vorteil gegenüber bedingtem kritischen Abschnitt: Kann nicht nur Befehlsfolgen sondern auch Funktionen enthalten
+			\end{itemize}
+			\item Barriere
+			\begin{itemize}
+				\item Synchronisationspunkt für mehrere Prozesse
+				\item Verwendung
+				\begin{itemize}
+					\item Initialisierung von Barrier-Variable mit Anzahl der Prozesse, auf die gewartet werden muss
+					\item \texttt{wait-barrier} muss von jedem dieser Prozesse ausgeführt werden. Dabei wird der Zahler der Barriere dekrementiert bis sie Null ist
+				\end{itemize}
+				\item Verbindungsstruktur von Parallelrechner werden zur Implementierung sehr schneller Barriere-Sync-Operationen genutzt
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Kommunikation über Nachrichten}
+\begin{itemize}
+	\item Verbrauchbarkeit: Nachrichten existieren nur für die Zeit des Übertragungsvorgangs
+	\item Sequentialbeziehung (implizite Synchronisation): Nachrichten können erst nach dem Senden empfangen werden
+	\item Bestandteile einer Nachticht: Ziel; Nummer; Speicherbereich, der verschickt werden soll; Anzahl und Datentyp der Datenelemente im Sendepuffer
+	\item Sendeoptionen: Asynchron/Synchron; Gepuffert/Ungepuffert; Blockierend/Unblockierend
+	\item Empfangsoptionen: Konsumierend (zerstörend)/konservierend; Asynchron/Synchron
+	\item Adressierungsarten: Direkte Bennenung; Briefkasten; Port (global bekannt); Verbindung/Kanal (lokal in Prozessen vereinbart)
+\end{itemize}
+
+
+\subsection{Parallele Programmstrukturen}
+\begin{itemize}
+	\item \textbf{Fork-Join Modell}
+	\begin{itemize}
+		\item Prozesse werden zu Beginn eines parallelen Codeteils durch \texttt{fork}-Operationen erzeugt
+		\item Diese arbeiten unabhängig weiter und erreichen am Ende eine \texttt{join}-Operation zur Synchronisation mit Erzeugerthread (\texttt{T1})
+		\item Nachteil: Aufwand zur Threaderzeugung
+	\end{itemize}
+	\item \textbf{SPMD Modell}
+	\begin{itemize}
+		\item Ziel: Vermeidung des Aufwands zur Thread-Ezeugung \(\rightarrow\) Threads werden nur einmal beim Programmstart erzeugt und terminieren erst am Programmende
+		\item Sequentielle Codeteile werden von allen Prozessen ausgeführt; parallele individuell
+	\end{itemize}
+	\item \textbf{Reusable-Thread-Pool Modell}
+	\begin{itemize}
+		\item Idee: Kombinieren von Fork-Join Modell (Vermeiden der Mehrfachgenerierung der Prozesse) und SPMD Modell (Vermeidung der Mehrfachausführung der sequentiellen Codeteilen)
+		\item Threads werden nur einmal erzeugt (wenn sie benötigt werden) und "`schlafen gelegt"', wenn sie gerade nicht gebraucht werden \(\rightarrow\) sequentieller Code wird nur einmal ausgeführt
+	\end{itemize}
+\end{itemize}
+
+
+
+\newpage
 \section{Appendix A: Formelsammung}
 
 \subsection{Parallelrechner}
@@ -360,4 +608,35 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 Overhead: Zeit, um Nachrichten in/aus dem Netzwerk zu bekommen
 \begin{equation}
 	latency = t_{overhead} + t_{routing} + t_{transmission} + t_{contention}
+\end{equation}
+
+
+\subsection{Programmiermodelle und Grundlagen}
+
+\subsubsection{Ausführungszeit}
+\begin{equation}
+	t = t_{computaton} + t_{communication} + t_{idle}
+\end{equation}
+
+\subsubsection{Übertragungszeit einer Nachricht}
+\begin{equation}
+	t_{msg} = t_{startup} + n \cdot \big( t_{transfer} \big)
+\end{equation}
+
+\subsubsection{Beschleunigung (Speedup)}
+\begin{equation}
+	S(p) = \frac{T(1)}{T(p)}
+\end{equation}
+
+\subsubsection{Effizienz}
+\begin{equation}
+	E(p) = \frac{S(p)}{p}
+\end{equation}
+
+\subsubsection{Amdahls Gesetz}
+\begin{equation}
+	T(p) = \underbrace{T(1) \cdot \frac{q}{p}}_{Paralleler~Anteil} + \underbrace{T(1) \cdot \big(1-q\big)}_{Sequentieller~Anteil}
+\end{equation}
+\begin{equation}
+	S(p) = \frac{T(1)}{T(p)} = \frac{T(1)}{T(1) \cdot \frac{q}{p} + T(1) \cdot \big(1-q\big)} = \frac{1}{\frac{q}{p} + \big( 1 - q \big)} \le \frac{1}{1-q}
 \end{equation}
