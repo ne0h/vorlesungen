@@ -599,6 +599,188 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 
 
+\section{Entwurf paralleler Programme}
+\begin{itemize}
+	\item Startproblem? Welche Programmabläufe lassen sich parallelisieren? Erstellung manuell, halbautomisch (werkzeuggestützt) oder automatisch (parallelisierender Compiler)
+	\item Designziel: Datenverteilung sollte derart vorgenommen werden, dass die Mehrzahl der Datenzugriffe lokal sind
+\end{itemize}
+
+\subsection{Phasen der Entwicklung paralleler Programme nach Foster}
+\begin{enumerate}
+	\item \textbf{Partitionierungsphase}
+	\begin{itemize}
+		\item Finde bestmögliche Aufteilung der Berechnungsschritte/zugehörigen Daten
+		\item Gebietszerlegung/Datenzerlegung
+		\begin{itemize}
+			\item Daten werden in Bereiche, die nur minimale Kommunikation erfordern aufgeteilt. Anweisungen/Funktionen/Programme werden gleichzeitig auf diese Bereiche angewendet
+			\item Statische Struktur: Compiler oder Programmierer legt Unterteilung fest
+			\item Dynamische Struktur: Lastverteilung zur Laufzeit. Benötigt u.U. weiteren Zeitbedarf für die Unterteilung
+		\end{itemize}
+		\item Funktionszerlegung
+		\begin{itemize}
+			\item Aufteilung entsprechend der Berechnungsschritte
+			\item Idealerweise können Daten disjunkt den Berechnungsschritten zugeordnet werden
+			\item Wird seltener verwendet
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Kommunikationsphase}
+	\begin{itemize}
+		\item Berechnungen eines Tasks werden meist von anderen Tasks benötigt \(\rightarrow\) (un)gerichtete Kommunikation zwischen Tasks
+		\item Kommunikationsanforderungen bei \textit{Gebietszerlegung} häufig schwer zu bestimmen; bei \textit{Funktionszerlegung} meist trivial
+		\item Kommunikationsmuster
+		\begin{description}
+			\item[Lokale Kommunikation:] Tasks kommunizieren nur mit wenigen, direkten Nachbarn (Bsp.: Gebietszerlegung von matrixstrukturierten Daten)
+			\item[Globale Kommunikation:] Tasks kommunizieren mit einer Vielzahl anderer Tasks (Bsp.: Zentralisierter Algorithmus mit Master-Worker)
+			\item[Strukturierte Kommunikation:] Kommunikationsanforderungen erzeugen ein geordnetes Muster (Bsp.: Netz, Baum, Ring, etc.)
+			\item[Unstrukturierte Kommunikation:] Erzeugt einen beliebigen Graphen (Verkompliziert meist die Bündelungsphase)
+			\item[Statische Kommunikation:] Kommunikationspartner bleiben während der Laufzeit die selben
+			\item[Dynamische Kommunikation:] Kommunikationspartner wechseln während der Laufzeit (und werden zur Laufzeit bestimmt)
+			\item[Synchrones Kommunikationsmuster:] Tasks arbeiten koordiniert, Kommunikation entsteht gleichzeitig
+			\item[Asynchrone Kommunikationsmuster:] Kommunikation entsteht unregelmäßig
+		\end{description}
+		\item Checkliste
+		\begin{itemize}
+			\item Gleiche Anzahl (weniger) Kommunikationsanforderungen pro Tasks?
+			\item Können Kommunikationsoperationen parallel 
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Bündelungsphase}
+	\begin{itemize}
+		\item Evaluierung der Aufgaben und Kommunikationsstrukturen bezüglich Leistungsanforderungen und Implementierungskosten in Abhängigkeit der Zielarchitektur
+		\item Zielkonflikte
+		\begin{enumerate}
+			\item Reduzierung der Kommunikationskosten durch Erhöhung der Berehcnungskosten
+			\item Erhalten der Flexibilität bzgl. Skalierung
+			\item Reduzierung der Software-Engineeringskosten
+		\end{enumerate}
+		\item Heuristiken zur Senkung der Kommunikationskosten
+		\begin{description}
+			\item[Oberfläche-versus-Volumen-Effekt:] Kommunikationsanforderungen eines Tasks sind proportional zur Oberfläche des Teilbereichs auf dem er arbeitet; Berechnungsanforderungen sind proportional zum Volumen des Teilbereichs
+			\item[Replizierte Berechnungen:] Reduzierung des Kommunikationsaufwands durch Mehrfachberechnung
+			\item[Verschmelzen nacheinander auszuführender Tasks:] Reduziert Kommunikationskosten
+			\item[Erhalten der Flexibilität:] Skalierung des Algorithmus sollte nicht beeinträchtigt werden (eventuell Zielkonflik mit \textit{Verschmelzen nacheinander auszuführender Tasks})
+		\end{description}
+		\item Checkliste
+		\begin{itemize}
+			\item Hat die Bündelungsphase die Kommunikationskosten durch Erhöhung der Lokalität reduziert?
+			\item Falls Daten replizeirt werden: Wird die Skalierbarkeit durch Problemgrößenbeschränkung/Prozessorzahl reduziert?
+			\item Skaliert die Anzahl Tasks weiterhin mit der Problemgröße?
+			\item Falls Bündelung paralleler Abläufe: Genügend Parallelität für die Zielarchitektur vorhanden?
+			\item Softwareerstellungkosten berücksichtigt?
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Abbildungsphase}
+	\begin{itemize}
+		\item Festlegung auf welchen Prozessoren die Tasks ausgeführt werden. Tasks, die häufig kommunizieren, werden auf demselben/benachbarten Prozessoren platziert
+		\item Heuristiken für die Tasks-Prozessorabbildung
+		\begin{itemize}
+			\item Gebietszerlegung: Oft feste Anzahl ähnlich großer tasks sowie strukturierte Kommunikationsmuster \(\rightarrow\) so platzieren, dass Interprozessorkommunikations minimiert wird sowie Aggregation von Tasks, die auf dem selben Prozessor ausgeführt werden
+			\item Verwendung eines dynamisch Loadbalancers bei ngliechmäßig großen Tasks oder unstrukturierten Kommunikationsmustern
+			\item Verwendung von Tasks-Scheduling-Algorithmen bei Funktionszerlegung (oft viele kurzlebige Tasks) zur Vermeidung untätiger Prozessoren
+		\end{itemize}
+	\end{itemize}
+\end{enumerate}
+
+
+\subsection{Parallele Programmiertechniken nach Carriero und Gelernter}
+\begin{itemize}
+	\item \textbf{Vorgehen}
+	\begin{enumerate}
+		\item Wähle konzeptionelle Klasse
+		\item Schreibe Programm unter Beachtung der Programmiermethode
+		\item Falls notwendig, transformiere Programm in andere Programmiermethode
+	\end{enumerate}
+	\item \textbf{Konzeptuelle Klassen}
+	\begin{itemize}
+		\item Resultat-Parallelität
+		\begin{itemize}
+			\item Resultat wird in Komponenten zerlegt, diese werden simultan erstellt und dann zusammengebaut
+			\item Parallelität etsteht durch parallele Berechnung der Elemente der Datenstruktur
+		\end{itemize}
+		\item Parallelität durch Spezialisierung
+		\begin{itemize}
+			\item Spezialisierte Einheiten arbeiten einander zu
+			\item Entspricht Funktionszerlegung nach Foster
+			\item Pipelining kann eingeschränkt als Parallelität durch Spezialisierung betrachtet werden
+		\end{itemize}
+		\item Agenda-Parallelität
+		\begin{itemize}
+			\item Erstellung einer Agenda von Tätigkeiten, die von mehreren Einheiten parallel abgearbeit wird
+			\item Typischerweise Master-Worker-Paradigma
+			\item Beispielsweise spekulative Ausführung
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Parallele Programmiermethoden}
+	\begin{itemize}
+		\item live-Datenstruktur
+		\begin{itemize}
+			\item Gemeinsamer Adressraum notwendig: Jede Komponente der Datenstruktur erzeugt einen separaten Prozess auf den per Referenz zugegriffen wird. Es gibt keinen Nachrichtenaustausch
+			\item Prozesse werden implizit erzeugt \(\rightarrow\) besonders für feinkörnige parallele Programme geeignet
+		\end{itemize}
+		\item Nachrichtenaustausch
+		\begin{itemize}
+			\item Geeignet für Nahrichtengekoppelte Multiprozessorsysteme
+			\item Explizite Generierung von Prozessen mit individuellen Datenstrukturen
+			\item Prozessstruktur/Kommunikationspfade durch Programmstruktur bestimmt
+		\end{itemize}
+		\item Verteilte Datenstrukturen
+		\begin{itemize}
+			\item Verteilte Datenstrukturen, die von verschiedenen Prozessen manipuliert werden können
+			\item Kommunikation über gemeinsame Datenobjekte
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Programmierung speichergekoppelter Multiprozessoren}
+\begin{itemize}
+	\item \textbf{Replikationsintelligenz-Modelle}
+	\begin{description}
+		\item[Objecktspezifisch:] Programmierer für Replikationsmanagement verantwortlich
+		\item[Middleware:] Middleware für Replikationsmanagement verantwortlich
+	\end{description}
+	\item \textbf{Konsistenzmodelle}
+	\begin{itemize}
+		\item Generell: Bei einem \textbf{Read} wird das Ergebnis des letzten \texttt{Write} erwartet
+		\item Konsistenzmodelle
+		\begin{description}
+			\item[Strikte/Atomare Konsistenz:] Von globaler Zeit abhängig \(\rightarrow\) in Multiprozessorsystem nicht implementierbar
+			\item[Sequentielle Konsistenz:] Jede gültige Kombination von RW-Operation zulässig (Permutationen möglich). Schwächer als atomares Modell, aber umsetzbar
+			\item[Schwache Konsistenz:] Konsistenz nur zu festgelegten Synchronisatiospunkten gegeben \(\rightarrow\) Einführung kritischer Bereiche, in denen Inkonsistenz gemeinsamer Daten zugelassen ist (konkurrierende Zugriffe müssen verhindert werden)
+		\end{description}
+	\end{itemize}
+	\item \textbf{Variablenanalyse}
+	\begin{itemize}
+		\item Ziel: Parallele Ausführung von Schleifeniterationen
+		\item Vorgehen
+		\begin{enumerate}
+			\item Unterscheidung: Lokale oder gemeinsame Variable?
+			\begin{description}
+				\item[Lokale Variable:] Werden in jeder Iteration neu initialisiert
+				\item[Globale Variable:] Werden von mehreren Iterationen verwendet
+			\end{description}
+			\item Falls gemeinsame Variable: Abhängig oder unabhängig?
+			\begin{description}
+				\item[Unabhängig:] Variable wird während allen Iterationen nur gelesen oder während jeder Iterationen wird auf ein anderes Array-Element zugegriffen
+				\item[Unabhängig:] Sonst
+			\end{description}
+			\item Falls abhängige Variable
+			\begin{description}
+				\item[Reduktionsvariable:] Erweiterung einer Array-Variable um kommutative oder assotiative Verknüpfung der Variable (\texttt{q = q + b[i][k] * w[i-k]})
+				\item[Locked Variable:] Änderungen bleiben ohne Auswirkungen (beispielsweise die Suche nach einem Minimum in einem Array)
+				\item[Ordered Variable:] Ergebnis nur bei korrekter sequentieller Ausführung korrekt \(\rightarrow\) Erzwingen der sequentiellen Abarbeitung der Iterationen; parallele Abarbeitung der Iterationsschritte kann jedoch eingeschränkt möglich sein \(\rightarrow\) eventuell Optimierung vor der Parallelisierung notwendig
+			\end{description}
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{Parallelisierung von Iterationen}
+	\begin{itemize}
+		\item Parallelisierung möglichst über äußere Schleife
+		\item Nur die abhängigen Variablen müssen berücksicht werden
+	\end{itemize}
+\end{itemize}
+
+
+
 \newpage
 \section{Appendix A: Formelsammung}
 
