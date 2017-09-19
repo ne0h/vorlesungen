@@ -884,6 +884,30 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 
 
+\section{Verteiltes Rechnen}
+\begin{itemize}
+	\item Definition nach Streit: Zusammenbringen von geografisch verteilten System zum gemeinsamen Problemlösen
+	\item Beispiele: Grid/Cloud Computing; verteilte Speicherung/Verwaltung/Analyse von BigData
+\end{itemize}
+
+
+\subsubsection{Metacomputing}
+\begin{itemize}
+	\item Logische Interaktion eigenständiger, heterogener Parallelrechner über ein Hochgeschwindigkeits-WAN \(\rightarrow\) verteilen einer einzelnen Anwendung über verschiedene, auf einander abgestimmte Parallelrechner
+	\item Beispiel gekoppelte Simulation: Jede Simulation wird auf der optimalen Plattform berechnet \(\rightarrow\) erhöht Nutzbarkeit/Auslastung von Systemen
+	\item Programmierung über nachrichtegekoppelte Methoden, beispielsweise über spezielle \texttt{MPI}-Umgebung
+	\item Beispiel aus Karlsruhe (1996): \texttt{IBM-RS/6000-SP}-Rechner (Universität) wird über \(155\) MBit/s-ATM-Leitung mit \(16\) Vektorrechner (Forschungszentrum) zusammengeschlossen \(\rightarrow\) verteilter "`Maschinenraum"'
+\end{itemize}
+
+
+\subsubsection{Grid Computing}
+\begin{itemize}
+	\item Konzept: Skalierbare und sichere HPC-Systeme über das Internet mit "`beispielloser"' Leistung
+	\item Verwendung von quelloffener Standardsoftware/Protokolle/Interfaces
+\end{itemize}
+
+
+
 \newpage
 \section{Appendix A: Formelsammung}
 
