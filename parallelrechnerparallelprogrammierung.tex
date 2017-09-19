@@ -781,6 +781,109 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 
 
+\section{Paralleles Programmieren mit OpenMP und MPI}
+
+\subsection{Einführung in OpenMP}
+\begin{itemize}
+	\item Seit 1997 gemeinschaftlich von verschiedenen Hardware- und Compilerherstellern entwickelte Programmierschnittstelle (API) für die Shared-Memory-Programmierung in \texttt{C++}, \texttt{C} und \texttt{Fortran} auf Multiprozessor-Computern\footnote{\url{https://de.wikipedia.org/wiki/OpenMP}}
+	\item Shared Memory System: Gesamtsystem verhält sich wie ein einzelnes System. Es existiert eine Kopie des OS 
+	\item Daten werden im Shared Memory gespeichert; ein Prozess beim Start erzeugt dynamisch parallele Threads, die auf gemeinsame oder private Daten zugreifen
+	\item \textbf{Grundidee}
+	\begin{description}
+		\item[Parallel Region:] Code wird von allen erzeugten Threads ausgeführt
+		\item[Work Sharing Konstrukte:] Abgegrenzte Codesegmente/Schleifenindizes werden von verschiedenen Threads ausgeführt und müssen innerhalb von \textit{Parallel Regions} liegen
+	\end{description}
+	\item \textbf{Überblick}
+	\begin{description}
+		\item[Parallel Region:] \texttt{\#pragma omp parallel \{ ... \}}, \texttt{!\$OMP PARALLEL ... !\$OMP END PARALLEL}
+		\item[Work Sharing Konstrukte:] \texttt{\#pragma omp for ...}, \texttt{!\$OMP DO ... !\$OMP END DO}
+		\item[Synchronisierung:] \texttt{!\$OMP BARRIER} % TODO: Nur in Fortran?
+		\item[Threadprivate:] Globale Daten, die innerhalb des Threads als private Daten behandelt werden. Die globalen Werte werden nicht geändert. \texttt{\#pragma omp threadprivate()}, \texttt{!\$OMP THREADPRIVATE()}
+	\end{description}
+	\item Typische Verwendung: Parallelisieren von Schleifen
+	\item \textbf{Wichtige Direktiven}
+	\begin{itemize}
+		\item \texttt{OMP PARALLEL}: Parallelisiert Schleifen mittels \texttt{\#pragma omp parallel [clauses]}
+		\item \texttt{Schedule}
+		\begin{description}
+			\item[Static:] Iterationen werden in \textit{Chunks} unterteilt und statisch den \textit{Threads} eines \textit{Teams} zugewiesen
+			\item[Dynamic:] Interationen werden in \textit{Chunks} unterteilt und dynamisch auf freie \textit{Threads} aufgeteilt
+			\item[Guided:] Jeder \textit{Thread} bekommt einen \textit{Chunk} zugewiesen. Nach erfolgreicher Verarbeitung erhält er einen weiteren, kleineren \textit{Chunk}
+		\end{description}
+		\item \texttt{TASK} (OpenMO 3.0)
+		\begin{itemize}
+			\item Kapselt ein "`Arbeitspaket"' (Code und Daten) und kann von beliebigen \textit{Threads} verarbeitet werden
+			\item Ähnlich zu \texttt{OMP SECTIONS}, vermeidet allerdings viele verschachtelte \textit{Parallel Regions}
+		\end{itemize}
+		\item \texttt{OMP TASKLOOP} (OpenMP 4.5)
+		\begin{itemize}
+			\item Nutzt \textit{Tasks} zur Ausführung \(\rightarrow\) ermöglicht Verschränkung von \textit{Tasks} und normalen Schleifen
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Gültigkeitsbereiche von Variablen}
+	\begin{description}
+		\item[Shared:] Die meisten variablen sind (gemäß Shared Memory Programmiermodell) standardmäßig gemeinsam
+		\item[Globale Variablen:] Gemeinsam untern den \textit{Threads}
+		\item[Privat:] Stackvariable in Unterprogrammen; automatische Variable innerhalb von Anweisungsblöcken; Schleifenindizes in \texttt{Fortran}
+	\end{description}
+	\item \textbf{Umgebungsvariablen}
+	\begin{description}
+		\item[OMP\_NUM\_THREADS:] Maximalzahl laufender \textit{Threads} (beispielsweise \texttt{export OMP\_NUM\_THREADS=16})
+		\item[OMP\_SCHEDULE:] Spezifiziert Scheduling-Verfahren und \textit{Chunk}-Größe (beispielsweise \texttt{export OMP\_SCHEDULE=\dq STATIC,4\dq})
+	\end{description}
+\end{itemize}
+
+
+\subsection{Einführung in MPI}
+\begin{itemize}
+	\item Distributed Memory System: Jeder Knoten agiert als eigenständiges Computersystem mit dediziertem Betriebssystem und lokalem Speicher. Parallelisierung über Message Passing Interface
+	\item Daten-/Arbeitsverteilung: Entscheidungen basieren auf \texttt{rank}; alle Programme werden durch spezielles Initialisierungsprogramm gestartet
+	\item \textbf{Kategorisierung nach Flynn}
+	\begin{itemize}
+		\item Pro Prozessor: Selbes Programm mit unterschiedlichen Daten \(\rightarrow\) SIMD
+		\item Manche Implementierungen erlauben allerdings auch MIMD: \texttt{rank}-basierte, individuelle Anweisungen pro Prozessor
+	\end{itemize}
+	\item \textbf{Kommunikation}
+	\begin{itemize}
+		\item Messages: Datenpakete, die von einem Prozess zu einem anderen übermittelt werden. Informationen sind u.a. der Rang, Lokationen, Datentypen und Datengröße (jeweils für Quelle und Ziel)
+		\item Synchrones Senden: Sender erhält Empfangsbestätigung
+		\item Asynchrones (gepuffertes) Senden: Keine Epfangsbestätigung
+		\item Blockierende Operationen
+		\begin{description}
+			\item[Synchrones Senden:] Senderoutine wird erst nach Bestätitung verlassen
+			\item[Asynchrones Senden:] Senderoutine wird verlassen, sobald die Daten vollständig verschickt worden sind
+			\item[Empfangen:] Empfangsroutine wird erst verlassen, wenn die Daten vollständig im Anwendungsspeicher stehen
+		\end{description}
+		\item Nicht-bockierende Operationen
+		\begin{itemize}
+			\item Stößt Kommunikation an und kehrt sofort zurück
+			\item \texttt{WAIT}- oder \texttt{TEST}-Operationen pro nicht-blockierender Operation (idealerweise)
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Befehlsreferenz}
+	\begin{itemize}
+		\item Initialisieren und Beenden: \texttt{MPI\_Init(argc, argv) ... MPI\_Finalize()}
+		\item \texttt{MPI\_Comm\_size()} gibt die aktuelle Prozessanzahl zurück
+		\item \texttt{MPI\_Comm\_rank()} gibt den Rang des aufrufenden Prozesses zurück
+		\item Kommunikation
+		\begin{itemize}
+			\item Kommunikations findet immer innerhalb eines Kommunikators statt (standardmäßig \texttt{MPI\_COMM\_WORLD}). Prozesse identifizieren sich selbst durch ihren Rang
+			\item Adressierungen (\texttt{dest}, \texttt{source}) mittels des entsprechenden Rangs
+			\item Wildcards: \texttt{MPI\_ANY\_SOURCE} bzw. \texttt{MPI\_ANY\_TAG}
+			\item Standardmäßig blockierende Kommunikation, allerdings auch nicht-blockierende Primitive vorhanden (beispielsweise \texttt{MPI\_ISend})
+			\item Strukturierte Daten: Byte-weises Versenden von \texttt{Structs} \(\rightarrow\) MPI-Datentypen müssen erweitert werden
+			\item P2P-Kommunikation
+			\begin{itemize}
+				\item Anforderungen: \texttt{tag} und \texttt{datatype} müssen übereinstimmen; Puffer müssen hinreichend groß sein
+				\item Senden: \texttt{MPI\_Send(buf, count, datatypr, dest, tag, comm)}
+				\item Empfangen: \texttt{MPI\_Recv(buf, count, datatype, source, tag, comm, status)}
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+
 \newpage
 \section{Appendix A: Formelsammung}
 
