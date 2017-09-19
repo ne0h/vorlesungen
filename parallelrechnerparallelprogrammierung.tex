@@ -60,7 +60,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 \subsubsection{IBM RS/6000 SP (1990-2000)}
 \begin{itemize}
-	\item Nachrichtengekoppelter Multiprozessor mit \(2-512\) superskalaren, \(64\)-bit \texttt{POWER}-Knoten (\texttt{POWER3-II} weist \(1,5 GFLOPS\) Spitzenleistung auf)
+	\item Nachrichtengekoppelter Multiprozessor mit \(2-512\) superskalaren, \(64\)-bit \texttt{POWER}-Knoten (\texttt{POWER3-II} mit \(1,5 \) GFLOPS Spitzenleistung auf)
 	\item Verbindungsstruktur: High-Performance-Omega-Netzwerk (\(4 \times 4\)) bidirektionale Kreuzschinen
 	\item Skalierbares IO-System über FileServer-Knoten
 	\item Betriebssystem: \texttt{IBM AIX}
@@ -68,10 +68,6 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\begin{itemize}
 		\item Frames: Jeweils \(16\) Knoten mit reduntanter Stromversorgung/Steuerungslogik sowie Hochleistungsnetzwerk
 		\item High-Performance Switch
-		\begin{itemize}
-			\item Pro Frame ein \(16 \times 16\) Schaltnetzwerk, besteht aus \(4 \times 4\) Kreuzschinenschalter, zur Kommunikation mit anderen Frames
-			\item \textit{Buffered Wormhole Routing}: Bei Kollisionen in den Verbindungselementen bleiben Nachrichten stehen und blockieren nachfolgende Datenpakete)
-		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
@@ -237,7 +233,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\end{itemize}
 	\item \textbf{bwUniCluster}
 	\begin{itemize}
-		\item Gemeinsames System aller Lindesuniversitäten Baden Württembergs
+		\item Gemeinsames System aller Landesuniversitäten Baden Württembergs
 		\item Systemarchitektur: \texttt{64bit x86} MultiCore-Prozessoren (sandy bridge); Infiniband FDR (\(56\) GBit/s)
 		\item Kennzahlen Cluster: \(8448\) Cores mit \(175\) TFLOPS Spitzenleistung bei \(\approx 200\) KW Energieverbrauch
 		\item Kennzahlen Speichersystem: \(900\) TB Speicher bei \(\approx 20\) KW Energieverbauch
@@ -253,40 +249,6 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 			\item[Green500:] 69 (06/2014)
 		\end{description}
 	\end{itemize}
-	\item \textbf{ForHLR Stufe 2}
-	\begin{itemize}
-		\item \(1152\) HPC-Knoten mit jeweils zwei DecaCore \texttt{Intel Xeon E5-2660v3}, \(64\) GB Hauptspeicher und \(480\) GB SSD
-		\item Spitzenleistung: \(24.048\) Cores mit \(95\) TB Hauptspeicher und \(1,1\) PFLOPS Spitzenleistung
-		\item OS: \texttt{RHEL 7.x} mit \texttt{KITE} Managementsoftware
-		\item Heißwasserkühlung mit \(\approx 40^\circ\) Grad Vorlauftemperatur und \(> 45^\circ\) Grad Rücklauftemperatur \(\rightarrow\) freie Kühlung selbst bei tropischen Temperaturen
-		\item Visualisierungskomponenten
-		\begin{itemize}
-			\item \(21\) Visualisierungsknoten mit jeweils \(4\) Dodeka-Core \texttt{Intel Xeon E7-4830v3}, \(1\) TB Hauptspeicher, \(4\) \(960\) GB SSDs und \(4\) \texttt{NVIDIA GeForce GTX980 Ti}
-			\item Neues Visualisierungslabor mit zwei \texttt{4K} Projektoren
-		\end{itemize}
-		\item Dateisystem und Integration
-		\begin{itemize}
-			\item \(4,8\) PB bei \(80\) GB/s Durchsatz
-			\item Kopplung der Dateisysteme von \texttt{ForHLR I} (Campus Süd) und \texttt{ForHLR II} (Campus Nord) über redundante \(320\) GBit/s Infiniband-Leitung (\(35\) km Laufstrecke)
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
-
-\subsubsection{Jülich Reasearch on Petaflop Architectures (JUROPA)}
-\begin{itemize}
-	\item \textbf{Aufbau}
-	\begin{itemize}
-		\item \texttt{Sun Blade 6048 System} mit \(2208\) Rechenknoten, \(17664\) Cores und \(\approx 52\) TB Hauptspeicher
-		\item Pro Rechenknoten: Zwei \texttt{Intel Xeon X5570} QuadCore mit \(24\) GB Hauptspeicher
-		\item Gesamtleistung: \(207\) TFLOPS Spitzenleistung
-		\item Netzwerk: Infiniband QDR (non-blocking Fat Tree)
-	\end{itemize}
-	\item \textbf{Schwestersystem}
-	\begin{itemize}
-		\item \(8640\) Cores mit \(101\) FTLOPS Spitzenleistung
-		\item Exklusiv für europäische Fusions-Wissenschaften
-	\end{itemize}
-	\item Besonderheiten der Systeme: Unterschiedliche Hersteller aber mit gleicher/kompatibler Hardware. Werden gemeinsam Entwickelt und können als ein Gesamtsystem betrieben werden
 \end{itemize}
 
 
@@ -336,18 +298,6 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\item[Time-Sharing:] Simultane Ausführung mehrerer Jobs auf der gleichen Ressource nach einem \textit{Round-Robin}-Verfahren. Anwendung bei PCs
 		\item[Space-Sharing:] Jobs bekommen exklusiv Ressourcen zur Ausführung zugewiesen, müssen allerdings ggf. warten bis genügend Ressourcen frei sind (Batch-System). Laufzeiten müssen abgeschätzt werden, meist gibt es Obergrenzen. Anwendung bei Clustern/Supercomputern
 	\end{enumerate}
-	\item \textbf{Beispiel: LoadLeveler}
-	\begin{itemize}
-		\item Job Scheduler von \texttt{IBM} zum Ausführen von Batch-Jobs
-		\item Grundlegende Befehle zum Hinzufügen/Anzeigen/Abbrechen/Status anzeigen von Jobs
-		\item Hinzufügen von Jobs per Job-Kommando-Datei (\textit{cmdfile})
-	\end{itemize}
-	\item \textbf{Beispiel: Torque (Resource Manager) + Maui (Cluster Scheduler)}
-	\begin{itemize}
-		\item Grundlegende Befehle zum Hinzufügen/Anzeigen/Abbrechen/Status anzeigen von Jobs
-		\item Hinzufügen neuer Jobs per Kommandozeile
-		\item Beispiel: \texttt{msub -l nodes=32:ppn=2,pmem=1800mb,walltime=3600 myscript}
-	\end{itemize}
 \end{itemize}
 
 
