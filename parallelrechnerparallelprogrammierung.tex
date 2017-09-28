@@ -24,7 +24,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\item[Nachrichtengekoppelt:] Lokale Adresseräume; Kommunikation über Nachrichten (No-remote Memory Access Model); theoretisch unbegrenzte Skalierung
 		\begin{description}
 			\item[Uniform Communication Architecture Model (UCA):] Einheitliche Nachrichtenübertragungszeit
-			\item[Nin-uniform Communication Architecture Model (NUCA):] Unterschiedliche Nachrichtenübertragungszeiten in Abhängigkeit der beteiligten Prozessoren
+			\item[Non-uniform Communication Architecture Model (NUCA):] Unterschiedliche Nachrichtenübertragungszeiten in Abhängigkeit der beteiligten Prozessoren
 		\end{description}
 	\end{description}
 \end{itemize}
@@ -36,7 +36,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\item \textbf{Leistungsfähigkeit}
 	\begin{itemize}
 		\item Maßzahl: Floating Point Operations per Second (FLOPS)
-		\item Nicht notwendigerweise protportional zur Taktgeschwindkeit: Eventuell mehrere Zyklen zur Berechnung notwendig; Vektorprozessoren verarbeiten viele Floating Point Operations gleichzeitig (Grafikkarten)
+		\item Nicht notwendigerweise proportional zur Taktgeschwindkeit: Eventuell mehrere Zyklen zur Berechnung notwendig; Vektorprozessoren verarbeiten viele Floating Point Operations gleichzeitig (Grafikkarten)
 		\item Messstandard: \texttt{LINPACK}-Benchmark
 	\end{itemize}
 \end{itemize}
@@ -111,7 +111,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\begin{itemize}
 			\item Jeder Prozessor kann immer auf gemeinsame Daten zugreifen. Synchronisation mittels Schloss,- Semaphor- oder Bedigungsvariablen
 			\item DSM-System regelt Kommunikation selbständig über (zumeist) Message-Passing
-			\item Vorteile: Entlastung des Programmierers; leichte Partierbarkeit von/zu eng gekoppelten Multiprozessoren
+			\item Vorteile: Entlastung des Programmierers; leichte Portierbarkeit von/zu eng gekoppelten Multiprozessoren
 			\item Datenverwaltung
 			\begin{description}
 				\item[Seitenbasiert:] Nutzung der virtuellen Speicherverwaltung des Betriebssystems zur expliziten Platzierung der Daten (unterschiedliche Granularität der Seiten: \(16\) Byte bis \(8\) kByte)
@@ -123,12 +123,12 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 				\item Lineares, strukturloses Feld von Speicherwort
 				\item False Sharing und Flattern (Trashing)
 				\begin{itemize}
-					\item False Sharing: Eine Speicherseite beinhaltet mehrere Datenwörter, die von verschiedenen Prozessoren benötigt werden (Kohärenz auf Seitenebene) \(\rightarrow\) nach jedem Schreizugriff eines Datenwortes muss die komplette Seite neu zu den anderen Prozessoren übertragen werden
+					\item False Sharing: Eine Speicherseite beinhaltet mehrere Datenwörter, die von verschiedenen Prozessoren benötigt werden (Kohärenz auf Seitenebene) \(\rightarrow\) nach jedem Schreibzugriff eines Datenwortes muss die komplette Seite neu zu den anderen Prozessoren übertragen werden
 					\item Flattern (Trashing): Bei mehrfachen Schreibzugriffen wird die Seite immer wieder übertragen
 					\item Gegenmaßnahmen
 					\begin{itemize}
 						\item Verkleinerung der Seitengröße. Allerdings steigt damit der Seitenverwaltungsaufwand
-						\item Objektbasiertes Software SDM-System: Gemeinsame Variablenzugriffe werden vom Precompiler erkannt und durch Bibliotheksfunktionen für entfernte Zugriffe ersetzt \(\rightarrow\) es werden nur Datenobjekte verschoeben, die benötigt werden \(\rightarrow\) \textit{False Sharing} wird ausgeschlossen
+						\item Objektbasiertes Software SDM-System: Gemeinsame Variablenzugriffe werden vom Precompiler erkannt und durch Bibliotheksfunktionen für entfernte Zugriffe ersetzt \(\rightarrow\) es werden nur Datenobjekte verschoben, die benötigt werden \(\rightarrow\) \textit{False Sharing} wird ausgeschlossen
 					\end{itemize}
 				\end{itemize}
 			\end{itemize}
@@ -177,7 +177,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\item Aufbau einer globalen Adresse: Verarbeitungselementnummer (PE-Nummer) und lokaler Offset
 		\item Adressumsetzung in Hardware (virtuelle \(\rightarrow\) logische \(\rightarrow\) physische Adresse)
 	\end{itemize}
-	\item \textbf{Verbindugnsnetzwerk}
+	\item \textbf{Verbindungsnetzwerk}
 	\begin{itemize}
 		\item Dreidimensionaler Torus (dreidimensionales, ringförmig geschlossenes Gitter)\footnote{\url{https://en.wikipedia.org/wiki/Torus_interconnect}}
 		\item Daten können gleichzeitig über separate Kommunikationspfade ohne Beteiligung der Verarbeitungselemente (unabhängige Hardware-Unterstützung für den Nachrichtenaustausch) in alle drei Richtungen transportiert werden \(\rightarrow\) kurze Verbindungswege, schnelle Übertragung
@@ -201,12 +201,12 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 
 \subsection{Cluster Systeme}
 \begin{itemize}
-	\item Hintergrund:Zu Beginn häufig Spezialprozessoren in Supercomputern (Consumermarktentwicklung noch zu langsam). Später vermehrt Nutzung von \texttt{x86}-Standardprozessoren
+	\item Hintergrund: Zu Beginn häufig Spezialprozessoren in Supercomputern (Consumermarktentwicklung noch zu langsam). Später vermehrt Nutzung von \texttt{x86}-Standardprozessoren
 	\item \textbf{Charakterisierung}
 	\begin{itemize}
 		\item Jeder Knoten als eigenes System mit eigenem OS
 		\item Nachrichtenaustausch früher: Interprozesskommunikation über Netzwerk
-		\item Nachrichtenaustausch heute: Cluster sind durch Multicore Prozessoren hybride Systeme
+		\item Nachrichtenaustausch heute: Cluster sind durch Multicore-Prozessoren hybride Systeme
 		\begin{itemize}
 			\item Gemeinsamer Speicher in einem Knoten (OpenMP)
 			\item Verteilter Speicher zwischen den Knoten (MPI)
@@ -260,7 +260,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\begin{description}
 		\item[Stufe 1:] Laden von Gleitkommazahlen aus dem Vektorregister
 		\item[Stufe 2:] Exponenten vergleichen und Mantisse verschieben
-		\item[Stufe 3:] Verschieben der ausgerichteten Mantisse
+		\item[Stufe 3:] Addieren der ausgerichteten Mantisse
 		\item[Stufe 4:] Ergebnis normalisieren und zurückschreiben
 	\end{description}
 	\item \textit{Chaining}: Verketten von (spezialisierten) Pipelines. Ergebnisse der vorderen Pipeline werden direkt der nächsten Pipeline zur Verfügung gestellt
@@ -420,7 +420,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\item \textbf{Amdahls Gesetz}
 	\begin{itemize}
 		\item Aufteilung eines Programms in einen parallelen und einen sequentiellen Anteil. Speedup-Berechnung unter der Annahme, das kein Programm komplett parallelisiert werden kann
-		\item Es gilt: \(1 \le S(p) \le p\)
+		\item Es gilt: \(0 \le S(p) \le p\)
 		\item Superlinearer Speedup: \(S(p) > p\)
 		\begin{itemize}
 			\item Tritt nur selten auf, sorgt für Konfusion
@@ -537,8 +537,8 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 	\end{itemize}
 	\item \textbf{SPMD Modell}
 	\begin{itemize}
-		\item Ziel: Vermeidung des Aufwands zur Thread-Ezeugung \(\rightarrow\) Threads werden nur einmal beim Programmstart erzeugt und terminieren erst am Programmende
-		\item Sequentielle Codeteile werden von allen Prozessen ausgeführt; parallele individuell
+		\item Ziel: Vermeidung des Aufwands zur Thread-Erzeugung \(\rightarrow\) Threads werden nur einmal beim Programmstart erzeugt und terminieren erst am Programmende
+		\item Sequentielle Codeteile werden von allen Prozessen ausgeführt; parallele Codeteile individuell
 	\end{itemize}
 	\item \textbf{Reusable-Thread-Pool Modell}
 	\begin{itemize}
@@ -599,7 +599,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\item Evaluierung der Aufgaben und Kommunikationsstrukturen bezüglich Leistungsanforderungen und Implementierungskosten in Abhängigkeit der Zielarchitektur
 		\item Zielkonflikte
 		\begin{enumerate}
-			\item Reduzierung der Kommunikationskosten durch Erhöhung der Berehcnungskosten
+			\item Reduzierung der Kommunikationskosten durch Erhöhung der Berechnungskosten
 			\item Erhalten der Flexibilität bzgl. Skalierung
 			\item Reduzierung der Software-Engineeringskosten
 		\end{enumerate}
@@ -636,7 +636,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 \begin{itemize}
 	\item \textbf{Vorgehen}
 	\begin{enumerate}
-		\item Wähle konzeptionelle Klasse
+		\item Wähle konzeptuelle Klasse
 		\item Schreibe Programm unter Beachtung der Programmiermethode
 		\item Falls notwendig, transformiere Programm in andere Programmiermethode
 	\end{enumerate}
@@ -645,7 +645,7 @@ Zusammenfassung der Vorlesung "`Parallelrechner und Parallelprogrammierung"' aus
 		\item Resultat-Parallelität
 		\begin{itemize}
 			\item Resultat wird in Komponenten zerlegt, diese werden simultan erstellt und dann zusammengebaut
-			\item Parallelität etsteht durch parallele Berechnung der Elemente der Datenstruktur
+			\item Parallelität entsteht durch parallele Berechnung der Elemente der Datenstruktur
 		\end{itemize}
 		\item Parallelität durch Spezialisierung
 		\begin{itemize}
