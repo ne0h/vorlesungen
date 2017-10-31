@@ -1,0 +1,132 @@
+\chapter{Systementwurf und Implementierung}
+
+Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Sommersemester 2017.\footnote{\url{http://os.itec.kit.edu/deutsch/3321_3327.php}}
+
+\section{Betriebssystemstrukturen und -schnittstellen}
+
+\subsection{Traditionelle Betriebssystemstrukturen}
+\begin{itemize}
+	\item Monolithischer Kernel im privilegierten Modus
+	\item (Multithreaded) Anwendungen im Benutzermodus
+	\item Schnittstellen: Library API; Syscalls
+\end{itemize}
+
+
+\subsection{Ziele und Funktionalität}
+\begin{itemize}
+	\item \textbf{Aufgaben eines OS}
+	\begin{itemize}
+		\item Ressourcenmanagement und Accounting
+		\item Hardware-Abstraktion: Erlaubt geteilte Zustände (Beispiel: Buffer Cache) sowie Zugriffskontrolle
+		\item Fehlervermeidung
+		\item Isolierung von Anwendungen inklusive Hardware-Mechanismus (Benutzermodus der CPU) zur Programmausführung (Betriebssystem muss nicht mehr jede Instruktion auf Gültigkeit überprüfen \(\rightarrow\) kein Leistungsverlust)
+	\end{itemize}
+	\item \textbf{Monolithische Kernel}
+	\begin{itemize}
+		\item Viele, mit Serices verflochtene Abstraktionen (Prozesse, Dateien, Sockets, etc.)
+		\item Schutz lediglich zwischen Prozessen und gegenüber dem Kernel (keinerlei Sicherheit innerhalb des Kernels)
+		\item Alle Betriebssystemfunktionalität innerhalb des Kernels (Treiber, Netzwerstack, Dateisysteme, etc.)
+		\item Historisches: Teilweise Services im Userspace (\texttt{X Server}) oder innerhalb des Kernel implementiert (\texttt{nfsd})
+		\item Schnittstellen: Bibliotheksaufrufe; Systemaufrufe und (asynchrone) Signale; In-Kernel-Interfaces
+	\end{itemize}
+	\item \textbf{Microkernel- und Multiserver-Systeme}
+	\begin{itemize}
+		\item Ziel: Microkernel stellt lediglich minimale Funktionalität (Address Space, Threading, IPC) zur Verfügung \(\rightarrow\) minimiert privilegierten Code
+		\item Treiber und Services isoliert im Userspace (Bugs haben minimale Auswirkungen)
+		\item Kommunikation mittels \texttt{IPC} oder Shared Memory
+		\item Kernel-Schnittstellen in Multiserver-Systemen
+		\begin{itemize}
+			\item Kernel Subsysteme sind "`Anwendungsprogramme"'
+			\item Schnittstellenentwurf bekannt von Verteilten Systemen (gleiches Szenario: Interaktion verteilter Komponenten). Probleme: Calling Conventions (beispielsweise Pointer oder Referenzen); Transparenz (lokales "`Look-and-Feel"' gewünscht; Latenz)
+			\item Remote Procedure Call (RPC)
+			\begin{itemize}
+				\item Mittels Stubs formal definierter Funktionsaufruf. Parameter und Return-Werte müssen per IPC kopiert werden
+				\item Funktionsweise
+				\begin{enumerate}
+					\item Client-Stub wird aufgerufen
+					\item Client-Stub ordnet Parameter, baut die Nachricht und sendet diese (per Kernel-Aufruf) zum Server
+					\item Server-Stub dekodiert die Nachricht und ruft die entsprechende Server-Prozedur auf
+					\item Server verarbeitet die Anfrage und gibt sie an den Server-Stub zurück
+				\end{enumerate}
+				\item Unterschiede zu Verteilten Systemen: Kommunikation deutlich effizienter \(\rightarrow\) Stub-Code hat größen Einfluss auf Verarbeitungsgeschwindigkeit; selbe Hardware/Kernel \(\rightarrow\) einheitliche Datentypen, Endian, etc.
+				\item Verwendung von \textit{Interface Definition Languages} (IDLs) zum Beschreiben und automatischen Erzeugen von Schnittstellen-Code
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Structure Design Space}
+
+
+\subsection{Fallstudien}
+
+\subsubsection{Fallstudie: \texttt{L4Re RPC}}
+\begin{itemize}
+	\item Capability: Task-lokale Berechtigung um (Id-adressiert) auf ein Object zuzugreifen. Zugriffskontrolle implizit
+	\item IPC-Gate übermittelt Aufrufe
+\end{itemize}
+
+\subsubsection{Fallstudie: Exokernel}
+\begin{itemize}
+	\item Motivation: Existierende Betriebssysteme zu unflexibel, umfangreich und ineffizient; Abstraktionen zu allgemein, unpassend für bestimmte Anwendungen, können nicht geändert werden
+	\item Ansatz: Minimale Hardware-Abstraktion (Hardware-Ressourcen werden Anwendungen direkt zur Verfügung gestellt); konfigurierbares Ressourcen-Management (Page Table, TLB, Anwendungen können Kernelmodule laden). Betriebssystem lediglich für Schutz/Multiplexen des Ressourcenzugriffs zuständig
+	\item Herausforderungen in der Forschung: Sicheres Anpassen der Betriebssystemabstraktionen durch die Anwendungen; Betriebssystemfunktionalität in Libraries (prägte den Begriff "`library OS"')
+	\item \textbf{Abstraktionen}
+	\begin{itemize}
+		\item Allokieren/Multiplexen physischer Ressourcen wie Speicher, CPU, TLB-Einträge. Beinhaltet keine Abstraktion der Hardware
+		\item Schützen der Ressourcen durch Capabilities
+		\item libOS: Hardwareabstraktionen für einzelnen Konsumenten
+	\end{itemize}
+	\item \textbf{Schnittstellen}
+	\begin{description}
+		\item[libOS API:] \texttt{API} komplett anpassbar; \texttt{ABI}-Aufrufe sind \texttt{API}-Funktionsaufrufe (statt System Calls) \(\rightarrow\) weniger beteiligte Sicherheitseben pro Aufruf
+		\item[Exokernel:] Schnittstelle zum Exokernel (per System Call) zum Verwalten von physischen Speicherseiten, DMA-Kanälen, IO-Geräte, TLBs, Prozessoren, Interrupt-Behandlung
+	\end{description}
+\end{itemize}
+
+\subsubsection{Virtualisierung}
+\begin{itemize}
+	\item Idee: Simulieren virtueller Maschinen mit den selben Hardware-Schnittstellen physischer Maschinen
+	\item \textbf{Technologie-Evolution}
+	\begin{itemize}
+		\item Zunächst: Trap-and-Emulate (seit den frühen 1970gern im \texttt{IBM VM/370})
+		\begin{itemize}
+			\item Gastbetriebssystem läuft unprivilegiert, privilegierte Instruktionen erzeugen einen \textit{Trap} und werden vom Hyperviser emuliert. Anschließend Rücksprung zur VM
+			\item Formale Voraussetzung\footnote{nach Popek und Goldberg (1974)}: Alle sensitiven Instruktionen müssen privilegierte Instruktionen sein, um vom Hyperviser erkannt zu werden. Nicht erfüllt bei \texttt{x86}: Manche Instruktionen verhalten sich je nach CPU-Modus unterschiedlich (beispielsweise \texttt{pushf} und \texttt{popf})
+		\end{itemize}
+		\item Workarounds für \texttt{x86}
+		\begin{description}
+			\item[VMWare:] Ersetzen der problematischen Instruktionen durch Binary Translation zur Laufzeit
+			\item[Xen:] Gastsystem wird angepasst und "`weis"', dass es virtualisiert ausgeführt wird (Paravirtualisierung). Privilegierte Instruktionen werden durch \textit{Hypercalls} ersetzt \(\rightarrow\) Ansatz vergleichbar mit Exokernel (Multiplexen der Ressourcen, low-level Syscall-Schnittstelle)
+		\end{description}
+		\item Hardware-seitige Unterstützung für Virtualisierung
+		\begin{itemize}
+			\item Zwei CPU-Modi zum Ausführen von privilegierten Instruktionen: Physical/Supervisor/Hypervisor und Guest/Virtualized \(\rightarrow\) \textit{Guest Privileged Mode} und \textit{Host Privileged Mode}
+			\item Gastbetriebssystem kann selbstständig zum \textit{Guest User Mode} wechseln und Page-Table-Einträge modifizieren
+			\item Hypervisor kontrolliert Mapping der Host-Ressourcen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

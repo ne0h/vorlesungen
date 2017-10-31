@@ -69,6 +69,10 @@ swt2only:
 	pdflatex swt2only.tex
 	pdflatex swt2only.tex
 
+sdionly:
+	pdflatex sdionly.tex
+	pdflatex sdionly.tex
+
 telematikonly:
 	pdflatex telematikonly.tex
 	pdflatex telematikonly.tex

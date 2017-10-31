@@ -38,6 +38,7 @@ Aktuell enthalten
 * Powermanagement
 * Sicherheit - Verfahren und Formelsammlung
 * Softwaretechnik 2
+* Systementwurf und Implementierung
 * Telematik
 * Virtuelle Systeme
 * Web-Anwendungen und Serviceorientierte Architekturen (II)
