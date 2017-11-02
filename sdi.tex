@@ -31,7 +31,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\end{itemize}
 	\item \textbf{Microkernel- und Multiserver-Systeme}
 	\begin{itemize}
-		\item Ziel: Microkernel stellt lediglich minimale Funktionalität (Address Space, Threading, IPC) zur Verfügung \(\rightarrow\) minimiert privilegierten Code
+		\item Ziel: Microkernel stellt lediglich minimale Funktionalität (Adressraum, Threading, IPC) zur Verfügung \(\rightarrow\) minimiert privilegierten Code
 		\item Treiber und Services isoliert im Userspace (Bugs haben minimale Auswirkungen)
 		\item Kommunikation mittels \texttt{IPC} oder Shared Memory
 		\item Kernel-Schnittstellen in Multiserver-Systemen
@@ -109,6 +109,127 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\end{itemize}
 \end{itemize}
 
+
+
+\section{CPU und Thread Management}
+
+\subsection{Threads und Prozesse}
+\begin{itemize}
+	\item \textbf{Thread- und Prozessverwaltung}
+	\begin{itemize}
+		\item Betriebssystemaufgaben: Verwaltung, Ausführung, Scheduling, Accounting, Ressourcen-Verwaltung
+		\item Zustandshaltung pro Thread inklusive Instruction Pointer und Stack Pointer; Schedulung-/Accounting-Zustand; Speicherzustand; Kommunikationszustand. Gepeichert im \textit{Thread Control Block} (TCB)
+		\item Basisoperationen % TODO: Unterschied wait-queue und ready-queue
+		\begin{description}
+			\item[Create:] Erstellen (inklusive TCB) und Einfügen in \textit{Ready Queue}
+			\item[Startup:] Entfernen aus \textit{Ready Queue}
+			\item[Block:] Speichern des Thread-Zustands auf dem Stack; Einfügen in \texttt{Wait Queue} Aktualisieren des Thread-Zustands; \texttt{resume(next\_thread)}
+			\item[Signal:] Thread wird von \textit{wait queue} in \textit{ready queue} verschoeben; Aktualisieren des Thread-Zustands
+			\item[Resume:] Entfernen des Threads aus \textit{ready queue}; Laden des Registerzustands; mit Ausführung fortfahren (\textit{Instruction Pointer} zeigt auf den entsprechenden Befehl)
+			\item[Finish:] Aufräumen (Stack und TCB); Finden und Weiterausführen des nächsten Thread
+		\end{description}
+		\item Abwägungen
+		\begin{itemize}
+			\item Leistungsoptimierung
+			\begin{itemize}
+				\item Stack wird erst beim Startup reserviert, da neue Threads eventuell nie laufen oder die für die Erstellung benötigten Ressourcen dem neuen Thread berechnet werden sollen (Accounting)
+				\item Aufwandsreduzierung beim Finden von freiem Speicher durch nutzen von \textit{Free Memory Lists} für Stack und TCB
+			\end{itemize}
+			\item Synchronisieren von Thread-Datenstrukturen
+			\begin{itemize}
+				\item Gleichzeitiger Zugriff muss serialisiert werden
+				\item Leistungsmetriken: Latenz bei konfliktfreiem Zugriff; konfliktfreier Durchsatz (Operationen pro Sekunde)
+				\item Implementierungsmöglichkeiten % TODO: Besprechen
+				\begin{description}
+					\item[Single Lock:] Einzelnes Lock für gesamte Datenstruktur \(\rightarrow\) Niedrige Latenz, allerdings limitierter Durchsatz
+					\item[Mehrere Locks:] Separates Lock für \textit{ready queue}, \textit{wait queue}, \textit{free lists}, etc. \(\rightarrow\) höhere Latenz, besseres Durchsatz
+					\item[(Prozessor-)lokale Free Lists:] Verringert Zugriffskonflikte beim allokieren von TCBs oder Stacks, allerdings erhöhter Speicherverwaltungsaufwand
+					\item[Lokale Ready Queues:] Prozessor-lokale \textit{ready queues}. Reduziert Zugriffskonflikte; setzt ggf. Load Balancing (und Synchronisierung während Load Balancing) voraus. Heutiger universeller Ansatz
+				\end{description}
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Thread Scheduling}
+\begin{itemize}
+	\item \textbf{Herausforderungen}
+	\begin{description}
+		\item[Komplexität:] Sehr viele unterschiedliche Umgebungen, Policies, etc.
+		\item[Leistungsauswirkungen:] Scheduling innerhalb des Systems verteilt und verwoben; viele beteiligte Komponenten; Trennung von Policy und Mechanismus (s.u.) eventuell komplex und ineffizient
+	\end{description}
+	\item \textbf{Designziel: Trennung zwischen Policy und Mechanismus}
+	\begin{description}
+		\item[Mechanismus:] Zuordnung (Dispatch), Unterbrechbarkeit (Preemtion), Migration, Abrechnung (Accounting)
+		\item[Policy:] Allokation, Budgetierung, Prioritäten, Dienstgüteklassen, Latenzen, etc.
+	\end{description}
+	\item Distributed/Hierarchical Scheduling: Scheduling umfasst ggf. mehrere Subsysteme und Schichten. Beispielsweise Scheduling von Webserver-Anfragen zu Webserver Threads sowie Scheduling von Webserver Threads zu CPUs
+	\item Ggf. nehmen weitere Betriebssystembestandteile Einfluss auf Schedlung-Entscheidungen. Beispielsweise Blocking-IO, IPC, Interrupts, Exceptione, etc. (Policy und Mechanisum macnhmal schwer zu trennen)
+	\item \textbf{Scheduling Policies} % TODO: Besprechen
+	\begin{description}
+		\item[Time-based Scheduling:]
+		\item[Energy-aware Scheduling:]
+		\item[Affinity Scheduling:] Vermeidung von teuren CPU-Wechseln, die Cache-Refills verursachen
+		\item[Co-/Gang Scheduling:]
+		\item[Load Balancing:]
+	\end{description}
+	\item \textbf{Ansätze}
+	\begin{itemize}
+		\item Kernel-Level Schedulung (traditionell)
+		\begin{itemize}
+			\item Kernel verantwortlich für Management/Scheduling/Dispatching der Threads; Kontext wird vom User initiiert
+			\item Kontext mit weiteren Abstraktionen verknüpft: Schutz des Speichers; Accounting; Kommunikation; Ressourcen
+			\item Analyse
+			\begin{itemize}
+				\item Kernel kann Scheduling-Entscheidungen in allen Anwendungen durchsetzen; wenig Overhead, da kein zentraler Scheduling-State; eventuell problematisch, da eine einzige Scheduling-Strategie für alle Anwendungen (QoS schwierig)
+				\item Komplexe, schwergewichtige Abstraktionen für Prozesswechsel-Kontext; Speicher-Kontext; I/O-Kontext; etc.
+				\item Schwierig zu erweitern, da keine Modularisierung sowie tief in den Kernel angebettet
+			\end{itemize}
+		\end{itemize}
+		\item Application-Level Scheduling (traditionell)
+		\begin{itemize}
+			\item Anwendungen selbst für Thread-Scheduling verantwortlich \(\rightarrow\) müssen Management/Scheduling/Dispatcher implementieren
+			\item Keine Interaktion mit anderen Subsystemen/Schichten; erweiterbar
+			\item Analyse
+			\begin{itemize}
+				\item Wenig Overhead durch Abstraktionen: Ledigleich innerhalb der Anwendungen; Thread-Wechsel verursacht ledigleich einen Wechsel des Ausführungskontext
+				\item Lokale Sicht, kann Anforderungen des Betriebssystems oder andere Anwendungen kann beachten
+			\end{itemize}
+		\end{itemize}
+		\item Fallstudie: Scheduler Activations
+		\begin{itemize}
+			\item Idee: Kernel-Level Threads sind zu schwergewichtig und zu wenig erweiterbar/anpassbar; User-Level Threads zu sehr anwendungsgebunden \(\rightarrow\) Kombination beider Ansätze
+			\item Voraussetzung: Verteiltes Scheduling, da die der Kernel den Anwendungszustand kennen muss (wie parallel arbeitet die Anwendung?) und die Anwendungen den Scheduling-Zustand des Kernels kennen muss (wenn blockiert ein Thread?)
+			\item Mechanismen
+			\begin{itemize}
+				\item Scheduler benachrichtigt den Kernel bei Thread-Operationen, die den Prozessor betreffen
+				\item Der Kernel benachricht den Scheduler bei allen Ereignissen, die den Adressspace betreffen
+			\end{itemize}
+			\item Abstraktion
+			\begin{description}
+				\item[Virtual Processors:] Kernel stellt Adressräumen virtuelle Multiprozessoren (VP) zur Verfügung. Adressräume können weitere VPs beim Kernel beantragen und diesen Threads zur Ausfürhung zuordnen
+				\item[Scheduler:] Jeder Adressraum verfügt über einen dedizierten User-Level Scheduler
+			\end{description}
+		\end{itemize}
+		\item Fallstudie: K42 (Scheduler)
+		\begin{itemize}
+			\item Aufteilung zwischen Kernel und Anwender; jeder Prozess besteht aus Adressraum und mindestens einem Dispatcher (vom Kernel geschedult, mehrere Dispatcher für Parallelität). Verschiedene Dispatcher können verschiedene Strategien implementieren
+			\item Dispatcher für Thread-Scheduling zuständig, daher können Anwendungen eigene Thread-Modelle benutzen und beliebig viele Threads spawnen, ohne Kernel-Ressourcen verwenden zu müssen
+			\item Resource-Domänen: Orthogonal zu Prozessen; haben eigene Ressourcen-Berechtigungen; können zum Accounting verwendet werden. Dispatcher sind jeweils an einen Prozessor gebunden und gehören zu einer \textit{Resource-Domäne} \(\rightarrow\) ermöglichen Ressourcenallokation für Mehrprozessanwendungen
+		\end{itemize}
+		\item Scheduling in Multi-Server Systemen
+		\begin{itemize}
+			\item Aufbau
+			\begin{itemize}
+				\item Threads repräsentieren verschiedene Entitäten (Servers, Clients, Ressourcen, etc.)
+				\item Verwendung von IPC für jegliche interne Kommunikation (behandeln von Requests, Dispatching, Synchronisierung, Interrupts, etc.) \(\rightarrow\) eng mit Scheduling verknüpft
+			\end{itemize}
+			\item Probleme: Policy sollte von Anwendung gesteuert werden; IPC-Leistung kritisch
+			\item Alternativen zu IPC: Policy-Upcalls (teuer); Kernel-Erweiterungen für Schedlung (sehr komplex, eventuell sicherheitskritisch); Heuristiken
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 
