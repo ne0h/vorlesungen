@@ -246,6 +246,152 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 
 
 
+\section{Speicher}
+
+\subsection{Laden von Programmen}
+\begin{itemize}
+	\item \textbf{Programmausführung}
+	\begin{itemize}
+		\item Bestandteile eines ausführbaren Programms (Executable): Ausführungskontext (initialer Instruction Pointer, initialer Stack Pointer, Programmargumente); Speicherkontext (Code, Daten)
+		\item Was wird geladen? Statischer Code/Daten (vom Linker spezifiziert und als ausführbare Date gepackt); dynamischer Code/Daten (vom Betriebssystem spezifiziert)
+	\end{itemize}
+	\item Executable and Linkable Format (ELF): Typischer Speicherformat. Unterteilt in ELF-Header, Program-Headers, Section-Headers, Daten
+\end{itemize}
+
+
+\subsection{Platzieren von Programmen}
+\begin{itemize}
+	\item \textbf{Direktes Laden in den physischen Speicher}
+	\begin{description}
+		\item[Vorteile:] Trivial; einfaches 1:1-Mapping vom virtuellen in den physischen Speicher
+		\item[Nachteile:] Nur eine Instanz pro Executable gleichzeitig; muss an die richtige Adresse verlinkt werden (fehleranfällig); Fragmentierung; auf Größe des physischen Speichers begrenzt
+	\end{description}
+	\item \textbf{Dynamisches Verschieben}
+	\begin{description}
+		\item[Vorteile:] Einfaches 1:1-Mapping mit Offset vom virtuellen in den physischen Speicher \(\rightarrow\) mehrere Instanzen pro Executable möglich
+		\item[Nachteile:] Performenceverlust durch positionsunabhängigen Code; Fragmentierung; auf Größe des physischen Speichers begrenzt
+	\end{description}
+	\item \textbf{Adressübersetzung und Segmentierung}
+	\begin{description}
+		\item[Vorteile:] Virtuelles Mapping des Executable in den physischen Speicher. Mehrere Instanzen pro Executable möglich; keine Relokation; kann mehr Speicher als den verfügbaren physischen Speicher verbrauchen
+		\item[Nachteile:] Benötigt Übersetzungstabelle; Fragmentierung; Swapping grobkörnig
+	\end{description}
+	\item \textbf{Paged Virtual Memory}
+	\begin{description}
+		\item[Vorteile:] Page-basiertes Mapping in den physischen Speicher. Mehrere Instanzen pro Executable möglich; weder a priori Load Map noch Verschiebung noch positionsunabhängiger Code nötig; kaum externe Fragmentierung; kann mehr Speicher als den verfügbaren physischen Speicher verbrauchen
+		\item[Nachteile:] Page-basierte Übersetzungstabelle notwendig
+	\end{description}
+\end{itemize}
+
+
+\subsection{Fallstudien}
+
+\subsubsection{4.3BSD on VAX-11}
+\begin{itemize}
+	\item Rechnerarchitektur\footnote{\url{https://de.wikipedia.org/wiki/Virtual_Address_eXtension}}, die bereits früh seitenbasierten virtuellen Speicher umgesetzt hat mit angepasstem BSD (um VMS\footnote{\url{https://de.wikipedia.org/wiki/Virtual_Memory_System}}-Performance zu erreichen)
+	\item \textbf{Bestandteile}
+	\begin{itemize}
+		\item Core Map (globale Frame-Tabelle): Speichert jeweils Name; Liste von Pointern auf freie Elemente; Gerät+Blocknummer (bei Text-Pages); Synchronisierungs-Flags
+		\item Seitenübersetzungstabelle (pro Prozess)
+		\item Swap Maps (pro Prozess): Übersetzt virtuelle Seiten zu Swap-Festplattenblöcke
+	\end{itemize}
+	\item \textbf{Adressaufbau}
+	\begin{itemize}
+		\item \texttt{32 Bit} Speicheradresse, \texttt{4 GB} virtueller Speicher, \texttt{512} B Seitengröße)
+		\item Segmente
+		\begin{description}
+			\item[P0:] Text, Data
+			\item[P1:] Stack (wird "`von rechts"' aufgefüllt)
+			\item[S0:] Kernelspeicher
+			\item[Reserved:] Ungenutzt
+		\end{description}
+		\item Daten- und Stackbereich können wachsen
+		\item Userspace-Seitentabellen werden im Kernel-Space gespeichert
+	\end{itemize}
+	\item \textbf{Erstellen neuer Prozesse}
+	\begin{itemize}
+		\item Erstellen der Seitentabelle
+		\item Laden des Programms mittels \textit{Demand Paging Policy}\footnote{Es werden immer nur die Programmteile geladen, die gerade gebraucht werden.}
+		\item Verschiedene Strategien zum Initialisieren der Seitentabelleneinträge: Fill-from-Text, Zero-Fill, Invalid, etc.
+	\end{itemize}
+	\item \textbf{Page-Fault-Handling bei Bounds Error}
+	\begin{itemize}
+		\item Normalerweise einfach zu erkennen: Zugriff auf ungültigen/nicht-existierenden Eintrag in der Seitentabelle
+		\item Schwieriger bei autoamtisch wachsendem Stack/Heap
+	\end{itemize}
+	\item \textbf{Nachteile}
+	\begin{itemize}
+		\item Weder Shared Memory noch Memory Mapped Files noch Shared Libraries noch Copy-on-Write möglich
+		\item \texttt{VAX}-spezifische, nicht-portierbare Architektur
+		\item Code nicht modular
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{System V Release 4}
+\begin{itemize}
+	\item \textbf{Konzept}
+	\begin{itemize}
+		\item Speicherbereiche: Aufgeteilt Speicherobjekte (\textit{Segmente}), die in \textit{Regionen} abgelegt sind. Beispielsweise \texttt{text/data}, Bibliotheken, Shared Memory, Memory Mapped Files, Stacks, Kernel, etc.
+		\item Jede Region ist mit einem passenden Segmenttreiber verknüpft und kann als \textit{shared} (Änderungen werden direkt geschrieben) oder \textit{private} (Änderungen erzeugen per COW eine private Kopie) markiert sein
+		\item Anonymer Speicher: Privates Speicherobjekt ohne permanenten Speicher. Beispielsweise \texttt{.bss}, Stack, Heap
+		\item Plattformabhängige Adressübersetzung in Hardware mit maschinen-unabhängiger Schnittstelle
+		\item Prozesserstellung
+		\begin{itemize}
+			\item Erstellen der Segmente: Text, RO-Data (entsprechende Region des Executable); Data, Stack (anonymer Speicher)
+			\item Shared Libraries werden nach Bedarf im Speicherbereich abgebildet
+			\item Bei \texttt{fork()} werden lediglich die Abbildungen read-only kopiert. Änderungen dynamisch per COW
+		\end{itemize}
+		\item Pagefaults werden vom entsprechenden Segmenttreiber behandelt
+	\end{itemize}
+	\item \textbf{Analyse}
+	\begin{description}
+		\item[Vorteile:] Modular, portierbar; verschiedene Möglichkeiten für Shared Memory; flexibel durch Segmenttreiber
+		\item[Nachteile:] Kernel benötigt durch Zustandshaltung mehr Speicher; komplex und dadurch langsam, im Allgemeinen überwiegt allerdings die neue Funktionalität gegenüber den Leistungseinbußen
+	\end{description}
+\end{itemize}
+
+\subsubsection{SawMill Dataspaces (L4)}
+\begin{itemize}
+	\item \textbf{Konzept\footnote{\url{https://os.itec.kit.edu/downloads/publ_2001_aron-ua_sawmill-framework.pdf}}}
+	\begin{itemize}
+		\item Modulares Virtual-Memory-Framework für anwendungsspezifisches VMM (beispielsweise in \texttt{L4Re})
+		\item Ziele: Dynamisch konfigurierbar; individuelle Policies; zur Laufzeit erweiterbar
+		\item Hierarchisches VM-System: Threads können einem anderen Adressraum beliebige, eigene Seiten zur Verfügung stellen. Wahlweise per \textit{Mapping} (Seite ist in beiden Adressraumen verfügbar) oder per \textit{Granting} (Seite wird verschoben)
+		\item Behandlung von Pagefaults: Per-Thread (User-Level) \textit{Pagers} im selben oder einem anderen Addressraum. Bei einem Pagefault wird ggf. direkt die entsprechende Seite zurückgegeben
+	\end{itemize}
+	\item \textbf{Dataspaces}
+	\begin{itemize}
+		\item Speicherkonzept zum Ablegen unstrukturierter Daten. Kann mit Dateien, anonymer Speicher, Frame-Buffers, etc.verknüpft sein und werden jeweils von einem \textit{Dataspace Manager} verwaltet (werden in \texttt{L4} als Pager bezeichnet)
+		\item Können (partiell) an \textit{Regions} von Adressräumen geknüpft werden
+	\end{itemize}
+	\item \textbf{Region Mapper (RM)}
+	\begin{itemize}
+		\item Ein User-Level-Pager pro Task \(\rightarrow\) verwaltet die Regionen des Adressraums und behandelt Pagefaults
+		\item Anpassbar, effizient
+	\end{itemize}
+	\item \textbf{Dataspace Operationen}
+	\begin{description}
+		\item[Attach/Open:] Öffnet einen Dataspace und verknüpft diesen mit einer Region
+	\end{description}
+	\item \textbf{Zusammenfassung}
+	\begin{description}
+		\item[Vorteile:] Modularisiert/flexibel/anpassbar; verteilt; einfacher User-Pager implementiertbar
+		\item[Nachteile:] Overhead bei Pagefaults (mehrere Protection Domains beteiligt); großer virtueller Adressraum notwendig (kein Problem bei 64bit); komplex
+	\end{description}
+\end{itemize}
+
+\subsubsection{NUMA Ausblick: Real-World physischer Speicher}
+\begin{itemize}
+	\item Annahme: Latenz und Durchsatz bei allen Speicher Frames gleich ("`Random Access Memory"')
+	\item \textbf{Unterschiede}
+	\begin{description}
+		\item[Caches:] Unterschiedliche Frames werden auf unterschiedliche Cache Sets abgebildet \(\rightarrow\) Page Colors
+		\item[SMP Systeme:] Cache-Kohärenzprotokolle zu Verschmutzung der Caches führen (beispielsweise durch externe Zugriffe)
+		\item[ccNUMA:]\footnote{cache-coherent Non-Uniform Memory Access} Arbeitsspeicher an unterschiedliche CPUs angebunden \(\rightarrow\) unterschiedliche Zugriffszeiten
+	\end{description}
+\end{itemize}
+
+
 
 
 
