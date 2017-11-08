@@ -393,6 +393,198 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 
 
 
+\section{I/O und Gerätetreiber}
+
+\subsection{Überblick: I/O Subsystem}
+\begin{itemize}
+	\item Ziele: Anwendungen sollen für unterschiedliche Geräte nicht neu entwickelt werden müssen \(\rightarrow\) Geräteunabhängigkeit durch Standardinterface pro Geräteklasse (wird von den Gerätetreibern implementiert); Unterstützung sollen mehrere Instanzen
+	\item Parallele Nutzung (Festplatte, Netzwerkgerät, etc.) vs. exklusive Nutzung (Tape, Drucker, DVD-Brenner, etc.) \(\rightarrow\) Betriebssystem muss gegenseitigen Ausschluss/Serialisierung/Verklemmungsvermeidung/etc. sicherstellen
+	\item Asynchrone Operationen durch Signalisierung und \texttt{WaitForObject}
+	\item Schichtenmodellbeispiel: Lesen aus Datei
+	\begin{description}
+		\item[User-Level I/O-Software:] Lesen aus Datei
+		\item[Geräteunabhängige Betriebssystemsoftware:] Blockgeräteverwaltung
+		\item[Gerätetreiber:] S-ATA-Treiber
+		\item[Interrupt Service Routine:] S-ATA-Treiber ISR
+		\item[Hardware] Festplatte
+	\end{description}
+	\item Aufgaben des Gerätetreibers: Kommunikation mit Gerät/höherer Schicht; Initialisierung des Geräts
+\end{itemize}
+
+
+\subsection{Hardware: Unterschiede zwischen Lehrbuch und Realität}
+\begin{itemize}
+	\item Vereinfachte Modelle für Leistungsbetrachtung unzureichen: "`Was passiert gerade wirklich?"'; "`Wo ist der Flaschenhals?"'
+	\item \textbf{Register}
+	\begin{itemize}
+		\item Register des Geräte-Controllers
+		\begin{description}
+			\item[Schreiben:] Konfiguriert den Controller; schickt Anweisungen/Daten an den Controller
+			\item[Lesen:] Läd Konfiguration/Status/Daten vom Controllers
+		\end{description}
+		\item Registerzugang: Memory Mapped I/O (MMIO)
+		\begin{itemize}
+			\item Geräteregister durch Load/Store-Operationen via Speicher zugänglich \(\rightarrow\) konventionell ansteuerbar/geschützt
+			\item Kompliziert durch unterschiedlich schnelle Geräte \(\rightarrow\) langsam Geräte and schnellen Bussen sollten vermieden werden
+			\item Register sollten nicht gecacht werden
+		\end{itemize}
+		\item Registerzugang: I/O Ports
+		\begin{itemize}
+			\item Geräteregisterzugang mittels speziellen Instruktionen. Benötigt: Spezielle Instruktionen in Programmiersprachen sowie zusätzliche Schutzmechanismen
+			\item Beispiel: \texttt{UART} bei einem Standard-PC
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Erkennen von Geräten}
+	\begin{description}
+		\item[Manuell:] Geräteadressen sind bekannt und werden zur Compilezeit oder mittels Boot-Parametern gesetzt
+		\item[Autoprobe:] Gerätetreiber probieren typische Adressen und validieren die Antwort
+	\end{description}
+\end{itemize}
+
+\subsubsection{I/O Methoden}
+\begin{itemize}
+	\item \textbf{Programmiert}
+	\begin{itemize}
+		\item Problem: Pollen des Registers notwendig (\texttt{while (*UART\_status\_reg != ready);}) \(\rightarrow\) CPU-intensiv
+		\item Memory-to-Device-Transfers: Sehr aufwendig, da CPU und Bus-intensiv, da pro Wort immer zwei Bus-Zyklen notwendig sein (für Speicherzugriff und Gerätezugriff)
+	\end{itemize}
+	\item \textbf{Interrupt-gesteuert}
+	\begin{itemize}
+		\item Signalisieren der CPU das Auftreten eines Geräteereignisses (Beispiel: Empfang eines Netzwerkpaketes)
+		\item Aufwendig, da der normale Betrieb pausiert, der Interrupt behandelt und der normale Betrieb forgeführt werden muss
+		\item Programmable Interrupt Controller (PIC): Multiplexen/priorisieren/puffern vieler Interrupt-Quellen in Multiprozessorsystemen. Seit \texttt{Pentium4} wird der Speicherbus mitgenutzt (viel schneller)
+	\end{itemize}
+	\item \textbf{DMA\footnote{Direct Memory Access}-gesteuert}
+	\begin{itemize}
+		\item CPU spezifiziert DMA-Transfer, DMA-Engine führt diesen ohne weitere CPU-Interaktion aus \(\rightarrow\) CPU kann während Transfer weiterarbeiten
+		\item Beispiel \texttt{Intel Xeon E7-x800v2}: DMA transferiert via Last-Level-Cache \(\rightarrow\) vermeidet Cache-Write-Backs und Cache-Misses bei I/O-Puffern
+		\item Beispiel \texttt{ARMv7A}: DMA ignoriert Caches; Caches ignoriert DMA-Transfers
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Fallstudie: PCI}
+\begin{itemize}
+	\item 32bit-I/O-Bus; jedes Gerät kann als Bus-Master agieren und DMA-Transfers durchführen
+	\item Nummerierung für Autokonfiguration: Erkennt Busse und Geräte
+	\item Configuration Space: Definiert wichtige Geräteparameter (Gerät, Hersteller, Status, Klasse, Register, etc.)
+	\item Adressbereich: Wird von der \textit{Host PCI Bridge} in den physischen Speicher gemappt (linearer Adressbereich, 32bit oder 64bit)
+	\item Beispiel: Netzwerkkarte
+	\begin{enumerate}
+		\item Betriebssystem erkennt Gerät: \texttt{00:08.0}
+		\item Betriebssystem läd die Geräte Id aus dem Configuration Space: \texttt{8086:e1000} (Intel NIC)
+		\item Betriebssystem läd den passenden Gerätetreiber (\texttt{e1000})
+		\item Betriebssystem erkennt die Adressbereiche (\texttt{BAR0} und \texttt{BAR1}) und allokiert die Speicher-Regionen
+	\end{enumerate}
+\end{itemize}
+
+\subsubsection{Fallstudie: ARM}
+\begin{itemize}
+	\item I/O-Geräte werden (per manuellen Konfiguration) in den physischen Adressbereich gemappt
+	\item SoC-Geräts\footnote{System-on-Chip} sind utnerschiedlich: Geräte; MMIO-Adressen; physischer Adressbereich der CPU und Adressbereich des Geräts (wichtig für DMA)
+	\item \textbf{Systemkonfiguration: Open Firmware Device Tree}
+	\begin{itemize}
+		\item Vermeided hart-codierte Adressen
+		\item Plattformunabhängige, offene Firmware mit Forth-Interpreter
+		\item Forth-Bytecode wird im PCI-Gerätespeicher abgelegt
+		\item Device Tree
+		\begin{itemize}
+			\item Beschreibt die Hardware eines Systems und wird vom Hersteller zur Verfügung gestellt
+			\item Bootloader übergibt den Device Tree ans Betriebssystem
+			\item Beispiel:\\\\
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[frame=single,numbers=left,mathescape,tabsize=4]
+uart0: serial@44e0900 {
+	compatible = "ti,imap3-uart";
+	ti,hwmods = "uart1";
+	clock-frequency = <48000000>;
+	reg = <0x44e0900 0x2000>;
+	interrupts = <72>;
+	status = "disabled";
+};
+\end{lstlisting}
+\end{minipage}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Details}
+
+\subsubsection{Code-Erzeugung}
+\begin{itemize}
+	\item Herausforderungen: Low-Level Hardware-Code ist sehr fehleranfällig und schwer zu testen; Dokumentation unpräzise/fehlerbehaftet; keine anerkannte Methodik hinsichtlich Struktur und Wiederverwendung von Code vorhanden
+	\item \textbf{Device Driver IDL: Devil}\footnote{\url{https://www.usenix.org/legacy/event/osdi00/full_papers/merillon/merillon.pdf}}
+	\begin{itemize}
+		\item Abstrakte Beschreibung von Geräten, Ports, Registern und Gerätevariablen; Compiler generiert darauß pro Gerätevariable einen Stub
+		\item Robustheit: Starke Typisierung; Sicherheitsprüfen zur Compile-Zeit und zur Laufzeit
+		\item Status: In der Praxis bisher nicht verwendet; verschiedene weitere Forschungsprototypen
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Aktive Gerätetreiber}
+\begin{itemize}
+	\item \textbf{Single-Threaded}
+	\begin{itemize}
+		\item Monolithisches Treibermodell mit passiven Objekten und schwer implementierbarer Kontrolllogik
+		\item Aktive Gerätetreiber nutzen einen separaten Thread und explizite Kommunikation zur Verwaltung der Anfragen/Geräten/IRQs
+	\end{itemize}
+	\item \textbf{Multi-Threaded}
+	\begin{itemize}
+		\item Microkernel, beispielsweise \texttt{L4}
+		\item Verwendung verschiedener Threads: Server Thread; Interrupt Service Thread, Deferred ISR Thread
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Buffer Verwaltung}
+\begin{itemize}
+	\item \textbf{(Double) Bufferung}
+	\begin{itemize}
+		\item Schreibzugriff
+		\begin{itemize}
+			\item Die Daten werden von einem Anwendungspuffer in einen Kernel-Puffer kopiert. Letzterer hält die Daten bis der Schreibvorgang abgeschlossen ist \(\rightarrow\) Anwendung kann kann sofort weiterarbeiten und ihren Puffer wiederverwenden
+			\item Vorteile: Schreibrate kann an Blockgröße/Geschwindigkeit des Gerätes angepasst werden; weitere Informationen können ergänzt werden (Checksumme, etc.)
+		\end{itemize}
+		\item Lesezugriff: Zusätzlicher Kernel-Puffer \(\rightarrow\) Daten können inklusive weitere Informationen (TCP-Port, Socket, etc.) oder als Pakete (\texttt{readline()}) übergeben werden
+	\end{itemize}
+	\item \textbf{Kein Puffer}
+	\begin{itemize}
+		\item Kopieren der Puffer (s.o.) ist ineffizient; "`unbezahlbar"' in Hochgeschwindigkeitsnetzwerken
+		\item Alternativen
+		\begin{itemize}
+			\item Anwendungs-Puffer wird in den Kernel gemappt und im Anwenudungsspeicher unmappt. Nachteilig, da die \texttt{API} restriktiv ist und das Betriebssystem an die verwendete Seitengröße gebunden ist
+			\item Empfangspuffer wird in den Anwendungsspeicher gemappt
+			\item Geteilter Empangspuffer. Nachteilig, da Anwendungen schreibend zugreifen können und keine weitere Behandlung im Kernel stattfinden kann (Checksummen, etc.)
+		\end{itemize} 
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Interrupt-Behandlung}
+\begin{itemize}
+	\item \textbf{Beispiel: Naive Implementierung eines Festplattentreibers}
+	\begin{itemize}
+		\item Implementierung
+		\begin{enumerate}
+			\item S-ATA ISR benachrichtigt Block-Layer des Betriebssystems (beispielsweise den Buffer Cache)
+			\item Block-Layer benachricht das Dateisystem
+			\item Dateisystem benachricht das virtuelle Dateisystem
+			\item Virtuelles Dateisystem kopiert den Puffer in den Userspace und gibt den gerade pausierten Thread wieder frei
+		\end{enumerate}
+		\item Problem: Aufwendig Abarbeitung notwendig, wodurch eventuell der nächste Interrupt verpasst wird \(\rightarrow\) ISRs müssen so kurz wie möglich sein \(\rightarrow\) verzögerte Abarbeitung des Interrupts
+	\end{itemize}
+	\item \textbf{Lösung}
+	\begin{itemize}
+		\item I/O-Rate kann deutlich höher sein als Interrupts verarbeitet werden können (beispielsweise durch 10G-Ethernet) \(\rightarrow\) Interruptrate muss reduziert werden
+		\item Coalescing: I/O-Geräte warten auf einen Timout oder eine bestimmte Anzahl von Ereignissen bevor sie einen Interrupt auslösen; pro Interrupt werden alle verfügbaren Ereignisse abgefragt; ISR wartet kurz ob weitere Ereignisse auftreten
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{I/O in Fiasco.OC}
+\begin{itemize}
+	\item Memory Mapped Devices: Teil des physischen Adressraums \(\rightarrow\) Zugriff per Speicherbefehlen möglich; Zugangskontrolle mittels virtuellem Speichersystem
+	\item PCI-Geräte werden automatisch erkannt oder (bei ARM) per Lua-Skript konfiguriert
+\end{itemize}
+
+
 
 
 
