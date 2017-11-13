@@ -350,7 +350,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\end{description}
 \end{itemize}
 
-\subsubsection{SawMill Dataspaces (L4)}
+\subsubsection{SawMill Dataspaces (L4)} % TODO: Überarbeiten
 \begin{itemize}
 	\item \textbf{Konzept\footnote{\url{https://os.itec.kit.edu/downloads/publ_2001_aron-ua_sawmill-framework.pdf}}}
 	\begin{itemize}
@@ -359,7 +359,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\item Hierarchisches VM-System: Threads können einem anderen Adressraum beliebige, eigene Seiten zur Verfügung stellen. Wahlweise per \textit{Mapping} (Seite ist in beiden Adressraumen verfügbar) oder per \textit{Granting} (Seite wird verschoben)
 		\item Behandlung von Pagefaults: Per-Thread (User-Level) \textit{Pagers} im selben oder einem anderen Addressraum. Bei einem Pagefault wird ggf. direkt die entsprechende Seite zurückgegeben
 	\end{itemize}
-	\item \textbf{Dataspaces}
+	\item \textbf{Dataspaces} % TODO: Dataspace vs. Region (48)
 	\begin{itemize}
 		\item Speicherkonzept zum Ablegen unstrukturierter Daten. Kann mit Dateien, anonymer Speicher, Frame-Buffers, etc.verknüpft sein und werden jeweils von einem \textit{Dataspace Manager} verwaltet (werden in \texttt{L4} als Pager bezeichnet)
 		\item Können (partiell) an \textit{Regions} von Adressräumen geknüpft werden
@@ -582,6 +582,136 @@ uart0: serial@44e0900 {
 \begin{itemize}
 	\item Memory Mapped Devices: Teil des physischen Adressraums \(\rightarrow\) Zugriff per Speicherbefehlen möglich; Zugangskontrolle mittels virtuellem Speichersystem
 	\item PCI-Geräte werden automatisch erkannt oder (bei ARM) per Lua-Skript konfiguriert
+\end{itemize}
+
+
+
+\section{Dateisysteme}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Motivation für Dateien: Ermöglicht Speichern/konkurrierend Zugreifen auf große Mengen persistenter Daten
+	\item Zugriff entweder sequentiell (beginnend am Anfang, keine Sprünge möglich) oder wahlfrei (durch Verschieben des \textit{Seek}, wichtig für Datenbanken)
+	\item Zugriff entweder durch System Calls (erzeugt eine Kopie im Speicher) oder memory mapped (direkter Zugang)
+	\item \textbf{Organisation}
+	\begin{itemize}
+		\item Festplatte und Partitionen
+		\begin{description}
+			\item[Festplatte:] Besteht aus MBR\footnote{Master Boot Record}, Partitionstabelle, Partitionen
+			\item[Partition:] Besteht aus Boot Block, Super Block\footnote{Teil vieler Unix-Dateisysteme, hält Verwaltungsinformationen}, Free-Space-Management, Inodes, Wurzelverzeichnis, Dateien und Verzeichnisse
+		\end{description}
+		\item Dateien: Allokation von Blöcken
+		\begin{description}
+			\item[Kontinuierlich:] Führt zu Fragmentierung
+			\item[Verkettete Liste:] Pointer zur nächsten Datei werden innerhalb der Datei gespeichert. Wird beispielsweise von \texttt{FAT} verwendet
+			\item[Indexierung innerhalb Inode:] Liste mit Blockadressen
+		\end{description}
+		\item Verzeichnisse
+		\begin{itemize}
+			\item Speichern unbegrenzt langer Dateinamen: In-line (direkt bei den Dateiattributen); in einem Heap (als ein gesamter Block nach allen Dateiattributen)
+			\item Problem: Dynamisches Verzeichnisse mit vielen Einträgen
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Fallstudien}
+
+\subsubsection{FAT}
+\begin{itemize}
+	\item Einfaches Dateisystem für Disketten mit weniger als \texttt{500kb} Speicherplatz aus den späten 70gern
+	\item \textbf{Struktur}
+	\begin{itemize}
+		\item Boot Record (Superblock): Speichert Größe der Datenstrukturen
+		\item Cluster\footnote{\url{https://en.wikipedia.org/wiki/Data_cluster}}: Zusammenhängende Gruppe von Sektoren auf dem Datenträger; kleinste logische Einheit, die eine Datei speichern kann (ansonsten interne Fragmentierung)
+		\item File Allocation Table (FAT): Speichert den Zustand pro Cluster (frei, reserviert, verwendet, beschädigt). Bei verwendeten Einträgen werden die Daten, ein Verweis zum nächsten Cluster der Datei, und ggf. dass es sich um den letzten Cluster der Datei handelt 
+		\item Clustergröße und Länge der FAT-Einträge bestimmten die maximale Dateisystemgröße
+		\item Wurzelverzeichnis: Hartkodiertes, normales Verzeichnis ohne "`\texttt{..}"'
+		\item Verzeichnisse
+		\begin{itemize}
+			\item Verzeichnisse verwalten eine Tabelle mit Dateieinträgen
+			\item Struktur eines Dateieintrags: Name und Erweiterung, Attribute, Zeitpunkte (Erstellen, letzte Änderung/Zugriff), Startcluster, Dateigröße
+			\item Erweiterung zur Verwendung langer Dateinamen (VFAT\footnote{Virtual File Allocation Table}): \texttt{xxxxxx~i.xxx}-Namen werden über mehrere Verzeichniseinträge verteilt
+		\end{itemize}
+		\item Öffnen von Dateien
+		\begin{enumerate}
+			\item Gehe zu Elternverzeichnis
+			\item Erster Cluster: Suche Dateieintrag, hole Nummer des ersten Clusters, lade Cluster-Daten
+			\item Weitere Cluster: Mittels FAT
+		\end{enumerate}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Log-Structured File System (LFS)}
+\begin{itemize}
+	\item Um 1990 in Stanford entweickelt; Grundlage für viele moderne Flash-Dateisysteme (JFFS, F2FS) und COW-Dateisysteme (ZFS, Btrfs)
+	\item \textbf{Motivation: Bessere Schreib-Performance}
+	\begin{itemize}
+		\item Verhindern mechanischer Verzögerungen durch Positionieren des RW-Kopfs und Rotation
+		\item Spitzenleistung nur bei sequentiellem Zugriff erreichbar \(\rightarrow\) Spurwechselvermeidung beim Schreiben sowie Verwendung eines RAM-Caches für bei Lesezugriffen (nicht-vermeidbare Spurwechsel)
+		\item Flash-Speicher: Effizienteres Überschreiben großer Blöcken
+	\end{itemize}
+	\item \textbf{Struktur\footnote{\url{https://en.wikipedia.org/wiki/Log-structured_file_system\#Rationale}}}
+	\begin{itemize}
+		\item Speichermedien werden als Ringpuffer (Circular Log) behandelt \(\rightarrow\) Schreibvorgänge finden generell am Kopf durchgeführt \(\rightarrow\) reduziert teure Spurwechsel auf ein Minimum
+		\item Änderungen an Dateien erzeugen neue Dateiversionen (alte können implementierungsabhängig verfügbar gemacht werden)
+		\item Unkompliziertes Wiederherstellen nach einem Crash, da ab dem letzten konsistenten Zustand wiederhergestellt werden kann
+		\item Inodes werden hinter den zusammenhängenden Datenblöcken der Dateien und Verzeichnissen abgelegt \(\rightarrow\) Inodes sind über die Festplatte verteilt \(\rightarrow\) Lage der Inodes zusätzlich tabellarisch festgehalten (und im RAM gecached). Persistent ebenfalls über die Festplatte verteilt mit zusätzlicher Tabelle der Positionen der Inode-Tabellen an fester Position
+		\item Dateizugriff via zweistufiger Inode-Tabelle. Beinhaltet nicht mehr Spurwechsel/Sprünge als bei traditionellen Dateisystemen
+		\item Garbage-Collection
+		\begin{itemize}
+			\item Durch Schreiben neuer Versionen verbleiben alte ungenutzt auf der Festplatte \(\rightarrow\) Speicher muss freigegeben werden
+			\item Erkennen aktueller Versionen: In Inode-Tabelle referenziert
+			\item Freigeben von Speicher am Ende des Ringpuffers
+			\begin{itemize}
+				\item Alte Versionen werden überschrieben
+				\item Aktuelle Versionen werden an den Anfang verschoben
+			\end{itemize}
+			\item Effiziente Aufräumstrategie notwendig
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Network File System (NFS)}
+\begin{itemize}
+	\item Ziel: Portables, transparents Portokoll für einen einfachen Dateisystemzugang
+	\item Virtual File System Layer (VFS) mit neuem Kernel-Interface; \textit{VNode} als Datenstruktur
+	\item \textbf{Architektur}
+	\begin{itemize}
+		\item Protokoll definiert per XDR\footnote{External Data Representation (IDL)} Methoden, Argumente und Ergebnisse; verwendet synchrones RPC (Transportschicht-unabhängig)
+		\item \texttt{NFSv2/v3}: Zustandlose Kommunikation \(\rightarrow\) kein Wiederherstellen nach Fehlern notwendig
+		\item \textit{File Handles} als Ids
+		\item Server
+		\begin{itemize}
+			\item Zustandslos ohne Caching \(\rightarrow\) Änderungen werden sofort geschrieben
+			\item Inode Generation Number: Eindeutige Nummer, die auch bei Wiederverwendung einer Inode eindeutig ist; Bestandteil eines \textit{File Handles}
+		\end{itemize}
+		\item Client: Transparenter Zugang zum Server-Dateisystem mittels \texttt{<host>:<path>}-Schema mittels \textit{mount}-Protokoll
+		\item NFS Dateisystem Interface
+		\begin{itemize}
+			\item Die meisten Dateioperationen können 1:1 auf NFS-Operationen abgebildet werden
+			\item Ausnahme: Auflösen von Pfadnahmen, da diese Mountpoints enthalten können \(\rightarrow\) iterative Verarbeitung, Beschleunigung durch lokalen Cache
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Probleme}
+	\begin{itemize}
+		\item Benutzerdaten und Sicherheit: Durch Unix-Permissions global eindeutige und gleich UIDs und GIDs notwendig; Root-Zugang mit Root-Berechtigungen; IP-basiertes Vertrauen \(\rightarrow\) mt Kerberos in \texttt{NFSv4} gelöst
+		\item Konkurrierender Zugriff: Kein Locking/Synchronisieren möglich
+		\item Time-Skews, beispielsweise be \texttt{make} ohne \texttt{NTP}
+	\end{itemize}
+	\item \textbf{Leistungsoptimierungen}
+	\begin{itemize}
+		\item "`Persistenz-Adjustierung"' obwohl Caching protokolseitig verboten
+		\item Asynchrone Schreibzugriffe: Lokale Client-Buffer werden erst bei \texttt{Commit} an den Server gesendet und geschrieben. Problem beispielsweise: Serverneustart zwischen asynchronem Schreiben und Committen
+		\item Schnellere Folge von Lesezugriffen durch "`Weiterlesen"' oder vollständiges Laden kleiner Programme
+		\item Lookup-Performance: Client-Caches, die aktualisiert werden, wenn neuerhaltene Werte nicht mehr zu gecachten Werten passen
+	\end{itemize}
+	\item \textbf{Änderungen bei \texttt{NFSv4}}
+	\begin{itemize}
+		\item Internetfähigkeit, hohe Sicherheit, cross-Platform
+		\item Zustandhaftete Server für Locking, Caching und explites Öffnen bevor Lesen/Schreiben
+		\item Zuständigkeiten bei Multiserver
+	\end{itemize}
 \end{itemize}
 
 
