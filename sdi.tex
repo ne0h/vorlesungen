@@ -716,6 +716,48 @@ uart0: serial@44e0900 {
 
 
 
+\section{Modularisierung und Struktur: Benennung}
+
+\begin{itemize}
+	\item Ziel: Identifizierung von Komponenten (beispielsweise Libraries) und Daten (beispielsweise Objekte oder Referenzen) über Namen; Auflösung von Compiler/Linker zur Compile-Zeit (monolither Kernel) oder zur Laufzeit (Multiserver)
+	\item Problem: Objekte sind zur Compile-Zeit teilweise unbekannt. Lookup zur Laufzeit problematisch/aufwendig (Raceconditions bzw. Synchronisierung)
+	\item \textbf{Definitionen}
+	\begin{description}
+		\item[Binding:] Definiert die Bedeutung eines Namens innerhalb eines Contextes
+		\item[Katalog:] Bindings-Tabelle; atomare Zugriffe
+		\item[Namensauflösung:] Schlägt (Bindung-basiert) einen Namen nach
+	\end{description}
+	\item Naming Glossary: Tabelle zur Namensauflösung (\texttt{<name>} \(\rightarrow\) \texttt{\_address})
+	\item Name Resolution: \textit{Resolver} übersetzt Namen innerhalb eines Namespaces in einen anderen (Name im Ziel-Namespace oft low-levliger oder näher am Objekt)
+	\item Closure: Verbindet Objekte, die auf andere Objekte verweisen, mittels Kontext (namensbasiert)
+	\item \textbf{Benennung als Umweg (Indirection)?}
+	\begin{itemize}
+		\item Identifikation von Dateien mittels Inode? Nicht eindeutig (Systemgrenzen, Hardlinks); unintuitiv
+		\item Lösung: Indirektion. Feste Namespaces werden als dynamisch Namespaces gemappt
+		\item Beispiele: Shell-Variablen; Mountpoints; Geräte in \texttt{/dev}
+	\end{itemize}
+	\item \textbf{Namespaces}
+	\begin{itemize}
+		\item Namen sind innerhalb des Namespaces eindeutig und können menschliche Bedeutung haben (Dateiname, SQL-Query, etc.)
+		\item Sicherstellen der Eindeutigkeit: Zentrale Vergabe; Verteilt durch UUIDs (statistisch eindeutig); Kombinationen (bespielsweise Hostname+MAC-Adresse)
+	\end{itemize}
+	\item \textbf{Namensauflösung}
+	\begin{description}
+		\item[Black Box:] Nicht-transparente Namensauflösung. Eventuell schwierig zu verwalten
+		\item[Naming Network:] Auflösungshierarchie. Jede Komponente verweist auf die nächste Hierarchieebene
+		\item[Linked Hierarchical Naming:] Verteilte Auflösung. Finden der Wurzel oder inter-Server-Verbindungen eventuell schwierig (Lösung: Per Hostname/ThreadId/etc. hardcodieren)
+	\end{description}
+	\item \textbf{Verteilte Namensvergabe}
+	\begin{itemize}
+		\item Vorgehen: Iteratives Übersetzen von Quellname über mehrere Schritte in Zielnamen. Protokoll muss ggf. mehrere Namespaces verwalten
+		\item Performance-Probleme: Mehrere IPC-Anfragen notwendig \(\rightarrow\) cachen statischer Daten
+		\item Konsistenz-Probleme: Gecachte Namen sind nicht mehr aktuell; Bindings existieren noch nicht oder nicht mehr. Strikte Konsisten erfordert Prüfung nach der Auflösung
+	\end{itemize}
+	\item % TODO: Case Study: L4Re (53)
+\end{itemize}
+
+
+
 
 
 
