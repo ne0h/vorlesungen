@@ -776,6 +776,119 @@ uart0: serial@44e0900 {
 
 
 
+\section{Kommunikation}
+\begin{itemize}
+	\item Motivation: Synchronisation, Datentransfer (Shared Data oder Message-Passing, Kontrolle
+\end{itemize}
+
+\subsection{Design-Prinzipien}
+\begin{itemize}
+	\item \textbf{Adressierung}
+	\begin{itemize}
+		\item Direkt (Signals, IPC) vs. indirekt (Pipes, Mailboxes, Sockets, IPC-Gates, etc.)
+		\item Unicast, Anycast, Multicast, Broadcast
+		\item Modelle: Dispatcher/Worker; Mailing List; Telefon
+	\end{itemize}
+	\item Nachrichtenübertragung: Kopieren (benötigt mehr Ressourcen) oder per Referenz (gemeinsamer Speicher vorausgesetzt)
+	\item Synchron (Telefon, RPC, etc.) vs. asynchron (komplexer; benötigt eventuell Buffering; beispielsweise E-Mail, Nachrichtenwarteschlangen, Pipes, etc.)
+	\item Blockierend vs. nicht-blockierend
+	\item Gepuffert vs. nicht nicht-gepuffert
+\end{itemize}
+
+
+\subsection{Kommunikation in monolithischen Systemen: Unix}
+\begin{itemize}
+	\item Zweidimensional: Horizontal (zwischen Prozessen oder Treibern) und vertikal (System Calls, Signals)
+	\item \textbf{Vertikale Kommunikation}
+	\begin{itemize}
+		\item Auf Sicherheitsbetrachtung wird verzichtet und dem Kernel vertraut
+		\item Kernel kann auf Speicher der Prozesse zugreifen, allerdings nicht umgekehrt
+	\end{itemize}
+	\item \textbf{Horizontale Kommunikation}
+	\begin{itemize}
+		\item Sicherheitsbetrachtung: Keine unbegrenzte Weitergabe von Daten und Kontrollfluss
+		\item Kernel stellt Kommunikationsprimitive zur Verfügung (Geteilter Speicher, Pipes, FIFOs, IPC, Sockets, etc.)
+		\item Kommunikationsprimitive in Unix
+		\begin{description}
+			\item[Pipe:] Unidirektional, Byte-orientiert, asynchron (Ringpuffer mit fester Größe), gepuffert, (nicht-) blockierend, Adressierung über Handle
+			\item[FIFO:] Semantik wie Pipe; Adressierung über globales Handle; wird ins Dateisystem gemappt \(\rightarrow\) mit Dateisystemberechtigungen verwaltbar
+			\item[IPC Semaphore:] Synchronisiert mehrere Semaphoren ("`atomatisiert"' die Standardoperationen durch atomares inkrement/dekrement)
+			\item[IPC Nachrichtenwarteschlange:] asynchron; puffert Nachrichten
+			\item[IPC Shared Memory:] Speicherbereiche, die zwischen Prozessen geteilt werden
+		\end{description}
+		\item Analyse Kommunikationsprimitive in Unix
+		\begin{description}
+			\item[Vorteile:] Flexibel, komfortable Schnittstelle
+			\item[Nachteile:] Komplexe, schwer verständliche Semantik; Verwendung von Kernelpuffern (Größenlimitierung); Kopieraufwand
+		\end{description}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Kommunikation in Multiserversystemen}
+\begin{itemize}
+	\item Kernel in viele User-Level-Subsysteme (Pager, Fileserver, Netzwerk, Treiber, etc.) mit kleinem, privilegierten Microkernel aufgeteilt
+	\item \textbf{Vertikale Kommunikation}
+	\begin{itemize}
+		\item User/Server \(\leftrightarrow\) Microkernel
+		\item Server \(\leftrightarrow\) Microkernel
+	\end{itemize}
+	\item \textbf{Horizontale Kommunikation}
+	\begin{itemize}
+		\item Benutzer \(\leftrightarrow\) Benutzer
+		\item Server \(\leftrightarrow\) Benutzer
+		\item Server \(\leftrightarrow\) Server
+	\end{itemize}
+	\item \textbf{Herausforderungen}
+	\begin{itemize}
+		\item Komplexe Sicherheits/Isolierungs-Anforderungen (Lösung: Kernel stellt IPC zur Verfügung)
+		\item Modularisierung führt zu erhöhtem Kommunikationsaufwand \(\rightarrow\) Kommunikation muss so wenig Overhead erzeugen wie möglich
+		\item Sichere Abstraktion für Kommunikation mit Geräten, da Treiber nicht explizit vertrauenswürdig sind \(\rightarrow\) Zugriffskontrolle per DMA und IOMMUs
+	\end{itemize}
+	\item \textbf{Fallstudien}
+	\begin{itemize}
+		\item Mach
+		\begin{itemize}
+			\item Nachrichten werden im Kernel gepuffert. Ermöglicht asynchrones, nicht-blockierendes Senden (bis der Puffer voll ist)
+			\item In-Line-Data: Wird indirekt zwischen Sender und Empfänger kopiert; richtige Reihenfolge garantiert
+			\item Out-of-Line-Data: COW-Mechanismus \(\rightarrow\) vermeidet Kopieren großer Puffer
+		\end{itemize}
+		\item L4
+		\begin{itemize}
+			\item Synchrones, ungepuffertes, rendezvoud-basiertes IPC; blockierend oder nicht-blockierend
+			\item IPC-Typen: Register-IPC (Synchronisierung); String-IPC (kopiert Speicher); Map IPC (schickt Speicherseiten aus dem eigenen Speicherbereich; potentielle Verletzung von Zugriffsrechten; Kernel aktualisiert MMU während IPC)
+			\item Asychrones (gepuffertes) IPC muss mittels Threads auf User-Level implementiert werden
+			\item Hardware-Abstraktion durch IPC (Paging, Interrupts, Exceptions)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Kommunikation in Multiprozessorsystemen}
+\begin{itemize}
+	\item Probleme bei Kernel-IPC: Architekturlimitierung durch Speicherbereichwechsel; Störung der User-Level Thread-Verwaltung
+	\item Mögliche Lösungen: Empfänger auf anderer CPU; Shared Memory für Nachrichtenaustausch
+	\item \textbf{URPC}
+	\begin{itemize}
+		\item Weder Kernel-Aufruf noch Kontextwechsel
+		\item Bidirektionale (Kopier-)Warteschlange via Shared Memory (asynchron, nicht-blockierend, gepuffert)
+	\end{itemize}
+	\item \textbf{Fallstudie: Barrelfish}
+	\begin{itemize}
+		\item Tread-System: Schedular Activations; K42-artigen Dispatcher
+		\item Kommunikation zwischen Dispatchern via Betriebssystem
+		\item Unified-RPC-Schnittstelle mit generierten RPC-Stubs und Verbindungstreibern mit speziellen Schnittstellen
+		\item Aufbau eines Kommunikationskanals
+		\begin{enumerate}
+			\item Nachschlagen im \textit{Lookup Server}
+			\item Aufhandeln des Verbinungstreibers
+			\item Weiter (spezifische) Initialisierung
+		\end{enumerate}
+	\end{itemize}
+\end{itemize}
+
+
+
 
 
 
