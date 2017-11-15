@@ -631,7 +631,7 @@ uart0: serial@44e0900 {
 		\begin{itemize}
 			\item Verzeichnisse verwalten eine Tabelle mit Dateieinträgen
 			\item Struktur eines Dateieintrags: Name und Erweiterung, Attribute, Zeitpunkte (Erstellen, letzte Änderung/Zugriff), Startcluster, Dateigröße
-			\item Erweiterung zur Verwendung langer Dateinamen (VFAT\footnote{Virtual File Allocation Table}): \texttt{xxxxxx~i.xxx}-Namen werden über mehrere Verzeichniseinträge verteilt
+			\item Erweiterung zur Verwendung langer Dateinamen (VFAT\footnote{Virtual File Allocation Table}): \texttt{xxxxxx\(\sim\)i.xxx}-Namen werden über mehrere Verzeichniseinträge verteilt
 		\end{itemize}
 		\item Öffnen von Dateien
 		\begin{enumerate}
@@ -682,7 +682,7 @@ uart0: serial@44e0900 {
 			\item Dateisysteme für Flash-Speicher \textit{ohne} FTL \(\rightarrow\) eerfüllt die technischen Voraussetzungen von Flash-Speicher
 			\item Imap lediglich im Speicher, das Dateisystem wird beim Einhängen vollständig gescannt (feste Position wäre entgegen \textit{Wear-Leveling})
 		\end{itemize}
-		\item F2F2\footnote{Flash-Friendly File System}
+		\item F2FS\footnote{Flash-Friendly File System}
 		\begin{itemize}
 			\item Dateisystem für Flash-Speicher \textit{mit} FTL
 			\item Näher an LFS: Metadaten an fester Position; zwei Checkpoint-Regionen; \textit{Node Address Table} als Imap \(\rightarrow\) überlässt dem FTL die Schreibpositionierung
