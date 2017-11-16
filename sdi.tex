@@ -767,11 +767,12 @@ uart0: serial@44e0900 {
 		\item Besteht aus Source-Dateien und Header-Dateien, die zu einer Binärdatei zusammengebaut werden
 		\item Typen von Namen: Variablen, Funktionsnamen, Klassennamen, Namespaces/Pakete, \texttt{typedef}, virtuelle/physische Speicheradressen, etc.
 	\end{itemize}
+	\item Inter-Adressbereich Namen: Namen (Pfade, Ids, Thread-Ids, Capabilities, etc.) werden von Resolvern (Compiler, IPC, Nameserver, etc. aufgelöst)
 	\item \textbf{Möglichkeiten zur Namensauflösung}
 	\begin{description}
 		\item[Black Box:] Nicht-transparente Namensauflösung. Eventuell schwierig zu verwalten
-		\item[Naming Network:] Auflösungshierarchie. Jede Komponente verweist auf die nächste Hierarchieebene
-		\item[Linked Hierarchical Naming:] Verteilte Auflösung. Finden der Wurzel oder inter-Server-Verbindungen eventuell schwierig (Lösung: Per Hostname/ThreadId/etc. hardcodieren)
+		\item[Naming Network:] Auflösungshierarchie. Jede Komponente verweist auf die nächste Hierarchieebene (Vgl. Baum)
+		\item[Linked Hierarchical Naming:] Verteilte Auflösung. Finden der Wurzel oder inter-Server-Verbindungen eventuell schwierig (Lösung: Per Hostname/ThreadId/etc. hardcodieren). In Multiserversystem kann die Wurzel nicht von Kernel vorgegeben werden (widerspricht Grundprinzip) \(\rightarrow\) wird von Parent-Task gesetzt
 	\end{description}
 	\item \textbf{Verteilte Namensvergabe}
 	\begin{itemize}
@@ -779,7 +780,13 @@ uart0: serial@44e0900 {
 		\item Performance-Probleme: Mehrere IPC-Anfragen notwendig \(\rightarrow\) cachen statischer Daten
 		\item Konsistenz-Probleme: Gecachte Namen sind nicht mehr aktuell; Bindings existieren noch nicht oder nicht mehr. Strikte Konsisten erfordert Prüfung nach der Auflösung
 	\end{itemize}
-	\item % TODO: Case Study: L4Re (53)
+	\item \textbf{Fallstudie: L4Re-basierte Multiserversysteme}
+	\begin{itemize}
+		\item Zielobjekte: Sämtliche Serviceanbieter (Mikrokernel, Server-Task \(\rightarrow\) Capability zur Interaktion notwendig)
+		\item Namensauflösung durch Compiler; IPC-Mechanismen; lokale Registrierung; entfernte Registrierung (Zielobjekte, Registrierungen). Pfade und vordefinierte Service Ids werden zu Capabilities aufgelöst
+		\item Elternprozess definiert bei Prozesserstellung den individuellen \textit{Root Catalog} aller Capabilities (\texttt{[String \(\Rightarrow\) Capability]})
+		\item Inter-Katalog-Verknüpfungen: Namensauflösung gibt Capability zu nächstem Katalog zurück (iterativ Auflösung)
+	\end{itemize}
 \end{itemize}
 
 
