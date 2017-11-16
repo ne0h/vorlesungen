@@ -119,13 +119,13 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{Thread- und Prozessverwaltung}
 	\begin{itemize}
 		\item Betriebssystemaufgaben: Verwaltung, Ausführung, Scheduling, Accounting, Ressourcen-Verwaltung
-		\item Zustandshaltung pro Thread inklusive \textit{Instruction Pointer} und \textit{Stack Pointer}; Schedulung-/Accounting-Zustand; Speicherzustand; Kommunikationszustand (Wait-Queue, Send-Queue, etc.). Ressourcen (File-Pointer, etc.); Berechtigungen (\texttt{ugo}. Gepeichert im \textit{Thread Control Block} (TCB), dieser kann auch Pointer zum Vorgänger und zum Nachfolger speichern
-		\item Basisoperationen % TODO: Unterschied Startup/Resume
+		\item Zustandshaltung pro Thread inklusive \textit{Instruction Pointer} und \textit{Stack Pointer}; Schedulung-/Accounting-Zustand; Speicherzustand; Kommunikationszustand (Wait-Queue, Send-Queue, etc.). Ressourcen (File-Pointer, etc.); Berechtigungen (\texttt{UGO})\footnote{User-Group-Owner}. Gepeichert im \textit{Thread Control Block} (TCB), dieser kann auch Pointer zum Vorgänger und zum Nachfolger speichern
+		\item Basisoperationen
 		\begin{description}
 			\item[Create:] Erstellen (inklusive TCB) und Einfügen in \textit{Ready Queue}
 			\item[Startup:] Entfernen aus \textit{Ready Queue}
 			\item[Block:] Speichern des Thread-Zustands auf dem Stack; Einfügen in \texttt{Wait Queue} Aktualisieren des Thread-Zustands; \texttt{resume(next\_thread)}
-			\item[Signal:] Thread wird von \textit{wait queue} in \textit{ready queue} verschoeben; Aktualisieren des Thread-Zustands
+			\item[Signal:] Thread wird von \textit{wait queue} in \textit{ready queue} verschoben; Aktualisieren des Thread-Zustands
 			\item[Resume:] Entfernen des Threads aus \textit{ready queue}; Laden des Registerzustands; mit Ausführung fortfahren (\textit{Instruction Pointer} zeigt auf den entsprechenden Befehl)
 			\item[Finish:] Aufräumen (Stack und TCB); Finden und Weiterausführen des nächsten Thread
 		\end{description}
@@ -233,10 +233,6 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 			\begin{itemize}
 				\item Threads repräsentieren verschiedene Entitäten (Servers, Clients, Ressourcen, etc.)
 				\item Verwendung von IPC für jegliche interne Kommunikation (behandeln von Requests, Dispatching, Synchronisierung, Interrupts, etc.) \(\rightarrow\) eng mit Scheduling verknüpft
-			\end{itemize}
-			\item Szenarien
-			\begin{itemize}
-				\item % TODO
 			\end{itemize}
 			\item Probleme: Policy sollte von Anwendung gesteuert werden; IPC-Leistung kritisch
 			\item Alternativen zu IPC: Policy-Upcalls (teuer); Kernel-Erweiterungen für Schedlung (sehr komplex, eventuell sicherheitskritisch); Heuristiken
@@ -359,7 +355,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\item Hierarchisches VM-System: Threads können einem anderen Adressraum beliebige, eigene Seiten zur Verfügung stellen. Wahlweise per \textit{Mapping} (Seite ist in beiden Adressraumen verfügbar) oder per \textit{Granting} (Seite wird verschoben)
 		\item Behandlung von Pagefaults: Per-Thread (User-Level) \textit{Pagers} im selben oder einem anderen Addressraum. Bei einem Pagefault wird ggf. direkt die entsprechende Seite zurückgegeben
 	\end{itemize}
-	\item \textbf{Dataspaces} % TODO: Dataspace vs. Region (48)
+	\item \textbf{Dataspaces}
 	\begin{itemize}
 		\item Speicherkonzept zum Ablegen unstrukturierter Daten. Kann mit Dateien, anonymer Speicher, Frame-Buffers, etc.verknüpft sein und werden jeweils von einem \textit{Dataspace Manager} verwaltet (werden in \texttt{L4} als Pager bezeichnet)
 		\item Können (partiell) an \textit{Regions} von Adressräumen geknüpft werden
