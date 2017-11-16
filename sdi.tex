@@ -737,29 +737,37 @@ uart0: serial@44e0900 {
 \section{Modularisierung und Struktur: Benennung}
 
 \begin{itemize}
+	\item Betriebssysteme bestehen aus Komponenten (Betriebssystem, Treiber, Dateisysteme, etc.) \(\rightarrow\) diese müssen zu einem kompletten System zusammengebaut werden
 	\item Ziel: Identifizierung von Komponenten (beispielsweise Libraries) und Daten (beispielsweise Objekte oder Referenzen) über Namen; Auflösung von Compiler/Linker zur Compile-Zeit (monolither Kernel) oder zur Laufzeit (Multiserver)
-	\item Problem: Objekte sind zur Compile-Zeit teilweise unbekannt. Lookup zur Laufzeit problematisch/aufwendig (Raceconditions bzw. Synchronisierung)
+	\item Problem: Objekte sind zur Compile-Zeit teilweise unbekannt (Beispiel: Konkrete Id eines Threads; Speicherziel im Dateisystem). Lookup zur Laufzeit problematisch/aufwendig (Raceconditions bzw. Synchronisierung)
 	\item \textbf{Definitionen}
 	\begin{description}
-		\item[Binding:] Definiert die Bedeutung eines Namens innerhalb eines Contextes
-		\item[Katalog:] Bindings-Tabelle; atomare Zugriffe
-		\item[Namensauflösung:] Schlägt (Bindung-basiert) einen Namen nach
+		\item[Kontext:] Teil einer Tabelle \texttt{[Name \(\Rightarrow\) Objekt]}
+		\item[Binding:] Definiert die Bedeutung eines Namens innerhalb eines Contextes. Intuitiv: Definiert, was ein Name bedeutet
+		\item[Katalog:] Bindings-Tabelle zu Objekt; atomare Zugriffe
+		\item[Namensauflösung:] Schlägt (Bindung-basiert) einen Namen nach. Auflösung entweder zur Compile-Zeit (einmal) oder zur Laufzeit (pro Aufruf \(\rightarrow\) Caching)
 	\end{description}
-	\item Naming Glossary: Tabelle zur Namensauflösung (\texttt{<name>} \(\rightarrow\) \texttt{\_address})
-	\item Name Resolution: \textit{Resolver} übersetzt Namen innerhalb eines Namespaces in einen anderen (Name im Ziel-Namespace oft low-levliger oder näher am Objekt)
-	\item Closure: Verbindet Objekte, die auf andere Objekte verweisen, mittels Kontext (namensbasiert)
+	\item Namensauflösung: \textit{Resolver} übersetzt Namen eines Namespaces in einen anderen (Name im Ziel-Namespace oft low-levliger oder näher am Objekt)
+	\item Closure: Verbindet Objekte, die auf andere Objekte verweisen, mittels Kontext (namensbasiert). Beispielsweise ein Compiler, der zur Compile-Zeit einen Symbolkatalog \texttt{[Name \(\Rightarrow\) Objektreferenz]} (Bindings) anlegt
 	\item \textbf{Benennung als Umweg (Indirection)?}
 	\begin{itemize}
-		\item Identifikation von Dateien mittels Inode? Nicht eindeutig (Systemgrenzen, Hardlinks); unintuitiv
+		\item Identifikation von Dateien mittels Inode? Nicht eindeutig (Systemgrenzen, Hardlinks); unintuitiv für Menschen
 		\item Lösung: Indirektion. Feste Namespaces werden als dynamisch Namespaces gemappt
 		\item Beispiele: Shell-Variablen; Mountpoints; Geräte in \texttt{/dev}
+		\item Oft Mehrstufig, beispielsweise beim Auflösen eines durch eine Variable definierten Dateipfades (Variable \(\rightarrow\) Pfad \(\rightarrow\) Dateisystem und Partition mit Mountpoint \(\rightarrow\) Partition und Inode \(\rightarrow\) Festplattenblöcke)
+		\item Problem: Es kann nicht immer sichergestellt werden, dass immer das selbe Objekt referenziert wird
 	\end{itemize}
 	\item \textbf{Namespaces}
 	\begin{itemize}
 		\item Namen sind innerhalb des Namespaces eindeutig und können menschliche Bedeutung haben (Dateiname, SQL-Query, etc.)
 		\item Sicherstellen der Eindeutigkeit: Zentrale Vergabe; Verteilt durch UUIDs (statistisch eindeutig); Kombinationen (bespielsweise Hostname+MAC-Adresse)
 	\end{itemize}
-	\item \textbf{Namensauflösung}
+	\item \textbf{Fallstudie: Monolithisches System oder LibOS}
+	\begin{itemize}
+		\item Besteht aus Source-Dateien und Header-Dateien, die zu einer Binärdatei zusammengebaut werden
+		\item Typen von Namen: Variablen, Funktionsnamen, Klassennamen, Namespaces/Pakete, \texttt{typedef}, virtuelle/physische Speicheradressen, etc.
+	\end{itemize}
+	\item \textbf{Möglichkeiten zur Namensauflösung}
 	\begin{description}
 		\item[Black Box:] Nicht-transparente Namensauflösung. Eventuell schwierig zu verwalten
 		\item[Naming Network:] Auflösungshierarchie. Jede Komponente verweist auf die nächste Hierarchieebene
