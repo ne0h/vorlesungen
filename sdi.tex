@@ -881,7 +881,7 @@ uart0: serial@44e0900 {
 		\item Aufbau eines Kommunikationskanals
 		\begin{enumerate}
 			\item Nachschlagen im \textit{Lookup Server}
-			\item Aufhandeln des Verbinungstreibers
+			\item Aufhandeln des Verbindungstreibers
 			\item Weiter (spezifische) Initialisierung
 		\end{enumerate}
 	\end{itemize}
@@ -889,19 +889,121 @@ uart0: serial@44e0900 {
 
 
 
+\section{Koordination}
+\begin{itemize}
+	\item Motivation: Verhindern von Raceconditions, da Operationen auf Variablen/Datenstrukturen keine atomaren Speicheroperationen sind
+	\item Lösungsansatz 0: Einprozessorsystem ohne Preemtion (beispielsweise durch Interrupts)
+	\item Lösungsansatz 1: Zentraler Koordinator zur Ressourcenverwaltung
+	\item \textbf{Lösungsansatz 2: Locking}
+	\begin{itemize}
+		\item Explizites Reservieren/Freigeben von Ressourcen/kritischen Sektionen
+		\item Granularität: Grobgranularere Locks sind einfacher implementiert und führen zu weniger Verwaltungsaufwand, allerdings auch zu potentiell mehr wartenden Threads
+		\item Reader-Writer-Locks
+		\begin{itemize}
+			\item Erlaubt mehrere parallele Lesezugriffe
+			\item Implementierung meist mittels Semaphoren
+			\item Lesepräferenz (erlaube weitere Lesezugriffe solange mindestens ein Lesezugriff stattfindet); Schreibpräferenz (blockiere Lesezugriffe während ein Schreibzugriff wartet); erlaube alle Lesezugriffe gemeinsam während zwei Schreibzugriffen
+			\item Generell gilt: Weniger komplexe Lockstrukturen sind in der Praxis oft am schnellsten \(\rightarrow\) zunächst einfache Spinlocks probieren\footnote{Hill's Law}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
+\subsection{Implementierungen}
+\begin{itemize}
+	\item \textbf{Zentraler Server}
+	\begin{itemize}
+		\item Anfordern von Locks via Nachrichten. Im einfachsten Fall (single-threaded Server) erfolgt die Synchronisation durch die Serialisierung der Nachrichten
+		\item Beispiel L4: Jegliche Synchronisierung oberhalb des synchronen IPC
+	\end{itemize}
+	\item \textbf{Blocking (Mutex)}
+	\begin{itemize}
+		\item Atomare Operationen für \texttt{aquire()} und \texttt{release()}; blockierte Threads werden in eine Warteschlange verschoben; beim Verlassen des kritischen Bereichs wird der nächste Thread aufgeweckt
+		\item \texttt{aquire()} und \texttt{release()} sind selbst kritische Bereiche
+	\end{itemize}
+	\item \textbf{Busy Waiting (Spinlock)}
+	\begin{itemize}
+		\item Thread pollt das Lock bis es frei ist \(\rightarrow\) atomares Locken (in Hardware) vorausgesetzt
+		\item Verschwendung von CPU-Zyklen bis das Lock frei ist
+	\end{itemize}
+	\item \textbf{Blocking vs. Spinning}
+	\begin{itemize}
+		\item Deutlich höherer Verwaltungaufwand bei Blocking (blockieren, in Warteschlange einfügen, Kontextwechsel zum anderen Thread, aus der Warteschlange nehmen und aufwecken, Kontextwechsel zurück) \(\rightarrow\) typische Wartezeit entscheident. Spinlocks bei kurzen Wartezeiten, Mutex bei langen
+		\item Triviale Fälle
+		\begin{description}
+			\item[Einprozessorsystem:] Immer blockieren. Wartender Thread wird erst wieder gestartet, wenn wieder freigegeben
+			\item[Multiprozessor, kein anderer Thread wartet auf den Prozessor:] Immer spinnen, da ohnehin nichts anderes ausgeführt werden kann
+			\item[Lock-Halter läuft gerade nicht:] Immer blockieren und möglichst schnell CPUs "`leeren"' um Lock-Halter weiterlaufen zu lassen (Lock-Holder-Preemtion beachten)
+		\end{description}
+		\item Spannende Fälle
+		\begin{itemize}
+			\item Lock-Halter läuft gerade auf einer anderen CPU; andere Threads warten in der CPU-lokalen Warteschlange
+			\item Algorithmen
+			\begin{itemize}
+				\item Optimaler Offline-Algorithmus: Kennt die Wartezeiten im Voraus \(\rightarrow\) blockieren, falls die Wartezeit größer als die Blockierungskosten (zwei Kontextwechsel, Warteschlangenverwaltung, Aufwecken) sind, sonst spinnen
+				\item Online-Algorithmen
+				\begin{itemize}
+					\item Muss Entscheidung ohne vollständige Informationen fällen
+					\item Ansatz: Spinning bis eine bestimmte Wartedauer überschritten wurde, dann blockieren
+					\item Bestimmen der Wartezeit
+					\begin{description}
+						\item[Fest:] Auf Basis der (halben) Dauer für den Blockierungsaufwand
+						\item[Adaptiv:] Schätzen der durchschnittlichen Wartezeit (Radom-Walk, Sliding-Window, etc.)
+					\end{description}
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
+\subsubsection{Implementierung von Spinlocks: Atomare Instruktionen}
+\begin{itemize}
+	\item Anforderung: CPU garantiert atomare lese-ändere-schreibe-Sequenz (Bus-Locking; lokale Cache-Zeile, die erst nach vollständige Ausführung zurückgeschrieben wird)
+	\item Typische atomare Instruktionen: compare-and-swap, swap, test-and-set, fertch-and-add
+	\item \textbf{Fallstudie: x86-Atomics}
+	\begin{itemize}
+		\item Lese-ändere-schreibe-Sequenz mittels exklusiv gelockter L1-Cache-Zeile
+		\item Triviale Nutzung
+		\item \texttt{atomic\_swap()}, \texttt{atomic\_add()}, etc. können mittels Inline-Assembler definiert werden
+	\end{itemize}
+	\item \textbf{Fallstudie: RISC-Atomics}
+	\begin{itemize}
+		\item Trennung von \textit{Load} und \textit{Store} (Load Linked / Store Conditional \(\rightarrow\) LL/SC)
+		\item \textit{Load} markiert Speicherregion und Cache-Zeile; \textit{Store} überprüft Markierung und gibt zurück, ob der Vorgang erfolgreich war
+		\item Nachteil: Ggf. mehrere Versuche notwendig \(\rightarrow\) schwieriger zu verwenden
+		\item Unter verschiedenen Namen u.a. in Alpha, ARM, MIPS und PowerPC implementiert
+	\end{itemize}
+\end{itemize}
 
+\subsubsection{Implementieren von Spinlocks: Strategien}
+\begin{itemize}
+	\item \textbf{Wiederholtes Test-and-Set}
+	\begin{itemize}
+		\item \texttt{while(\_\_sync\_lock\_test\_and\_set(lock, 1));}
+		\item ccNUMA: Cache-Zeile wird zwischen CPU-Kernen hin und her geschoben
+		\item Performance wird mit wachsender Anzahl wartender Threads sowie 
+	\end{itemize}
+	\item \textbf{Wiederholtes Lesen (Test-and-Test-and-Set)}
+	\begin{itemize}
+		\item Wartende Threads lesen nur \texttt{lock}: \texttt{while(lock || test\_and\_set(lock, 1));}
+		\item ccNUMA: Cache-Zeile von den wartenden CPU-Kernen geteilt und bei \texttt{release()} invalidiert \(\rightarrow\) erzeugt einen Cache-Miss und gibt ein neues Lock zurück
+		\item Problem: Wettbewerb zwischen Erkennen des freien Locks und \texttt{aquire()} (mehrere CPU-Kerne probieren test-and-set) \(\rightarrow\) nicht-erfolgreiches Test-and-Set invalidiert Lesekopie im Cache \(\rightarrow\) unnötiger Cache-Kohärenzaufwand
+		\item Lösung: Benachrichtige nur einen CPU-Kern; invalidiere Cache lediglich bei Zustandswechsel des Locks
+	\end{itemize}
+	\item \textbf{Queue Locks}
+	\begin{itemize}
+		\item Idee: Wartende CPUs kommen in eine Warteschlange; es wird immer nur die erste benachrichtigt
+		\item Implementierungsalternativen
+		\begin{itemize}
+			\item Separates Flag pro wartender CPU: Typischerweise bei ccNUMA
+			\item Verteilte Schreibkohärenz mit Ticket-Weitergab in einer einzigen Bus-Transaktion
+		\end{itemize}
+		\item Vergleich mit einfachem Spinlock: Höhere Latenz ohne Stau, niedrigere bei Stau
+	\end{itemize}
+\end{itemize}
 
-
-
-
-
-
-
-
-
-
-
-
+\subsubsection{Spinlock-Analyse}
+\begin{itemize}
+	\item Verwendung von Spinlocks in Anwendungen mit wenig Konkurrenz, ansonsten Queue-Locks \(\rightarrow\) Benchmarks!
+	\item Generell: Keine Fairness bei Spinlocks
+\end{itemize}
