@@ -17,13 +17,13 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{Aufgaben eines OS}
 	\begin{itemize}
 		\item Ressourcenmanagement und Accounting
-		\item Hardware-Abstraktion: Erlaubt geteilte Zustände (Beispiel: Buffer Cache) sowie Zugriffskontrolle
+		\item Hardware-Abstraktion: Erlaubt gemeinsame Datenzugriffe (Beispiel: Buffer Cache) sowie Zugriffskontrolle
 		\item Fehlervermeidung
 		\item Isolierung von Anwendungen inklusive Hardware-Mechanismus (Benutzermodus der CPU) zur Programmausführung (Betriebssystem muss nicht mehr jede Instruktion auf Gültigkeit überprüfen \(\rightarrow\) kein Leistungsverlust)
 	\end{itemize}
 	\item \textbf{Monolithische Kernel}
 	\begin{itemize}
-		\item Viele, mit Serices verflochtene Abstraktionen (Prozesse, Dateien, Sockets, etc.)
+		\item Viele Abstraktionen (Prozesse, Dateien, Sockets, etc.)
 		\item Schutz lediglich zwischen Prozessen und gegenüber dem Kernel (keinerlei Sicherheit innerhalb des Kernels)
 		\item Alle Betriebssystemfunktionalität innerhalb des Kernels (Treiber, Netzwerstack, Dateisysteme, etc.)
 		\item Historisches: Teilweise Services im Userspace (\texttt{X Server}) oder innerhalb des Kernel implementiert (\texttt{nfsd})
@@ -87,7 +87,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 
 \subsubsection{Virtualisierung}
 \begin{itemize}
-	\item Idee: Simulieren virtueller Maschinen mit den selben Hardware-Schnittstellen physischer Maschinen
+	\item Idee: Simulieren virtueller Maschinen mit den selben Hardware-Schnittstellen wie physischer Maschinen
 	\item \textbf{Technologie-Evolution}
 	\begin{itemize}
 		\item Zunächst: Trap-and-Emulate (seit den frühen 1970gern im \texttt{IBM VM/370})
@@ -98,12 +98,12 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\item Workarounds für \texttt{x86}
 		\begin{description}
 			\item[VMWare:] Ersetzen der problematischen Instruktionen durch Binary Translation zur Laufzeit
-			\item[Xen:] Gastsystem wird angepasst und "`weis"', dass es virtualisiert ausgeführt wird (Paravirtualisierung). Privilegierte Instruktionen werden durch \textit{Hypercalls} ersetzt \(\rightarrow\) Ansatz vergleichbar mit Exokernel (Multiplexen der Ressourcen, low-level Syscall-Schnittstelle)
+			\item[Xen:] Gastsystem wird angepasst und "`weiß"', dass es virtualisiert ausgeführt wird (Paravirtualisierung). Privilegierte Instruktionen werden durch \textit{Hypercalls} ersetzt \(\rightarrow\) Ansatz vergleichbar mit Exokernel (Multiplexen der Ressourcen, low-level Syscall-Schnittstelle)
 		\end{description}
 		\item Hardware-seitige Unterstützung für Virtualisierung
 		\begin{itemize}
 			\item Zwei CPU-Modi zum Ausführen von privilegierten Instruktionen: Physical/Supervisor/Hypervisor und Guest/Virtualized \(\rightarrow\) \textit{Guest Privileged Mode} und \textit{Host Privileged Mode}
-			\item Gastbetriebssystem kann selbstständig zum \textit{Guest User Mode} wechseln und Page-Table-Einträge modifizieren
+			\item Gastbetriebssystem kann selbstständig zum \textit{Guest Privileged Mode} wechseln und beispielsweise Page-Table-Einträge modifizieren
 			\item Hypervisor kontrolliert Mapping der Host-Ressourcen
 		\end{itemize}
 	\end{itemize}
@@ -124,9 +124,9 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\begin{description}
 			\item[Create:] Erstellen (inklusive TCB) und Einfügen in \textit{Ready Queue}
 			\item[Startup:] Entfernen aus \textit{Ready Queue}
-			\item[Block:] Speichern des Thread-Zustands auf dem Stack; Einfügen in \texttt{Wait Queue} Aktualisieren des Thread-Zustands; \texttt{resume(next\_thread)}
-			\item[Signal:] Thread wird von \textit{wait queue} in \textit{ready queue} verschoben; Aktualisieren des Thread-Zustands
-			\item[Resume:] Entfernen des Threads aus \textit{ready queue}; Laden des Registerzustands; mit Ausführung fortfahren (\textit{Instruction Pointer} zeigt auf den entsprechenden Befehl)
+			\item[Block:] Speichern des Thread-Zustands auf dem Stack; Einfügen in \textit{Wait Queue} Aktualisieren des Thread-Zustands; \texttt{resume(next\_thread)}
+			\item[Signal:] Thread wird von \textit{Wait Queue} in \textit{Ready Queue} verschoben; Aktualisieren des Thread-Zustands
+			\item[Resume:] Entfernen des Threads aus \textit{Ready Queue}; Laden des Registerzustands; mit Ausführung fortfahren (\textit{Instruction Pointer} zeigt auf den entsprechenden Befehl)
 			\item[Finish:] Aufräumen (Stack und TCB); Finden und Weiterausführen des nächsten Thread
 		\end{description}
 		\item Abwägungen
@@ -134,7 +134,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 			\item Leistungsoptimierung
 			\begin{itemize}
 				\item Stack wird erst beim Startup reserviert, da neue Threads eventuell nie laufen oder die für die Erstellung benötigten Ressourcen dem neuen Thread berechnet werden sollen (Accounting)
-				\item Aufwandsreduzierung beim Finden von freiem Speicher durch nutzen von \textit{Free Memory Lists} für Stack und TCB
+				\item Aufwandsreduzierung beim Finden von freiem Speicher durch Nutzen von \textit{Free Memory Lists} für Stack und TCB
 			\end{itemize}
 			\item Synchronisieren von Thread-Datenstrukturen
 			\begin{itemize}
@@ -143,9 +143,9 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 				\item Implementierungsmöglichkeiten
 				\begin{description}
 					\item[Single Lock:] Einzelnes Lock für gesamte Datenstruktur \(\rightarrow\) Niedrige Latenz, allerdings limitierter Durchsatz
-					\item[Mehrere Locks:] Separates Lock für \textit{ready queue}, \textit{wait queue}, \textit{free lists}, etc. \(\rightarrow\) höhere Latenz, besseres Durchsatz
+					\item[Mehrere Locks:] Separates Lock für \textit{Ready Queue}, \textit{Wait Queue}, \textit{Free Lists}, etc. \(\rightarrow\) höhere Latenz, besseres Durchsatz
 					\item[(Prozessor-)lokale Free Lists:] Exklusive Allocation Pools pro Prozessor \(\rightarrow\) verringert Zugriffskonflikte beim allokieren von TCBs oder Stacks, allerdings erhöhter Speicherverwaltungsaufwand. Pools müssen eventuell balanciert werden
-					\item[Lokale Ready Queues:] Prozessor-lokale \textit{ready queues}. Reduziert Zugriffskonflikte; setzt ggf. Load Balancing (und Synchronisierung während Load Balancing) voraus. Heutzutage meist verwendet
+					\item[Lokale Ready Queues:] Prozessor-lokale \textit{Ready Queues}. Reduziert Zugriffskonflikte; setzt ggf. Load Balancing (und Synchronisierung während Load Balancing) voraus. Heutzutage meist verwendet
 				\end{description}
 			\end{itemize}
 		\end{itemize}
@@ -177,7 +177,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\end{description}
 	\item \textbf{Ansätze}
 	\begin{itemize}
-		\item Kernel-Level Schedulung (traditionell)
+		\item Kernel-Level Scheduling (traditionell)
 		\begin{itemize}
 			\item Kernel verantwortlich für Management/Scheduling/Dispatching der Threads; Ausführungskontext wird vom User initiiert \(\rightarrow\) globale Sicht/Zustand
 			\item Kontext mit weiteren Abstraktionen verknüpft: Schutz des Speichers; Accounting; Kommunikation; Ressourcen
@@ -202,7 +202,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\begin{itemize}
 			\item Idee: Kernel-Level Threads sind zu schwergewichtig und zu wenig erweiterbar/anpassbar; User-Level Threads zu sehr anwendungsgebunden \(\rightarrow\) Kombination beider Ansätze
 			\item Meist keine Intervention des Kernel beim Thread-Scheduling nötig (reine User-Level Threads). Kernel wird erst bei blockierten Threads oder Page Faults benötigt
-			\item Voraussetzung: Verteiltes Scheduling, da die der Kernel den Anwendungszustand kennen muss (wie parallel arbeitet die Anwendung?) und die Anwendungen den Scheduling-Zustand des Kernels kennen muss (wenn blockiert ein Thread?)
+			\item Voraussetzung: Verteiltes Scheduling, da die der Kernel den Anwendungszustand kennen muss (wie parallel arbeitet die Anwendung?) und die Anwendungen den Scheduling-Zustand des Kernels kennen muss (wenn ein Thread blockiert)
 			\item Abstraktion
 			\begin{description}
 				\item[Virtual Processors:] Kernel stellt Adressräumen virtuelle Multiprozessoren (VP) zur Verfügung. Adressräume können weitere VPs beim Kernel beantragen und diesen Threads zur Ausführung zuordnen
@@ -275,7 +275,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{Paged Virtual Memory}
 	\begin{description}
 		\item[Vorteile:] Page-basiertes Mapping in den physischen Speicher. Mehrere Instanzen pro Executable möglich; weder a priori Load Map noch Verschiebung noch positionsunabhängiger Code nötig; kaum externe Fragmentierung; kann mehr Speicher als den verfügbaren physischen Speicher verbrauchen
-		\item[Nachteile:] Page-basierte Übersetzungstabelle notwendig
+		\item[Nachteile:] Seiten-basierte Übersetzungstabelle notwendig
 	\end{description}
 \end{itemize}
 
@@ -313,7 +313,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{Page-Fault-Handling bei Bounds Error}
 	\begin{itemize}
 		\item Normalerweise einfach zu erkennen: Zugriff auf ungültigen/nicht-existierenden Eintrag in der Seitentabelle
-		\item Schwieriger bei autoamtisch wachsendem Stack/Heap
+		\item Schwieriger bei automatisch wachsendem Stack/Heap
 	\end{itemize}
 	\item \textbf{Nachteile}
 	\begin{itemize}
@@ -346,19 +346,19 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\end{description}
 \end{itemize}
 
-\subsubsection{SawMill Dataspaces (L4)} % TODO: Überarbeiten
+\subsubsection{SawMill Dataspaces (L4)}
 \begin{itemize}
 	\item \textbf{Konzept\footnote{\url{https://os.itec.kit.edu/downloads/publ_2001_aron-ua_sawmill-framework.pdf}}}
 	\begin{itemize}
 		\item Modulares Virtual-Memory-Framework für anwendungsspezifisches VMM (beispielsweise in \texttt{L4Re})
 		\item Ziele: Dynamisch konfigurierbar; individuelle Policies; zur Laufzeit erweiterbar
 		\item Hierarchisches VM-System: Threads können einem anderen Adressraum beliebige, eigene Seiten zur Verfügung stellen. Wahlweise per \textit{Mapping} (Seite ist in beiden Adressraumen verfügbar) oder per \textit{Granting} (Seite wird verschoben)
-		\item Behandlung von Pagefaults: Per-Thread (User-Level) \textit{Pagers} im selben oder einem anderen Addressraum. Bei einem Pagefault wird ggf. direkt die entsprechende Seite zurückgegeben
+		\item Behandlung von Pagefaults: Ein (User-Level) \textit{Pager} pro Addressraum. Bei einem Pagefault wird ggf. direkt die entsprechende Seite zurückgegeben
 	\end{itemize}
 	\item \textbf{Dataspaces}
 	\begin{itemize}
-		\item Speicherkonzept zum Ablegen unstrukturierter Daten. Kann mit Dateien, anonymer Speicher, Frame-Buffers, etc.verknüpft sein und werden jeweils von einem \textit{Dataspace Manager} verwaltet (werden in \texttt{L4} als Pager bezeichnet)
-		\item Können (partiell) an \textit{Regions} von Adressräumen geknüpft werden
+		\item Speicherkonzept zum Ablegen unstrukturierter Daten. Kann mit Dateien, anonymem Speicher, Frame-Buffers, etc.verknüpft sein und wird jeweils von einem \textit{Dataspace Manager} verwaltet
+		\item Können (partiell) als \textit{Regions} in Adressräumen gemappt werden
 	\end{itemize}
 	\item \textbf{Region Mapper (RM)}
 	\begin{itemize}
@@ -382,7 +382,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{Unterschiede}
 	\begin{description}
 		\item[Caches:] Unterschiedliche Frames werden auf unterschiedliche Cache Sets abgebildet \(\rightarrow\) Page Colors
-		\item[SMP Systeme:] Cache-Kohärenzprotokolle zu Verschmutzung der Caches führen (beispielsweise durch externe Zugriffe)
+		\item[SMP Systeme:] Cache-Kohärenzprotokolle können zu Verschmutzung der Caches führen (beispielsweise durch externe Zugriffe)
 		\item[ccNUMA:]\footnote{cache-coherent Non-Uniform Memory Access} Arbeitsspeicher an unterschiedliche CPUs angebunden \(\rightarrow\) unterschiedliche Zugriffszeiten
 	\end{description}
 \end{itemize}
@@ -416,12 +416,12 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 		\item Register des Geräte-Controllers
 		\begin{description}
 			\item[Schreiben:] Konfiguriert den Controller; schickt Anweisungen/Daten an den Controller
-			\item[Lesen:] Läd Konfiguration/Status/Daten vom Controllers
+			\item[Lesen:] Läd Konfiguration/Status/Daten vom Controller
 		\end{description}
 		\item Registerzugang: Memory Mapped I/O (MMIO)
 		\begin{itemize}
 			\item Geräteregister durch Load/Store-Operationen via Speicher zugänglich \(\rightarrow\) konventionell ansteuerbar/geschützt
-			\item Kompliziert durch unterschiedlich schnelle Geräte \(\rightarrow\) langsam Geräte and schnellen Bussen sollten vermieden werden
+			\item Kompliziert durch unterschiedlich schnelle Geräte \(\rightarrow\) langsam Geräte an schnellen Bussen sollten vermieden werden
 			\item Register sollten nicht gecacht werden
 		\end{itemize}
 		\item Registerzugang: I/O Ports
@@ -453,6 +453,7 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 	\item \textbf{DMA\footnote{Direct Memory Access}-gesteuert}
 	\begin{itemize}
 		\item CPU spezifiziert DMA-Transfer, DMA-Engine führt diesen ohne weitere CPU-Interaktion aus \(\rightarrow\) CPU kann während Transfer weiterarbeiten
+		\item Lediglich ein einzelner Interrupt zur Benachrichtigung nötig (statt einem pro Wort)
 		\item Beispiel \texttt{Intel Xeon E7-x800v2}: DMA transferiert via Last-Level-Cache \(\rightarrow\) vermeidet Cache-Write-Backs und Cache-Misses bei I/O-Puffern
 		\item Beispiel \texttt{ARMv7A}: DMA ignoriert Caches; Caches ignoriert DMA-Transfers
 	\end{itemize}
@@ -476,15 +477,15 @@ Zusammenfassung der Vorlesung "`Systementwurf und Implementierung"' aus dem Somm
 \subsubsection{Fallstudie: ARM}
 \begin{itemize}
 	\item I/O-Geräte werden (per manuellen Konfiguration) in den physischen Adressbereich gemappt
-	\item SoC-Geräts\footnote{System-on-Chip} sind utnerschiedlich: Geräte; MMIO-Adressen; physischer Adressbereich der CPU und Adressbereich des Geräts (wichtig für DMA)
+	\item SoC-Geräts\footnote{System-on-Chip} sind unterschiedlich: Geräte; MMIO-Adressen; physischer Adressbereich der CPU und Adressbereich des Geräts (wichtig für DMA)
 	\item \textbf{Systemkonfiguration: Open Firmware Device Tree}
 	\begin{itemize}
-		\item Vermeided hart-codierte Adressen
+		\item Vermeidet hart-kodierte Adressen
 		\item Plattformunabhängige, offene Firmware mit Forth-Interpreter
 		\item Forth-Bytecode wird im PCI-Gerätespeicher abgelegt
 		\item Device Tree
 		\begin{itemize}
-			\item Beschreibt die Hardware eines Systems und wird vom Hersteller zur Verfügung gestellt
+			\item Beschreibt die Hardware eines Systems; wird vom Hersteller zur Verfügung gestellt
 			\item Bootloader übergibt den Device Tree ans Betriebssystem
 			\item Beispiel:\\\\
 \begin{minipage}{\linewidth}
@@ -537,17 +538,17 @@ uart0: serial@44e0900 {
 	\begin{itemize}
 		\item Schreibzugriff
 		\begin{itemize}
-			\item Die Daten werden von einem Anwendungspuffer in einen Kernel-Puffer kopiert. Letzterer hält die Daten bis der Schreibvorgang abgeschlossen ist \(\rightarrow\) Anwendung kann kann sofort weiterarbeiten und ihren Puffer wiederverwenden
+			\item Die Daten werden von einem Anwendungspuffer in einen Kernel-Puffer kopiert. Letzterer hält die Daten bis der Schreibvorgang abgeschlossen ist \(\rightarrow\) Anwendung kann sofort weiterarbeiten und ihren Puffer wiederverwenden
 			\item Vorteile: Schreibrate kann an Blockgröße/Geschwindigkeit des Gerätes angepasst werden; weitere Informationen können ergänzt werden (Checksumme, etc.)
 		\end{itemize}
 		\item Lesezugriff: Zusätzlicher Kernel-Puffer \(\rightarrow\) Daten können inklusive weitere Informationen (TCP-Port, Socket, etc.) oder als Pakete (\texttt{readline()}) übergeben werden
 	\end{itemize}
 	\item \textbf{Kein Puffer}
 	\begin{itemize}
-		\item Kopieren der Puffer (s.o.) ist ineffizient; "`unbezahlbar"' in Hochgeschwindigkeitsnetzwerken
+		\item Kopieren der Puffer (s.o.) ist ineffizient ("`unbezahlbar"' in Hochgeschwindigkeitsnetzwerken)
 		\item Alternativen
 		\begin{itemize}
-			\item Anwendungs-Puffer wird in den Kernel gemappt und im Anwenudungsspeicher unmappt. Nachteilig, da die \texttt{API} restriktiv ist und das Betriebssystem an die verwendete Seitengröße gebunden ist
+			\item Anwendungs-Puffer wird in den Kernel gemappt und aus Anwendungsspeicher gemappt. Nachteilig, da die \texttt{API} restriktiv ist und das Betriebssystem an die verwendete Seitengröße gebunden ist
 			\item Empfangspuffer wird in den Anwendungsspeicher gemappt
 			\item Geteilter Empangspuffer. Nachteilig, da Anwendungen schreibend zugreifen können und keine weitere Behandlung im Kernel stattfinden kann (Checksummen, etc.)
 		\end{itemize} 
@@ -561,8 +562,8 @@ uart0: serial@44e0900 {
 		\item Implementierung
 		\begin{enumerate}
 			\item S-ATA ISR benachrichtigt Block-Layer des Betriebssystems (beispielsweise den Buffer Cache)
-			\item Block-Layer benachricht das Dateisystem
-			\item Dateisystem benachricht das virtuelle Dateisystem
+			\item Block-Layer benachrichtigt das Dateisystem
+			\item Dateisystem benachrichtigt das virtuelle Dateisystem
 			\item Virtuelles Dateisystem kopiert den Puffer in den Userspace und gibt den gerade pausierten Thread wieder frei
 		\end{enumerate}
 		\item Problem: Aufwendig Abarbeitung notwendig, wodurch eventuell der nächste Interrupt verpasst wird \(\rightarrow\) ISRs müssen so kurz wie möglich sein \(\rightarrow\) verzögerte Abarbeitung des Interrupts
@@ -586,7 +587,7 @@ uart0: serial@44e0900 {
 
 \subsection{Einführung}
 \begin{itemize}
-	\item Motivation für Dateien: Ermöglicht Speichern/konkurrierend Zugreifen auf große Mengen persistenter Daten
+	\item Motivation für Dateien: Ermöglicht Speichern/konkurrierendes Zugreifen auf große Mengen persistenter Daten
 	\item Zugriff entweder sequentiell (beginnend am Anfang, keine Sprünge möglich) oder wahlfrei (durch Verschieben des \textit{Seek}, wichtig für Datenbanken)
 	\item Zugriff entweder durch System Calls (erzeugt eine Kopie im Speicher) oder memory mapped (direkter Zugang)
 	\item \textbf{Organisation}
@@ -675,7 +676,7 @@ uart0: serial@44e0900 {
 		\item Flash Translation Layer (FTL): Übersetzung logischer nach physischer Adressen
 		\item JFFS2\footnote{Journaling Flash File System v2}
 		\begin{itemize}
-			\item Dateisysteme für Flash-Speicher \textit{ohne} FTL \(\rightarrow\) eerfüllt die technischen Voraussetzungen von Flash-Speicher
+			\item Dateisysteme für Flash-Speicher \textit{ohne} FTL \(\rightarrow\) erfüllt die technischen Voraussetzungen von Flash-Speicher
 			\item Imap lediglich im Speicher, das Dateisystem wird beim Einhängen vollständig gescannt (feste Position wäre entgegen \textit{Wear-Leveling})
 		\end{itemize}
 		\item F2FS\footnote{Flash-Friendly File System}
@@ -704,7 +705,7 @@ uart0: serial@44e0900 {
 		\item NFS Dateisystem Interface
 		\begin{itemize}
 			\item Die meisten Dateioperationen können 1:1 auf NFS-Operationen abgebildet werden
-			\item Ausnahme: Auflösen von Pfadnahmen, da diese Mountpoints enthalten können \(\rightarrow\) iterative Verarbeitung, Beschleunigung durch lokalen Cache
+			\item Ausnahme: Auflösen von Pfadnamen, da diese Mountpoints enthalten können \(\rightarrow\) iterative Verarbeitung, Beschleunigung durch lokalen Cache
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{Probleme}
@@ -715,7 +716,7 @@ uart0: serial@44e0900 {
 	\end{itemize}
 	\item \textbf{Leistungsoptimierungen}
 	\begin{itemize}
-		\item "`Persistenz-Adjustierung"' obwohl Caching protokolseitig verboten
+		\item "`Persistenz-Adjustierung"' obwohl Caching protokollseitig verboten
 		\item Asynchrone Schreibzugriffe: Lokale Client-Buffer werden erst bei \texttt{Commit} an den Server gesendet und geschrieben. Problem beispielsweise: Serverneustart zwischen asynchronem Schreiben und Committen
 		\item Schnellere Folge von Lesezugriffen durch "`Weiterlesen"' oder vollständiges Laden kleiner Programme
 		\item Lookup-Performance: Client-Caches, die aktualisiert werden, wenn neuerhaltene Werte nicht mehr zu gecachten Werten passen
@@ -723,7 +724,7 @@ uart0: serial@44e0900 {
 	\item \textbf{Änderungen bei \texttt{NFSv4}}
 	\begin{itemize}
 		\item Internetfähigkeit, hohe Sicherheit, cross-Platform
-		\item Zustandhaftete Server für Locking, Caching und explites Öffnen bevor Lesen/Schreiben
+		\item Zustandhaftete Server für Locking, Caching und explizites Öffnen bevor Lesen/Schreiben
 		\item Zuständigkeiten bei Multiserver
 	\end{itemize}
 \end{itemize}
@@ -789,7 +790,7 @@ uart0: serial@44e0900 {
 
 \section{Kommunikation}
 \begin{itemize}
-	\item Motivation: Synchronisation, Datentransfer (Shared Data oder Message-Passing, Kontrolle
+	\item Motivation: Synchronisation, Datentransfer (Shared Data oder Message-Passing), Kontrolle
 \end{itemize}
 
 \subsection{Design-Prinzipien}
@@ -886,7 +887,7 @@ uart0: serial@44e0900 {
 	\end{itemize}
 	\item \textbf{Fallstudie: Barrelfish}
 	\begin{itemize}
-		\item Tread-System: Schedular Activations; K42-artigen Dispatcher
+		\item Tread-System: Scheduler Activations; K42-artigen Dispatcher
 		\item Kommunikation zwischen Dispatchern via Betriebssystem
 		\item Unified-RPC-Schnittstelle mit generierten RPC-Stubs und Verbindungstreibern mit speziellen Schnittstellen
 		\item Aufbau eines Kommunikationskanals
@@ -992,7 +993,7 @@ uart0: serial@44e0900 {
 	\begin{itemize}
 		\item \texttt{while(\_\_sync\_lock\_test\_and\_set(lock, 1));}
 		\item ccNUMA: Cache-Zeile wird zwischen CPU-Kernen hin und her geschoben
-		\item Performance wird mit wachsender Anzahl wartender Threads sowie 
+		\item Performance sinkt mit wachsender Anzahl wartender Threads 
 	\end{itemize}
 	\item \textbf{Wiederholtes Lesen (Test-and-Test-and-Set)}
 	\begin{itemize}
@@ -1007,7 +1008,7 @@ uart0: serial@44e0900 {
 		\item Implementierungsalternativen
 		\begin{itemize}
 			\item Separates Flag pro wartender CPU: Typischerweise bei ccNUMA
-			\item Verteilte Schreibkohärenz mit Ticket-Weitergab in einer einzigen Bus-Transaktion
+			\item Verteilte Schreibkohärenz mit Ticket-Weitergabe in einer einzigen Bus-Transaktion
 		\end{itemize}
 		\item Vergleich mit einfachem Spinlock: Höhere Latenz ohne Stau, niedrigere bei Stau
 	\end{itemize}
