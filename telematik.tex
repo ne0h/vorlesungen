@@ -135,7 +135,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Probleme}
 	\begin{itemize}
 		\item "`Gierige Nutzer"': Faire Verteilung bezieht sich auf TCP-Verbindungen. Kann daher mehrere Verbindungen gleichzeitig öffnen. Gegenmaßnahme: Verteilung der Kapazität pro Benutzer
-		\item "`Gieriger Empfänger"': Da Quittungsverhalten der Empfängerinstanz die Ressourcenzuteilung beeinflusst, kann dieser mehr oder scheller Quittungen senden. Das Staukontrollfenster öffnet sich schneller, damit erhält die Verbindung mehr Ressourcen
+		\item "`Gieriger Empfänger"': Da das Quittungsverhalten der Empfängerinstanz die Ressourcenzuteilung beeinflusst, kann dieser mehr oder weniger schell Quittungen senden. Das Staukontrollfenster öffnet sich schneller, damit erhält die Verbindung mehr Ressourcen
 		\begin{enumerate}
 			\item Mehrere Quittungen pro empfangener Dateneinheit: Sequenznummern zählen Bytes, Staukontrollfenster zählen Dateneinheiten. Bestätigt der Empfänger jede Dateneinheit in mehreren "`Häppchen"', so öffnet sich das Staukontrollfenster schneller
 			\item Quittungen schneller senden als Daten empfangen werden. Protokolländerung notwendig
@@ -190,12 +190,12 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\item \textbf{Firewall}
 	\begin{itemize}
 		\item Untersuchen Dateneinheiten nach konfigurierten Regeln und verwerfen diese ggf.
-		\item \textit{Shallow Packet Insepction}: Bewertung anhand des \texttt{IP}-Kopfs und den Köpfen der Transportprotokolle
+		\item \textit{Shallow Packet Inspection}: Bewertung anhand des \texttt{IP}-Kopfs und den Köpfen der Transportprotokolle
 		\item \textit{Deep Packet Inspection}: Anwendungsorientierte Bewertung, beispielsweise das Erkennen und Blockieren von Malware
 	\end{itemize}
 	\item \textbf{Proxy}
 	\begin{itemize}
-		\item Führen Kommunikation an statt des Clients durch
+		\item Führen Kommunikation anstatt des Clients durch
 		\item Können Ressourcen zwischenspeichern; Anfragen ablehnen/verändern; Logs anlegen
 		\item Häufig: Sperren mittels Firewalls, Erlauben mittels Proxys
 		\item Nicht-transparent (kann sich Servern gegenüber zu erkennen geben) oder transparent (benötigt Unterstützung der Netzwerkinfrastruktur, häufig zur Überwachung eingesetzt)
@@ -212,7 +212,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item \texttt{SPDY} zunächst von Google zum teilweise Ersetzen von \texttt{HTTP} (Weiterentwicklung durch \texttt{IETF} zu \texttt{HTTP/2})
 		\item Ziele
 		\begin{itemize}
-			\item Kurze Antwortzeiten: Eine dauerhafte \texttt{TCP}-Verbindung pro Server; Priorisierung von Anfragen; Server-Push; effizientere Header-Kodierung (verienfacht, binär und komprimiert)
+			\item Kurze Antwortzeiten: Eine dauerhafte \texttt{TCP}-Verbindung pro Server; Priorisierung von Anfragen; Server-Push; effizientere Header-Kodierung (vereinfacht, binär und komprimiert)
 			\item Verbesserte Sicherheit: \texttt{TLS} verpflichtend 
 			\item Rückwärtskompatibilität
 		\end{itemize}
@@ -265,7 +265,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \subsection{Grundlagen}
 \begin{itemize}
 	\item Aufgaben: Weiterleitung sowie Kopplung von Netzen \(\rightarrow\) Verknüpfung einzelner Übertragungsabschnitte zu einer E2E-Übertragung
-	\item Wegfindung im Kommunikationssystem: Weiterleitung im Router anhand Weiterleitungstabelle. Schnelle Weiterleitung mittels kurzen Warteschlangen und kleinen Tabellen
+	\item Wegfindung im Kommunikationssystem: Weiterleitung im Router anhand Weiterleitungstabelle. Schnelle Weiterleitung mittels kurzer Warteschlangen und kleinen Tabellen
 	\begin{itemize}
 		\item Pro Dateneinheit ein Lookup in Weiterleitungstabelle
 		\item \textit{Metriken} (üblicherweise Ganzzahl) zur Bewertung von Übertragungsabschnitten
@@ -341,7 +341,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\begin{itemize}
 			\item Gemeinsamer Speicher
 			\item Bus-/Ringstruktur: Konfliktfreier Zugriff durch Zeitmultiplex; \(\big\lbrack Uebertragungskapazitaet \ge \sum Kapazitaet-Eingangsport_i\big\rbrack \); Multicast und Broadcast trivial; Anzahl der Anschlüsse sehr begrenzt (\(\le 16\)); Bsp.: \texttt{CISCO 7500}
-			\item Koppelmatrix: Alle Eingänge mit alles Ausgängen verbunden; teilweise parallel nutzbar; hoher Verdrahtungsaufwand; unflexibel; besonders effizient bei gleichgroßen Dateneinheiten
+			\item Koppelmatrix: Alle Eingänge mit allen Ausgängen verbunden; teilweise parallel nutzbar; hoher Verdrahtungsaufwand; unflexibel; besonders effizient bei gleichgroßen Dateneinheiten
 			\item Mehrstufige Verbindungsnetzwerke: Ebenfalls alle Eingänge mit allen Ausgängen durch hierarchische Schaltelemente verbunden; geringerer Verdrahtungsaufwand als Koppelmatrix; nicht alle Verbindungen gleichzeitig möglich
 		\end{itemize}
 	\end{itemize}
@@ -402,7 +402,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\begin{description}
 		\item{Tier-1}: Größte globale ASe mit Peering zu allen anderen ASen; Verkauf von Transit. Beispiele: Level3, AT\&T, Sprint
 		\item{Tier-2}: Große, überregionale ASe für Verbindungen zu Anbietern von Internet-Anwendungen; Verkaufen Transit und betreiben i.d.R. Peering. Beispiele: Vodafone, Comcast, Tele2
-		\item{Tier-3}: Kleinere, regionale ASe; Kaufen Transit von Tier-2-ASen, verkaufen Transit an Endanwender und betreiben i.d.R. Peering. Beispiele: KabelBW, Congstar, Versatel
+		\item{Tier-3}: Kleinere, regionale ASe; kaufen Transit von Tier-2-ASen, verkaufen Transit an Endanwender und betreiben i.d.R. Peering. Beispiele: KabelBW, Congstar, Versatel
 	\end{description}
 	\item \textbf{Content-Delivery-Network (CDN)}
 	\begin{itemize}
@@ -431,7 +431,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 	\begin{itemize}
 		\item Link-State-Protokoll mit globaler Netzwerksicht \(\rightarrow\) alle Router haben eine globale Sicht (abgelegt in Link-State-Datenbank)
 		\item Arbeitet direkt oberhalb von \texttt{IP} ohne zwischengelagertes Transportprotokoll
-		\item Sychronisierung der Link-State-Database sobald sich zwei benachbarte Router kennenlernen; im weiter Verlauf lediglich Austausch von Updates
+		\item Sychronisierung der Link-State-Databases sobald sich zwei benachbarte Router kennenlernen; im weiter Verlauf lediglich Austausch von Updates
 		\item Flooding-Protokoll für Routing-Updates per Multicast mit Sequenznummer an alle direkten Nachbarn (Nachbarn aktualisieren nur, wenn Route neu oder besser mit neueren Sequenznummer)
 		\item Vermeidung von redundanten Informationsfluten bei Routingupdate: Explizite Auswahl eines \textit{Designated Router} (DR), der die Signalisierungsaufgabe übernimmt
 		\item Sicherung der Zuverlässigkeit der Routing-Updates: Pro-Hop-Quittungen mit Zeitgeber und Prüfsummen. Zusätzlich Authentifizierung möglich (beispielsweise durch IPSec auf IP-Ebene)
@@ -451,7 +451,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 
 \subsubsection{Exterior Gateway Protocols (EGP): Border Gateway Protokoll (BGP)}
 \begin{itemize}
-	\item Weltweiter Einsatz als Basis des heutigen weltweiten Internetroutings zwischen Autonomen Systemen
+	\item Weltweiter Einsatz als Basis des heutigen, weltweiten Internetroutings zwischen Autonomen Systemen
 	\item Erweitertes Pfad-Vektor-Protokoll: Verbreitung von Pfaden statt Metriken \(\rightarrow\) garantiert Schleifenfreiheit
 	\item Entscheident für die Wegewahl: Netzbetreiberpolicies (hinsichtlich Wirtschaftlichkeit oder vertraglichen Vereinbarungen)
 	\item Einsparung von Routingnachrichten durch geschickte Präfixvergabe (Aggregierung von Adressbereichen). Aus \texttt{204.71.0.0/24, 204.71.1.0/24,...,204.71.1.0/24} wird beispielsweise \texttt{204.71.0.0/16} \(\rightarrow\) verbessert Skalierung
@@ -626,7 +626,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 \subsubsection{CSMA-basierte Verfahren}
 \begin{itemize}
 	\item Asynchroner Zugriff mit Medienprüfung
-	\item Persistenz: Bei besetztem Medium mithören, bis es wieder frei ist ("`persistent"', eher ungeeignet, da bei vielen sendewilligen Stationen alle gleichzeitig anfangen würden zu senden) vs. zufälliges Intervall warten und erneut prüfen, ob das Medium frei ist ("`Nicht-presistent"')
+	\item Persistenz: Bei besetztem Medium mithören, bis es wieder frei ist ("`persistent"', eher ungeeignet, da bei vielen sendewilligen Stationen alle gleichzeitig anfangen würden zu senden) vs. zufälliges Intervall warten und erneut prüfen, ob das Medium frei ist ("`Nicht-persistent"')
 	\item \texttt{p}-Persistenz: Dateneinheit wird mit Wahrscheinlichkeit \(p\) gesendet, wenn Medium als frei erkannt wurde
 	\item Zeitfenster für Kollisionen durch "`beschränkte"' Signalausbreitungsgeschwindigkeit im Broadcast-Medium
 	\item CSMA/CD: "`Listen before talk, listen while talk"' (Collision Detection)
@@ -677,11 +677,11 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 				\item Stabile Phase: Root-Brücke sendet periodisch BPDUs; aktive Brücken leiten diese weiter. Bei Ausbleiben von BPDUs erklären sich Brücken wieder selbst zu Root-Brücken und der Algorithmus startet von vorne
 			\end{itemize}
 			\item Der resultierende Spanning Tree enthält alle Netze (LANs) und alle designated Brücken. Nicht benutzte Brücken werden ausgespart
-			\item \textit{Spanning Tree Protocol} (STP): Umsetzung entsprechend dem SPA. Rekonfigurationsdauer allerdings sehr lange (30-50s) \(\rightarrow\) \textit{Rapid Spanning Tree Protocol} (RSTP) mit wenigen Sekunden Umschaltzeit
+			\item \textit{Spanning Tree Protocol} (STP): Umsetzung entsprechend dem STA. Rekonfigurationsdauer allerdings sehr lange (30-50s) \(\rightarrow\) \textit{Rapid Spanning Tree Protocol} (RSTP) mit wenigen Sekunden Umschaltzeit
 			\item Wesentliche Änderungen bei Rapid Spanning Tree Protocol (RSPT)
 			\begin{itemize}
 				\item Neue Portzustände: \textit{Alternate Port} (bester alternativer Pfad zur Root-Brücke); \textit{Backup Port} (alternativer Pfad zu einem Netz, zu dem eine Verbindung existiert)
-				\item Periodisches Senden von BPDUs als Keep-Alive Nachrichten and die nächste Hierarchiebene. Ausfallerkennung von Nachbarn möglich
+				\item Periodisches Senden von BPDUs als Keep-Alive Nachrichten an die nächste Hierarchiebene. Ausfallerkennung von Nachbarn möglich
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
@@ -696,7 +696,7 @@ Zusammenfassung der Vorlesung "`Telematik"' aus dem Wintersemester 2016.\footnot
 		\item Flusskontrolle
 		\begin{itemize}
 			\item \textit{Backpressure} bei halbduplex: Kollision herbeiführen oder Medium als belegt vortäuschen. In beiden Fällen greift CSMA/CD \(\rightarrow\) implizite Flusskontrolle
-			\item \textit{Halt-und-Weiter} bei duplex: Senden eines \texttt{PAUSE}-Paketes mit zeitlicher Angabe, wie lange der Sender pausieren soll. Löst das Problem längerfristiger Überlatung im Netz nicht
+			\item \textit{Halt-und-Weiter} bei duplex: Senden eines \texttt{PAUSE}-Paketes mit zeitlicher Angabe, wie lange der Sender pausieren soll. Löst das Problem längerfristiger Überlastung im Netz nicht
 			\item Einführung einer neuen, optionalen Teilschicht zur MAC-Kontrolle mit Kontrolldateneinheiten (unzuverlässiger Best-Effort-Dienst)
 		\end{itemize}
 	\end{itemize}
@@ -845,7 +845,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 		\item \texttt{0}: Signalwechsel  vonniedriger Pegel \(\rightarrow\) hoher Pegel
 		\item Erzeugbar durch \texttt{XNOR} über Takt und NRZ-kodierten Daten
 		\item Vorteil: Taktrückgewinnung möglich; keine Gleichstromkomponente
-		\item Nachteil: Baudrate bei 1-und-0-Folgen doppelt so hoch wied Datenrate
+		\item Nachteil: Baudrate bei 1-und-0-Folgen doppelt so hoch wie die Datenrate
 	\end{itemize}
 \end{itemize}
 
@@ -964,7 +964,7 @@ Schicht 1 erhält/liefert Bitstrom an Schicht 2 \(\rightarrow\) für Kodierung/M
 	\item Nutzbare Datenrate am Anschluss abhängig von der Dämpfung, bedingt durch Kabeldurchmesser (sinkt mir steigendem Kabeldurchmesser, Entfernung und Störungen durch Aderanordnung im Kabel (\texttt{NEXT}, Sender stört Empfänger; \texttt{FEXT} Sender stören sich gegenseitig)
 	\item \textbf{Architektur}
 	\begin{itemize}
-		\item Broadband Remote Server (BRAS): Erster Router in Richtung Backbone; Aggregiert Verkehr und stellt Schicht-3-Konnektivität über PPP her; Authentifizierung/Autorisierung/Accounting via \texttt{RADIUS}-Protokoll
+		\item Broadband Remote Server (BRAS): Erster Router in Richtung Backbone; Aggregiert Verkehr und stellt Schicht-3-Konnektivität über PPP her; Authentifizierung/Autorisierung/Accounting (AAA) via \texttt{RADIUS}-Protokoll
 		\item Weiterentwicklungen: ADSL(2), VDSL(2)
 	\end{itemize}
 \end{itemize}
