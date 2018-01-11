@@ -77,6 +77,10 @@ telematikonly:
 	pdflatex telematikonly.tex
 	pdflatex telematikonly.tex
 
+verteiltesystemeonly:
+	pdflatex verteiltesystemeonly.tex
+	pdflatex verteiltesystemeonly.tex
+
 vsonly:
 	pdflatex vsonly.tex
 	pdflatex vsonly.tex

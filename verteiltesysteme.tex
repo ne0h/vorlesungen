@@ -1,0 +1,33 @@
+\chapter{Verteilte Systeme}
+
+Zusammenfassung der Vorlesung "`Verteilte Systeme"' aus dem Wintersemester 2017.\footnote{\url{https://www.scc.kit.edu/bildung/10865.php}}
+
+\section{Einführung}
+
+\subsection{Verteilte Systeme und Middleware}
+\begin{itemize}
+	\item Definition: Zusammenschluss unabhängiger Computer zu einem einzelnen, kohärenten System
+	\item Single-View; Unterschiede zwischen den verschiedenen Systemen werden vor dem Nutzer verborgen
+	\item Anforderungen: Skalierbar, erweiterbar, fehlertolerant
+	\item Beispiele: Workstations als \texttt{DesktopGrid}, WWW
+	\item \textbf{Ziele}
+	\begin{itemize}
+		\item Verbinden von Nutzern und Ressourcen: Sicherer Zugang zu entfernten Ressourcen. Verteiltes System wird oft (aus ökonomischen Gründen) zwischen verschiedenen Institutionen geteilt \(\rightarrow\) AAA notwendig
+		\item Transparenz: Abstrahieren von Datenzugriffen (bsp. Repräsentation, Byte-Order, Parallelität) und Lokation; Fehlerbehandlung
+		\item Erweiterbar und portierbar durch standardisierte Protokolle/Schnittstellen/Semantiken
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Web Services}
+\begin{itemize}
+	\item XML-basiert, plattformunabhängige Schnittstelle auf die mittels Webprotokoll zugegriffen werden kann \(\rightarrow\) ermöglicht lose Kopplung zwischen Systemen
+	\item WSDL\footnote{Web Service Description Language} zur standardisierten Beschreibung. Stub/Skeleton-Klassen können automatisch generiert werden
+\end{itemize}
+
+
+\subsection{Web Services Resource Framework (WSRF)}
+\begin{itemize}
+	\item Generisches Framework zur Definition/Verwendung zustandsbehafteter Web Services (bsp. Ressourcenzugriff)
+	\item Bestandteile: Ressourcen, Lifecycle-Management, Service-Gruppen und Fehlerbehandlung
+\end{itemize}
