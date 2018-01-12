@@ -31,3 +31,69 @@ Zusammenfassung der Vorlesung "`Verteiltes Rechnen"' aus dem Wintersemester 2017
 	\item Generisches Framework zur Definition/Verwendung zustandsbehafteter Web Services (bsp. Ressourcenzugriff)
 	\item Bestandteile: Ressourcen, Lifecycle-Management, Service-Gruppen und Fehlerbehandlung
 \end{itemize}
+
+
+
+\section{Grid}
+\begin{itemize}
+	\item Form des verteilten Rechnens, bei der ein virtueller Supercomputer aus einem Cluster lose gekoppelter Computer erzeugt wird\footnote{\ur{https://de.wikipedia.org/wiki/Grid-Computing}}
+	\item Typische Eigenschaften: Loose gekoppelt, heterogen, geografische Verteilung, häufig Verwendung von Standardsoftware
+	\item \textbf{Meta-Computing}
+	\begin{itemize}
+		\item Zusammenschluss unabhängiger, heterogener Supercomputer mittels Hochgeschwindkeits-WAN \(\rightarrow\) Verteilung einer einzelnen Anwendung über mehrere Supercomputer
+		\item Beispiel: Gekoppelte Simulation, die ein einzelner Supercomputer nicht berechnen könnte
+	\end{itemize}
+	\item \textbf{Klassifikation}
+	\begin{description}
+		\item[Compute Grid:] Stellt Rechenkapazität zur Verfügung; weitere Spezifizierung in \textit{Desktop Grid} (oft Windows-basiert), \textit{Server Grids} (oft Unix-basiert) oder \textit{HPC-/Cluser-Grids}
+		\item[Data Grids:] Stellt föderativen, sicheren, transparenten Hochgeschwindigkeitszugang zu Ressourcen zur Verfügung 
+		\item[P2P Grids:] Geteilter Zugriff auf Speicher eines Desktoprechners, zentral oder dezentral
+		\item[Collaborative Grids:] Stellen Kollaborationsdienste zur Verfügung. Bsp. Videokonferenzen, Chaträume, live-Messdaten
+	\end{description}
+\end{itemize}
+
+
+\subsection{Architektur}
+\begin{itemize}
+	\item Verwendung von Middleware-Architekturen, die über Protokolle, APIs und SDK definiert sind
+	\item Stundenglasmodell: Wenige zentrale Abstraktionen um möglichste viele Anwendungen zu unterstützen. Bsp. Internet: lediglich \texttt{IP} innerhalb des Netzwerk-Stacks vorgegeben
+	\item \textbf{Schichtenarchitektur}
+	\begin{description}
+		\item[Collective Layer:] Verwaltung mehrerer Ressourcen mittels Verzeichnisdienste zum Allokieren, Schedulen, Verteilten/Monitoren/Replizieren
+		\item[Resource Layer:] Ermöglicht teilen einzelner Ressourcen mittels Standardprotokolle zum Verbdingungsaufbau, Monitoring, Accounting, Bezahlen
+		\item[Connectivity Layer:] Ermöglicht Verbindungen zwischen unterschiedlichen Fabric-Ressourcen (Transport, Routing, Naming, etc.), meist dem \texttt{IP}-Stack entnommen; Authentifizierung
+		\item[Fabric Layer:] Physikalische Verbindung der geteilten Hardware-Ressourcen unter Berücksichtigung verschiedener Hardware-Typen und Verbindungstypen
+	\end{description}
+	\item \textbf{Struktur}
+	\begin{itemize}
+		\item Als standardisiertes Framework definiert: \textit{Open Grid Service Architecture} (OGSA)
+		\item Service-orientiert \(\rightarrow\) alle Ressourcen werden durch einen Service repräsentiert; alle Komponenten sind virtuell
+		\item Beinhaltet Basisschnittstellen für den Ressourcenzugriff mittels WSRF sowie Capabilities für Integration/Management der Services
+		\item OGS Capabilities
+		\begin{description}
+			\item[Execution Management Services:] Finden und auswählen möglicher Ausführungsorte sowie Vorbereiten/Initiieren/Verwalten der Ausführung
+			\item[Data Service:] Verwalten entfernter Daten, inklusive Staging/Replikation/Derivation und Metadaten
+			\item[Resource Management Services:] Verwaltung der Ressourcen sowie der dazugehörigen \texttt{OSGA}-Infrastruktur
+			\item[Security Services:] (Föderative-) Authentifikation und Autorisierung
+			\item[Self-management Services:] Dient der automatische Grid-Verwaltung, inklusive Monitoring, Fehelertoleranz, Eigenreparatur, Analyse. Ziel: Anpassen der Konfiguration um SLA\footnote{Service-Level-Agreement} einzuhalten
+			\item[Information Services:] Naming, Service-/Ressourcendiscovery, Logging/Monitoring
+		\end{description}
+	\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
