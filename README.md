@@ -40,6 +40,6 @@ Aktuell enthalten
 * Softwaretechnik 2
 * Systementwurf und Implementierung
 * Telematik
-* Verteilte Systeme
+* Verteiltes Rechnen
 * Virtuelle Systeme
 * Web-Anwendungen und Serviceorientierte Architekturen (II)
