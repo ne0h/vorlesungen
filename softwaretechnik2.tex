@@ -6,11 +6,11 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 \section{Gesetzmäßigkeiten}
 \begin{itemize}
-	\item \textit{Brook's Law}: "`Adding manpower to a late software projcet makes it later."'
+	\item \textit{Brook's Law}: "`Adding manpower to a late software projcet makes it later."' Gründe: Ramp-up-Time, Kommunikationsaufwand
 	\item \textit{Boehm's Law}: "`Errors are more frequent during requirements and design."'
 	\item \textit{Dijkstra 1969}: "`Testing shows the presence, not the absende of bugs."'
 	\item (One of) \textit{Lehman's Laws}: "`A system that is used will be changed."'
-	\item \textit{Parnas' Law}: "`Only what is hidden can be chaned without risk"' (\(\rightarrow\) Kapselung notwendig)
+	\item \textit{Parnas' Law}: "`Only what is hidden can be changed without risk"' (\(\rightarrow\) Kapselung notwendig)
 \end{itemize}
 
 
@@ -18,7 +18,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \section{Software-Entwicklungsprozess}
 
 \begin{itemize}
-	\item "`Code and Fix"', als Vorgehensmodell unzureichend, da es zu schlecht strukturierten und dokumentierten Programmen führt
+	\item "`Code and Fix"', als Vorgehensmodell unzureichend, da es zu schlecht strukturierten und dokumentierten Programmen führt. Darüber hinaus: Teamarbeit schwierig sowie unzureichende Skalierung
 	\item Vorgehensmodell: Abstrakte Beschreibung eines Software-Entwicklungsprozesses. Beinhaltet Richtlinien bezüglich Aktivitäten, Rollen und Ergebnissen (Artefakte, Dokumente, etc.)
 	\item \textbf{Wasserfallmodell}
 	\begin{itemize}
@@ -26,10 +26,10 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\begin{enumerate}
 			\item Planung: Lastenheft, Projektplan, Kalkulation
 			\item Definition: Pflichtenheft, GUI-Beschreibung, eventuell Benutzerhandbuch
-			\item Entwurf: Enwurfsdokumente, Modulführer
+			\item Entwurf: Entwurfsdokumente, Modulführer
 			\item Implementierung: Komponenten und Dokumentation, Testeinrichtung
-			\item Testen
-			\item Einsatz und Wartung: "`Fertiges"' System
+			\item Testen: "`Fertiges"' System
+			\item Einsatz und Wartung
 		\end{enumerate}
 		\item Probleme
 		\begin{itemize}
@@ -39,9 +39,47 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\end{itemize}
 	\end{itemize}
 	\item \textbf{V-Modell} \\\\
-		\begin{minipage}{\linewidth}
-			\includegraphics[scale=0.8]{swt2/v-modell.pdf}
-		\end{minipage}
+	\begin{minipage}{\linewidth}
+		\includegraphics[scale=0.8]{swt2/v-modell.pdf}
+	\end{minipage}
+	\item \textbf{Unified Process (UP)}
+	\begin{itemize}
+		\item Bestandteile: Entwicklungsphase, Tests, Risikomanagement
+		\item Phasen
+		\begin{description}
+			\item[Anfangsphase:] Vergegenwärtigen des Projektumfangs, -ziels und -szenarios. Prüfen der Machbarkeit; Abschätzung des Aufwands; Kaufen vs. Entwickeln
+			\item[Ausarbeitungsphase:] Entwickeln der Kernarchitektur ("`Elemente mit hohem Risiko"'); Definieren der meisten Requirements; Erstellen des Projektplans
+			\item[Konstruktionsphase:] Iterative Implementierung der übrigen Elemente ("`Elemente mit niedrigem Risiko"')
+			\item[Übergabephase:] Beta Tests sowie Deployment
+		\end{description}
+		\item Disziplinen
+		\begin{description}
+			\item[Business Modelling:] Erstellen eines Domänen-Modells mit Geschäftsprozessen
+			\item[Requirements:] Requirements-Analyse inklusive Artefakte (Anwendungsfalldiagramme, Glossar, Vision, etc.)
+			\item[Design:] Entwickeln des Umsetzungskonzepts
+			\item[Implementierung, Test, Desployment]
+			\item[Konfiguration, Projektmanagement]
+		\end{description}
+		\item Allerdings kein striktes Regelwerk vorgegeben!
+	\end{itemize}
+	\item \textbf{Rational Unified Process (RUP)}
+	\begin{itemize}
+		\item Spezifische, geregelte Umsetzung von UP. Beinhaltet Vorgaben zur Zuteilung von Aufgaben/Verantwortung innerhalb einer Organisation zur Entwicklung konkreter Produkte
+		\begin{description}
+			\item[Rollen (wer?):] Definiert Fähigkeiten und Verantwortlichkeiten
+			\item[Aufgaben (wie?):] Beschreibt Arbeitspakete einer Rolle um Ergebnisse zu erzielen (beispielsweise Produkt)
+			\item[Artefakte (was?):] Ergebnisse von Aufgaben, beispielsweise Modelle oder Dokumente 
+		\end{description}
+		\item Best Practices
+		\begin{enumerate}
+			\item Iterative Entwicklung
+			\item Verwalten von Requirements
+			\item Verwendung von Komponenten-basierten Architekturen
+			\item Grafische Modellierung der Software
+			\item Überprüfen der Software-Qualität
+			\item Kontrollieren von Software-Änderungen
+		\end{enumerate}
+	\end{itemize}
 \end{itemize}
 
 
