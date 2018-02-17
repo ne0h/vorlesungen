@@ -194,13 +194,13 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 
-\section{Anforderungsmanagement (Requirements Engineering)}
+\section{Requirements Engineering}
 
 \subsection{Einführung}
 \begin{itemize}
 	\item 48 \% aller gescheiterten Softwareprojekte scheitern an mangelhafter Anforderungsdefinition
 	\item Beheben von falsch definierten Anforderungen in späteren Entwicklungsphasen kann extrem teuer sein
-	\item Beschreibungskriterien: Ausreichend, komplett, widerspruchsfrei, verständlich, eindeutig, überprüfbar, risikoadjustiert
+	\item Beschreibungskriterien: Ausreichend detailliert, komplett, widerspruchsfrei, verständlich, eindeutig, überprüfbar, risikoadjustiert
 	\item Werden meist in Form von User-Stories (Agile) oder Anwendungsfällen (modellgetrieben) beschrieben
 	\item \textbf{Typen von Anforderungen (concern-based Classification)}
 	\begin{itemize}
@@ -208,7 +208,8 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Qualitätsanforderungen (Quality Requirements): Qualitätsmerkmale, beispielsweise Sicherheit, Bedienbarkeit, Performance
 		\item Bedingungen (Constraints): Beispielsweise physikalische, rechtliche, kulturelle Umgebung oder Interface (Computerplattform)
 	\end{itemize}
-	\item Anforderungsingenieur vermittelt zwischen Entwicklern und Benutzern
+	\item Concern-based Kategorisierung von ANforderungen: Entsprechend dem zugrundeliegenden Anliegen ("`Concern"')
+	\item Anforderungsingenieur vermittelt (als zentrale) zwischen Entwicklern und Benutzern
 	\item \textbf{Anforderungsmanagementprozess}
 	\begin{enumerate}
 		\item Gewinnung unter Einbeziehung sämtlicher Stakeholder
@@ -227,14 +228,6 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Beobachtungstechniken: Feldbeobachtungen
 \end{itemize}
 
-\subsection{Überprüfen ob Anforderungen umgesetzt sind}
-\begin{itemize}
-	\item Betriebsfähige: Reviews, Tests, formale Beweise
-	\item Quantitative: Messen
-	\item Qualitative: Keine direkte Prüfung möglich; eventuell (subjektiv) durch Jury
-	\item Beschreibende: Reviews
-\end{itemize}
-
 
 \subsection{Grundlegende Beschreibungsempfehlungen}
 \begin{itemize}
@@ -244,6 +237,15 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Führen/Verwenden eines Begriffsglossars
 	\item Verwenden einer Satzvorlage
 \end{itemize}
+
+
+\subsection{Überprüfen ob Anforderungen umgesetzt sind}
+\begin{itemize}
+	\item Code-Inspections, Reviews, Testfälle
+	\item Simulationen, Prototyping
+	\item Formale Prüfung durch \textit{Model Checking}
+\end{itemize}
+
 
 
 
