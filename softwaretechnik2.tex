@@ -234,7 +234,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Problem: Die meisten Anforderungen sind (zu Beginn) in natürlicher Sprache festgehalten
 	\item Kurze Sätze, eine Anforderung pro Satz
 	\item Festhalten wer für welche Aktionen/Handlungen verantwortlich ist
-	\item Führen/Verwenden eines Begriffsglossars
+	\item Führen/Verwenden eines Glossars
 	\item Verwenden einer Satzvorlage
 \end{itemize}
 
@@ -246,6 +246,75 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Formale Prüfung durch \textit{Model Checking}
 \end{itemize}
 
+
+
+\section{Anwendungsfälle}
+
+\subsection{Modelbasierte Anwenungsfallerhebung}
+\begin{itemize}
+	\item Anforderungsbeschreibung für Softwaresysteme durch verschiedene Modelle (textbasiert, Diagramme)
+	\item \textbf{Scopes}
+	\begin{description}
+		\item[Business-Anwendungsfall:] Das gesamte Unternehmen (\textit{white box scope} inklusive Abteilungen und Personal)
+		\item[System-Anwendungsfall:] Das gesamte Computersystem (\textit{white box scope} inklusive Komponentensicht)
+		\item[Komponenten-Anwendungsfall:] Zeigt Komponenten oder Subsysteme (immer \textit{white box scope})
+	\end{description}
+	\item \textbf{Messen der "`Wichtigkeit"'}
+	\begin{itemize}
+		\item Offen unklar, wie gut/wichtig ein konkreter Anwendungsfall ist \(\rightarrow\) Fokus auf \textit{Elementary Business Processes} (EBPs)
+		\item Elementary Business Process
+		\begin{itemize}
+			\item Definition
+			\begin{itemize}
+				\item Eine \textit{Aufgabe},
+				\item die von einer \textit{Person} durchgeführt wird,
+				\item an einem bestimmten \textit{Ort}, zu einem bestimmten \textit{Zeitpunkt},
+				\item als Anwort auf ein \textit{Geschäftsereignis},
+				\item die einen messbaren \textit{Geschäftswert} erzeugt und
+				\item \textit{Daten} in einem konsistenten Zustand hinterlässt.
+			\end{itemize}
+			\item Beispiel: Prüfen einer Kreditanfrage
+			\item Common Mistake: Definition zu vieler Anwendungsfälle. Besser: Formulieren von Unterandwendungsfällen
+		\end{itemize}
+		\item Heuristiken
+		\begin{itemize}
+			\item Boss-Test: Würde man dem Chef von der modellierten Tätigkeit erzählen, wenn er fragt, was man den Tag über getan hat?
+			\item Kaffeepausetest: TODO
+			\item Größentest: TODO
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Detaillevel nach Cockburn}
+	\begin{description}
+		\item[1. Zusammenfassung:] Fasst mehrere Benutzerziele und Unterfunktionen zusammen
+		\item[2. Benutzerziel:] Beschreibt, wie ein Benutzer eine Ziel erreichen kann
+		\item[3. Unterfunktion:] "`Zwischenziel"' eines Benutzerziels
+		\item[4. Zu niedrig:] Alles weitere wird als zu niedrig angesehen
+	\end{description}
+	\item \textbf{Anwendungsfalldiagramme}
+	\begin{itemize}
+		\item Textuelle Beschreibung generell wichtiger als Diagramme. Sollten nur für Zusammenfassungen/Beziehungen verwendet werden
+		\item Generell auf Benutzerziel-Level 
+	\end{itemize}
+	\item \textbf{Finden von Anwendungsfällen}
+	\begin{enumerate}
+		\item Wählen der Systemgrenzen
+		\item Identifizieren der primären Aktoren
+		\item Identifizieren der Ziele aller Aktoren
+		\item Definieren der Anwendungsfälle, um diese Ziele zu erfüllen
+	\end{enumerate}
+	\item \textbf{Weitere Richtlinien}
+	\begin{itemize}
+		\item Jeder Schritt dokumentiert einen Fortschritt im Benutzerprozess
+		\item Verzicht auf UI-Details und Branches in der BEschreibung des Hauptszenarios
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Spezifikation und Verwaltung von Anwendungsfällen}
+\begin{itemize}
+	\item Ziel: Vollständige Beschreibung des \textit{externen} Verhaltens einer Software \(\rightarrow\) Dokumentation aller externen Schnittstellen
+	\item Zentrale Verwaltung aller Anforderungen (Datenbanken, Dokumente, Verwaltungssoftware, etc.)
+\end{itemize}
 
 
 
