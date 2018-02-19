@@ -175,6 +175,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Teamgröße: Klein starten und organisch wachsen (siehe Brook's Law)
 		\item Abhängigkeiten zwischen Teams verringern
 		\item Daily "`Scrum of Scrums"' mit je einem (oder mehreren) Teammitgliedern
+		\item Es gibt meistens einen \texttt{Sprint0}, in dem die Architektur festgelegt wird
 	\end{itemize}
 	\item \textbf{Tipps für verteilte Teams}
 	\begin{itemize}
@@ -357,6 +358,33 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\end{itemize}
 	\item Architektur-/Systemcharaktersistiken: Performance, Sicherheit, Verfügbarkeit, Wartbarkeit
 \end{itemize}
+
+
+
+\section{Architektur}
+\begin{itemize}
+	\item Neben der Architektur sollte auch der Prozess der Architekturfindung dokumentiert werden (v.a. die Motivation der einzelnen Entscheidungen)
+	\item Einflussfakturen: Anforderungen, Wiederverwendbarkeit, Organisationsstruktur (zb. des Kunden), Qualitätskriterien um die nicht-funktionalen Anforderungen sicherzustellen (Performance, Skalierbarkeit, etc.)
+	\item Beispiele für Architekturprinzipien: Separation of concerns (wie MVC), Single Responsibility, Information Hiding, Least Knowledge, Don't repeat yourself, Minimizing upfront design
+	\item \textbf{Beispiele für Architekturstile}
+	\begin{description}
+		\item[Kommunikation:] Service-orientierte Architektur (SOA), Message Bus
+		\item[Deployment:] Client-Server, N-Tier (zB. 3-Tier)
+		\item[Struktur:] Komponenten-basiert, objektorientiert, layered (Layers \(\neq\) N-Tier)
+	\end{description}
+	\item Vorteile von Schichtenarchitekturen: Reduziert Komplixität; erhöht Modifizierbarkeit; Trennung der Anliegen (Concerns); vereinfacht Testen
+	\item Referenzarchitektur: Generische Standardarchitektur, die als Vorlage verwendet wird
+	\item \textbf{Modellierungsmöglichkeiten}
+	\begin{description}
+		\item[Ein Controller pro Anwendungsfall:] Gut geeignet für Systeme mit vielen Anwendungsfällen (beispielsweise \texttt{CRUD})
+		\item[Einzelner (Fassaden-)Controller:] Gut geeignet für kleine Systeme mit weniger als zwölf Operationen
+		\item[Direkter Objektzugang:] Reduziert Anzahl der Abstraktionsschritte mit vielen Parameterübergaben, führt allerdings zu Kontrolllogik im Domänenmodell
+	\end{description}
+	\item Fassaden: Ermöglichen reduzierte Schnittstellen zu Subsystemen mit vielen Klassen/Layern, die nur wenig Funktionalität exportieren
+	\item Data Transfer Objects: (Serialisierte) Objekte zum Transportieren von Daten zwischen Prozessen/Komponenten etc. zur Reduzierung der Kopplung. Beinhaltet lediglich die Attribute sowie Getter und Setter (bsp. Java-Bean). Domänen-Objekte können durch ihren großen Umfang meist nicht selbst übertragen werden
+	\item Domänen-Layer: Beinhaltet das Domänen-Modell und die Geschäftslogik
+\end{itemize}
+
 
 
 
