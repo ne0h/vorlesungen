@@ -318,6 +318,48 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 
+\section{Verhaltensbeschreibung (Operation Contracts) und Einführung in Software-Architektur}
+
+\subsection{Verhaltensbeschreibung (Operation Contracts)}
+\begin{itemize}
+	\item Formale Beschreibung des Systemverhaltens. Bestandteile:
+	\begin{description}
+		\item[Operation:] Name und Parameter
+		\item[Cross References:] Verweise zu Anwendungsfällen, welche diese Operation beinhalten können (optional)
+		\item[Preconditions:] Beschreibt Voraussetzungen zur Ausführung der Operation (beispielsweise ein bestimmter Systemzustand, siehe Geldautomat)
+		\item[Postcondition:] Beschreibt mittels Domänenmodellierung den Systemzustand nach der Ausführung der Operation (im Präteritum)
+	\end{description}
+	\item Unterschied zu Anwendungsfällen: Contracts können einen höheren Detailgrad abdecken und werden nur bei der Notwendigkeit eines höheren Detailgrads benötigt; Contracts müssen nicht vollständig sein
+\end{itemize}
+
+
+\subsection{Einführung in Software-Architektur}
+\begin{itemize}
+	\item Architekturentwurf: Früher Zustand im Systementwurfsprozess, der Spezifikation mit Entwruf verbindet. Beinhaltet die Identifikation der wichtigesten Systemkomponenten, deren Kommunikation und deren Hardware-Ressourcen
+	\item Entwurf vs. Architektur: Entwurf auf Klassenebene, Architektur auf Komponentenebene % TODO: Korrekt?
+	\item Definition Software-Architektur\footnote{Reusser 2016}: Menge an Entwurfsentscheidungen, welche die Struktur eines Systems (Komponenten, Beziehungen, Deployment) beschreibt
+	\item \textbf{Strutures, Views, View Points}
+	\begin{itemize}
+		\item Definitionen %TODO
+		\begin{description}
+			\item[View:] Verschiedene Sichten unterschiedlicher Stakeholder (Requirementsengineer, Architekt, SysOp, Tester) auf ein System. Beispiele: Logical/Development/Process/Physical View
+			\item[Structure:] Menge der Elemente, wie sie später implementiert werden
+			\item[View Point:] Zusammengefasste Sichten
+		\end{description}
+		\item Empfehlung: Logische Architektur und Deploymentarchitektur sollten nicht vermischt werden. Bsp.: externe Ressourcen wie Datenbanken sollten nicht als Teil der logischen Architektur dargestellt werden sondern lediglich als Teil der technischen Services ("`Persistance"')
+	\end{itemize}
+	\item \textbf{Vorteile einer expliziten Architektur-Dokumentation}
+	\begin{itemize}
+		\item Kommunikationsmedium mit expliziten Namen
+		\item Vereinfachte Prüfung der nicht-funktionalen Anforderungen
+		\item Wiederverwendung
+		\item Projektplanung
+	\end{itemize}
+	\item Architektur-/Systemcharaktersistiken: Performance, Sicherheit, Verfügbarkeit, Wartbarkeit
+\end{itemize}
+
+
+
 \section{Modellgetriebene Entwicklung (Model Driven Development)}
 \begin{itemize}
 	\item Ziele: Plattformunabhängigkeit; höhere Entwicklungsgeschwindigkeit; bessere Softwarequalität; Wiederverwendbarkeit
