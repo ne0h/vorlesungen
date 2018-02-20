@@ -387,6 +387,100 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 
+\section{Komponentenbasierte Software-Entwicklung}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item Feature-orientierte, unabhängige Einheit mit fest definierten Schnittstellen und Abhängigkeiten, die unabhängig deployt werden kann, ohne die interne Implementierung zu kennen ("`Black-Box"')
+	\item Ziel: Strenge Trennung von Komponentenentwicklung und -nutzungen \(\rightarrow\) verbesserte Wiederverwendung von Komponenten
+	\item Komponenten können keine Objekte sein, da Vererbung das Black-Box-Prinzip verletzt
+	\item \textbf{Komponentenmodell}
+	\begin{itemize}
+		\item Konkrete Realisierung von komponentenbasiertem Software-Engineering
+		\item Hauptproblem: Die meisten Implementierungen der letzten Jahre (\texttt{CORBA}, \texttt{EJBs}) sind eher objektorientiert als komponentenbasiert \(\rightarrow\) \texttt{OSGi}?
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Übersicht: Technische Komponentenmodelle}
+\begin{itemize}
+	\item \textbf{Open Service Gateway Initiative (OSGi)}
+	\begin{itemize}
+		\item \textit{Bundles} als Komponentenkonzept: \texttt{JAR}-Archive mit öffentlichen Schnittstellen (per \texttt{Manifest})
+		\item OSGi bietet zur Laufzeit eine Verwaltung/Registrierung der Bundles
+	\end{itemize}
+	\item \textbf{Web-Services}
+	\begin{itemize}
+		\item Selbst-beschreibende, modulare Web-Schnittstelle, die per standadrisierten \texttt{HTTP}-Aufrufen angesteuert wird
+		\item Service-orientierte Architektur (SOA). Jedes Element deckt eine der folgenden Rollen ab:
+		\begin{description}
+			\item[Service Provider:] Publiziert Services in Service-Registrierungen
+			\item[Service Requestor:] Sucht/Findet Services in Service-Registrierungen
+			\item[Service Broker (Repository)] 
+		\end{description}
+		\item Schlüsseltechnologien
+		\begin{description}
+			\item[Simple Object Access Protocol (SOAP):] Spezifiziert \texttt{XML}-kodierte Nachrichten-Layouts
+			\item[Web Service Description Language (WSDL):] Definiert Web-Services als Sammlung von (Netzwerk-)Endpunkten
+			\item[Universal Description, Discovery and Integration (UDDI):] Ermöglicht das Finden von Web-Services durch Clients \(\rightarrow\) Basis für Repositories für Geschäftsanwendungen
+		\end{description}
+	\end{itemize}
+	\item \textbf{Open Service Gateway Initiative (OSGi)}
+	\begin{itemize}
+		\item
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Wissenschaftliche Komponentenmodelle: Palladio}
+\begin{itemize}
+	\item Palladio Komponenten Modell (PCM): Domänen-spezifische Modellierungssprache (DSL)\footnote{Domain specific modelling language} für Leistungsvorhersagen für Software-Architekturen in der Anfangsphase der Entwicklung
+	\item Generelle Frage: Was beeinflusst die Ausführungsgeschwindig einer Komponente? - Der Algorithmus selbst, die Ablaufumgebung (beispielsweise Hardware, Virtualisierung, Betriebssystem), Performance externer Dienste, Benutzerverhalten
+	\item Alle o.g. Faktoren werden im \texttt{PCM} explizit angegeben und modelliert \(\rightarrow\) ermöglicht Analysen unter verschiedenen Bedingungen (andere Ausführungsumgebung, andere Benutzung, etc.)
+	\item Motivation zur Modellierung/Analyse von Software: Erweiterung von Legacy-Systemen; Leistungsvorhersagen während des Entwurfszeit (meist preiswerter als Prototypenbau); Ermittlung von Leistungsengpässen; Simulation (läuft schneller als Echtzeit); die Hardware steht eventuell noch nicht zur Verfügung (speziell bei sehr großen Software-Umgebungen)
+	\item Eingabeinformationen: Komponentenmodell; Strukturmodell (inklusive externer Dienste); Deployment-Modell (Hardware, etc.); Nutzungsmodell (Datenmenge, etc.)
+	\item Ausgabeinformationen: Antwortzeiten; Ressourcenauslastung; Durchsatz
+	\item \textbf{Entwicklung der Modelle}
+	\begin{description}
+		\item[Komponenten:] Komponentenentwickler
+		\item[Systementwurf:] Software-Architekt
+		\item[Deployment:] System-Deployer
+		\item[Nutzungsmodell:] Domänenexperte
+	\end{description}
+	\item \textbf{Abstrakte Verhaltensbeschreibung (SEFF\footnote{Service Effect Specification}, Aufgabenbereich des Komponentenentwicklers)}
+	\begin{itemize}
+		\item Ziel: Abstrakte Beschreibung des nach Außen sichtbaren Verhaltens der Komponenten \(\rightarrow\) ermöglicht die Berechnung von Laufzeiten/Ressourcenbelegung
+		\item Darstellung als Aktivitätsdiagramm zur Beschreibung des Kontrollflusses
+		\item Kontrollfluss wird lediglich für externe Aufruf detailliert modelliert (Abängigkeit von externen Diensten). \textit{Internal Actions} benötigen keine Modellierung des internen Kontrollflusses, da nur der Ressourcenverbrauch, nicht aber die tatsächliche Implementierung für die Laufzeitberechung relevant ist
+		\item Starke Parametrisierung zur Erhöhung der Wiederverwendbarkeit der Modelle (bspw. Wahrscheinlichkeiten für Branches) \(\rightarrow\) Entkopplung von externen Einflussfaktoren. Ggf. können Parameter (wie Zugriffszeiten) erst beim Deployment festgestellt werden
+		\item Aufgaben des Komponentenentwicklers
+		\begin{itemize}
+			\item Spezifizieren der Komponenten, Schnittstellen und Datentypen
+			\item Zusammenbauen zusammengesetzter Komponenten
+			\item Erstellen sowie Speichern (in Repositories) der parametrisierten \textit{SEFFs}
+			\item Implementieren, testen und verwalten der Komponenten
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Systemmodelle (Aufgabenbereich des Software-Architekten)}
+	\begin{itemize}
+		\item Modellieren die komponentenbasierte Architektur, die analysiert wird; inklusive exterer Komponenten und Benutzerschnittstellen
+		\item Wird vom System-Deployer zum auffinden der Komponenten (in verschiedenen Repositories) benötigt
+		\item Aufgaben des Software-Architekten
+		\begin{itemize}
+			\item Führt durch den gesamten Entwicklungsprozess
+			\item Spezifiziert die Architektur (das Systemmodell) unter Verwendung \textit{existierender} Komponenten und Schnittstellen
+			\item Spezifiziert \textit{neue} Komponenten und Schnittstellen
+			\item Durchführung von Leistungsvorhersagen auf Basis der Architektur
+			\item Überträgt Implementierungsaufgaben
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Ressourcen (Aufgabenbereich des System-Deployers)}
+	\begin{itemize}
+		\item
+	\end{itemize}
+\end{itemize}
+
+
 
 \section{Modellgetriebene Entwicklung (Model Driven Development)}
 \begin{itemize}
