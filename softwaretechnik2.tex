@@ -476,7 +476,21 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\end{itemize}
 	\item \textbf{Ressourcen (Aufgabenbereich des System-Deployers)}
 	\begin{itemize}
-		\item
+		\item Abbildung der Komponenten auf Ressourcen
+		\item Spezifiziert \textit{Resource Containers} als Laufzeitumgebung für bestimmte Komponenten inklusive abstrakter Definition der Systemressourcen (konkrete Ressourcen zum Entwurfszeitpunkt nicht bekannt). Auf Architekturebene werden in Palladio lediglich Latenz und Bandbreite angegeben
+		\item Aufgaben des System-Deployers
+		\begin{itemize}
+			\item Modelliert die Ressourcenumgebung (Middleware, Betriebssystem, Hardware) sowie die Belegung der Ressourcen durch die Komponenten
+			\item Aufbau der Ressourcenumgebung (Serverinstallation, Hardware-Konfiguration)
+			\item Betreuung des laufenden Systems
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Nutzungsmodell (Aufgabenbereich des Domänenexperten)}
+	\begin{itemize}
+		\item Beschreibung der Benutzung des Systems (auf der äußersten Systemschnittstelle) \(\rightarrow\) Modellierung von Verhalten (und nicht von Komponenten)
+		\item Aus dem Nutzerverhalten können meist einfach Verteilungsfunktionen zu Eingaben abgeleitet werden. Palladio benötigt nur auf dieser Ebene Wahrscheinlichkeiten zur Simulation und bestimmt darauß die Verzweigungswahrscheinlichkeiten im SEFF
+		\item Unterschiede zu SEFFs: Bezieht sich nicht auf Ressourcen oder innere Systemkomponenten
+		\item Aufgabe des Domänenexperten: Bestimmen der Benutzeranzahl; Systemanfragen durch Benutzer sowie Charakteristiken der Eingabeparameter
 	\end{itemize}
 \end{itemize}
 
