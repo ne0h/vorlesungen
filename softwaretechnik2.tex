@@ -839,7 +839,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Schlechter Code senkt die Produktivität exponentiell
 		\item Lesbarkeit extrem wichtig, da Code i.d.R. öfters gelesen als geschrieben wird
 		\item Guter Code erhöht die Wartbarkeit ("`a system that is used will be changed"'\footnote{Lehman's first law} sowie "`an evolving system increases its complexity unless work is done to reduce it"'\footnote{Lehman's second law})
-		\item Verwendung iterativer/inkrementeller Methoden (Agile) erreicht durch Refactorn, dass die Kurve flach bleibt
+		\item Verwendung iterativer/inkrementeller Methoden (Agile) erreicht durch Refactern, dass die Komplexitätskurve flach bleibt
 	\end{itemize}
 \end{itemize}
 
@@ -849,18 +849,21 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item \textbf{Single Responsibility Principle (SRP)}
 	\begin{itemize}
 		\item Klassen sollen lediglich eine einzige Verantwortlichkeit haben (Definition "`Anzahl Verantwortung"' über die Anzahl der Änderungsgründe)
-		\item Ggf. müssen Klassen aufgeteilt werden
+		\item Ggf. müssen Klassen aufgeteilt werden (Bsp. Modem: Funktionalität nach Verbindungsverwaltung und -nutzung aufteilen)
 		\item Verbessert die Lesbarkeit und verringert das Fehlerrisiko
+		\item Command-Query-Separation: Trennung von Methoden, die manipulieren/zurückliefern (verringert Seiteneffekte, einfacher testbar, Queries sollten immer das selbe Ergebnis liefern, vgl. Idempotenzgesetz). Ausnahme: Iterator
 	\end{itemize}
 	\item \textbf{Open Closed Principle (OCP)}
 	\begin{itemize}
-		\item Softwareeinheiten sollen unkompliziert erweitert aber nicht verändert werden können: "`Verändern durch Ergänzen"'
-		\item Beispiel: Zeichnen verschiedener Grafikprimitive durch Strategy-Pattern
+		\item Softwareeinheiten sollen unkompliziert erweitert, aber nicht verändert werden können: "`Verändern durch Ergänzen"'
+		\item Beispiel: Zeichnen verschiedener Grafikprimitive durch Vererbung statt \texttt{Switch} (Methodenverschiebung nach Unterklasse)
 	\end{itemize}
 	\item \textbf{Liskov Substitution Principle (LSP)}
 	\begin{itemize}
+		\item Unterklassen müssen immer in Oberklassen einsetzbar sein
 		\item Das Ersetzbarkeitsprinzip fordert, dass eine Instanz einer abgeleiteten Klasse sich so verhalten muss, dass jemand, der meint, ein Objekt der Basisklasse vor sich zu haben, nicht durch unerwartetes Verhalten überrascht wird, wenn es sich dabei tatsächlich um ein Objekt eines Subtyps handelt\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Liskovsches_Substitutionsprinzip}}
 		\item Verletzung des Prinzips häufig nicht auf den ersten Blick erkennbar
+		\item Beispiel: \textit{Quadrat} darf nicht von \textit{Rechteck} erben, da durch \texttt{setHeight()} oder \texttt{setWidth()} der Oberklasse, \textit{Quadrate} regelwidrig geändert werden könnten (allgemein: Vererbung unpassender/sinnloser Methoden)
 	\end{itemize}
 	\item \textbf{Interface Segregation Principle (ISP)}
 	\begin{itemize}
@@ -871,6 +874,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item \textbf{Dependency Inversion Principle (DIP)}
 	\begin{itemize}
 		\item Abhängigkeiten sollten immer von konkreteren Modulen niedriger Ebenen zu abstrakten Modulen höherer Ebenen gerichtet sein\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Dependency-Inversion-Prinzip}}
+		\item Verwendung von Interfaces statt direkter Implementierung \(\rightarrow\) Invertierung der Abhängigkeit 
 	\end{itemize}
 \end{enumerate}
 
@@ -879,9 +883,10 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 \begin{itemize}
 	\item \textit{Law of Demeter}: Objekte sollen nur mit Objekten in ihrer unmittelbaren Umgebung kommunizieren. Dadurch soll die Kopplung in einem Softwaresystem verringert und dadurch die Wartbarkeit erhöht werden\footnote{\url{https://de.wikipedia.org/wiki/Prinzipien_objektorientierten_Designs\#Gesetz_von_Demeter}}
 	\item \textit{Boy Scout Rule}: Code wird mit der Zeit schlechter \(\rightarrow\) regelmäßiges Refactern (beispielsweise vor dem Commiten)
-	\item \textit{Principle of least Surprise}: Funktionen und Klassen sollten implementieren, was von ihnen erwartet wird (Intuitivität)
+	\item \textit{Principle of least Surprise}: Funktionen und Klassen sollten implementieren, was von ihnen erwartet wird (Intuitivität). Typische Abkürzungen oder Großundkleinschreibung sollten akzeptiert werden
 	\item \textbf{Code Conventions}
 	\begin{itemize}
+		\item Namen sollten präzise sein (\texttt{getThem()} vs. \texttt{getFlaggedCells()})
 		\item Naming: Innerhalb eines Projekts/Teams standardisiert; aussagekräftig; Vermeidung unnötiger Pre-/Postfixes
 		\item Commenting: Aussagekräftig; Verschieben von komplexen Kontrollstrukturen (die aufwendig kommentiert werden müssen) in Methoden
 	\end{itemize}
@@ -889,6 +894,20 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item \textit{Keep it simple (KISS)}: Erhöht die Verständlich. Beispiel: Verzicht auf unnötig komplexe Datenstrukturen
 	\item \textit{You ain't gonna need it} (YAGNI): Features sind teuer/aufwendig (mehr Testing/Dokumentation). Implementiere lediglich was nötig ist
 	\item \textit{Single Level of Abstraction} (SLA): Statements innerhalb einer Funktion/Funtionen innerhalb einer Klasse sollten auf dem selben Abstraktionslevel sein
+\end{itemize}
+
+
+\subsection{Clean Architecture}
+\begin{itemize}
+	\item Verschiedene Architekturmuster: Hexagonale Architektur; Zwiebelarchitektur \(\rightarrow\) gemeinsames Ziel: Verwendung von Layern
+	\item Ziele: Unabhängige Frameworks; gute Testbarkeit; Unabhängigkeit von UI, Datenbank und externe Abhängigkeiten
+	\item Abhängigkeiten existieren nur von Außen nach Innen ("`The Dependency Rule"')
+	\item \textbf{Schichtenmodell (von Innen nach Außen)}
+	\begin{description}
+		\item[Entities:] Anwendungsunabhängige Daten inklusive elementarer Operationen auf diesen Daten ohne komplexe Logik
+		\item[Use Cases:] Anwendungsabhängige Daten in Domänenterminologie. Keine Abhängigkeit zu UI oder konkreter Datenbankrealisierung (beides ebenfalls nicht in der Anwendungsfallbeschreibung enthalten)
+		\item[Interface Adapters:] Kommunikation mit externen Diensten (UI, Datenkonversion)
+	\end{description}
 \end{itemize}
 
 
