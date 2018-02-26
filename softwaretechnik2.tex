@@ -496,6 +496,248 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 
+\section{Designpatterns für Enterprise Application Architecture und Microservices}
+\begin{itemize}
+	\item Software-Anwendungen zur Datenhaltung (CRUD) in Unternehmen
+	\item \textbf{Eigenschaften von Enterprise Applications (EA)}
+	\begin{itemize}
+		\item Langlebige Daten: Daten bleiben länger als Anwendungen und Hardware erhalten \(\rightarrow\) oft Migration von Daten notwendig
+		\item Große Datenmengen mit meist mehreren Millionen Datensätzen \(\rightarrow\) effizienter Zugriff notwendig
+		\item Konkurrierender Zugriff \(\rightarrow\) Inkonsistenzen müssen verhindert werden
+		\item Unterschiedliche UIs und Anwender-Typen
+	\end{itemize}
+	\item Vielzahl unterschiedlicher Systeme: Shops, Leasing-Management-Systeme, Ausgabenüberwachungssysteme
+	\item Web Shops: Viele parallele Anwender; einfache Logic
+	\item \textbf{Ebenen (Layers)}
+	\begin{itemize}
+		\item Präsentation: Benutzerinterface zur Informationsdarstellung und Eingabeverarbeitung
+		\item Domain: Logik, Berechnungen
+		\item Datenquelle: Kommunikation mit anderen Systemen, beispielsweise Datenbanken
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Patternfamilien}
+\begin{itemize}
+	\item Jede Familie beschäftigt sich mit einem Problem von EAs
+	\item Generell: Kein Pattern ist "`das beste"'. Wahl des Patterns aus einer Familie hängt von den konkreten Voraussetzungen ab
+\end{itemize}
+
+\subsubsection{Domain-Logik Patterns}
+\begin{itemize}
+	\item Mögliche Herausforderungen: Hohe Komplexität, Austauschbarkeit, Verknüpfung mit Presentation und Datenquelle(n)
+	\item \textbf{Pattern: Transaction Script}
+	\begin{itemize}
+		\item Jede Anfrage wird in einer separaten Prozedur abgearbeitet \(\rightarrow\) sämtliche Transaktionslogik in dieser Prozedur
+		\item Beispiel: Laden von Objekt aus der Datenquelle, bearbeiten des Objekts, speichern des Objekts
+		\item Vorteile: Einfache, verständliche Prozeduren; unkomplizierte Verbindungen mit Datenquellen; Transaktionsgrenzen einfach feststellbar
+		\item Nachteile: Skalieren schlecht bei komplexer Logik; tendenziell douplizierter Code
+	\end{itemize}
+	\item \textbf{Pattern: Domain Model}
+	\begin{itemize}
+		\item Objektmodell, das Verhalten und Datenhaltung übernimmt
+		\item Objekte arbeiten für Transaction zusammen
+		\item Vorteil: Bessere Organisation der Domain-Logik
+		\item Nachteile: Höhere Ansprüche an Entwickler; Mapping zur Datenquelle komplexer
+	\end{itemize}
+	\item \textbf{Pattern: Table Module}
+	\begin{itemize}
+		\item Einzelne Instanz, welche die komplette Logik für eine Tabelle implementiert
+		\item Entweder eine Instanz pro Datensatz oder statisch per Singleton
+		\item Vorteile: Einfaches Mappen Objekt \(\leftrightarrow\) Tabellenzeile; Logiktrennung für verschiedene Konzepte; nützlich, wenn von bereits verwendeten Technologien unterstützt
+		\item Nachteil: Keine Instanzen pro Objekt \(\rightarrow\) eventuell unpraktisch/nachteilig bei komplexen Anwendungen
+	\end{itemize}
+	\item \textbf{Entscheidungskriterien}
+		\item Wichtigstes Kriterium: Komplexität der Domain-Logik
+		\begin{itemize}
+			\item Bei wenig Komplexität: \texttt{Table Module < Transaction Skript < Domain Model} (gemessen am Implementierungsaufwand)
+			\item Bei hoher Komplexität: \texttt{Domain Model < Table Module < Transaction Skript} (gemessen am Implementierungsaufwand)
+		\end{itemize}
+		\item Wie aufwendig ist das Mapping zur Datenquelle?
+		\item Kennen die Entwickler das Domain-Model?
+		\item Welche Werkzeuge/Entwicklungsumgebungen werden verwendet?
+\end{itemize}
+
+\subsubsection{Datenquelle-Architektur-Patterns}
+\begin{itemize}
+	\item Ziel: Trennung von Datenbankzugriff und Domain-Logic
+	\item Herausforderung: Mapping Objekt \(\leftrightarrow\) Tabellenzeile
+	\item \textbf{Pattern: Record Set}
+	\begin{itemize}
+		\item Lokale (in-memory) Kopie von Tabellenzeile(n)
+		\item Einfach zu erzeugen und zu verändern
+		\item Funktionalität wird meist von Frameworks bereitgestellt und nicht selbst implementiert
+	\end{itemize}
+	\item \textbf{Pattern: Table Data Gateway}
+	\begin{itemize}
+		\item Ein Objekt als Gateway (nicht als Facade, da die Schnittstelle nicht vereinfaht wird), das den Zugriff auf alle Tabellenzeilen verwaltet
+		\item Trennt Anfragen und Datenbankzugriff
+		\item Implementiert \textbf{CRUD}-Methoden
+		\item Geeignet für \texttt{Transaction Script}, eher ungeeignet für \texttt{Domain Model}
+	\end{itemize}
+	\item \textbf{Pattern: Active Record}
+	\begin{itemize}
+		\item Ein Objekt pro Tabellenzeile, das die Datenbankzugriff und Domain-Logic implementiert
+		\item Unterschied zu \textit{Record Set}: Objekt implementiert Datenbankzugriff selbst % TODO
+		\item Objektorientiert: Vereint Daten und Funktionalität
+		\item Mapping muss isomorph sein
+		\item Gute Wahl bei wenig komplexer Domain-Logic, ansonsten ungeeignet (bei komplexen Beziehungen oder Vererbung) \(\rightarrow\) \texttt{Data Mapper} verwenden
+	\end{itemize}
+	\item \textbf{Pattern: Row Data Gateway}
+	\begin{itemize}
+		\item Objekt, das als Gateway zu einer einzelnen Tabellenzeile fungiert. Eine Instanz pro Tabellenzeile
+		\item Idee: Ähnlich wie \texttt{Active Record}, verhindert allerdings die Komplexität; kann SQL-Anfragen für verschiedene Datenbanktypen abstrahieren \(\rightarrow\) alle Zugriffsdetails sind hinter dem Interface versteckt
+		\item Meist hat jede Tabelle eine Zusätzliche Finder-Klasse: \texttt{PersonFinder.find(id) \(\rightarrow\) PersonGateway}
+		\item Gut geeignet für automatisch erzeugten Zugriffscode (der gesamte Datenbankzugriff wird generiert)
+	\end{itemize}
+	\item \textbf{Pattern: Identity Map}
+	\begin{itemize}
+		\item Jedes Objekt wird nur einmal aus der Datenbank geladen und dann lokal im Speicher vorgehalten (Cache)
+	\end{itemize}
+	\item \textbf{Pattern: Data Mapper}
+	\begin{itemize}
+		\item Mapping-Layer, der zwischen Datenbank und Objektspeicher vermittelt bzw. diese voneinander isoliert
+		\item Mapping kann entweder explizit (für jedes Domain-Objekt existiert ein Mapper) oder Metadaten erfolgt werden, aus denen ggf. Code generiert wird
+		\item Beispiel: \texttt{Hibernate}
+		\item Verwendung
+		\begin{itemize}
+			\item Datenbankschema und Objekt-Modell entwickeln sich unabhängig (was meist der Fall ist)
+			\item KomplexeBusiness-Logik, \texttt{Active Record} nicht ausreichend
+			\item Automatisch erzeugt bei MDD
+			\item Legacy Systeme mit bereits existierenden Datenbanken
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Sinnvolle Kombinationen aus Datenquelle-Pattern und Domain-Logic-Pattern}
+\begin{itemize}
+	\item \textbf{Transaction Script}
+	\begin{itemize}
+		\item \texttt{Row Data Gateway} oder \texttt{Table Data Gateway}
+	\end{itemize}
+	\item \textbf{Domain Model}
+	\begin{itemize}
+		\item Wenig komplexes Mapping: \texttt{Active Record}
+		\item Komplexes Mapping: \texttt{Data Mapper}
+	\end{itemize}
+	\item \textbf{Table Module}
+	\begin{itemize}
+		\item \texttt{Table Data Gateway} (falls RecordSet-Framework)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Object-Relational Structural Patterns}
+\begin{itemize}
+	\item Mapping von OO-Strukturen zu relationalen Datenbanken (besonders bei \texttt{Domain Model} und \texttt{Data Mapper})
+	\item \textbf{Pattern: Single Table Inheritance}
+	\begin{itemize}
+		\item Vererbungshierarchie mehrerer Klassen wird in einer einzigen Tabelle repräsentiert. Diese enthält Spalten für alle Attribute der verschiedenen Klassen sowie eine Type-Spalte
+		\item Vorteile: Einfaches Datenbankschema; keine \texttt{Joins} notwendig; Verschieben von Attributen innerhalb der Hierarchie erfordert kein Anpassen der Tabelle
+		\item Nachteile: Viele ungenutzte Attribute; Tabelle kann sehr groß werden; es gibt nur einen Namespace für alle Attribute (problematisch, falls mehrere Klassen gleiche Attributnamen für verschiedene Typen benutzen. Abhilfe: Naming Convention wie beispielsweise \texttt{[Classname]\_[Fieldname]})
+	\end{itemize}
+	\item \textbf{Pattern: Class Table Inheritance}
+	\begin{itemize}
+		\item Vererbungshierarchie mit je einer Tabelle pro Klasse
+		\item Bei vererbten Klassen werden jeweils lediglich die neuen Attribute in der entsprechenden Tabelle gespeichert
+		\item Vorteile: Einfach verständlich; Alle Spalten sind wichtig - keine Speicherverschwendung; einfaches Mapping zwischen Objekt und Datenbank
+		\item Nachteile: Beim Laden eines Objekte müssen meist Daten aus mehreren Tabellen geladen werden (Leistungsverlust); aufwendigeres Refactoring; Supertypes können zum Flaschenhals werden
+	\end{itemize}
+	\item \textbf{Pattern: Concrete Table Inheritance}
+	\begin{itemize}
+		\item Jede Klasse der Vererbungshierarchie erhält eine Tabelle mit allen (auch den vererbten) Attributen
+		\item Vorteile: Einfaches Zugriff, keine überflüssigen Spalten; keine \texttt{Joins} notwendig
+		\item Nachteile: Verschieben von Attributen in der Hierarchie erfordert Schemaanpassung; Anpassungen bei Supertypes erfordern viele Änderungen; \texttt{find} über die Superklasse erfordert Suche in allen Subklassen (und damit Subtabellen)
+	\end{itemize}
+	\item \textbf{Verwendung}
+	\begin{itemize}
+		\item Alle Pattern in erster Linie zur Verwendung von \texttt{Domain Model} mit \texttt{Data Mapper}
+		\item Abwägung zwischen Datendopplung und Geschwindigkeit
+		\item Konkrete Wahl hängt von Zugriffsmustern ab
+	\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Praxis: Java Persistance API (JPA)}
+\begin{itemize}
+	\item Bestandteil von \texttt{Java EE}
+	\item Definiert das komplette Mapping zwischen Objekt-Modell und Datenbank
+	\item Kann wahlweise per \texttt{Java Annotations} oder \texttt{XML} definiert werden
+	\item Vererbungspattern kann explizit festgelegt werden
+\end{itemize}
+
+
+\subsection{Microservices}
+\begin{itemize}
+	\item Architekturstil zum Entwickeln einzelner Anwendung als Sammlung kleiner, dezentraler Services
+	\item Alle Services laufen als eigenständige Prozesse und kommunizieren leichtgewichtig (HTTP, RPC, etc.) \(\rightarrow\) können unabhängig mit unterschiedlichen Technologien entwickelt und deployt werden \(\rightarrow\) größere Entkopplung der Services voneinander
+	\item Kann entsprechend der "`realen"' Kommunikation im Unternehmen (beispielsweise zwischen verschiedenen Abteilungen) gesehen werden
+	\item "`Tolerant Reader"': Ignoriert unbekannte Anfragen \(\rightarrow\) erhöht die Robustheit
+	\item Dezentrale Datenverwaltung: Jeder Service verwaltet eine eigene Datenbank
+	\item Unabhängigkeit der Services eignet sich gut für automatisierte Verwaltung (beispielsweise Continuous Delivery)
+\end{itemize}
+
+
+
+\section{Software Design}
+
+\subsection{Responsibility-Driven Design}
+\begin{itemize}
+	\item Zentrale Frage: Wie wird die Funktionalität auf die Objekte verteilt?
+	\item Software-Objekte sollen tatsächlichen Objekten in der Realität entsprechen
+	\item \textbf{Objekte erhalten \textit{Verantwortlichkeiten} (Responsibilities)}
+	\begin{itemize}
+		\item Doing responsibilities: Für welche Handlungen ist das Objektverantwortlich?
+		\item Knowing responsibilities: Welche Informationen hält/teilt das Objekt
+	\end{itemize}
+	\item Verantwortlichkeiten werden mittels \texttt{Methoden} implementiert
+	\item Pattern zum Verteilen von Verantwortlichkeiten: \textit{Informationsexperte}. Verarbeitung erfolgt in dem Objekt, das die Informationen hält
+	\item Verarbeitungsbeispiel: Eingabeobjekt wird an die richtige "`Bearbeitungsstelle"' weitergegeben
+\end{itemize}
+
+
+\subsection{Design Diagramme}
+\begin{itemize}
+	\item Interaktionsdiagramme sind eine große Hilfe beim Entwurf
+	\item Aus den fertigen Interaktionsdiagrammen können Software-Klassen abgeleitet werden: Nachricht im Interaktionsdiagramm \(\rightarrow\) Klassenmethode
+	\item Typische Bestandteile eines Klassendiagramms: Klassen, Assoziationen, Attribute und deren Typen, Methoden, Interfaces, Abhängigkeiten
+\end{itemize}
+
+
+\subsection{General Responsibility Assignment Software Patterns (GRASP)}
+\begin{itemize}
+	\item Systematische Beschreibung, welche Objekte für was zuständig sein sollen
+	\item \textbf{Creator}
+	\begin{itemize}
+		\item Legt fest, welches Objekt ein bestimmtes anderes erstellen soll
+		\item \texttt{A} erstellt neues Objekt \texttt{B}, falls
+		\begin{itemize}
+			\item \texttt{A} eine Aggregation von \texttt{B} ist
+			\item \texttt{A} \texttt{B}-Objekte beeinhaltet
+			\item \texttt{A} \texttt{B}-Objekte mit starker Kopplung verwendet
+			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat
+		\end{itemize}
+	\end{itemize}
+	\textbf{Controllers}
+	\begin{itemize}
+		\item Der \texttt{Controller} oder \texttt{Facade} entscheidet, wie Ereignisse/Anfragen weiterverarbeitet werden
+		\item Strategien
+		\begin{itemize}
+			\item Ein \textit{System Facade Controller}: Alle Ereignisse werden in dieser Klasse behandelt
+			\item Ein Controller pro Anwendungsfall
+		\end{itemize}
+		\item Nicht gleichzusetzen mit einem \texttt{MVC}-Controller
+	\end{itemize}
+	\item Low Coupling: Niedriges Maß an Abhängigkeiten einer Klasse zu seiner Umgebung. Vereinfacht Änderungen und fördert Wiederverwendbarkeit und Verständlichkeit
+	\item High Cohesion: Verringerung der Komplexität in dem unterschiedliche Funktionalität auf verschiedene Klassen aufgeteilt wird
+	\item Polymorphism: Verwendung von polymorphen Klassen/Methoden statt \texttt{if} für verschiedene Eingabetypen. Erhöht allerdings die Gesamtzahl an Klassen/Methoden
+	\item \texttt{Kompositionen > Vererbung}. \textit{Strategie-Pattern}: Verhalten wird zur Laufzeit konfiguriert
+	\item Pure Fabrication: Normalerweise wird eine Pure Fabrication verwendet, um einen Algorithmus zu kapseln, der in keine Domain-Klasse passt. Sie kann zum Beispiel verwendet werden, um Technologiewissen von Domänenwissen zu trennen. Sie implementiert reines Verhalten und hat somit keinen Zustand. Sollte nicht zu häufig verwendet werden, sonst existieren am Schluss nur noch Klassen die einzelne Methoden kapseln.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Pure_Fabrication}}
+	\item Indirection: Indirection (Umweg) kann verwendet werden um geringe Kopplung zu erreichen. Sie wird erreicht, indem ein Vermittler zwischen Client und Server eingebaut wird. Sinnvoll wenn sich ein Serverobjekt ständig verändert. Als Nachteil ist die Leistungsfähigkeit vermindert. Beispielhaft für dieses Muster ist die Einführung der Controller-Komponente, die zwischen dem Datenmodell (Model) und dessen Präsentation (View) im Model-View-Controller-Architekturmuster vermittelt.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Indirection}}
+	\item Protected Variations: Interfaces sollen immer verschiedene konkrete Implementierung verstecken. Man nutzt also Polymorphismus und Delegation, um zwischen den Implementierungen zu wechseln. Dadurch kann das restliche System vor den Auswirkungen eines Wechsels der Implementierung geschützt werden.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Protected_Variations}}
+\end{itemize}
+
+
+
 \section{Modellgetriebene Entwicklung (Model Driven Development)}
 \begin{itemize}
 	\item Ziele: Plattformunabhängigkeit; höhere Entwicklungsgeschwindigkeit; bessere Softwarequalität; Wiederverwendbarkeit
@@ -580,233 +822,6 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 \subsection{Forschung und Praxis}
-
-
-
-\section{Designpatterns für Enterprise Application Architecture}
-\begin{itemize}
-	\item \textbf{Eigenschaften von Enterprise Applications (EA)}
-	\begin{itemize}
-		\item Langlebige Daten: Daten bleiben länger als Anwendungen und Hardware erhalten \(\rightarrow\) oft Migration von Daten
-		\item Große Datenmengen mit meist mehreren Millionen Datensätzen \(\rightarrow\) effizienter Zugriff notwendig
-		\item Konkurrierender Zugriff, Verhinderung von Inkonsistenzen notwendig
-	\end{itemize}
-	\item Viele verschiedene Systeme: Shop, Leasing-Management-System, Ausgabenüberwachungssystem
-	\item Web Shops: Viele parallele Anwender; einfache Logic
-	\item \textbf{Ebenen (Layers)}
-	\begin{itemize}
-		\item Präsentation: Benutzerinterface zur Informationsdarstellung und Eingabeverarbeitung
-		\item Domain: Logik, Berechnungen
-		\item Datenquelle: Kommunikation mit anderen Systemen, beispielsweise Datenbanken
-	\end{itemize}
-\end{itemize}
-
-
-\subsection{Patternfamilien}
-\begin{itemize}
-	\item Jede Familie beschäftigt sich mit einem Problem von EAs
-	\item Generell: Kein Pattern ist "`das beste"'. Wahl des Patterns aus einer Familie hängt von den konkreten Voraussetzungen ab
-\end{itemize}
-
-\subsubsection{Domain-Logik Patterns}
-\begin{itemize}
-	\item Mögliche Herausforderungen: Hohe Komplexität, Austauschbarkeit, Verknüpfung mit Presentation und Datenquelle(n)
-	\item \textbf{Pattern: Transaction Script}
-	\begin{itemize}
-		\item Jede Anfrage wird in einer separaten Prozedur abgearbeitet \(\rightarrow\) sämtliche Transaktionslogik in dieser Prozedur
-		\item Beispiel: Laden von Objekt aus der Datenquelle, bearbeiten des Objekts, speichern des Objekts
-		\item Vorteile: Einfache, verständliche Prozeduren; unkomplizierte Verbindungen mit Datenquellen; Transaktionsgrenzen einfach feststellbar
-		\item Nachteile: Skalieren schlecht bei komplexer Logik; tendenziell doppelter Code
-	\end{itemize}
-	\item \textbf{Pattern: Domain Model}
-	\begin{itemize}
-		\item Objektmodell, das Verhalten und Daten beinhaltet
-		\item Objekte arbeiten für Transaction zusammen
-		\item Vorteil: Bessere Organisation der Domain-Logik
-		\item Nachteile: Höhere Ansprüche an Entwickler; Mapping zur Datenquelle komplexer
-	\end{itemize}
-	\item \textbf{Pattern: Table Module}
-	\begin{itemize}
-		\item Einzelne Instanz, welche die komplette Logik für eine Tabelle implementiert
-		\item Entweder eine Instanz pro Datensatz oder statisch per Singleton
-		\item Vorteile: Einfaches Mappen Objekt \(\leftrightarrow\) Tabellenzeile; Logiktrennung für verschiedene Konzepte; nützlich, wenn von bereits verwendeten Technologien unterstützt
-		\item Nachteil: Keine Instanzen pro Objekt \(\rightarrow\) eventuell unpraktisch/nachteilig bei komplexen Anwendungen
-	\end{itemize}
-	\item \textbf{Entscheidungskriterien}
-		\item Wichtigstes Kriterium: Komplexität der Domain-Logik
-		\begin{itemize}
-			\item Bei wenig Komplexität: \texttt{Table Module < Transaction Skript < Domain Model} (gemessen am Implementierungsaufwand)
-			\item Bei hoher Komplexität: \texttt{Domain Model < Table Module < Transaction Skript} (gemessen am Implementierungsaufwand)
-		\end{itemize}
-		\item Wie aufwendig ist das Mapping zur Datenquelle?
-		\item Kennen die Entwickler das Domain-Model?
-		\item Welche Werkzeuge/Entwicklungsumgebungen werden verwendet?
-\end{itemize}
-
-\subsubsection{Datenquelle-Architektur-Patterns}
-\begin{itemize}
-	\item Ziel: Trennung von Datenbankzugriff und Domain-Logic
-	\item Herausforderung: Mapping Objekt \(\leftrightarrow\) Tabellenzeile
-	\item \textbf{Pattern: Record Set}
-	\begin{itemize}
-		\item Lokale (in-memory) Kopie von Tabellenzeile(n)
-		\item Einfach zu erzeugen und zu verändern
-	\end{itemize}
-	\item \textbf{Pattern: Table Data Gateway}
-	\begin{itemize}
-		\item Ein Objekt als Gateway (nicht als Facade), das den Zugriff auf alle Tabellenzeilen verwaltet
-		\item Trennt Anfragen und Datenbankzugriff
-		\item Implementiert \textbf{CRUD}-Methoden
-		\item Geeignet für \texttt{Transaction Script}, eher ungeeignet für \texttt{Domain Model}
-	\end{itemize}
-	\item \textbf{Pattern: Active Record}
-	\begin{itemize}
-		\item Ein Objekt pro Tabellenzeile, das die Datenbankzugriff und Domain-Logic implementiert
-		\item Objektorientiert: Vereint Daten und Funktionalität
-		\item Mapping muss isomorph sein
-		\item Gute Wahl bei wenig komplexer Domain-Logic, ansonsten ungeeignet \(\rightarrow\) \texttt{Data Mapper} verwenden
-	\end{itemize}
-	\item \textbf{Pattern: Row Data Gateway}
-	\begin{itemize}
-		\item Objekt, das als Gateway zu einer einzelnen Tabellenzeile fungiert
-		\item Idee: Ähnlich wie \texttt{Active Record}, verhindert allerdings die Komplexität; kann SQL-Anfragen für verschiedene Datenbanktypen abstrahieren \(\rightarrow\) alle Zugriffsdetails sind hinter dem Interface versteckt
-		\item Meist hat jede Tabelle eine Zusätzliche Finder-Klasse: \texttt{PersonFinder.find(id) \(\rightarrow\) PersonGateway}
-		\item Gut geeignet für automatisch erzeugten Zugriffscode (der gesamte Datenbankzugriff wird generiert)
-	\end{itemize}
-	\item \textbf{Pattern: Identity Map}
-	\begin{itemize}
-		\item Jedes Objekt wird nur einmal aus der Datenbank geladen und dann lokal im Speicher vorgehalten (Cache)
-	\end{itemize}
-	\item \textbf{Pattern: Data Mapper}
-	\begin{itemize}
-		\item Mapping-Layer, der zwischen Datenbank und Objektspeicher vermittelt bzw. diese voneinander isoliert
-		\item Mapping kann entweder explizit (für jedes Domain-Objekt existiert ein Mapper) oder Metadaten erfolgt werden, aus denen ggf. Code generiert wird
-		\item Beispiel: \texttt{Hibernate}
-		\item Verwendung
-		\begin{itemize}
-			\item Datenbankschema und Objekt-Modell entwickeln sich unabhängig (was meist der Fall ist)
-			\item KomplexeBusiness-Logik, \texttt{Active Record} nicht ausreichend
-			\item Automatisch erzeugt bei MDD
-			\item Legacy Systeme mit bereits existierenden Datenbanken
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
-
-\subsubsection{Sinnvolle Kombinationen aus Datenquelle-Pattern und Domain-Logic-Pattern}
-\begin{itemize}
-	\item \textbf{Transaction Script}
-	\begin{itemize}
-		\item \texttt{Row Data Gateway} oder \texttt{Table Data Gateway}
-	\end{itemize}
-	\item \textbf{Domain Model}
-	\begin{itemize}
-		\item Wenig komplexes Mapping: \texttt{Active Record}
-		\item Komplexes Mapping: \texttt{Data Mapper}
-	\end{itemize}
-	\item \textbf{Table Module}
-	\begin{itemize}
-		\item \texttt{Table Data Gateway} (falls RecordSet-Framework)
-	\end{itemize}
-\end{itemize}
-
-\subsubsection{Object-Relational Structural Patterns}
-\begin{itemize}
-	\item Mapping von OO-Strukturen zu relationalen Datenbanken (besonders bei \texttt{Domain Model} und \texttt{Data Mapper})
-	\item \textbf{Pattern: Single Table Inheritance}
-	\begin{itemize}
-		\item Vererbungshierarchie mehrerer Klassen wird in einer einzigen Tabelle repräsentiert. Diese enthält Spalten für alle Attribute der verschiedenen Klassen sowie eine Type-Spalte
-		\item Vorteile: Einfaches Datenbankschema; keine \texttt{Joins} notwendig; Verschieben von Attributen innerhalb der Hierarchie erfordert kein Anpassen der Tabelle
-		\item Nachteile: Viele ungenutzte Attribute; Tabelle kann sehr groß werden; es gibt nur einen Namespace für alle Attribute (problematisch, falls mehrere Klassen gleiche Attributnamen für verschiedene Typen benutzen. Abhilfe: Naming Convention wie beispielsweise \texttt{[Classname]\_[Fieldname]})
-	\end{itemize}
-	\item \textbf{Pattern: Class Table Inheritance}
-	\begin{itemize}
-		\item Vererbungshierarchie mit je einer Tabelle pro Klasse
-		\item Bei vererbten Klassen werden jeweils lediglich die neuen Attribute in der entsprechenden Tabelle gespeichert
-		\item Vorteile: Einfach verständlich; Alle Spalten sind wichtig - keine Speicherverschwendung; einfaches Mapping zwischen Objekt und Datenbank
-		\item Nachteile: Beim Laden eines Objekte müssen meist Daten aus mehreren Tabellen geladen werden (Leistungsverlust); aufwendigeres Refactoring; Supertypes können zum Flaschenhals werden
-	\end{itemize}
-	\item \textbf{Pattern: Concrete Table Inheritance}
-	\begin{itemize}
-		\item Jede Klasse der Vererbungshierarchie erhält eine Tabelle mit allen (auch den vererbten) Attributen
-		\item Vorteile: Einfaches Zugriff, keine überflüssigen Spalten; keine \texttt{Joins} notwendig
-		\item Nachteile: Verschieben von Attributen in der Hierarchie erfordert Schemaanpassung; Anpassungen bei Supertypes erfordern viele Änderungen; \texttt{find} über die Superklasse erfordert Suche in allen Subklassen (und damit Subtabellen)
-	\end{itemize}
-	\item \textbf{Verwendung}
-	\begin{itemize}
-		\item Alle Pattern in erster Linie zur Verwendung von \texttt{Domain Model} mit \texttt{Data Mapper}
-		\item Abwägung zwischen Datendopplung und Geschwindigkeit
-		\item Konkrete Wahl hängt von Zugriffsmustern ab
-	\end{itemize}
-\end{itemize}
-
-
-\subsection{Praxis: Java Persistance API (JPA)}
-\begin{itemize}
-	\item Bestandteil von \texttt{Java EE}
-	\item Definiert das komplette Mapping zwischen Objekt-Modell und Datenbank
-	\item Kann wahlweise per \texttt{Java Annotations} oder \texttt{XML} definiert werden
-	\item Vererbungspattern kann explizit festgelegt werden
-\end{itemize}
-
-
-
-\section{Software Design}
-
-\subsection{Responsibility-Driven Design}
-\begin{itemize}
-	\item Zentrale Frage: Wie wird die Funktionalität auf die Objekte verteilt?
-	\item Software-Objekte sollen tatsächlichen Objekten in der Realität entsprechen
-	\item \textbf{Objekte erhalten \textit{Verantwortlichkeiten} (Responsibilities)}
-	\begin{itemize}
-		\item Doing responsibilities: Für welche Handlungen ist das Objektverantwortlich?
-		\item Knowing responsibilities: Welche Informationen hält/teilt das Objekt
-	\end{itemize}
-	\item Verantwortlichkeiten werden mittels \texttt{Methoden} implementiert
-	\item Pattern zum Verteilen von Verantwortlichkeiten: \textit{Informationsexperte}. Verarbeitung erfolgt in dem Objekt, das die Informationen hält
-	\item Verarbeitungsbeispiel: Eingabeobjekt wird an die richtige "`Bearbeitungsstelle"' weitergegeben
-\end{itemize}
-
-
-\subsection{Design Diagramme}
-\begin{itemize}
-	\item Interaktionsdiagramme sind eine große Hilfe beim Entwurf
-	\item Aus den fertigen Interaktionsdiagrammen können Software-Klassen abgeleitet werden: Nachricht im Interaktionsdiagramm \(\rightarrow\) Klassenmethode
-	\item Typische Bestandteile eines Klassendiagramms: Klassen, Assoziationen, Attribute und deren Typen, Methoden, Interfaces, Abhängigkeiten
-\end{itemize}
-
-
-\subsection{General Responsibility Assignment Software Patterns (GRASP)}
-\begin{itemize}
-	\item Systematische Beschreibung, welche Objekte für was zuständig sein sollen
-	\item \textbf{Creator}
-	\begin{itemize}
-		\item Legt fest, welches Objekt ein bestimmtes anderes erstellen soll
-		\item \texttt{A} erstellt neues Objekt \texttt{B}, falls
-		\begin{itemize}
-			\item \texttt{A} eine Aggregation von \texttt{B} ist
-			\item \texttt{A} \texttt{B}-Objekte beeinhaltet
-			\item \texttt{A} \texttt{B}-Objekte mit starker Kopplung verwendet
-			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat
-		\end{itemize}
-	\end{itemize}
-	\textbf{Controllers}
-	\begin{itemize}
-		\item Der \texttt{Controller} oder \texttt{Facade} entscheidet, wie Ereignisse/Anfragen weiterverarbeitet werden
-		\item Strategien
-		\begin{itemize}
-			\item Ein \textit{System Facade Controller}: Alle Ereignisse werden in dieser Klasse behandelt
-			\item Ein Controller pro Anwendungsfall
-		\end{itemize}
-		\item Nicht gleichzusetzen mit einem \texttt{MVC}-Controller
-	\end{itemize}
-	\item Low Coupling: Niedriges Maß an Abhängigkeiten einer Klasse zu seiner Umgebung. Vereinfacht Änderungen und fördert Wiederverwendbarkeit und Verständlichkeit
-	\item High Cohesion: Verringerung der Komplexität in dem unterschiedliche Funktionalität auf verschiedene Klassen aufgeteilt wird
-	\item Polymorphism: Verwendung von polymorphen Klassen/Methoden statt \texttt{if} für verschiedene Eingabetypen. Erhöht allerdings die Gesamtzahl an Klassen/Methoden
-	\item \texttt{Kompositionen > Vererbung}. \textit{Strategie-Pattern}: Verhalten wird zur Laufzeit konfiguriert
-	\item Pure Fabrication: Normalerweise wird eine Pure Fabrication verwendet, um einen Algorithmus zu kapseln, der in keine Domain-Klasse passt. Sie kann zum Beispiel verwendet werden, um Technologiewissen von Domänenwissen zu trennen. Sie implementiert reines Verhalten und hat somit keinen Zustand. Sollte nicht zu häufig verwendet werden, sonst existieren am Schluss nur noch Klassen die einzelne Methoden kapseln.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Pure_Fabrication}}
-	\item Indirection: Indirection (Umweg) kann verwendet werden um geringe Kopplung zu erreichen. Sie wird erreicht, indem ein Vermittler zwischen Client und Server eingebaut wird. Sinnvoll wenn sich ein Serverobjekt ständig verändert. Als Nachteil ist die Leistungsfähigkeit vermindert. Beispielhaft für dieses Muster ist die Einführung der Controller-Komponente, die zwischen dem Datenmodell (Model) und dessen Präsentation (View) im Model-View-Controller-Architekturmuster vermittelt.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Indirection}}
-	\item Protected Variations: Interfaces sollen immer verschiedene konkrete Implementierung verstecken. Man nutzt also Polymorphismus und Delegation, um zwischen den Implementierungen zu wechseln. Dadurch kann das restliche System vor den Auswirkungen eines Wechsels der Implementierung geschützt werden.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Protected_Variations}}
-\end{itemize}
 
 
 
