@@ -678,48 +678,52 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 
 
 
-\section{Software Design}
+\section{Software Design: Responsibility-Driven Design}
 
 \subsection{Responsibility-Driven Design}
 \begin{itemize}
 	\item Zentrale Frage: Wie wird die Funktionalität auf die Objekte verteilt?
-	\item Software-Objekte sollen tatsächlichen Objekten in der Realität entsprechen
-	\item \textbf{Objekte erhalten \textit{Verantwortlichkeiten} (Responsibilities)}
-	\begin{itemize}
-		\item Doing responsibilities: Für welche Handlungen ist das Objektverantwortlich?
-		\item Knowing responsibilities: Welche Informationen hält/teilt das Objekt
-	\end{itemize}
-	\item Verantwortlichkeiten werden mittels \texttt{Methoden} implementiert
-	\item Pattern zum Verteilen von Verantwortlichkeiten: \textit{Informationsexperte}. Verarbeitung erfolgt in dem Objekt, das die Informationen hält
+	\item \textbf{Ansätze}
+	\begin{description}
+		\item [Doing responsibilities:] Objekte ist für eine bestimmte Handlung verantwortlich
+		\item [Knowing responsibilities:] Verantwortlichkeit auf Basis des Wissens (Objekte hält Daten)
+	\end{description}
+	\item \textit{Operation Contracts} als Ausgangspunkt, ggf. muss ermittelt werden, woher das verantwortliche Objekt Informationen zur Verarbeitung der Daten bekommt
 	\item Verarbeitungsbeispiel: Eingabeobjekt wird an die richtige "`Bearbeitungsstelle"' weitergegeben
+	\item Interaktionsdiagramme zur Ermittlung der Abläufe (wichtiger als statische Strukturdiagramme)
 \end{itemize}
 
 
-\subsection{Design Diagramme}
+\subsection{Design Diagramme (Design Class Diagram)}
 \begin{itemize}
 	\item Interaktionsdiagramme sind eine große Hilfe beim Entwurf
-	\item Aus den fertigen Interaktionsdiagrammen können Software-Klassen abgeleitet werden: Nachricht im Interaktionsdiagramm \(\rightarrow\) Klassenmethode
+	\item \textbf{Identifizieren notwendiger Klassen}
+	\begin{itemize}
+		\item Anforderungsliste
+		\item Aus den fertigen Squenzdiagrammen können weitere Klassen abgeleitet werden
+	\end{itemize}
 	\item Typische Bestandteile eines Klassendiagramms: Klassen, Assoziationen, Attribute und deren Typen, Methoden, Interfaces, Abhängigkeiten
+	\item Pattern \textit{Information Expert}: Verantwortlichkeit wird entsprechend vorhandenem Wissen innerhalb einer Klasse zugewiesen ("`wer die notwendigen Daten hat, ist verantwortlich"'). Existiert keine solche Klasse im Domänenmodell, muss sie ggf. hinzugefügt werden
 \end{itemize}
 
 
 \subsection{General Responsibility Assignment Software Patterns (GRASP)}
 \begin{itemize}
 	\item Systematische Beschreibung, welche Objekte für was zuständig sein sollen
-	\item \textbf{Creator}
+	\item \textbf{Pattern: Creator}
 	\begin{itemize}
-		\item Legt fest, welches Objekt ein bestimmtes anderes erstellen soll
+		\item Legt fest, welches Objekt ein bestimmtes anderes erstellen soll (Vgl. \textit{Information Expert})
 		\item \texttt{A} erstellt neues Objekt \texttt{B}, falls
 		\begin{itemize}
-			\item \texttt{A} eine Aggregation von \texttt{B} ist
-			\item \texttt{A} \texttt{B}-Objekte beeinhaltet
-			\item \texttt{A} \texttt{B}-Objekte mit starker Kopplung verwendet
-			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat
+			\item \texttt{A} eine Aggregation von \texttt{B} ist,
+			\item \texttt{A} \texttt{B}-Objekte beeinhaltet,
+			\item \texttt{A} \texttt{B}-Objekte mit starker Kopplung verwendet,
+			\item \texttt{A} die Initialisierungsdaten für \texttt{B} hat.
 		\end{itemize}
 	\end{itemize}
-	\textbf{Controllers}
+	\textbf{Pattern: Controller}
 	\begin{itemize}
-		\item Der \texttt{Controller} oder \texttt{Facade} entscheidet, wie Ereignisse/Anfragen weiterverarbeitet werden
+		\item Der \texttt{Controller} oder \texttt{Facade} entscheidet über die Weiterverarbeitung von Ereignissen/Anfragen. Verstecken oft ein ganzes Subsystem
 		\item Strategien
 		\begin{itemize}
 			\item Ein \textit{System Facade Controller}: Alle Ereignisse werden in dieser Klasse behandelt
@@ -728,11 +732,11 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Nicht gleichzusetzen mit einem \texttt{MVC}-Controller
 	\end{itemize}
 	\item Low Coupling: Niedriges Maß an Abhängigkeiten einer Klasse zu seiner Umgebung. Vereinfacht Änderungen und fördert Wiederverwendbarkeit und Verständlichkeit
-	\item High Cohesion: Verringerung der Komplexität in dem unterschiedliche Funktionalität auf verschiedene Klassen aufgeteilt wird
+	\item High Cohesion: Zusammenfassung mehrerer Komponenten, die sehr eng zusammenarbeiten
 	\item Polymorphism: Verwendung von polymorphen Klassen/Methoden statt \texttt{if} für verschiedene Eingabetypen. Erhöht allerdings die Gesamtzahl an Klassen/Methoden
-	\item \texttt{Kompositionen > Vererbung}. \textit{Strategie-Pattern}: Verhalten wird zur Laufzeit konfiguriert
-	\item Pure Fabrication: Normalerweise wird eine Pure Fabrication verwendet, um einen Algorithmus zu kapseln, der in keine Domain-Klasse passt. Sie kann zum Beispiel verwendet werden, um Technologiewissen von Domänenwissen zu trennen. Sie implementiert reines Verhalten und hat somit keinen Zustand. Sollte nicht zu häufig verwendet werden, sonst existieren am Schluss nur noch Klassen die einzelne Methoden kapseln.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Pure_Fabrication}}
-	\item Indirection: Indirection (Umweg) kann verwendet werden um geringe Kopplung zu erreichen. Sie wird erreicht, indem ein Vermittler zwischen Client und Server eingebaut wird. Sinnvoll wenn sich ein Serverobjekt ständig verändert. Als Nachteil ist die Leistungsfähigkeit vermindert. Beispielhaft für dieses Muster ist die Einführung der Controller-Komponente, die zwischen dem Datenmodell (Model) und dessen Präsentation (View) im Model-View-Controller-Architekturmuster vermittelt.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Indirection}}
+	\item \texttt{Kompositionen > Vererbung}. \textit{Strategie-Pattern}: Verhalten wird zur Laufzeit konfiguriert. Vereinfacht die Entwicklung, da zur Vererbung die Implementierung der Oberklasse bekannt sein muss (Blackboxtechnik vs. Whiteboxtechnik). Erhöht die Flexibilität (siehe Entenbeispiel)
+	\item Pure Fabrication: Wird verwendet, um einen Algorithmus zu kapseln, der in keine Domain-Klasse passt. Beispielsweise um Technologiewissen von Domänenwissen zu trennen. Sie implementiert reines Verhalten und hat somit keinen Zustand. Sollte nicht zu häufig verwendet werden, sonst existieren am Schluss nur noch Klassen die einzelne Methoden kapseln.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Pure_Fabrication}}
+	\item Indirection: Indirection (Umweg) kann verwendet werden um geringe Kopplung zu erreichen (Weitergabe von Verantwortlichkeit). Sie wird erreicht, indem ein Vermittler zwischen Client und Server eingebaut wird. Sinnvoll wenn sich ein Serverobjekt ständig verändert. Als Nachteil ist die Leistungsfähigkeit vermindert. Beispielhaft für dieses Muster ist die Einführung der Controller-Komponente, die zwischen dem Datenmodell (Model) und dessen Präsentation (View) im Model-View-Controller-Architekturmuster vermittelt.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Indirection}}
 	\item Protected Variations: Interfaces sollen immer verschiedene konkrete Implementierung verstecken. Man nutzt also Polymorphismus und Delegation, um zwischen den Implementierungen zu wechseln. Dadurch kann das restliche System vor den Auswirkungen eines Wechsels der Implementierung geschützt werden.\footnote{\url{https://de.wikipedia.org/wiki/GRASP\#Protected_Variations}}
 \end{itemize}
 
