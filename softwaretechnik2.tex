@@ -1024,3 +1024,41 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Verbesserung: Verwendung mehrerer Channels für höhere Leistung und Zuverlässigkeit
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Zuverlässigkeit und statistisches Testen}
+\begin{itemize}
+	\item Wie viel Testen ist genug? - Abbruchkriterien: Zeit/Budget ausgebraucht; Zielgröße bei Code-Coverage erreicht; alle Testfälle Funktionierende
+	\item Definition "`Zuverlässigkeit"': Wahrscheinlichkeit, dass ein System fehlerfrei arbeitet
+	\item \textbf{Ansätze}
+	\begin{description}
+		\item[Functional Testing:] Testen der Benutzerfunktionen
+		\item[Coverage Testing:] Testen sämtlicher Code-Pfade
+		\item[Random Testing:] Testen zufällig generierte Eingabedaten
+		\item[Partition Testing:] Testdaten werden zufällig aus verschiedenen Bereichen ausgewählt und getestet
+		\item[Statistical Testing:] Nutzung experimentell ergeugter Eingabedaten
+	\end{description}
+	\item Generelles Problem: Nur ein kleiner Teil der möglichen Eingabedaten kann getestet werden. Wie wird diese Teilmenge ausgewählt?
+	\item \textbf{Statistisches Testen}
+	\begin{itemize}
+		\item Voraussetzung: Nutzungsmodell der Software; Simulation der Betriebsumgebung; Protokoll zur Analyse der Testdaten \(\rightarrow\) das Modell erzeugt statistisch korrekte Testdaten für alle Anwendungsmöglichkeiten
+	\end{itemize}
+	% TODO: Formeln
+	\item \textbf{Nutzungsbasiertes statistisches Testen}
+	\begin{itemize}
+		\item Voraussetzungen
+		\begin{enumerate}
+			\item Es existiert ein verlässliches Nuzungsprofil (Beispiel auf Basis eines Markov-Modells \(\rightarrow\) Berechnung aller Code-Pfade; Berechnung zufälliger Code-Pfade mittels Random-Walk)
+			\item Die Testfälle sind statistisch unabhängig von (vorherigen) Tests (Software muss zwischen Testläufen immer in den Orginalzustand zurückgesetzt werden, sonst entstehen kaskadierende Zustandsänderungen)
+			\item Erkennen, ob ein Test erfolgreich war oder nicht
+		\end{enumerate}
+	\end{itemize}
+	\item \textbf{Weitere Vorteile bei Verwendung eines Benutzungsmodells}
+	\begin{itemize}
+		\item Entstehung im Rahmen der Anforderungserhebung
+		\item Wahrscheinlichere Pfade können öfters/besser getestet werden
+		\item Partitionierung der Concerns
+		\item Entdecken von Optimierungsmöglichkeiten (beispielsweise im UI)
+	\end{itemize}
+\end{itemize}
