@@ -928,7 +928,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 	\item Echtzeitanforderung: System \textit{muss} innerhalb einer vorgegebenen Zeit antworten
 	\item "`Harte Echtzeitanforderung"': Daten sind korrekt, wenn sie zeitlich und logisch korrekt sind
 	\item "`Weiche Echtzeitanforderung"': Antwortzeit muss innerhalb einer Toleranz liegen (beispielsweise Mittelwert als Kriterium). Die vorgegebene Antwortzeit kann regelmäßig überschritten werden
-	\item Typische Anwendung: Embedded Mess-/Regelsystem
+	\item Typische Anwendungen: Monitoring, Kontrollsysteme, Data Acquisition Systems
 	\item Sensor-Aktor-Schema (wird meist als Schleife ausgeführt)\\\\
 		\begin{tikzpicture}
 			\node at (-3.2, 3) [circle,draw] (sensor) {SENSOR};
@@ -944,7 +944,7 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 			\draw[->] (data_processor)    edge node {} (sensor_actor);
 			\draw[->] (sensor_actor)      edge node {} (actor);
 		\end{tikzpicture}
-	\item Herausforderungen: Viele verschiedene Sensoren mit unterschiedlichen Echtzeitbedingungen beeinhalten
+	\item Herausforderungen: Viele verschiedene Sensoren mit unterschiedlichen Echtzeitbedingungen
 \end{itemize}
 
 
@@ -959,24 +959,64 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item \textit{Resource Manager} zum Verwalten von Speicher-/Prozessresourcen
 		\item \textit{Dispatcher} zum Ausführen von Befehlen/Anwendungen (nachdem der Scheduler einen Prozess ausgewählt hat)
 	\end{itemize}
+	\item \textbf{Prioritätslevel}
+	\begin{description}
+		\item[Interrupt-Level:] Höhere Priorität für unregelmäßig auftretende Prozesse, die eine schnellere Antwort erwarten
+		\item[Clock-Level:] Periodische Prozesse
+	\end{description}
 	\item \textbf{Scheduling}
 	\begin{itemize}
-		\item Statisch oder dynamisch
-		\item Beispiele
+		\item Bestandteile
+		\begin{description}
+			\item[Scheduler:] Wählt den nächsten Prozess, der vom OS ausgeführt wird
+			\item[Resource Manager:] Allokiert Systemressourcen (Prozessor, Speicher, etc.)
+			\item[Dispatcher:] Für die eigentliche Prozessausführung verantwortlich
+		\end{description}
+		\item Statisch (Gesamtanzahl der Prozesse im System unveränderlich) oder dynamisch
+		\item Scheduling-Strategien
 		\begin{itemize}
 			\item \texttt{First-In-First-Out (FIFO)}: dynamisch, non-preemtive, keine Prioritäten
-			\item \texttt{Fixed-Priorities}: dynamisch, statische Prioritäten
+			\item \texttt{Fixed-Priorities}: Entsprechend dynamischen oder statischen Prioritäten
 			\item \texttt{Earliest-Deadline-First (EDF)}: dynamisch, dynamische Prioritäten
 			\item \texttt{Least-Laxity-First (LLF)}: \(laxity = deadline-now-t_{remaining\_processing\_time}\). Kein Kontextwechsel bei gleicher Laxity zweier Prozesse
 			\item \texttt{Time-Slice-Scheduling}: Iterativ mit Warteschlange und unterschiedlich langen Time-Slices pro Prozess. Neue Prozesse werden beim Eintreffen hinten die Warteschlange eingefügt
 		\end{itemize}
 	\end{itemize}
+	\item \textbf{Java zur Entwicklung echtzeitfähiger Anwendungen}
+	\begin{itemize}
+		\item Klassisch: JVM ungeeignet für Echtzeitanwendungen (Garbagecollector sowie JustInTime-Compilation nicht drterministisch)
+		\item Vorteile von Java gegenüber C/C++ allerdings auch in Echtzeitanwendungen gewünscht (besser umgesetzte OO, portabler, bessere Hardwarabstraktion, etc.)
+		\item \texttt{JamaicaVM}\footnote{Realtime-Java aus Karlsruhe}: Anpassungen der JVM zur Unterstützung von Echtzeitanwendungen sowie angepasste Programmierung notwendig (deterministische Ausführung von Schleifen, etc.)
+	\end{itemize}
 \end{itemize}
 
+
 \subsection{System Design}
+\begin{itemize}
+	\item Ausgangsfrage: Welche Teile werden in Hardware (schneller und teurer), welche Teile werden in Software umgesetzt? \(\rightarrow\) Entscheidung auf Basis der Qualitätskriterien
+	\item \textbf{RT-Entwurfsprozess}
+	\begin{enumerate}
+		\item Identifizierung von Stimuli und Antworten
+		\item Bestimmen der Zeitbedingungen
+		\item Festlegen der Ausführungsplattform (Hardware, RTOS, etc.)
+		\item Definition der parallel ablaufenden Prozesse (ergibt sich aus Gruppierung von (1))
+		\item Implementierung der Antworten (Modellierung mittels Zustandsautomaten: Ausgabe abhängig von Eingabe und Zustand)
+		\item Entwurf des Schedulings
+	\end{enumerate}
+	\item \textbf{Thread-Kommunikation}
+	\begin{description}
+		\item[Shared-Memory:] Kommunikation über gemeinsamen Speicher
+		\item [Message-Passing:] Kommunikation über (non-)blocking, (a-)sychrone Weitergabe von Nachrichten
+	\end{description}
+	\item \textbf{Safety vs. Reliability} % TODO
+	\begin{description}
+		\item[Safety:] System kann ohne zuverlässig betrieben werden
+		\item[Reliability:] Wahrscheinlichkeit, dass ein System fehlerfrei arbeitet
+	\end{description}
+\end{itemize}
 
 
-\subsection{Sicherheits- und Zuverlässigkeitspatterns für Echtzeitsystem-Design}
+\subsection{Echtzeit-Muster}
 \begin{itemize}
 	\item \textbf{Channel (oder auch Pipe/Filter)}
 	\begin{itemize}
