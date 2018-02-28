@@ -1062,3 +1062,77 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item Entdecken von Optimierungsmöglichkeiten (beispielsweise im UI)
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Einführung in Software-Sicherheit}
+\begin{itemize}
+	\item Motivation: Unsichere Software ist teuer (Downtime; hohe Kosten beim Schließen von Sicherheitslücken)
+	\item \textbf{Gründe für unsichere Software}
+	\begin{itemize}
+		\item Kein Geld oder keine Zeit zum Testen
+		\item Schlechtes Design
+		\item Implementierungsfehler
+	\end{itemize}
+	\item Optimal: Sicherheitsanforderungen bereits im Entwurf integrieren ("`Security by Design"')
+	\item \textbf{Sicherheitsanforderungen}
+	\begin{itemize}
+		\item Präzise Beschreibung der Schutzanforderungen: Vor wem? wieso? wie lange?
+		\item Schlecht: "`Use encryption wherever necessary"'
+		\item Besser: "`Protect credit card data from unauthorized access because this information is sensitive"'
+		\item Wichtig: Annahmen bei Entwurfsentscheidungen dokumentieren (Beispiel: Feldbus im Auto nur unter der Motorhaube zugreifbar)
+	\end{itemize}
+	\item \textbf{Grundprinzipien für sichere Software}
+	\begin{enumerate}
+		\item "`Schwächste"' Angriffslinie schützen
+		\item Mehrere kaskadierende Sicherheitsmaßnahmen, falls eine davon durchbrochen wird
+		\item Sichere Ausnahmebehandlung (beipsielsweise keine Stacktraces anzeigen)
+		\item Sicherheitseinstellungen initial so hoch wie möglich. Benutzer muss Ausnahmen etc. selbst hinzufügen
+		\item Principle of least privilege
+		\item No security by obscurity\footnote{Kerkhoffs Prinzip}
+		\item Angriffsfläche minimieren (weniger Code bietet weniger Angriffsfläche; welche APIs werden exportiert; etc.)
+		\item Software-Kern mit hohen Berechtigungen speziell schützen (beispielsweise durch formale Verifikation)
+		\item Prüfen der Eingabedaten. Eingabedaten dürfen nicht als Code verwendbar sein (SQL-Injection, etc.)
+		\item Trennen von Code und Daten (kein hartkodiertes Kennwort)
+	\end{enumerate}
+	\item \textbf{Weitere hilfreiche Muster}
+	\begin{enumerate}
+		\item Verwendung existierender Systeme zur föderativen Benutzerverwaltung (LDAP, etc.)
+		\item Sinnvolle Passwörter (beispielsweise lange Passphrases statt Regeln zu Sonderzeichen); Passwörter nicht client-seitig validieren (Client-Seite generell unsicherer); salten; padden
+		\item Verschlüsselte Verbindungen bei Session-Handling
+	\end{enumerate}
+	\item \textbf{Implementierung}
+	\begin{itemize}
+		\item Die meisten Sicherheitslücken entstehen durch Implementierungsfehler (Bufferoverflow in \texttt{C})
+		\item Sicherheitsrichtlinien
+		\begin{enumerate}
+			\item Sicherheitstest sind nicht das gleiche wie Funktionstests. Ziel: Finden von Schwachstellen
+			\item Selten genutzten Code ebenfalls ausführlich testen (Auffinden durch Coverage-Analyse). Ungenutzter Code ist oft der gefährlichster
+			\item Reviews durch Sicherheitsprofis
+			\item Verwendung einer Sicherheitstestumgebung (Port-Scans, Intrusion Detections, etc.)
+			\item Blackbox- und Whitebox-Tests durch spezialisierte Firmen
+			\item 
+		\end{enumerate}
+		\item Sicherheitszertifizierungen
+		\item Angriffsbeispiele
+		\begin{itemize}
+			\item Race Conditions
+			\begin{itemize}
+				\item Beispiel: Test der Zugriffsberechtigung auf eine Datei, bevor sie geöffnet wird. Prüfung und Öffnung erfolgt via Dateinamen
+				\item Problem: Umbiegen des Dateinamens auf eine andere Datei, zwischen Prüfen und Öffnen (in einer nebenläufigen Umgebung möglich)
+				\item Gegenmaßnahmen: Verwendung von Dateipointern oder Critical Sections
+			\end{itemize}
+			\item Buffer Overflows
+			\begin{itemize}
+				\item Manche \texttt{C/C++}-Befehle prüfen beim Anlegen eines Buffers keine Speichergrenzen \(\rightarrow\) Zugriff auf Daten oder Code eines anderen Speicherbereichs möglich
+				\item Beispiel: \texttt{char buf[BUFSIZE]; gets(buf);}. Platziert Schadcode in einer anderen Anwendung
+				\item Besser: Ersetzen durch \texttt{char buf[BUFSIZE]; fgets(buf, BUFSIZE, stdin);} (liest nur bis zum Zeilenumbruch)
+			\end{itemize}
+			\item SQL-Injection
+			\begin{itemize}
+				\item Ziel: Erweitern des SQL-Befehls durch Hinzufügen an String-Eingabe
+				\item Lösung: PreparedStatements; Prüfen der Eingabe
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
