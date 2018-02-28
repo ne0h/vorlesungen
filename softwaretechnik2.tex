@@ -1136,3 +1136,27 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
+
+
+
+\section{Continuous Integration}
+\begin{itemize}
+	\item Ziel: Sicherstellen der Qualität durch funktionale und qualitative Tests in einer repräsentativen Umgebung; Erhöhung der Transparenz
+	\item Integration in den Release-Prozess: Bei jeder Änderung werden automatisierte Tests durchgeführt und ein Release erzeugt (\textit{Continuous Delivery})
+	\item \textbf{Voraussetzungen}
+	\begin{itemize}
+		\item Verwendung automatisierter Software-Builds (Ant, Maven, make, etc.)
+		\item Unittests und Integrationtests
+		\item Testing-Automation
+	\end{itemize}
+	\item \textbf{Best-Practices}
+	\begin{itemize}
+		\item Verwendung eines zentralen Entwicklungs-Repsitory für alle Entwicklungsartefakte (Quell-Code, Tests, Scripte, etc.)
+		\item Vermeidung duplizierten Test-Codebasis
+		\item \textit{Design for fast Feedback}: Kritische Tests zuerst; Unittests vor Integrationtests
+		\item Ein Build-System für jegliche Verwendung (lokaler Test; Integrationbuild; Release)
+		\item Automatisierte Zusammenfassung der Fehler an den Verursacher
+	\end{itemize}
+	\item Continuous Delivery: Erweiterung zu CI; Builds werden nach zusätzlichem Akzeptanztest durch das Test-Team direkt freigegeben
+	\item Ergebnis einer Studie zur Code-Qualität von CI-unterstützten Projekte auf Github: Effektivere Zusammenarbeit durch einfachere Integration von (zuvor getesteter) Pull-Requests; Code-Qualität insgesamt durch mehr gefundende Bugs verbessert
+\end{itemize}
