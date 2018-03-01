@@ -1238,3 +1238,31 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item[The would't-it-be-nice Pattern:] Produktives Gegenstück zu \textit{The yes-but Pattern}, zeugt oft von schlechtem Halbwissen; meist liegt die Wahrheit in der Mitte, technische Lösungen sind immer Abwägungen aus Performance, Wartbarkeit und Machbarkeit
 	\end{description}
 \end{itemize}
+
+
+
+\section{Cloud Computing und Cloud-Architektur}
+\begin{itemize}
+	\textbf{Charakterisierung}
+	\begin{itemize}
+		\item Elastische (Infrastruktureigenschaft: System kann bei höherer Last dynamisch mehr Ressourcen hinzufügen) Skalierung (Systemeigenschaft: Bei steigender Last kann linear durch mehr Ressourcen ausgeglichen werden)
+		\item Selbstbedienung: Anwender kann Infrastruktur selbst konfigurieren
+		\item Allgegenwärtiger Netzwerkzugang
+		\item Resource Pooling: Ressourcen können im Rechenzentrem besser ausgelastet werden. In individuellen Rechenzentren werden meist nur 30\% ausgenutzt, um Lastspitzen abzufedern. Annahme in der Cloud: Lastspitzen werden nicht bei allen Kunden gleichzeitig erreicht (Vgl. Autoanzahl bei Stadtmobil)
+		\item Measured Service: Maßgeschneiderte Service, der nach Vebrauch abgerechnet wird ("`Pay for use"')
+		\item Multi-Tenancy (Mandantenfähigkeit): Isolierung der Workloads/Daten verschiedener Kunden
+	\end{itemize}
+	\item \textbf{Delivery Models}
+	\begin{description}
+		\item[Software as a Service (SaaS):] Webanwendungen (Google Apps, Salesforce, etc.)
+		\item[Platform as a Service (PaaS):] Entwicklungs-/Ausführungsumgebungen (Google App Engine, etc.)
+		\item[Infrastructure as a Service (IaaS):] Speicher, Virtuelle Maschinen, etc.
+	\end{description}
+	\item \textbf{Deployment Models}
+	\begin{description}
+		\item[Private Cloud:] Kunde und Anbieter gehören zur selben Organisation
+		\item[Public Cloud:] Kunde und Anbieter gehören zu unterschiedlichen Organisationen
+		\item[Hybrid Cloud:] Kombination aus \textit{Private Cloud} und \textit{Public Cloud}
+		\item[Community Cloud:] Stakeholder teilen ihre Ressourcen um ein gemeinsames Ziel zu erreichen
+	\end{description}
+\end{itemize}
