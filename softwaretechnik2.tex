@@ -1156,7 +1156,85 @@ Zusammenfassung der Vorlesung "`Softwaretechnik 2"' aus dem Wintersemester 2016.
 		\item \textit{Design for fast Feedback}: Kritische Tests zuerst; Unittests vor Integrationtests
 		\item Ein Build-System für jegliche Verwendung (lokaler Test; Integrationbuild; Release)
 		\item Automatisierte Zusammenfassung der Fehler an den Verursacher
+		\item Gute Komponentisierung für Komponenten-basiertes Testen
 	\end{itemize}
 	\item Continuous Delivery: Erweiterung zu CI; Builds werden nach zusätzlichem Akzeptanztest durch das Test-Team direkt freigegeben
 	\item Ergebnis einer Studie zur Code-Qualität von CI-unterstützten Projekte auf Github: Effektivere Zusammenarbeit durch einfachere Integration von (zuvor getesteter) Pull-Requests; Code-Qualität insgesamt durch mehr gefundende Bugs verbessert
+\end{itemize}
+
+
+
+\section{Reviews}
+\begin{itemize}
+	\item \textbf{Terminologie}
+	\begin{description}
+		\item[Validierung:] Fallbasiertes Testen
+		\item[Verifizierung:] Formale Betriebsprüfung. Bei erhöhter Komplexität i.d.R. nicht durchführbar (zu viele Pfade zum Testen; Annahmen zur Gleitkommaaritmetik oder Speicherbelegung)
+		\item[Review:] Menschen untersuchen Artefakte auf Korrektheit
+	\end{description}
+	\item Können bereits in frühen Phasen eingesetzt werden, wenn Werkzeuge noch nicht zur Verfügung stehen
+	\item Motivation: Früh gefundene Fehler sind generell einfacher/günstiger zu beseitigen
+	\item \textbf{Wieso nicht häufiger eingesetzt}
+	\begin{itemize}
+		\item Consultats verdienen damit kein Geld; nicht neu
+		\item Erhöhte Kosten beim Projektstart; wird oft als Zeitverschwendung angesehen
+		\item Erhöhte Anforderungen an das Entwicklungsteam (gute Fehlerkultur vorausgesetzt)
+	\end{itemize}
+	\item \textbf{Gefahren}
+	\begin{itemize}
+		\item Reduziert die Bereitschaft zu ausführlichem Testen
+		\item Entwickler verlassen sich auf Reviews \(\rightarrow\) Code-Qualität wird initial schlechter
+		\item Werden bei Budget-Problem zuerst gekürzt
+	\end{itemize}
+	\item \textbf{Vorteile}
+	\begin{itemize}
+		\item Erhöhte Qualität/Korrektheit/Robustheit
+		\item Besseres Projektverständnis, da fremde Teile reviewt werden; weniger "`Single Person of Failure"'
+		\item Anfänger lernen guten Stil(-richtlinien)
+		\item Verbesserte Lesbarkeit
+	\end{itemize}
+	\item \textbf{Phasen}
+	\begin{enumerate}
+		\item Planung: Welche Artefakten werden wann/wie reviewt?
+		\item Überblick: Wann sind die Artefakte bereit? Wer ist beteiligt?
+		\item Vorbereitung: Verteilung der Artefakte und der Dokumentation auf die Reviewer
+		\item Treffen: Fragen, Rückfragen, Verbesserungsvorschläge
+		\item Überarbeitung: Der Autor pflegt die Ergebnisse des Reviews ein
+		\item Folgetreffen, falls noch etwas unklar ist
+		\item Retrospektives Meeting zu typischen Fehlerklassen und generellen Abläufen
+	\end{enumerate}
+	\item \textbf{Rollen}
+	\begin{itemize}
+		\item Autor
+		\item Meeting-Moderator
+		\item Leser, i.d.R. fünf Personen ausreichend (Nutzen flacht ab)
+		\item Protekollführer
+		\item Verifier: Prüft, ob die Verbesserungen umgesetzt worden sind. Sollte nicht der Autor sein
+	\end{itemize}
+	\item \textbf{Code-Lesetechniken}
+	\begin{itemize}
+		\item Von oben nach unten, zeilenweise Lesen bei größerer Menge Code nicht effektiv
+		\item Hypothesen-basiertes Lesen bei Code-Reviews: Aufstellen von Hypothesen zur Verwendung von Kontrollblöcken mit anschließender Überprüfung ("`tut der Code was ich glaube das er tut?"')
+	\end{itemize}
+	\item \textbf{Review-Typen}
+	\begin{description}
+		\item[Inspection:] Der komplette Prozess
+		\item[Team Review:] Alle Phasen, aber ohne Verifizierung
+		\item[Walkthrough:] Treffen, um gemeinsam den Code durchzuarbeiten \(\rightarrow\) keine Vorbereitung, keine Verifizierung
+		\item[Pair Programming:] Kontinuierliche Zusammenarbeit (Meeting) während der Arbeit
+		\item[Peer Deskchecks:] Weitergabe des eigenen Codes an einen Kollegen zur Prüfung
+		\item[Ad hoc pass around:] Spontane Weitergabe des eigenen Codes an einen Kollegen zur Prüfung
+	\end{description}
+	\item \textbf{Psychologische Antipattern}
+	\begin{description}
+		\item[The Alcohol Pattern:] Schlechte Angewohnheiten, die immer wieder verwendet werden und abgestellt werden müssen
+		\item[The no-I-have-got-you Pattern:] Schlecht für die Review-Kultur
+		\item[The see-what-you-made-to-me Pattern:] Schlecht für die Review-Kultur
+		\item[The Hurried Pattern:] Überarbeiteter Entwickler erzeugt, durch weiter erhöhte Arbeitsbelastung druch Reviews, mehr und mehr Fehler
+		\item[The if-it-were-not-you Pattern:] Analog zu \textit{The see-what-you-made-to-me Pattern}
+		\item[The look-how-hard-I-tried Pattern:] Dokumentation, wie hart gearbeitet wurde. Oft ein Zeichen, dass ein Projekt schief läuft
+		\item[The Schlemiel Pattern:] Fehler tauchen beim Review an einer anderen Stelle auf. Dadurch wird nicht klar, wer den Fehler gemacht hat und wie solche Fehler in Zukunft verhindert werden können
+		\item[The yes-but Pattern:] Abstruse Erklärung, die jeglichen guten Vorschlag zunichte macht
+		\item[The would't-it-be-nice Pattern:] Produktives Gegenstück zu \textit{The yes-but Pattern}, zeugt oft von schlechtem Halbwissen; meist liegt die Wahrheit in der Mitte, technische Lösungen sind immer Abwägungen aus Performance, Wartbarkeit und Machbarkeit
+	\end{description}
 \end{itemize}
