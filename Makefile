@@ -3,11 +3,7 @@ all:
 	pdflatex main.tex
 
 clean:
-	rm -rf *.log
-	rm -rf *.aux
-	rm -f *.toc *.loc *.out
-	rm -f algo2only.pdf cgonly.pdf derivateonly.pdf internetOfEverythingOnly.pdf mp2only.pdf netzsicherheitonly.pdf \
-			propaonly.pdf
+	rm -f *.aux *.loc *.log *.out *.pdf *.toc
 
 algo2only:
 	pdflatex algo2only.tex
