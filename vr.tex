@@ -36,8 +36,14 @@ Zusammenfassung der Vorlesung "`Verteiltes Rechnen"' aus dem Wintersemester 2017
 
 \section{Grid}
 \begin{itemize}
-	\item Form des verteilten Rechnens, bei der ein virtueller Supercomputer aus einem Cluster lose gekoppelter Computer erzeugt wird\footnote{\ur{https://de.wikipedia.org/wiki/Grid-Computing}}
+	\item Form des verteilten Rechnens, bei der ein virtueller Supercomputer aus einem Cluster lose gekoppelter Computer erzeugt wird\footnote{\url{https://de.wikipedia.org/wiki/Grid-Computing}}
 	\item Typische Eigenschaften: Loose gekoppelt, heterogen, geografische Verteilung, häufig Verwendung von Standardsoftware
+	\item \textbf{Checkliste nach Foster}
+	\begin{itemize}
+		\item Keine zentrale Kontrolle
+		\item Verwendung allgemeiner, standardisierter, quelloffener Software und Schnittstellen
+		\item Sehr hohe QoS-Zusagen. Mehrwert des Systems insgesamt höher als die Summe der Einzelsysteme 
+	\end{itemize}
 	\item \textbf{Meta-Computing}
 	\begin{itemize}
 		\item Zusammenschluss unabhängiger, heterogener Supercomputer mittels Hochgeschwindkeits-WAN \(\rightarrow\) Verteilung einer einzelnen Anwendung über mehrere Supercomputer
@@ -57,14 +63,18 @@ Zusammenfassung der Vorlesung "`Verteiltes Rechnen"' aus dem Wintersemester 2017
 \begin{itemize}
 	\item Verwendung von Middleware-Architekturen, die über Protokolle, APIs und SDK definiert sind
 	\item Stundenglasmodell: Wenige zentrale Abstraktionen um möglichste viele Anwendungen zu unterstützen. Bsp. Internet: lediglich \texttt{IP} innerhalb des Netzwerk-Stacks vorgegeben
-	\item \textbf{Schichtenarchitektur}
-	\begin{description}
-		\item[Collective Layer:] Verwaltung mehrerer Ressourcen mittels Verzeichnisdienste zum Allokieren, Schedulen, Verteilten/Monitoren/Replizieren
-		\item[Resource Layer:] Ermöglicht teilen einzelner Ressourcen mittels Standardprotokolle zum Verbdingungsaufbau, Monitoring, Accounting, Bezahlen
-		\item[Connectivity Layer:] Ermöglicht Verbindungen zwischen unterschiedlichen Fabric-Ressourcen (Transport, Routing, Naming, etc.), meist dem \texttt{IP}-Stack entnommen; Authentifizierung
-		\item[Fabric Layer:] Physikalische Verbindung der geteilten Hardware-Ressourcen unter Berücksichtigung verschiedener Hardware-Typen und Verbindungstypen
-	\end{description}
-	\item \textbf{Struktur}
+	\item \textbf{Anatomie: Schichtenarchitektur}
+	\begin{itemize}
+		\item Schichten
+		\begin{description}
+			\item[Collective Layer:] Verwaltung mehrerer Ressourcen mittels Verzeichnisdienste zum Allokieren, Schedulen, Verteilten/Monitoren/Replizieren
+			\item[Resource Layer:] Ermöglicht Teilen einzelner Ressourcen mittels Standardprotokolle zum Verbindungsaufbau, Monitoring, Accounting, Bezahlen. Implementierung nutzt \textit{Fabric-Layer}-Methoden
+			\item[Connectivity Layer:] Ermöglicht Verbindungen zwischen unterschiedlichen Fabric-Ressourcen (Transport, Routing, Naming, etc.), meist dem \texttt{IP}-Stack entnommen; Authentifizierung
+			\item[Fabric Layer:] Physikalische Verbindung der geteilten Hardware-Ressourcen unter Berücksichtigung verschiedener Hardware-Typen und Verbindungstypen
+		\end{description}
+		\item Resource-Layer vs. Fabric-Layer: \textit{Fabric-Layer} umfasst die Plattform (Hardware und Betriebssystem); \textit{Resource-Layer} umfasst virtuelle, abstrakte Ressourcen
+	\end{itemize}
+	\item \textbf{Physiologie}
 	\begin{itemize}
 		\item Als standardisiertes Framework definiert: \textit{Open Grid Service Architecture} (OGSA)
 		\item Service-orientiert \(\rightarrow\) alle Ressourcen werden durch einen Service repräsentiert; alle Komponenten sind virtuell
@@ -79,6 +89,7 @@ Zusammenfassung der Vorlesung "`Verteiltes Rechnen"' aus dem Wintersemester 2017
 			\item[Information Services:] Naming, Service-/Ressourcendiscovery, Logging/Monitoring
 		\end{description}
 	\end{itemize}
+	\item Anatomie vs. Physiologie: \textit{Anatomie} beschreibt die Architektur eines Grids als Middleware; \textit{Physiologie} beschreibt die Kommunikation mittels OSGA
 \end{itemize}
 
 
@@ -89,18 +100,164 @@ Zusammenfassung der Vorlesung "`Verteiltes Rechnen"' aus dem Wintersemester 2017
 \end{itemize}
 
 
+\subsection{Infrastruktur}
+\begin{itemize}
+	\item \textbf{Worldwide LHC Computing Grid (WLCG)} % TODO
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
 
 
 
+\section{Big Data}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Charakteristika\footnote{\url{https://en.wikipedia.org/wiki/Big_data\#Characteristics}}}
+	\begin{description}
+		\item[Volume:] Die Menge der erzeugten/generierten Daten \(\rightarrow\) gibt Aufschluss über den Wert der Daten und ob es sich um "`Big Data"' handelt
+		\item[Velocity:] Geschwindigkeit, in der die Daten gewonnen/verarbeitet werden. Bei Big Data oft in Echtzeit
+		\item[Variety:] Typ/Art der Daten. Ermöglicht die effektive Nutzung der Daten. Big Data wird aus verschiedensten Quellen gewonnen und verknüpft
+		\item[Value:] (Nicht-)Reproduzierbarkeit der Daten
+		\item[Variability:] Inkonsistenzen der Daten können Verwaltungsprozesse verhindern oder erschweren
+		\item[Veracity:] Qualität der Daten \(\rightarrow\) maßgeblich für Ausgabequalität
+	\end{description}
+	\item \textbf{Anwendung Charakteristika auf HLC\footnote{Large Hadron Collider}}
+	\begin{description}
+		\item[Volume:] Sehr wichtig, da mehrere Terabyte pro Sekunde erzeugt werden
+		\item[Velocity:] Nicht so wichtig, da die Aggregation nicht während des Experiments erfolgen muss
+		\item[Variety:] Unwichtig, nur sehr wenige Datentypen
+		\item[Value:] Unwichtig, da das Experiment wiederholt werden kann
+		\item[Variability:] Unwichtig, da sich die Datentypen nicht ändern 
+	\end{description}
+\end{itemize}
+
+
+\subsection{Data Stewardship, Curation and Preservation}
+\begin{itemize}
+	\item \textbf{Data Stewardship}
+	\begin{itemize}
+		\item Für die Nutzung und die Sicherheit digitaler Güter verantwortlich. Kümmert sich um Pflege, Verwaltung und Zugang
+		\item Stellt \textit{Data Preservation} sicher und unterstützt \textit{Data Curation}
+	\end{itemize}
+	\item \textbf{Data Preservation}
+	\begin{itemize}
+		\item Ziel: Sicherstellung der Langzeit-Brauchbarkeit und Verfügbarkeit digitaler Güter
+		\item Beeinhaltet Authentizität (digitales Logbuch), Verfügbarkeit (trusted Source), Nutzbarkeit (Formate, VMs, Emulation,...) und Integrität
+		\item Speicherformate etc. müssen regelmäßig aktualisiert werden
+	\end{itemize}
+	\item \textbf{Data Curation}
+	\begin{itemize}
+		\item Verwaltung und Wertsteigerung digitaler Güter \(\rightarrow\) Verwaltung der Metadaten
+		\item Beinhaltet Zugang (inklusive Authentifizierung) und Rechteverwaltung
+		\item Tätigkeiten: Hinzufügen von Erläuterungen; Erstellen von Verknüpfungen; Verbessern und Aktualisieren der Dokumentation
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{MapReduce}
+\begin{itemize}
+	\item Skalierbares, massiv-paralleles Programmiermodell zum Verarbeiten extrem großer Datenmengen in Form von Key-Value-Paaren. Wichtig: Keine Ahängigkeiten zwischen den Daten, da sonst nicht parallelisierbar
+	\item \textbf{Vorgehen}
+	\begin{description}
+		\item[Map:] Durchführen einer Map-Operation pro KV-Paar. Erzeugt \textit{Intermediate Values}
+		\item[Reduce:] Zusammenfassen der selben \textit{Intermediate Values}. Eine \texttt{Reduce}-Instanz pro \textit{Intermediate}-Key mit einem Iterator auf sämtliche Values zu diesem Key
+	\end{description}
+	\item Schritte: Split, Map, Shuffle, Reduce
+	\item \textbf{Beispiele}
+	\begin{itemize}
+		\item \texttt{WordCount}
+		\begin{description}
+			\item[Eingabe:] Liste mit Dokumenten; jede \texttt{Map}-Instanz gibt pro Wort ein KV-Paar weiter
+			\item[Intermediate Value:] \texttt{EmitIntermediate(w, 1);}
+			\item[Ausgabe:] Jede \texttt{Reduce}-Operation ermittelt über den Iterator die Häufigkeit des jeweiligen Wortes
+		\end{description}
+		\item \texttt{PageRank}
+		\begin{itemize}
+			\item Formel
+			\begin{itemize}
+				\item \(PR(u) = \frac{1-\beta}{N} + \beta \sum_{v \in B_u}\frac{PR(v)}{L(v)}\)
+				\item \(\beta\): Dämpfungsfaktor, meist \(\beta \approx 0.8\). Verhindert Dead-Ends und elbstverlinkung
+				\item \(B_u\): Liste aller Seiten, die auf Seite \(u\) verweisen
+				\item \(L_v\): Anzahl der ausgehenden Links von Seite \(v\)
+			\end{itemize}
+			\item Implementierung
+			\begin{description}
+				\item[Map:] Weitergabe von KV-Paaren der Form \texttt{\(\big(\)Ziel ausgehender Link, Anteil Quell-PageRank geteilt durch Anzahl ausgehender Links\(\big)\)}
+				\item[Reduce:] Summe über die Elemente des Iterators
+			\end{description}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 
 
 
+\section{Cloud}
+
+\subsection{Einführung}
+\begin{itemize}
+	\item \textbf{Abgrenzung gegenüber Grid-Computing}
+	\begin{itemize}
+		\item Checkliste
+		\begin{itemize}
+			\item Zentrale Kontrolle
+			\item Verwendung proprietärer Protokolle und Schnittstellen
+			\item Erfüllen eher "`einfache"' Aufgaben
+		\end{itemize}
+		\item Weitere Unterschiede
+		\begin{itemize}
+			\item Einsatz: Cloud kommerziell (Peakleistungsverteilung zwischen mehreren Kunden), Grid in der Forschung
+			\item Grid-Rechner global verteilt, Cloud in Rechenzentren
+		\end{itemize}
+	\end{itemize}
+	\item \textbf{Charakteristik (NIST)}
+	\begin{description}
+		\item[On-Demand Self-Service:] Kunden können Ressourcen automatisch, ohne Freischaltung durch Technikerpersonal, hinzubuchen
+		\item[Broad Netwerk Access:] Ressourcen sind mittels Standardprotokolle über das Netzwerk zugänglich
+		\item[Resource Pooling:] Die Ressourcen des Providers werden zusammengefasst mehreren Kunden zur Verfügung gestellt
+		\item[Rapid Elastizität:] Kunden können Ressourcen dynmaisch verringern und erweitern (scale-in, scale-out)
+		\item[Measured Service:] Die Ressourcenverwendung durch den Kunden wird automatisch verwaltet und optimiert. Abrechnungsgrundlage des Providers
+	\end{description}
+	\item \textbf{Scale-Out vs. Scale-Up}
+	\begin{description}
+		\item[Scale-Out:] Hinzufügen weiterer Ressourcen-Einheiten (beispielsweise VMs) \(\rightarrow\) horizontale Skalierung
+		\item[Scale-Up:] Verbesserung der einzelnen Ressourcen-Einheiten (beispielsweise bessere CPUs in VMs) \(\rightarrow\) vertikale Skalierung
+	\end{description}
+	\item \textbf{Service-Modelle}
+	\begin{description}
+		\item[IaaS:] Infrastructure as a Service
+		\item[PaaS:] Platform as a Service
+		\item[SaaS:] Software as a Service
+	\end{description}
+\end{itemize}
 
 
-
-
-
-
-
-
-
+\subsection{Virtualisierung}
+\begin{itemize}
+	\item \textbf{Vorteile}
+	\begin{itemize}
+		\item Betriebssystem und Ressourcen können on-demand angepasst werden \(\rightarrow\) einfache Verwaltung
+		\item Gäste sind isoliert (Sicherheit, dedizierte Leistung, etc.)
+		\item Gäste können unkompliziert migriert werden
+		\item Verwendung von Legacy-Systemen
+	\end{itemize}
+	\item \textbf{Virtualisierung vs. Emulation}
+	\begin{description}
+		\item[Virtualisierung:] Instruktionen des Gastsystemes werden (so weit wie möglich) direkt durch die Hardware des Hostsystems ausgeführt
+		\item[Emuation:] Instruktionen des Gastsystems werden vom Host nachgebildet und ausgeführt. Ermöglicht die Ausführung von Fremdarchitekturen
+	\end{description}
+	\item \textbf{x86-Virtualisierung}
+	\begin{itemize}
+		\item Kritische Instruktionen: Sensitive, aber nicht privilegierte Instruktionen. 17 bei x86, beispielsweise \text{POPF} \(\rightarrow\) trappen nicht\footnote{\url{https://de.wikipedia.org/wiki/Virtualisierungsforderungen_von_Popek_und_Goldberg}}
+		\item Vollvirtualisierung: \textit{Binary Translation} zur Laufzeit zum Finden und Ersetzen kritischer Anweisungen; User-Level-Anweisungen werden direkt ausgeführt (native Geschwindigkeit). Gast "`weiß"' nicht, dass er in einer virtuellen Umgebung läuft (\texttt{Ring 1})
+		\item Paravirtualisierung: Kritische Instruktionen werden vor der Ausführung durch \textit{Hypercalls} ersetzt und kommunizieren direkt mit dem Hypervisor. Gast "`weiß"', dass er virtuell läuft (\texttt{Ring 1})
+		\item Hardware-assistierte Virtualisierung (VT-x, AMD-V): Zusätzlicher Ausführungsmodus für Gastsysteme
+		\item Speicherirtualisierung: Der physische Speicher des Gastes wird in den physischesn Speicher des Hypervisors gemappt \(\rightarrow\) Gast hat keinen direkten Zugriff aus den Arbeitsspeicher des Hosts
+	\end{itemize}
+	\item \textbf{Docker}
+	\begin{itemize}
+		\item Container: Leichtgewichtige, vollständige Ausführungsumgebung für Anwendungen. Beinhaltet Libraries und Konfigurationen
+		\item Verwendet den Betriebssystem-Kernel \(\rightarrow\) meist sehr gute Performance bei wenig Overhead
+	\end{itemize}
+\end{itemize}
