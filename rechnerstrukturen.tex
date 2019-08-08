@@ -99,7 +99,7 @@ Weltweite Forschungsaktivitäten bzgl. ExaScale-Rechner
 	\item Nachteile automatischer Synthesewerkzeuge: Randbedingungen schwer einzuhalten, Ergebnisse oft schlechter als bei manuellem Entwurf
 	\item Chip-Entwurf mit VHDL
 	\begin{itemize}
-		\item Grundlage des Entwurfs ist die Spezifikation der Schaltung: Gewünschtes Verhalten; Schnittstellen; Vorgaben bzwgl. Geschwindigkeit, Kosten, Fläche oder Leistungsverbrauch
+		\item Grundlage des Entwurfs ist die Spezifikation der Schaltung: Gewünschtes Verhalten; Schnittstellen; Vorgaben bzgl. Geschwindigkeit, Kosten, Fläche oder Leistungsverbrauch
 		\item Entwurfsschritte: Verhaltensspezifikation, High-Level-Synthese, RT-Beschreibung, Logik-Synthese, Gatterbeschreibung, Layout-Synthese, Geometriegebschreibung, Fertigung
 		\item Hauptbestandteile: Entity, Architecture, Configuration
 		\item Signale zur Kommunikation zwischen Instanzen untereinander oder mit Schnittstellen der äußeren Hülle (Entity)
@@ -112,7 +112,7 @@ ENTITY blinklicht IS
 		reset: IN Std_Logic;
 		led: OUT Std_Logic
 	);
-END blicklicht
+END blinklicht
 			\end{lstlisting}
 			\end{minipage}
 		\item Schema einer ARCHITECTURE\\\\
@@ -159,18 +159,18 @@ ARCHITECTURE Structure OF blinklicht IS
 \subsection{Energieeffizienter Entwurf - Grundlagen}
 \begin{itemize}
 	\item Mobile Geräte: Verfügbare Energiemenge durch Batterien und Akkus begrenzt \(\rightarrow\) vorhandene Energie möglichst lange ausnutzen sowie Vermeidung von Überhitzung
-	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und die beeinflussen die Zuverlässigkeit
+	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und beeinflussen die Zuverlässigkeit
 	\item \textbf{CMOS-Schaltung}
 	\begin{itemize}
 		\item MOSFET: Je nach Spannung am Gate und dem daraus resultierenden Feld im Kanal können Ladungsträger den Kanal passieren oder nicht. Extrem niedrige Stromaufnahme im Ruhezustand
 		\item Leistungsaufnahme: \(P_{total} = P_{switching} + P_{shortcircuit} + P_{static} + P_{leakage}\)
 		\item Statischer Leistungsverbrauch: \(P_{static}\) sowie Leistungsverbauch bei Kriechströmen (\(P_{leakage}\))
-		\item Verbrauch bei Zustandsänderung: \(P_{switching}\) sowie Verbrauch während des Übergangs am Ausgang, wenn sich die Eingänge ändern \(P_{shortciruit}\)
-		\item Höhere Frequenzen erfordern steilere Taktflaken \(\rightarrow\) schnelleres Laden von \(C_{eff}\) \(\rightarrow\) höhere Versorgungsspannung (\(P \sim V^2_{dd}\))
+		\item Verbrauch bei Zustandsänderung: \(P_{switching}\) sowie Verbrauch während des Übergangs am Ausgang, wenn sich die Eingänge ändern \(P_{shortcircuit}\)
+		\item Höhere Frequenzen erfordern steilere Taktflanken \(\rightarrow\) schnelleres Laden von \(C_{eff}\) \(\rightarrow\) höhere Versorgungsspannung (\(P \sim V^2_{dd}\))
 		\item Reduktion der Taktfrequenz bedeutet Reduktion von Leistungsaufnahme und Ausführungsgeschwindigkeit (unter idealen Bedingungen gilt \(P \sim f\))
 		\item Schaltwahrscheinlichkeit
 		\begin{itemize}
-			\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
+			\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang}(1) \cdot (1-\mathbb{P}_{Ausgang}(1))\)
 			\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
 		\end{itemize}
 	\end{itemize}
@@ -185,7 +185,7 @@ ARCHITECTURE Structure OF blinklicht IS
 		\item CPU time (Vgl Unix time Kommando)
 		\begin{itemize}
 			\item CPU time: Zeit, in der die CPU arbeitet
-			\item User CPU time: Zeit, inder die CPU ein Programm ausführt
+			\item User CPU time: Zeit, in der die CPU ein Programm ausführt
 			\item System CPU time: Zeit, in der die CPU Betriebssystemaufgaben ausführt, die von einem Programm angefordert werden
 		\end{itemize}
 	\end{itemize}
@@ -199,7 +199,7 @@ ARCHITECTURE Structure OF blinklicht IS
 	\item \textbf{Benchmarks}
 	\begin{itemize}
 		\item Bewertung der Leistungsfähigkeit mit Hilfe von einem Programm oder einer Programmsammlung und Messen der Ausführungszeit. Zugriff auf die Maschine notwendig
-		\item Kernels: Rechenintensive Teile reale Programme, vorwiegend numerische Algorithmen (beispielsweise LINPACK Softwarepaket zum Lösen linearer Gleichungen)
+		\item Kernels: Rechenintensive Teile realer Programme, vorwiegend numerische Algorithmen (beispielsweise LINPACK Softwarepaket zum Lösen linearer Gleichungen)
 		\item Standardisierung zur Verbesserung der Vergleichbarkeit von Rechnern (inklusive OS und Compiler)
 		\item Standardisierte Benchmarks: SPEC CPU Benchmarks
 		\begin{itemize}
@@ -292,7 +292,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 
 
 
-\section{Parallelismus auf Machinenbefehlsebene}
+\section{Parallelismus auf Maschinenbefehlsebene}
 
 \subsection{Pipelining}
 \begin{itemize}
@@ -338,7 +338,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 	\item \textbf{Auflösen von Konflikten}
 	\begin{itemize}
 		\item Anhalten der Pipeline (pipeline stall)
-		\item Einfügen von Leerzyklen (pipeline bibble)
+		\item Einfügen von Leerzyklen (pipeline bubble)
 		\item Führt zu Leistungseinbußen, daher verschiedene Maßnahmen (in Hardware und Software), um die Auswirkungen auf die Leistungsfähigkeit zu reduzieren/vermeiden
 	\end{itemize}
 \end{itemize}
@@ -350,7 +350,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 \begin{itemize}
 	\item Mehrfachzuweisung: Pro Takt können mehrere Befehle den Ausführungseinheiten zugeordnet und die gleiche Anzahl von Befehlsausführungen pro Takt beendet werden
 	\item RISC-Eigenschaften bleiben weitestgehend erhalten: LS-Architektur sowie festes Befehlsformat
-	\item Entwurfsziel: Erhöhung des IPC (Instruction per Cycle)
+	\item Entwurfsziel: Erhöhung des IPC (Instructions per Cycle)
 	\begin{itemize}
 		\item \textbf{1. In-order-Abschnitt}
 		\begin{itemize}
@@ -391,7 +391,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Sprungvorhersage wird zur Laufzeit von der CPU ausgeführt. Genauigkeit bei etwa 98\% (Quelle: Wikipedia)
 		\item Sprungvorhersagetechniken
 		\begin{itemize}
-			\item Der \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
+			\item Die \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
 			\item \texttt{1-Bit-Prädikator}: Zu jedem Sprung wird ein Bit gespeichert. Ist es gesetzt, dann wird ein gespeicherter Sprung genommen. Bei Falschannahme wird dessen Bit invertiert. Problem: Alternierende Sprünge werden nicht berücksichtigt \(\rightarrow\) \texttt{n-Bit-Prädikator}
 			\item \texttt{2-Bit-Prädikator}: Speichert vier Zustände und setzt das Korrektheitsbit erst nach \texttt{2} Fehlschlägen neu. Zustände sind \texttt{Predict strongly taken (11)}, \texttt{Predict weakly taken (10)}, \texttt{Predict weakly not taken (01)} und \texttt{Predict stronly not taken (00)}. In der Praxis bringen Prädikatoren mit mehr als 2 Bit kaum Vorteile.
 		\end{itemize}
@@ -453,7 +453,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Bei Aufreten einer Unterbrechung
 		\begin{itemize}
 			\item Alle Resultate, die in der Programmausführung vor dem Befehl stehen, werden gültig gemacht; die Ergebnisse aller nachfolgenden werden verworfen
-			\item Das Ergebnisse des Befehls, der die Unterbrechung verursacht hat, wird in Abhängigkeit der Unterbrechung und der Architektur gültig gemacht oder verworfen
+			\item Das Ergebnis des Befehls, der die Unterbrechung verursacht hat, wird in Abhängigkeit der Unterbrechung und der Architektur gültig gemacht oder verworfen
 			\item Komplexe Hardware notwendig
 		\end{itemize}
 	\end{itemize}
@@ -469,7 +469,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\end{itemize}
 	\item \textbf{Funktionsweise\footnote{\url{https://de.wikipedia.org/wiki/Tomasulo-Algorithmus\#Funktionsweise}}}
 	\begin{itemize}
-		\item Issue: Der Befehl an der aktuellen Position in der Operation Queue wird dekodiert und entsprechend seiner auszuführenden Operation in eine passende Reservation Station eingetragen. Operanden werden direkt aus der Registerdatei übernommen, wenn sie gültig sind. Dieser Vorgang wird als Registerumbenennung bezeichnet. Steht ein Operand noch nicht zur Verfügung, wird stattdessen die Adresse der RS eingetragen, die den Wert gerade berechnet. Ist keine passende RS frei, verbleibt der Befeht in der Operation Queue und die Zuweisung wird im nächsten Takt erneut versucht
+		\item Issue: Der Befehl an der aktuellen Position in der Operation Queue wird dekodiert und entsprechend seiner auszuführenden Operation in eine passende Reservation Station eingetragen. Operanden werden direkt aus der Registerdatei übernommen, wenn sie gültig sind. Dieser Vorgang wird als Registerumbenennung bezeichnet. Steht ein Operand noch nicht zur Verfügung, wird stattdessen die Adresse der RS eingetragen, die den Wert gerade berechnet. Ist keine passende RS frei, verbleibt der Befehl in der Operation Queue und die Zuweisung wird im nächsten Takt erneut versucht
 		\item Execute: Sobald alle Operanden in der Reservation Station zur Verfügung stehen, wird die Operation an die FU weiter gegeben und ausgeführt. Andernfalls wird der Common Data Bus auf eingehende Werte beobachtet und fehlende Operanden übernommen, wenn die Adresse der Quell-RS mit der benötigten Adresse übereinstimmt
 		\item Write Result: Sobald das Ergebnis der Operation berechnet wurde, wird es mitsamt der Adresse der ausgeführten RS auf den Common Data Bus gelegt und somit für die RS sichtbar, welche auf das Ergebnis warten
 	\end{itemize}
@@ -512,12 +512,12 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsubsection{Multithreading (Mehrfädigkeit)}
 \begin{itemize}
-	\item Entwurfsziel: Reduzieren der Untätigkeits- oder Latanzzeiten, die bei Speicherzugriffen (insbesondere Cache-Fehlzugriffe) entstehen
+	\item Entwurfsziel: Reduzieren der Untätigkeits- oder Latenzzeiten, die bei Speicherzugriffen (insbesondere Cache-Fehlzugriffe) entstehen
 	\item Ziel: Parallele Ausführung mehrerer Kontrollfäden
 	\item \textbf{Ansätze}
 	\begin{itemize}
-		\item Interleaved Multithreading (cycle-by-cycle): In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
-		\item Blocked Multithreading: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
+		\item Cycle-by-cycle Interleaving: In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
+		\item Block Interleaving: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
 		\item Simultaneous Multithreading: Die Ausführungseinheiten werden über eine Zuordnungseinheit aus mehreren Befehlspuffern versorgt. Jeder Befehlspuffer stellt einen anderen Befehlsstrom dar und hat einen eigenen Registersatz zugeordnet
 	\end{itemize}
 \end{itemize}
@@ -587,7 +587,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \subsubsection{Parallelitätsprofil}
 \begin{itemize}
 	\item Misst die entstehende Parallelität in einem Programm oder bei der Ausführung auf einem Parallelrechner und liefert so eine Vorstellung von der inhärenten Parallelität eines Algorithmus/Programms
-	\item Grafische Darstellung: XY-Diagramm mit Anzahl der parallelen Aktivitäten in zeitlicher Abhängigkeit \(\rightarrow\) Perioden von Berechnungs- Kommunikations- und Untätigkeitszeiten sind erkennbar
+	\item Grafische Darstellung: XY-Diagramm mit Anzahl der parallelen Aktivitäten in zeitlicher Abhängigkeit \(\rightarrow\) Perioden von Berechnungs-, Kommunikations- und Untätigkeitszeiten sind erkennbar
 	\item Der Parallelitätsgrad \(PG(t)\) gibt die Anzahl der Tasks an, die zu einem Zeitpunkt parallel bearbeitet werden können
 	\item Leistungsangaben zu Multiprozessorsystemen werden mit Leistungsangaben zu Einprozessorsystemen in Beziehung gesetzt
 	\item \textbf{Parallelindex I (Mittlerer Grad des Parallelismus)}
@@ -619,7 +619,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item \textbf{Verbindungsnetzwerke in Multiprozessoren}
 	\begin{itemize}
 		\item Ermöglichen die Kommunikation und Kooperation zwischen den Verarbeitungselementen
-		\item Einsatz: Chip-Multiprozessor (NoC, beispielsweise Verbinden des gemeinsamen L2-Cache), Multiprozessor mit gemeinsamem oder verteilten Speicher
+		\item Einsatz: Chip-Multiprozessor (NoC, beispielsweise Verbinden des gemeinsamen L2-Cache), Multiprozessor mit gemeinsamem oder verteiltem Speicher
 	\end{itemize}
 	\item \textbf{Charakterisierung von Verbindungsnetzwerken}
 	\begin{itemize}
@@ -649,7 +649,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\begin{itemize}
 			\item Nach Aufbau des Verbindungsnetzes bleiben die Strukturen fest
 			\item Vorhersagbare Kommunikationsmuster zwischen Knoten
-			\item Vollständige Verbindung: Alle Knoten sind miteinander verbunden. Höchste Leistungsfähigkeit aber nicht praktikabel bei hoher Prozessorzahl (Aufwand steigt qudratisch mit der Prozessorzahl)
+			\item Vollständige Verbindung: Alle Knoten sind miteinander verbunden. Höchste Leistungsfähigkeit aber nicht praktikabel bei hoher Prozessorzahl (Aufwand steigt quadratisch mit der Prozessorzahl)
 			\item Gitterstrukturen: Verbinden benachbarte Knoten. Disjunkte Bereiche können parallel genutzt werden, allerdings oft mehrere Schritte notwendig (bei unbenachbarten Knoten)
 			\item Unidirektionaler Ring: Nachrichten werden vom Quellknoten zum Zielknoten geschickt. Bei Ausfall bricht die Kommunikation zusammen
 			\item Bidirektionaler Ring: Übertragung kann die kürzeren der beiden Wege wählen. Bei einer Unterbrechung bleibt die Kommunikation bestehen
@@ -657,7 +657,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Baumstruktur: Teilweise mit steigender Anzahl an Kommunikationskanälen in Richtung Wurzel
 			\item Diverse Kubusstrukturen, beispielsweise Hyperkubus: Binäre Bezeichnung der Knoten ermöglicht Routenbestimmung (benachbarte Knoten unterscheiden sich um genau eine Stelle, Start- und Zieladresse werden per XOR verknüpft). Allerdings schlechte Skalierbarkeit, da bei jeder Erweiterung der Knotengrad steigt und alle Knoten erweitert werden müssen
 			\begin{itemize}
-				\item Anzahl der Knoten eines \(K\)-nären \(n\)-Kubus: \(N = K^n\)
+				\item Anzahl der Knoten eines \(K\)-ären \(n\)-Kubus: \(N = K^n\)
 				\item Knoten-/Verbindungsgrad: \(2n\)
 			\end{itemize}
 		\end{itemize}
@@ -682,7 +682,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsection{Multiprozessoren mit gemeinsamem Speicher}
 \begin{itemize}
-	\item Gültigkeitsproblem: Paralleler Zugriff mehrere Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
+	\item Gültigkeitsproblem: Paralleler Zugriff mehrerer Prozessoren auf den Hauptspeicher \(\rightarrow\) mehrere Kopien des gleichen Speicherwortes müssen miteinander in Einklang gebracht werden
 	\item Inklusionseigenschaft bei Caches: Der Inhalt des Caches auf der höchsten Stufe ist auch in den Caches niedrigerer Stufen enthalten
 	\item \textbf{Cache-Kohärenz-Problem}
 	\begin{itemize}
@@ -720,7 +720,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 			\item Erweiterung jeder Cache-Zeile um zwei Steuerbits zum Anzeigen der Zustände:
 			\begin{itemize}
 				\item Invalid (I): Die Cache-Zeile ist ungültig. Mittels Shared-Signal zeigen die anderen Steuerungen an, ob sie diesen Block gespeichert haben (shared read hit/miss). Davon abhängig erfolgt der Übergang in \(S\) oder \(E\). Bei einem Write-Miss erfolgt der Übergang in \(M\)
-				\item Shared (S): Der Speicherblock existiert sowohl lokal als auch in anderen Caches. Bei einem Schreibzugriff übergang in Zustand \(M\) und Ausgeben des Invalidate-Signals
+				\item Shared (S): Der Speicherblock existiert sowohl lokal als auch in anderen Caches. Bei einem Schreibzugriff Übergang in Zustand \(M\) und Ausgeben des Invalidate-Signals
 				\item Exclusive (E): Der Speicherblock existiert exklusiv nur in der Zeile dieses Caches. Lese- und Schreibzugriffe möglich, ohne den Bus benutzen zu müssen. Nach Schreibzugriff, Wechsel in \(E\)
 				\item Modified (M): Der Speicherblock existiert nur lokal und ist nach dem Laden verändert worden. Bei einem externen Zugriff durch einen anderen Prozessor muss dieser in den Hauptspeicher zurückkopiert werden. Der externe Prozessor wird über das Retry-Signal informiert, dass zunächst zurückgeschrieben werden muss
 			\end{itemize}
@@ -738,7 +738,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item \textbf{Speicherkonsistenz}
 	\begin{itemize}
 		\item Sequentielle Konsistenz: Ein Multiprozessorsystem heißt sequentiell konsistent, wenn das Ergebnis einer beliebigen Berechnung dasselbe ist, als wenn die Operation sequentiell auf einem Einprozessorsystem ausgeführt worden ist
-		\item Atomar Schreibzugriffe
+		\item Atomare Schreibzugriffe
 		\item Programmierer geht von sequentieller Konsistenz aus \(\rightarrow\) sehr starke Leistungseinbußen bzgl. der Implementierung und der Leistung. Verbietet vorgezogene Ladeoperationen und nicht-blockierende Caches
 		\item Schwache Konsistenz (Speicherkonsistenzmodell)
 		\begin{itemize}
@@ -767,7 +767,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\begin{itemize}
 		\item Großer Software-Overhead, daher Kopieren via DMA
 		\item Hardwareunterstützung soll die Latenz verringern und den Prozessor entlasten
-		\item Im Allgemeinen bietet das Verbindungsnetzwerke Übertragungsprimitive an
+		\item Im Allgemeinen bietet das Verbindungsnetzwerk Übertragungsprimitive an
 		\item Hardwaresupport durch Kommunikationsprozessor
 	\end{itemize}
 \end{itemize}
@@ -776,13 +776,13 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 \begin{itemize}
 	\item \textbf{IBM Blue Gene/L}
 	\begin{itemize}
-		\item \(2^16\) Knoten in bis zu 64 Racks, die jeweils auch als Einzelsystem organisiert werden können
+		\item \(2^{16}\) Knoten in bis zu 64 Racks, die jeweils auch als Einzelsystem organisiert werden können
 		\item Knoten über ein fünfstufiges Netzwerk verbunden. Unterste Ebene: 64x32x32 3D-Torus
 	\end{itemize}
 	\item \textbf{JUGENE: Juelicher BlueGene/P}
 	\begin{itemize}
 		\item Im Juni 2010 Nummer 5 der Top500
-		\item Gesamtleistung mit der letzten Ausgbaustufe bei über einem PF/s
+		\item Gesamtleistung mit der letzten Ausbaustufe bei über einem PF/s
 		\item Aufbau: System mit jeweils 72 Racks mit jeweils 32 NodeCards, die etwa 13,9 TF erreichen. NodeCards bestehen aus jeweils 32 ComputerCards mit je einem Quadcore-Chip (Leistung etwa 13,6GF/s)
 		\item Verbindungsnetze
 		\begin{itemize}
@@ -845,7 +845,7 @@ Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
 		\item Mindestens eine Skalareinheit zur Ausführung von Befehlen, die nicht auf ganze Vektoren angewendet werden sollen (Skalarbefehle)
 		\item Vektoreinheiten und Skalareinheiten können parallel arbeiten \(\rightarrow\) Vektorbefehle und Skalarbefehle können parallel ausgeführt werden
 	\end{itemize}
-	\item \textbf{Pipeling eines Vektorprozessors}
+	\item \textbf{Pipeline eines Vektorprozessors}
 	\begin{itemize}
 		\item Berechnung eines Ergebnisses pro Takt bei ununterbrochener Arbeit und einer Füllzeit/Einschwingzeit
 		\item Beispiel einer Gleitkommaoperation
@@ -858,14 +858,14 @@ Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
 		\item Verkettung von Pipelines: Erweiterung auf eine Folge von Vektoroperationen durch Verkettung der (spezialisierten) Pipelines. So können die Ergebnisse einer Pipline sofort der nächsten Pipeline zur Verfügung gestellt werden. Beispielsweise können Addition, Schieben und UND-Verknüofung unmittelbar hintereinander ausgeführt werden
 		\item Multifunktions- oder spezialisierte Pipelines zur Realisierung arithemtisch-logischer Verknüpfungen
 		\begin{itemize}
-			\item Verwendung eines Multifunktionspipeline oder eine Anzahl von spezialisierten Pipelines
-			\item Multifunkspipeline: Der Aufbau erfordert eine höhere Stufenzahl, wobei aktuell nicht benötigte Stufen oder Pipelines übersprungen werden können
-			\item Spezialisierte Pipelines: Jeweils zur Durchführungs spezieller Funktionen benutzt. Hardware und Steuerung relativ einfach, allerdings werden mehrere unabhängige Pipelibes benötigt, um alle Funktionen abzubilden
+			\item Verwendung einer Multifunktionspipeline oder eine Anzahl von spezialisierten Pipelines
+			\item Multifunktionspipeline: Der Aufbau erfordert eine höhere Stufenzahl, wobei aktuell nicht benötigte Stufen oder Pipelines übersprungen werden können
+			\item Spezialisierte Pipelines: Jeweils zur Durchführung spezieller Funktionen benutzt. Hardware und Steuerung relativ einfach, allerdings werden mehrere unabhängige Pipelines benötigt, um alle Funktionen abzubilden
 		\end{itemize} 
 	\end{itemize}
 	\item \textbf{Parallelität in einem Vektorrechner}
 	\begin{itemize}
-		\item Vektor-Pipeline-Parllelität durch die Stufenzahl der Vektor-Pipeline
+		\item Vektor-Pipeline-Parallelität durch die Stufenzahl der Vektor-Pipeline
 		\item Mehrere Vektor-Pipelines in einer Vektoreinheit
 		\item Vervielfachen der Pipelines: Pro Takt wird nicht nur ein Operandenpaar sondern ein Vielfaches davon verarbeitet
 		\item Mehrere Vektoreinheiten, die parallel zueinander arbeiten (vgl. speichergekoppelter Multiprozessor)
@@ -891,7 +891,7 @@ Loop:	L.D 	 F2, 0(Rx)  	; X(i) laden
 \begin{itemize}
 	\item \textbf{Vektor Stride}
 	\begin{itemize}
-		\item Problem: Die Elemente eines Vektors liegen nicht immer so wie sie gebraucht werden in aufeinander folgend Speicherzellen. Beispielsweise ändert sich die Reihenfolge bei Matrizenmultiplikationen (Spaltenelemente \(\times\) Zeilenelemente)
+		\item Problem: Die Elemente eines Vektors liegen nicht immer so wie sie gebraucht werden in aufeinander folgenden Speicherzellen. Beispielsweise ändert sich die Reihenfolge bei Matrizenmultiplikationen (Spaltenelemente \(\times\) Zeilenelemente)
 		\item Stride-Wert bezeichnet den Abstand zwischen den Elementen. Dieser kann sich allerdings zur Laufzeit ändern oder ist dann erst bekannt. Lösung: Ablegen in Allzweckregister
 		\item In heutigen Vektorrechnern werden die Zugriffe von jedem Prozessor auf über mehrere Hundert Speicherbänke verteilt 
 	\end{itemize}
@@ -1036,7 +1036,7 @@ SV 		Rc, V3
 	\item Gesamtausführungzeit (Gesetz von Amdahl): \(T(n) = T(1) \cdot a + T(n) \cdot \frac{1-a}{n}\), \(a\): Anteil des Programms, der nur sequentiell ausgeführt werden kann
 	\item Für \(n \rightarrow \infty:S(n)=\frac{1}{a}\)
 	\item Beschleunigung: \(S(n) = \frac{T(1)}{T(n)} = \frac{T(1)}{T(1) \cdot \frac{1-a}{n}+T(1) \cdot a} = \frac{1}{\frac{1-a}{n}+1}\)
-	\item Effiziens: \(E(n) = \frac{\text{Beschleunigung}}{\text{Anzahl der Kerne}} = \frac{S(n)}{n}\), \(E \le 1\)
+	\item Effizienz: \(E(n) = \frac{\text{Beschleunigung}}{\text{Anzahl der Kerne}} = \frac{S(n)}{n}\), \(E \le 1\)
 	\item Parallelindex: \(I(n) = \frac{\text{Anzahl an Operationen}}{\text{Parallelgesamtausfuehrungszeit}} = \frac{P(n)}{T(n)}\)
 	\item Auslastung: \(U(n) = \frac{I(n)}{n}\)
 	\item Mehraufwand für die Parallelisierung: \(R(n) = \frac{P(n)}{P(1)}\)
@@ -1070,7 +1070,7 @@ SV 		Rc, V3
 	\item Übertragungszeit = Startzeit + Transferzeit: \(T_{msg} = t_s + t_w\)
 	\item Bisektionslinie: Teilt das Netzwerk in zwei gleiche Hälften
 	\item Bisektionsbandbreite: Maximale Anzahl vom Megabytes pro Sekunde, die das Netzwerk über die Bisektionslinie transportieren kann
-	\item Diameter (Durchmesser): Maximale Distanz zweier Prozessoren oder Anzahl der Verbindugen, die durchlaufen werden müssen oder maximale Pfadlänge zwichen zwei Knoten
+	\item Diameter (Durchmesser): Maximale Distanz zweier Prozessoren oder Anzahl der Verbindugen, die durchlaufen werden müssen oder maximale Pfadlänge zwischen zwei Knoten
 	\item Verbindungsgrad eines Knoten: Anzahl der Direktverbindungen zu anderen Knoten
 	\item Mittlere Distanz zwischen zwei Knoten: Anzahl der Links auf dem kürzesten Pfad zwischen den beiden Knoten
 \end{itemize}
