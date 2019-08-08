@@ -159,18 +159,18 @@ ARCHITECTURE Structure OF blinklicht IS
 \subsection{Energieeffizienter Entwurf - Grundlagen}
 \begin{itemize}
 	\item Mobile Geräte: Verfügbare Energiemenge durch Batterien und Akkus begrenzt \(\rightarrow\) vorhandene Energie möglichst lange ausnutzen sowie Vermeidung von Überhitzung
-	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und die beeinflussen die Zuverlässigkeit
+	\item HPC: Hohe Temperaturen begrenzen die Verarbeitungsgeschwindigkeit und beeinflussen die Zuverlässigkeit
 	\item \textbf{CMOS-Schaltung}
 	\begin{itemize}
 		\item MOSFET: Je nach Spannung am Gate und dem daraus resultierenden Feld im Kanal können Ladungsträger den Kanal passieren oder nicht. Extrem niedrige Stromaufnahme im Ruhezustand
 		\item Leistungsaufnahme: \(P_{total} = P_{switching} + P_{shortcircuit} + P_{static} + P_{leakage}\)
 		\item Statischer Leistungsverbrauch: \(P_{static}\) sowie Leistungsverbauch bei Kriechströmen (\(P_{leakage}\))
-		\item Verbrauch bei Zustandsänderung: \(P_{switching}\) sowie Verbrauch während des Übergangs am Ausgang, wenn sich die Eingänge ändern \(P_{shortciruit}\)
-		\item Höhere Frequenzen erfordern steilere Taktflaken \(\rightarrow\) schnelleres Laden von \(C_{eff}\) \(\rightarrow\) höhere Versorgungsspannung (\(P \sim V^2_{dd}\))
+		\item Verbrauch bei Zustandsänderung: \(P_{switching}\) sowie Verbrauch während des Übergangs am Ausgang, wenn sich die Eingänge ändern \(P_{shortcircuit}\)
+		\item Höhere Frequenzen erfordern steilere Taktflanken \(\rightarrow\) schnelleres Laden von \(C_{eff}\) \(\rightarrow\) höhere Versorgungsspannung (\(P \sim V^2_{dd}\))
 		\item Reduktion der Taktfrequenz bedeutet Reduktion von Leistungsaufnahme und Ausführungsgeschwindigkeit (unter idealen Bedingungen gilt \(P \sim f\))
 		\item Schaltwahrscheinlichkeit
 		\begin{itemize}
-			\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang(1)} \cdot (1-\mathbb{P}_{Ausgang}(1))\)
+			\item \(\mathbb{P}_{Schalt} = 2 \cdot \mathbb{P}_{Ausgang}(1) \cdot (1-\mathbb{P}_{Ausgang}(1))\)
 			\item \(\mathbb{P}_{Ausgang}(1) = \mathbb{P}_{Eingang1}(0) \cdot \mathbb{P}_{Eingang2}(1) + \mathbb{P}_{Eingang1}(1) \cdot \mathbb{P}_{Eingang2}(0)\)
 		\end{itemize}
 	\end{itemize}
@@ -185,7 +185,7 @@ ARCHITECTURE Structure OF blinklicht IS
 		\item CPU time (Vgl Unix time Kommando)
 		\begin{itemize}
 			\item CPU time: Zeit, in der die CPU arbeitet
-			\item User CPU time: Zeit, inder die CPU ein Programm ausführt
+			\item User CPU time: Zeit, in der die CPU ein Programm ausführt
 			\item System CPU time: Zeit, in der die CPU Betriebssystemaufgaben ausführt, die von einem Programm angefordert werden
 		\end{itemize}
 	\end{itemize}
@@ -199,7 +199,7 @@ ARCHITECTURE Structure OF blinklicht IS
 	\item \textbf{Benchmarks}
 	\begin{itemize}
 		\item Bewertung der Leistungsfähigkeit mit Hilfe von einem Programm oder einer Programmsammlung und Messen der Ausführungszeit. Zugriff auf die Maschine notwendig
-		\item Kernels: Rechenintensive Teile reale Programme, vorwiegend numerische Algorithmen (beispielsweise LINPACK Softwarepaket zum Lösen linearer Gleichungen)
+		\item Kernels: Rechenintensive Teile realer Programme, vorwiegend numerische Algorithmen (beispielsweise LINPACK Softwarepaket zum Lösen linearer Gleichungen)
 		\item Standardisierung zur Verbesserung der Vergleichbarkeit von Rechnern (inklusive OS und Compiler)
 		\item Standardisierte Benchmarks: SPEC CPU Benchmarks
 		\begin{itemize}
@@ -292,7 +292,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 
 
 
-\section{Parallelismus auf Machinenbefehlsebene}
+\section{Parallelismus auf Maschinenbefehlsebene}
 
 \subsection{Pipelining}
 \begin{itemize}
@@ -338,7 +338,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 	\item \textbf{Auflösen von Konflikten}
 	\begin{itemize}
 		\item Anhalten der Pipeline (pipeline stall)
-		\item Einfügen von Leerzyklen (pipeline bibble)
+		\item Einfügen von Leerzyklen (pipeline bubble)
 		\item Führt zu Leistungseinbußen, daher verschiedene Maßnahmen (in Hardware und Software), um die Auswirkungen auf die Leistungsfähigkeit zu reduzieren/vermeiden
 	\end{itemize}
 \end{itemize}
@@ -350,7 +350,7 @@ Littles Gesetz besagt, dass die durchschnittliche Anzahl von Kunden \(L\) in ein
 \begin{itemize}
 	\item Mehrfachzuweisung: Pro Takt können mehrere Befehle den Ausführungseinheiten zugeordnet und die gleiche Anzahl von Befehlsausführungen pro Takt beendet werden
 	\item RISC-Eigenschaften bleiben weitestgehend erhalten: LS-Architektur sowie festes Befehlsformat
-	\item Entwurfsziel: Erhöhung des IPC (Instruction per Cycle)
+	\item Entwurfsziel: Erhöhung des IPC (Instructions per Cycle)
 	\begin{itemize}
 		\item \textbf{1. In-order-Abschnitt}
 		\begin{itemize}
@@ -391,7 +391,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Sprungvorhersage wird zur Laufzeit von der CPU ausgeführt. Genauigkeit bei etwa 98\% (Quelle: Wikipedia)
 		\item Sprungvorhersagetechniken
 		\begin{itemize}
-			\item Der \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
+			\item Die \texttt{Branch History Table} protokolliert die letzten Sprünge in einer Hashtabelle
 			\item \texttt{1-Bit-Prädikator}: Zu jedem Sprung wird ein Bit gespeichert. Ist es gesetzt, dann wird ein gespeicherter Sprung genommen. Bei Falschannahme wird dessen Bit invertiert. Problem: Alternierende Sprünge werden nicht berücksichtigt \(\rightarrow\) \texttt{n-Bit-Prädikator}
 			\item \texttt{2-Bit-Prädikator}: Speichert vier Zustände und setzt das Korrektheitsbit erst nach \texttt{2} Fehlschlägen neu. Zustände sind \texttt{Predict strongly taken (11)}, \texttt{Predict weakly taken (10)}, \texttt{Predict weakly not taken (01)} und \texttt{Predict stronly not taken (00)}. In der Praxis bringen Prädikatoren mit mehr als 2 Bit kaum Vorteile.
 		\end{itemize}
@@ -453,7 +453,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 		\item Bei Aufreten einer Unterbrechung
 		\begin{itemize}
 			\item Alle Resultate, die in der Programmausführung vor dem Befehl stehen, werden gültig gemacht; die Ergebnisse aller nachfolgenden werden verworfen
-			\item Das Ergebnisse des Befehls, der die Unterbrechung verursacht hat, wird in Abhängigkeit der Unterbrechung und der Architektur gültig gemacht oder verworfen
+			\item Das Ergebnis des Befehls, der die Unterbrechung verursacht hat, wird in Abhängigkeit der Unterbrechung und der Architektur gültig gemacht oder verworfen
 			\item Komplexe Hardware notwendig
 		\end{itemize}
 	\end{itemize}
@@ -469,7 +469,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\end{itemize}
 	\item \textbf{Funktionsweise\footnote{\url{https://de.wikipedia.org/wiki/Tomasulo-Algorithmus\#Funktionsweise}}}
 	\begin{itemize}
-		\item Issue: Der Befehl an der aktuellen Position in der Operation Queue wird dekodiert und entsprechend seiner auszuführenden Operation in eine passende Reservation Station eingetragen. Operanden werden direkt aus der Registerdatei übernommen, wenn sie gültig sind. Dieser Vorgang wird als Registerumbenennung bezeichnet. Steht ein Operand noch nicht zur Verfügung, wird stattdessen die Adresse der RS eingetragen, die den Wert gerade berechnet. Ist keine passende RS frei, verbleibt der Befeht in der Operation Queue und die Zuweisung wird im nächsten Takt erneut versucht
+		\item Issue: Der Befehl an der aktuellen Position in der Operation Queue wird dekodiert und entsprechend seiner auszuführenden Operation in eine passende Reservation Station eingetragen. Operanden werden direkt aus der Registerdatei übernommen, wenn sie gültig sind. Dieser Vorgang wird als Registerumbenennung bezeichnet. Steht ein Operand noch nicht zur Verfügung, wird stattdessen die Adresse der RS eingetragen, die den Wert gerade berechnet. Ist keine passende RS frei, verbleibt der Befehl in der Operation Queue und die Zuweisung wird im nächsten Takt erneut versucht
 		\item Execute: Sobald alle Operanden in der Reservation Station zur Verfügung stehen, wird die Operation an die FU weiter gegeben und ausgeführt. Andernfalls wird der Common Data Bus auf eingehende Werte beobachtet und fehlende Operanden übernommen, wenn die Adresse der Quell-RS mit der benötigten Adresse übereinstimmt
 		\item Write Result: Sobald das Ergebnis der Operation berechnet wurde, wird es mitsamt der Adresse der ausgeführten RS auf den Common Data Bus gelegt und somit für die RS sichtbar, welche auf das Ergebnis warten
 	\end{itemize}
@@ -512,7 +512,7 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 
 \subsubsection{Multithreading (Mehrfädigkeit)}
 \begin{itemize}
-	\item Entwurfsziel: Reduzieren der Untätigkeits- oder Latanzzeiten, die bei Speicherzugriffen (insbesondere Cache-Fehlzugriffe) entstehen
+	\item Entwurfsziel: Reduzieren der Untätigkeits- oder Latenzzeiten, die bei Speicherzugriffen (insbesondere Cache-Fehlzugriffe) entstehen
 	\item Ziel: Parallele Ausführung mehrerer Kontrollfäden
 	\item \textbf{Ansätze}
 	\begin{itemize}
