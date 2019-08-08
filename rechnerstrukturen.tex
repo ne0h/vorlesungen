@@ -516,8 +516,8 @@ In modernen Prozessoren werden Maschinenbefehle in mehreren Verarbeitungsschritt
 	\item Ziel: Parallele Ausführung mehrerer Kontrollfäden
 	\item \textbf{Ansätze}
 	\begin{itemize}
-		\item Interleaved Multithreading (cycle-by-cycle): In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
-		\item Blocked Multithreading: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
+		\item Cycle-by-cycle Interleaving: In jedem Zyklus wird ein Befehl aus einem anderen Kontrollfaden geholt und ausgeführt
+		\item Block Interleaving: Die Befehle eines Threads werden solange ausgeführt bis ein Ereignis eintritt, das eine lange Wartezeit nach sich zieht
 		\item Simultaneous Multithreading: Die Ausführungseinheiten werden über eine Zuordnungseinheit aus mehreren Befehlspuffern versorgt. Jeder Befehlspuffer stellt einen anderen Befehlsstrom dar und hat einen eigenen Registersatz zugeordnet
 	\end{itemize}
 \end{itemize}
